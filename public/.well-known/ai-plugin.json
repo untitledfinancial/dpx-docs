@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_model": "dpx_stability_oracle",
+  "name_for_human": "DPX Stability Oracle",
+  "description_for_model": "DPX is a programmable stablecoin settlement rail with a 6-tier macro-intelligent stability oracle. Use this to get real-time stability scores, fee quotes, ESG-weighted fees, and execute cross-border settlements. Call /manifest first to discover full capabilities, then /quote to price a transaction, then /verify-fees to confirm on-chain alignment before settlement. Fees: 0.85% core + 0.40% FX (cross-currency only) + 0.00–0.50% ESG (live from oracle) + 0.01% license. Typical all-in: 1.385% at ESG score 75, cross-border.",
+  "description_for_human": "Real-time DPX stablecoin stability oracle with agent-native pricing, ESG-weighted fees, and programmable settlement rails on Base mainnet.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "http://localhost:3000/openapi.json"
+  },
+  "logo_url": "http://localhost:3000/logo.png",
+  "contact_email": "victoria@dpx.finance",
+  "legal_info_url": "https://docs.dpx.finance/legal"
+}

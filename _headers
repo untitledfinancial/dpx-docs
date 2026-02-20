@@ -1,0 +1,25 @@
+# Cloudflare Pages headers
+
+/openapi.json
+  Content-Type: application/json
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600
+
+/llms.txt
+  Content-Type: text/plain
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600
+
+/llms-full.txt
+  Content-Type: text/plain
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600
+
+/.well-known/ai-plugin.json
+  Content-Type: application/json
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600
+
+/*
+  X-Robots-Tag: all
+  X-Content-Type-Options: nosniff

@@ -1,0 +1,71 @@
+---
+title: What is DPX?
+description: DPX programmable stablecoin settlement rails — agent-native API, ESG-weighted fees, and 6-tier stability oracle on Base mainnet.
+template: splash
+hero:
+  tagline: Programmable stablecoin settlement rails for institutional treasuries and autonomous AI agents.
+  actions:
+    - text: Agent Quick Start
+      link: /agent-quickstart
+      icon: right-arrow
+      variant: primary
+    - text: API Reference
+      link: /api/stability-oracle
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## What DPX does
+
+DPX is the first stablecoin settlement rail built for both institutional treasury teams and autonomous AI agents. It provides:
+
+- **Predictable pricing** — fees are in the protocol, readable by any agent before execution
+- **ESG-weighted fees** — high ESG score = lower fee; 100% redistributed to verified on-chain impact
+- **6-tier stability oracle** — 30–90 day early warning signals before macro events affect the peg
+- **Non-custodial** — deployed on Base mainnet, fully on-chain, agent-executable without human approval
+
+## Key numbers
+
+| | |
+|---|---|
+| Typical all-in rate (score 75, cross-border) | **1.385%** |
+| Best case (score 100, same-currency) | **0.86%** |
+| Network | **Base Mainnet** (chainId 8453) |
+| Auth required | **None** for pricing endpoints |
+| Oracle update cycle | **Hourly** |
+| Peg verification | **Every 60 seconds** |
+
+## Start here
+
+<CardGrid>
+  <Card title="Agent Quick Start" icon="rocket">
+    The complete settlement loop in 5 steps — from discovery to on-chain execution.
+    [Get started →](/agent-quickstart)
+  </Card>
+  <Card title="Fee Structure" icon="information">
+    Core, FX, ESG, and license fee breakdown with volume discount tiers and scenarios.
+    [See fees →](/fees)
+  </Card>
+  <Card title="MCP — Claude" icon="puzzle">
+    Connect Claude Desktop directly to DPX via Model Context Protocol.
+    [Set up MCP →](/integrations/mcp)
+  </Card>
+  <Card title="API Reference" icon="document">
+    Every endpoint documented with parameters and example responses.
+    [View API →](/api/stability-oracle)
+  </Card>
+</CardGrid>
+
+## Agent discovery
+
+Agents and LLMs find DPX at these standard locations:
+
+```
+GET /llms.txt                       LLM navigation index (llmstxt.org standard)
+GET /llms-full.txt                  Complete docs compiled for LLM context
+GET /openapi.json                   OpenAPI 3.0 schema for all endpoints
+GET /.well-known/ai-plugin.json     Agent framework plugin manifest
+GET /manifest                       Live DPX protocol manifest with fee config
+```

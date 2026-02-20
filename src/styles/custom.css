@@ -1,0 +1,34 @@
+/* DPX brand colours */
+:root {
+  --sl-color-accent-low:  #0d2137;
+  --sl-color-accent:      #0e7fd4;
+  --sl-color-accent-high: #7dd3fc;
+  --sl-color-white:       #ffffff;
+  --sl-color-gray-1:      #f0f6ff;
+  --sl-color-gray-2:      #c8daf0;
+  --sl-color-gray-3:      #7a9bbf;
+  --sl-color-gray-4:      #3d5c78;
+  --sl-color-gray-5:      #1e3148;
+  --sl-color-gray-6:      #0d1e2e;
+  --sl-color-black:       #060f18;
+}
+
+/* Subtle banner at top of every page */
+.sl-banner {
+  background: linear-gradient(90deg, #0e7fd4 0%, #0d2137 100%);
+  color: white;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 0.4rem 1rem;
+}
+
+/* Code blocks — tighter, cleaner */
+pre {
+  border-radius: 8px !important;
+  font-size: 0.875rem !important;
+}
+
+/* Badge styling for fee tiers */
+.badge-good     { background: #16a34a; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
+.badge-average  { background: #ca8a04; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
+.badge-poor     { background: #dc2626; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
