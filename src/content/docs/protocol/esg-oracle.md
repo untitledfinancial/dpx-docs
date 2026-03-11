@@ -1,68 +1,101 @@
 ---
 title: ESG Oracle
-description: How the DPX ESG Oracle calculates live environmental, social, and governance scores that feed directly into settlement fees.
+description: How the DPX ESG Oracle scores counterparties across Environmental, Social, and Governance dimensions using 6 real-world data sources — and how 100% of ESG fee revenue is redistributed to verified on-chain impact programs.
 ---
 
-The DPX ESG Oracle provides live E, S, G scores that feed directly into settlement fees. A higher ESG score means a lower fee — creating a direct financial incentive for environmentally and socially responsible counterparties.
+> **Proprietary technology.** The ESG Oracle scoring methodology, weighting model, redistribution logic, and source code are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. API access is available to approved beta partners. Self-hosting requires a separate license agreement — contact [beta@untitledfinancial.com](mailto:beta@untitledfinancial.com).
 
-## Score components
+The DPX ESG Oracle produces live E, S, G scores from 6 real-world institutional data sources. Those scores flow directly into settlement fees: a higher score means a lower fee. 100% of ESG fee revenue is redistributed to verified on-chain impact programs — making every DPX settlement a direct contributor to measurable environmental and social outcomes.
 
-| Component | Description |
-|---|---|
-| Environmental (E) | Carbon footprint, energy sourcing, climate impact |
-| Social (S) | Labor practices, community impact, diversity |
-| Governance (G) | Transparency, board structure, compliance |
+---
 
-The three scores are averaged equally: `avgScore = (E + S + G) / 3`
+## Data Sources
 
-## Fee formula
+The oracle pulls from 6 institutional data sources across the three ESG dimensions:
+
+### Environmental (E)
+| Source | API | Metrics |
+|---|---|---|
+| **World Bank** | `api.worldbank.org` | CO2 emissions (metric tons per capita) — `EN.ATM.CO2E.PC` |
+| **Climate Monitor** | `climatemonitor.info/api` | Live CO2 levels (ppm), CH4 levels (ppb) |
+
+### Social (S)
+| Source | API | Metrics |
+|---|---|---|
+| **UN SDG API** | `unstats.un.org/SDGAPI` | SDG 4.1.1 — minimum proficiency in reading (education), SDG 3 health indicators |
+
+### Governance (G)
+| Source | API | Metrics |
+|---|---|---|
+| **IMF** | `dataservices.imf.org` | Consumer Price Index (CPI) — economic stability proxy |
+| **OECD** | `sdmx.oecd.org` | GDP data — economic governance indicator |
+| **SEC EDGAR** | `data.sec.gov` | Corporate governance disclosures (XBRL company facts) |
+
+---
+
+## Fee Formula
 
 ```
 esgFee = (100 - avgScore) / 200
 ```
 
-This is a linear formula. At score 100 the ESG fee is 0%. At score 0 it is 0.50%. The formula is identical in:
-
-- `esg-oracle/routes/agentEndpoints.js` (Node.js)
-- `stability-oracle/routes/agentEndpoints.js` (Node.js)
-- `DPXSettlementRouter.sol` (on-chain)
-
-## Score tiers
-
-| Score | ESG Fee | Tier |
+| Score | Fee | Tier |
 |---|---|---|
-| 90–100 | 0.000–0.050% | Excellent |
-| 75–89 | 0.055–0.125% | Good |
-| 50–74 | 0.130–0.250% | Average |
-| 25–49 | 0.255–0.375% | Below Average |
-| 0–24 | 0.380–0.500% | Poor |
+| 100 | 0.000% | Excellent |
+| 90 | 0.050% | Excellent |
+| 75 | 0.125% | Good |
+| 50 | 0.250% | Average |
+| 25 | 0.375% | Below Average |
+| 0 | 0.500% | Poor |
 
-## Redistribution
+The on-chain contract, oracle, and API always apply the same formula consistently.
 
-100% of ESG fee revenue is redistributed to verified on-chain impact programs. The distribution is encoded in the `DPXSettlementRouter` contract and cannot be changed without an on-chain governance action.
+---
 
-| Program | Share |
-|---|---|
-| Ocean Conservation | 30% |
-| Renewable Energy | 25% |
-| Forest Preservation | 20% |
-| Climate Action | 15% |
-| Clean Water | 10% |
+## ESG Redistribution Mechanism
 
-## Architecture
+**100% of ESG fee revenue is redistributed to verified on-chain impact programs.** This is enforced by the `DPXSettlementRouter` contract — it is not discretionary.
 
-```
-esg-oracle/
-  server.js            ← HTTP server, port 3001
-  normalize.js         ← score normalization module
-  routes/
-    agentEndpoints.js  ← /manifest, /esg-score, /quote, /reliability
-```
+### Distribution
 
-## Live endpoint
+| Program | Share | Rationale |
+|---|---|---|
+| Ocean Conservation | 30% | Largest share — oceans absorb ~30% of CO2 |
+| Renewable Energy | 25% | Direct emissions reduction |
+| Forest Preservation | 20% | Carbon sequestration and biodiversity |
+| Climate Action | 15% | Broad climate mitigation programs |
+| Clean Water | 10% | Social / SDG 6 alignment |
+
+### How it works on-chain
+
+1. Counterparty's E, S, G scores are fetched from the oracle at settlement time
+2. `DPXSettlementRouter.settle()` computes `esgFee = (100 - avgScore) / 200`
+3. The ESG fee amount is transferred to the redistribution contract
+4. The redistribution contract routes funds to five verified program addresses according to fixed percentage weights
+5. Each redistribution is recorded in a Storacha (IPFS) proof with: tx hash, per-program amounts, period dates, and total redistributed
+
+The program addresses and percentage splits are set at contract deployment and can only be changed via on-chain governance — not by Untitled Financial unilaterally.
+
+### Impact at scale
+
+| Annual Volume | ESG Fee Pool (score 75) | Per Program |
+|---|---|---|
+| $100M | $125K | $37.5K (Ocean) / $31.25K (Renewable) |
+| $1B | $1.25M | $375K (Ocean) / $312.5K (Renewable) |
+| $5B | $6.25M | $1.875M (Ocean) / $1.5625M (Renewable) |
+| $12B (Year 10) | $15M+ | $4.5M+ (Ocean) / $3.75M+ (Renewable) |
+
+Every redistribution is verifiable on-chain and on IPFS. Any agent, auditor, or regulator can independently confirm funds reached the programs.
+
+---
+
+## Live Endpoint
 
 ```bash
-curl localhost:3001/esg-score
+GET https://esg.untitledfinancial.com/esg-score
 ```
 
-Returns the current E, S, G scores, the composite average, the active fee, and the tier label. Use `scores.average` as the `esgScore` parameter in settlement quotes.
+Returns the current E, S, G scores, composite average, active fee rate, and tier label. Use `scores.average` as the `esgScore` parameter in settlement quotes on the Stability Oracle.
+
+---
+

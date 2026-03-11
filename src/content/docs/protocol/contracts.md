@@ -81,7 +81,7 @@ ROUTER_ADDRESS=0x...    # Address from deploy output
 ## Source
 
 ```
-DPX-Dashborad/dpx-deploy/contracts/DPXSettlementRouter.sol
-DPX-Dashborad/dpx-deploy/deployRouter.sh
+dpx-protocol/dpx-deploy/contracts/DPXSettlementRouter.sol
+dpx-protocol/dpx-deploy/deployRouter.sh
 Stability-Oracle/stability-oracle/routes/settlerClient.js
 ```

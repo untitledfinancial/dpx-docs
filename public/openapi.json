@@ -5,9 +5,9 @@
     "description": "Agent-native API for DPX programmable stablecoin settlement rails. Provides real-time stability scores, ESG-weighted fee quotes, and on-chain settlement verification. No authentication required. All responses are machine-parseable JSON.\n\n**Fee structure (Option F):**\n- Core: 0.85% (every settlement)\n- FX: 0.40% (cross-currency only)\n- ESG: 0.00–0.50% live from oracle — formula: (100 - avgScore) / 200\n- License: 0.01% (fixed)\n- Typical all-in (score 75, cross-border): **1.385%**\n\n**Agent integration order:** /manifest → /fee-schedule → /quote → /verify-fees → settle on-chain",
     "version": "2.1.0",
     "contact": {
-      "name": "DPX — Victoria Lee Case",
-      "email": "victoria@dpx.finance",
-      "url": "https://docs.dpx.finance"
+      "name": "DPX — Victoria Lee Case, Untitled_ LuxPerpetua Technologies, Inc.",
+      "email": "beta@untitledfinancial.com",
+      "url": "https://docs.untitledfinancial.com"
     },
     "license": {
       "name": "MIT"
@@ -15,11 +15,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000",
-      "description": "Local development"
-    },
-    {
-      "url": "https://stability.dpx.finance",
+      "url": "https://stability.untitledfinancial.com",
       "description": "Production (Base Mainnet)"
     }
   ],

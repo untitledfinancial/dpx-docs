@@ -1,0 +1,110 @@
+# DPX — Investor Overview
+# Untitled_ LuxPerpetua Technologies, Inc.
+
+> DPX is programmable, non-custodial settlement infrastructure for institutional
+> treasuries and autonomous AI agents — where ethics is protocol, not just policy.
+
+## Company
+
+Untitled_ LuxPerpetua Technologies, Inc. operates at the intersection of
+programmable finance, ESG accountability, and the emerging agentic economy.
+DPX is the company's flagship protocol: a stablecoin settlement rail on Base
+mainnet (Ethereum L2) that embeds ESG scoring, stability intelligence, and
+fee transparency directly into settlement logic.
+
+## Market
+
+Cross-border institutional settlement is a $150T+ annual market dominated by
+SWIFT and correspondent banking — infrastructure built in the 1970s, carrying
+fees of 2–5% per transaction, with no machine-readable pricing, no ESG
+accountability, and no path to autonomous execution.
+
+DPX addresses this with a protocol-level alternative that is:
+- Cheaper than incumbents (1.385% typical all-in vs 2–5% SWIFT)
+- Machine-readable by design (any AI agent can discover, price, and execute)
+- ESG-accountable by default (fee component tied to live ESG scores, 100%
+  redistributed on-chain)
+- Non-custodial (institutions keep custody; DPX is rails, not a bank)
+
+## Product
+
+### DPX Protocol
+Deployed on Base mainnet (chainId 8453). Four-component fee structure enforced
+on-chain via DPXSettlementRouter smart contract:
+- Core transfer: 0.85%
+- FX conversion: 0.40% (cross-currency only)
+- ESG fee: (100 - esgScore) / 200 — live from oracle, 0–0.50%
+- License: 0.01% fixed
+
+Typical all-in rate (ESG score 75, cross-border): 1.385%
+Best case (ESG score 100, same-currency): 0.86%
+
+### Hybrid On-Chain / Off-Chain Architecture
+Fee calculation happens off-chain via API (fast, readable by agents).
+Fee enforcement happens on-chain (trustless, auditable).
+/verify-fees endpoint confirms both match before any settlement executes.
+
+### Agent-Native by Design
+Any AI agent can go from discovery to executed settlement in five API calls
+with no human in the loop. The protocol manifest returns
+`onboarding.humanRequired: false`. Integrations ship for Claude (MCP),
+ChatGPT (GPT Actions), LangChain, and n8n.
+
+## Competitive Positioning
+
+| Provider        | Typical Rate | Per $1M     |
+|-----------------|-------------|-------------|
+| SWIFT / Wire    | 2.00–5.00%  | $20K–$50K   |
+| Stripe Stablecoin | 1.50%     | $15,000     |
+| DPX (typical)   | 1.385%      | $13,850     |
+| DPX (best case) | 0.86%       | $8,600      |
+
+DPX is the only settlement rail with:
+1. ESG fees embedded at the protocol level (not a bolt-on)
+2. Machine-readable pricing in every API response
+3. Agent-executable settlement without human intervention
+4. On-chain ESG redistribution to verified impact programs
+
+## Revenue Model
+
+DPX earns fees on every settlement:
+- Core + FX + License flow to protocol treasury
+- ESG fee (0–0.50%) redistributes 100% to on-chain impact programs
+
+Volume discount tiers (core fee reduction):
+- Standard (<$100K/mo): 0% discount
+- Growth ($100K–$1M/mo): 10% off core
+- Institutional ($1M–$10M/mo): 20% off core
+- Sovereign ($10M+/mo): 30% off core
+
+At $5B annual volume (Sovereign tier), ESG pool alone: $6.25M/year
+See full model: https://docs.untitledfinancial.com/financial-model
+
+## Technology
+
+- **Base mainnet** (Ethereum L2) — low cost, institutional-grade finality
+- **6-tier Stability Oracle** — 30–90 day early warning signals on macro stress
+- **ESG Oracle** — live E, S, G scores from 6 institutional data sources
+- **Storacha (IPFS + Filecoin)** — verifiable on-chain audit trail for every settlement
+- **OpenAPI 3.0** — full machine-readable API spec
+- **llms.txt standard** — discoverable by AI agents and LLM crawlers
+
+## Status
+
+Private beta. Pricing, ESG scoring, and stability monitoring are fully live.
+Settlement execution on Base mainnet available to vetted early partners.
+
+- DPX Token: 0x7A62dEcF6936675480F0991A2EF4a0d6f1023891
+- DPXSettlementRouter: deployment in progress
+- Beta applications: beta@untitledfinancial.com
+
+## Links
+
+- [Company](https://untitledfinancial.com)
+- [Technical Documentation](https://docs.untitledfinancial.com)
+- [Full llms.txt](https://docs.untitledfinancial.com/llms.txt)
+- [Financial Model](https://docs.untitledfinancial.com/financial-model)
+- [Fee Structure](https://docs.untitledfinancial.com/fees)
+- [Protocol Manifest](https://stability.untitledfinancial.com/manifest)
+- [OpenAPI Spec](https://stability.untitledfinancial.com/openapi.json)
+- [Beta Access](https://docs.untitledfinancial.com/beta)

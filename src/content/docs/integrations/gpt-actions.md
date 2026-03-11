@@ -10,14 +10,10 @@ Add DPX to a Custom GPT so ChatGPT can autonomously price settlements and check 
 1. Go to [chat.openai.com](https://chat.openai.com) → **Explore GPTs** → **Create**
 2. In the GPT editor, click **Configure** → **Actions** → **Add action**
 3. Paste the contents of `/dpx-agents/gpt-actions.yaml` into the schema field
-4. Set the server URL to your production URL (e.g. `https://stability.dpx.finance`)
+4. Set the server URL to your production URL (e.g. `https://stability.untitledfinancial.com`)
 5. Authentication: **None**
 6. Save and test
 
-## Schema file location
-
-```
-/Users/victoriacase/Documents/GitHub/DPX-Dashborad/dpx-agents/gpt-actions.yaml
 ```
 
 ## Available actions

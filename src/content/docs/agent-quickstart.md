@@ -7,7 +7,6 @@ DPX is designed for autonomous agents. No sales process. No onboarding call. An 
 
 ## Prerequisites
 
-- Both oracles running — see [Run the Oracles](/running)
 - For on-chain settlement: `ROUTER_ADDRESS` and `SETTLER_PRIVATE_KEY` in `.env`
 
 ## The 5-step settlement loop
@@ -15,7 +14,7 @@ DPX is designed for autonomous agents. No sales process. No onboarding call. An 
 ### Step 1 — Discover
 
 ```bash
-GET localhost:3000/manifest
+GET https://stability.untitledfinancial.com/manifest
 ```
 
 Returns capabilities, fee structure, supported currencies, and all contract addresses. Cache this. It changes only when the protocol is updated.
@@ -35,7 +34,7 @@ Returns capabilities, fee structure, supported currencies, and all contract addr
 ### Step 2 — Get live ESG score
 
 ```bash
-GET localhost:3001/esg-score
+GET https://esg.untitledfinancial.com/esg-score
 ```
 
 Returns current E, S, G scores and the active ESG fee. Use `scores.average` as the `esgScore` parameter in Step 3.
@@ -45,7 +44,7 @@ Returns current E, S, G scores and the active ESG fee. Use `scores.average` as t
 ### Step 3 — Price the transaction
 
 ```bash
-GET localhost:3000/quote?amountUsd=1000000&hasFx=true&esgScore=75
+GET https://stability.untitledfinancial.com/quote?amountUsd=1000000&hasFx=true&esgScore=75
 ```
 
 Returns a full fee breakdown and a `quoteId` valid for 300 seconds.
@@ -73,7 +72,7 @@ Returns a full fee breakdown and a `quoteId` valid for 300 seconds.
 ### Step 4 — Verify on-chain
 
 ```bash
-GET localhost:3000/verify-fees?amountUsd=1000000&hasFx=true&esgScore=75
+GET https://stability.untitledfinancial.com/verify-fees?amountUsd=1000000&hasFx=true&esgScore=75
 ```
 
 Confirms the on-chain `DPXSettlementRouter.previewFees()` returns the same number as the quote. If `feesMatch: true`, proceed.
@@ -83,7 +82,7 @@ Confirms the on-chain `DPXSettlementRouter.previewFees()` returns the same numbe
 ### Step 5 — Check stability, then execute
 
 ```bash
-GET localhost:3000/reliability
+GET https://stability.untitledfinancial.com/reliability
 ```
 
 | Condition | Action |

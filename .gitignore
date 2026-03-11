@@ -19,3 +19,13 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
+
+# Storacha deploy history (contains CIDs — track separately if needed)
+.storacha-deploys.json
+
+# Private docs and internal files
+Private & Shared/
+*.zip
+
+# Claude session files
+.claude/

@@ -79,7 +79,7 @@ DPX saves ~$1,150/million vs Stripe stablecoin. The premium over Wise reflects i
 ## Get a live quote
 
 ```bash
-GET localhost:3000/quote?amountUsd=1000000&hasFx=true&esgScore=75
+GET https://stability.untitledfinancial.com/quote?amountUsd=1000000&hasFx=true&esgScore=75
 ```
 
 See [API Reference](/api/stability-oracle) for full parameter documentation.

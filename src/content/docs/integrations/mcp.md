@@ -5,37 +5,6 @@ description: Connect Claude Desktop to DPX using the Model Context Protocol (MCP
 
 The DPX MCP server gives Claude Desktop native access to all pricing, stability, and ESG endpoints. No browser required — Claude can price settlements and check stability directly in conversation.
 
-## Setup
-
-### 1. Install dependencies
-
-```bash
-cd ~/Documents/GitHub/DPX-Dashborad/dpx-mcp
-npm install
-```
-
-### 2. Add to Claude Desktop config
-
-Open `~/Library/Application Support/Claude/claude_desktop_config.json` and add:
-
-```json
-{
-  "mcpServers": {
-    "dpx": {
-      "command": "node",
-      "args": ["/Users/victoriacase/Documents/GitHub/DPX-Dashborad/dpx-mcp/index.js"],
-      "env": {
-        "STABILITY_ORACLE_URL": "http://localhost:3000",
-        "ESG_ORACLE_URL": "http://localhost:3001"
-      }
-    }
-  }
-}
-```
-
-### 3. Restart Claude Desktop
-
-The DPX tools will appear in Claude's tool list.
 
 ## Available tools
 
@@ -65,6 +34,4 @@ The MCP server uses **stdio transport** (JSON-RPC 2.0). All tool logging goes to
 
 ## Source
 
-```
-/Users/victoriacase/Documents/GitHub/DPX-Dashborad/dpx-mcp/index.js
-```
+Available to beta partners via [GitHub](https://github.com/untitledfinancial). [Request access →](/beta)

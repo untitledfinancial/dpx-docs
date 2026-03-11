@@ -1,34 +1,487 @@
-/* DPX brand colours */
-:root {
-  --sl-color-accent-low:  #0d2137;
-  --sl-color-accent:      #0e7fd4;
-  --sl-color-accent-high: #7dd3fc;
-  --sl-color-white:       #ffffff;
-  --sl-color-gray-1:      #f0f6ff;
-  --sl-color-gray-2:      #c8daf0;
-  --sl-color-gray-3:      #7a9bbf;
-  --sl-color-gray-4:      #3d5c78;
-  --sl-color-gray-5:      #1e3148;
-  --sl-color-gray-6:      #0d1e2e;
-  --sl-color-black:       #060f18;
+/*
+ * ═══════════════════════════════════════════════════════════════
+ *  UNTITLED FINANCIAL — DPX DOCS
+ *  Design: Notion-inspired clean document aesthetic
+ *  Display: Bebas Neue (hero headings)
+ *  Body:    Inter (UI + body — like Notion)
+ *  Palette: #ffffff bg · #1e2e2c text · #dce8e7 borders (ocean teal palette)
+ * ═══════════════════════════════════════════════════════════════
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ── VARIABLES ───────────────────────────────────────────────── */
+:root,
+[data-theme='light'],
+[data-theme='dark'] {
+  /* Ocean teal brand (sampled from Winslow Homer "Undertow") */
+  --brand-dark:              #192f2d;     /* deep ocean teal */
+  --brand-darker:            #0f1e1d;     /* darkest ocean */
+  --brand-mid:               #254442;     /* hover / interactive */
+  --brand-tint:              #e8f0ef;     /* light callout tint */
+
+  /* Starlight / Notion-inspired palette — teal-shifted */
+  --sl-color-bg:             #ffffff;
+  --sl-color-bg-nav:         #ffffff;
+  --sl-color-bg-sidebar:     #f2f7f6;     /* teal-tinted warm sidebar */
+  --sl-color-bg-inline-code: #e8f0ef;
+
+  --sl-color-text:           #1e2e2c;     /* dark teal body text */
+  --sl-color-text-accent:    #192f2d;
+
+  --sl-color-accent-low:     #e8f0ef;
+  --sl-color-accent:         #192f2d;
+  --sl-color-accent-high:    #0f1e1d;
+
+  --sl-color-white:          #ffffff;
+  --sl-color-gray-1:         #192f2d;     /* deep ocean teal (was #111111) */
+  --sl-color-gray-2:         #254442;
+  --sl-color-gray-3:         #5a6e6c;
+  --sl-color-gray-4:         #8aa5a3;
+  --sl-color-gray-5:         #c5d8d7;
+  --sl-color-gray-6:         #dce8e7;     /* teal-tinted border */
+  --sl-color-gray-7:         #f2f7f6;
+  --sl-color-black:          #192f2d;     /* deep ocean teal (was #111111) */
+
+  --sl-color-hairline-light: #dce8e7;
+  --sl-color-hairline:       #c5d8d7;
+
+  --sl-font:                 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --sl-font-system:          'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --sl-font-mono:            'SF Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 }
 
-/* Subtle banner at top of every page */
+/* ── SITE HEADER ─────────────────────────────────────────────── */
+header.header {
+  background: rgba(255,255,255,0.94) !important;
+  border-bottom: 1px solid #dce8e7 !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* ── BRAND NAME / SITE TITLE ─────────────────────────────────── */
+.site-title,
+.site-title span,
+.site-title a,
+a.site-title {
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.22em !important;
+  text-transform: uppercase !important;
+  font-size: 0.72rem !important;
+  color: #192f2d !important;
+  text-decoration: none !important;
+}
+
+/* ── PAGE BACKGROUND ─────────────────────────────────────────── */
+body,
+.page,
+main {
+  background: #ffffff !important;
+  color: #37352f;
+}
+
+/* ── SIDEBAR ─────────────────────────────────────────────────── */
+.sidebar-pane,
+nav.sidebar {
+  background: #f2f7f6 !important;
+  border-right: 1px solid #dce8e7 !important;
+}
+
+/* Group labels */
+.group-label span,
+details summary span {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.65rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  color: #9b9a97 !important;
+}
+
+/* Sidebar links */
+.sidebar-content a,
+nav.sidebar a {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.85rem !important;
+  font-weight: 400 !important;
+  color: #6b6b6b !important;
+  border-radius: 4px !important;
+}
+
+.sidebar-content a:hover,
+nav.sidebar a:hover {
+  color: #37352f !important;
+  background: #dce8e7 !important;
+}
+
+/* Active page */
+[aria-current='page'],
+.sidebar-content [aria-current='page'] {
+  color: #192f2d !important;
+  font-weight: 500 !important;
+  background: #dce8e7 !important;
+  border-left: 2px solid #192f2d !important;
+  padding-left: calc(0.5rem - 2px) !important;
+}
+
+/* ── HEADINGS ────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6,
+.sl-markdown-content h1,
+.sl-markdown-content h2,
+.sl-markdown-content h3,
+.sl-markdown-content h4,
+.sl-markdown-content h5 {
+  color: #192f2d !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.sl-markdown-content h1 {
+  font-family: 'Bebas Neue', 'Arial Black', sans-serif !important;
+  font-size: 2.8rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.04em !important;
+  line-height: 1.05 !important;
+  margin-bottom: 1.25rem !important;
+  color: #192f2d !important;
+}
+
+.sl-markdown-content h2 {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  text-transform: none !important;
+  border-bottom: 1px solid #dce8e7 !important;
+  padding-bottom: 0.5rem !important;
+  margin-top: 2.5rem !important;
+}
+
+.sl-markdown-content h3 {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.sl-markdown-content h4 {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.12em !important;
+  color: #9b9a97 !important;
+}
+
+/* ── HERO (index page) ───────────────────────────────────────── */
+.hero h1,
+.hero > div h1 {
+  font-family: 'Bebas Neue', 'Arial Black', sans-serif !important;
+  font-size: clamp(2.5rem, 5vw, 3.5rem) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.04em !important;
+  line-height: 1.05 !important;
+  color: #192f2d !important;
+}
+
+.hero .tagline {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 300 !important;
+  color: #787774 !important;
+  line-height: 1.65 !important;
+}
+
+.hero .actions a {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  border-radius: 3px !important;
+}
+
+/* Primary hero button */
+.hero .actions .primary {
+  background: #192f2d !important;
+  border-color: #192f2d !important;
+  color: #ffffff !important;
+}
+.hero .actions .primary:hover {
+  background: #37352f !important;
+}
+
+/* Secondary hero button */
+.hero .actions .secondary {
+  color: #37352f !important;
+  border-color: #c5d8d7 !important;
+}
+.hero .actions .secondary:hover {
+  background: #f2f7f6 !important;
+}
+
+/* ── BODY TEXT ───────────────────────────────────────────────── */
+.sl-markdown-content p,
+.sl-markdown-content li,
+.sl-markdown-content td {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.95rem !important;
+  line-height: 1.7 !important;
+  color: #37352f !important;
+}
+
+.sl-markdown-content strong {
+  color: #192f2d !important;
+  font-weight: 600 !important;
+}
+
+/* ── LINKS ───────────────────────────────────────────────────── */
+a,
+.sl-markdown-content a {
+  color: #37352f !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px !important;
+  text-decoration-color: #c5d8d7 !important;
+}
+
+a:hover,
+.sl-markdown-content a:hover {
+  text-decoration-color: #37352f !important;
+}
+
+/* ── CODE ────────────────────────────────────────────────────── */
+pre,
+.expressive-code pre {
+  background: #f2f7f6 !important;
+  border: 1px solid #dce8e7 !important;
+  border-radius: 4px !important;
+  font-size: 0.85rem !important;
+  box-shadow: none !important;
+}
+
+code:not(pre code),
+.sl-markdown-content code:not(pre code) {
+  background: #e8f0ef !important;
+  color: #37352f !important;
+  border: 1px solid #dce8e7 !important;
+  border-radius: 3px !important;
+  padding: 0.1em 0.4em !important;
+  font-size: 0.875em !important;
+  font-family: 'SF Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace !important;
+}
+
+/* Expressive Code frame title */
+.expressive-code .frame .title {
+  background: #e8f0ef !important;
+  border-bottom: 1px solid #dce8e7 !important;
+  color: #9b9a97 !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.72rem !important;
+}
+
+/* Code copy button */
+.expressive-code .copy button {
+  color: #9b9a97 !important;
+}
+
+/* ── TABLES ──────────────────────────────────────────────────── */
+.sl-markdown-content table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  font-size: 0.9rem !important;
+  border: 1px solid #dce8e7 !important;
+  border-radius: 4px !important;
+  overflow: hidden !important;
+}
+
+.sl-markdown-content th {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.68rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: #9b9a97 !important;
+  border-bottom: 1px solid #dce8e7 !important;
+  padding: 10px 16px !important;
+  text-align: left !important;
+  background: #f2f7f6 !important;
+}
+
+.sl-markdown-content td {
+  border-bottom: 1px solid #dce8e7 !important;
+  padding: 10px 16px !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.sl-markdown-content tr:last-child td {
+  border-bottom: none !important;
+}
+
+.sl-markdown-content tr:hover td {
+  background: #f2f7f6 !important;
+}
+
+/* ── ASIDE / CALLOUT BOXES ───────────────────────────────────── */
+.starlight-aside {
+  background: #f2f7f6 !important;
+  border: 1px solid #dce8e7 !important;
+  border-left: 3px solid #192f2d !important;
+  border-radius: 0 4px 4px 0 !important;
+  padding: 14px 16px !important;
+}
+
+.starlight-aside--tip {
+  border-left-color: #37352f !important;
+}
+
+.starlight-aside--caution {
+  border-left-color: #9b9a97 !important;
+  background: #fdfbf7 !important;
+}
+
+.starlight-aside--danger {
+  border-left-color: #555555 !important;
+}
+
+.starlight-aside--note {
+  border-left-color: #c5d8d7 !important;
+}
+
+.starlight-aside .starlight-aside__title {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: #37352f !important;
+}
+
+/* ── BANNER (top of page) ────────────────────────────────────── */
 .sl-banner {
-  background: linear-gradient(90deg, #0e7fd4 0%, #0d2137 100%);
-  color: white;
-  font-size: 0.85rem;
-  text-align: center;
-  padding: 0.4rem 1rem;
+  background: #192f2d !important;
+  color: #ffffff !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.78rem !important;
+  font-weight: 300 !important;
+  letter-spacing: 0.06em !important;
+  text-align: center !important;
+  padding: 0.5rem 1rem !important;
 }
 
-/* Code blocks — tighter, cleaner */
-pre {
-  border-radius: 8px !important;
-  font-size: 0.875rem !important;
+/* ── RIGHT SIDEBAR / TOC ─────────────────────────────────────── */
+.right-sidebar-panel {
+  border-left: 1px solid #dce8e7 !important;
 }
 
-/* Badge styling for fee tiers */
-.badge-good     { background: #16a34a; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
-.badge-average  { background: #ca8a04; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
-.badge-poor     { background: #dc2626; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
+.right-sidebar-panel a,
+nav[aria-label='On this page'] a {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.8rem !important;
+  color: #9b9a97 !important;
+}
+
+.right-sidebar-panel a:hover,
+nav[aria-label='On this page'] a:hover {
+  color: #37352f !important;
+  text-decoration: none !important;
+}
+
+[aria-label='On this page'] a[aria-current='true'] {
+  color: #37352f !important;
+  font-weight: 500 !important;
+}
+
+/* ── SEARCH BOX ──────────────────────────────────────────────── */
+site-search button[data-open-modal] {
+  background: #f2f7f6 !important;
+  border: 1px solid #dce8e7 !important;
+  border-radius: 4px !important;
+  color: #9b9a97 !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.85rem !important;
+}
+
+/* ── THEME TOGGLE — hide (forcing light mode) ────────────────── */
+starlight-theme-select {
+  display: none !important;
+}
+
+/* ── CARD GRID ───────────────────────────────────────────────── */
+.card {
+  background: #f2f7f6 !important;
+  border: 1px solid #dce8e7 !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+}
+
+.card:hover {
+  border-color: #c5d8d7 !important;
+  background: #e8f0ef !important;
+  box-shadow: none !important;
+}
+
+.card .title {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  color: #192f2d !important;
+}
+
+/* ── PAGINATION ──────────────────────────────────────────────── */
+.pagination-links a {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.85rem !important;
+  border: 1px solid #dce8e7 !important;
+  border-radius: 4px !important;
+  color: #37352f !important;
+}
+
+.pagination-links a:hover {
+  background: #f2f7f6 !important;
+  border-color: #c5d8d7 !important;
+}
+
+/* ── SCROLLBAR ───────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c5d8d7;
+  border-radius: 3px;
+}
+
+/* ── MARKDOC CUSTOM TAGS ─────────────────────────────────────── */
+.markdoc-callout {
+  border-left: 3px solid #192f2d;
+  background: #f2f7f6;
+  border-radius: 0 4px 4px 0;
+  padding: 14px 16px;
+  margin: 1.5rem 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #37352f;
+  border: 1px solid #dce8e7;
+  border-left: 3px solid #192f2d;
+}
+
+.markdoc-callout-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #37352f;
+  margin-bottom: 0.4rem;
+}
+
+/* ── FEE TIER BADGES ─────────────────────────────────────────── */
+.badge-good    { background: #f2f7f6; color: #37352f; border: 1px solid #c5d8d7; padding: 2px 9px; border-radius: 3px; font-size: 0.72rem; font-family: 'Inter', sans-serif; letter-spacing: 0.04em; font-weight: 500; }
+.badge-average { background: #f2f7f6; color: #787774; border: 1px solid #c5d8d7; padding: 2px 9px; border-radius: 3px; font-size: 0.72rem; font-family: 'Inter', sans-serif; letter-spacing: 0.04em; font-weight: 500; }
+.badge-poor    { background: #f2f7f6; color: #9b9a97; border: 1px solid #c5d8d7; padding: 2px 9px; border-radius: 3px; font-size: 0.72rem; font-family: 'Inter', sans-serif; letter-spacing: 0.04em; font-weight: 500; }

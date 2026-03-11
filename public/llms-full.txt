@@ -1,37 +1,44 @@
-# DPX — Complete Agent Documentation
+# DPX by Untitled Financial — Complete Agent Documentation
 
-> DPX is a programmable stablecoin settlement rail with a 6-tier macro-intelligent stability oracle, ESG-aware fee redistribution, and agent-native pricing APIs. Built for institutional treasuries, sovereign wealth funds, and autonomous AI treasury agents. Deployed on Base mainnet (chainId 8453). No authentication required for pricing endpoints.
+> DPX is a programmable stablecoin settlement rail built by Untitled Financial for institutional treasuries, sovereign wealth funds, and autonomous AI agents. It combines a 6-tier climate-aware stability oracle, live ESG scoring with 100% fee redistribution to verified impact programs, and an agent-native API that requires no human sales process. Deployed on Base mainnet (chainId 8453). No authentication required for pricing endpoints.
+
+**Company:** Untitled_ LuxPerpetua Technologies, Inc. — untitledfinancial.com / untitledfinancial.xyz
+**Founder:** Victoria Lee Case
+**Status:** Beta — pricing and ESG endpoints live, settlement router pending deployment
+**Beta access:** docs.untitledfinancial.com/beta
 
 ---
 
 ## What DPX Is
 
-DPX (DovePaxBranch) is a synthetic stablecoin protocol built for enterprise treasury use. It integrates real-world climate, energy, macro, and FX data with PID-controlled stability, a multi-currency basket (USD 55%, EUR 36%, GBP 9%), and on-chain verification. It provides 30–90 day early warning signals before macro events affect peg stability.
+DPX is a stablecoin settlement rail that moves value between institutions and AI agents across currencies with:
+- Transparent, predictable fees (no opaque FX spreads)
+- Live ESG scoring built into every transaction's price
+- On-chain verifiability — every settlement independently auditable via IPFS
+- Agent-native APIs designed from the ground up for autonomous discovery and execution
 
 DPX is the first stablecoin settlement rail with:
-- Machine-readable agent-native API (no human sales process required)
-- ESG-weighted fees that redistribute to verified on-chain impact programs
-- 6-tier stability oracle with predictive signals
-- Programmatic onboarding — agents can discover, price, and route settlements autonomously
+- 30–90 day early warning signals on macro/climate shifts (not reactive monitoring)
+- ESG-weighted fees that redistribute 100% to verified on-chain impact programs
+- A 6-tier stability oracle with cross-body transmission modeling
+- Programmatic onboarding — agents can discover, price, and route settlements with no human in the loop
 
 ---
 
-## Services
+## Two Services
 
-Two services run concurrently:
-
-| Service | Port | Purpose |
-|---|---|---|
-| Stability Oracle | 3000 | Settlement pricing, stability scores, peg monitoring, agent endpoints |
-| ESG Oracle | 3001 | Live E/S/G scores, ESG fee component |
+| Service | Port | Production URL | Purpose |
+|---|---|---|---|
+| Stability Oracle | 3000 | stability.untitledfinancial.com | Settlement pricing, stability scores, peg monitoring |
+| ESG Oracle | 3001 | esg.untitledfinancial.com | Live E/S/G scores, ESG fee component |
 
 ---
 
-## Fee Structure (Option F — current)
+## Fee Structure
 
-All fees are enforced on-chain via DPXSettlementRouter on Base mainnet.
+All fees enforced on-chain via DPXSettlementRouter on Base mainnet.
 
-| Component | Rate | Applicability |
+| Component | Rate | When it applies |
 |---|---|---|
 | Core transfer | 0.85% (85 bps) | Every settlement |
 | FX conversion | 0.40% (40 bps) | Cross-currency only |
@@ -40,7 +47,7 @@ All fees are enforced on-chain via DPXSettlementRouter on Base mainnet.
 
 **ESG Fee Formula:** `fee = (100 - avgESGScore) / 200`
 
-| ESG Score | ESG Fee | Tier |
+| ESG Score | Fee | Tier |
 |---|---|---|
 | 100 | 0.000% | Excellent |
 | 90 | 0.050% | Excellent |
@@ -58,259 +65,206 @@ All fees are enforced on-chain via DPXSettlementRouter on Base mainnet.
 | Average — score 50, cross-border | 1.51% | $15,100 |
 | Worst case — score 0, cross-border | 1.76% | $17,600 |
 
-**Volume discount tiers (applied to core fee only):**
+**Volume discount tiers (core fee only):**
 
-| Tier | Monthly Volume | Core Discount | Effective All-In |
+| Tier | Monthly Volume | Core Discount | Effective All-In (score 75, FX) |
 |---|---|---|---|
 | Standard | < $100K | 0% | 1.385% |
 | Growth | $100K–$1M | 10% | 1.30% |
 | Institutional | $1M–$10M | 20% | 1.215% |
 | Sovereign | $10M+ | 30% | 1.13% |
 
-**ESG redistribution (100% of ESG fees):**
-- 30% Ocean Conservation
-- 25% Renewable Energy
-- 20% Forest Preservation
-- 15% Climate Action
-- 10% Clean Water
+**ESG redistribution (100% of ESG fees, on-chain enforced):**
+
+| Program | Share | Annual at $5B volume |
+|---|---|---|
+| Ocean Conservation | 30% | $1.875M |
+| Renewable Energy | 25% | $1.563M |
+| Forest Preservation | 20% | $1.25M |
+| Climate Action | 15% | $937K |
+| Clean Water | 10% | $625K |
 
 ---
 
 ## Agent Settlement Loop
 
 ```
-Step 1  GET localhost:3000/manifest     → discover capabilities, cache fee structure
-Step 2  GET localhost:3001/esg-score    → get live ESG score and current fee
-Step 3  GET localhost:3000/quote        → get exact fee breakdown + quoteId (valid 300s)
-Step 4  GET localhost:3000/verify-fees  → confirm on-chain router matches quote
-Step 5  settler.settle()               → execute on Base mainnet, audit trail on-chain
+Step 1  GET /manifest          → discover capabilities, fees, contracts (cache this)
+Step 2  GET /esg-score         → live ESG score and current fee from ESG Oracle
+Step 3  GET /quote             → exact fee breakdown + quoteId (valid 300 seconds)
+Step 4  GET /verify-fees       → confirm on-chain router matches quote (feesMatch: true)
+Step 5  settler.settle()       → execute on Base mainnet, receipt saved to IPFS
 ```
+
+For sandbox/testing without settlement: omit Step 5. Steps 1–4 are fully live.
 
 ---
 
-## Stability Oracle Endpoints (port 3000)
+## Stability Oracle API (port 3000)
 
 ### GET /manifest
-Protocol discovery. Returns complete machine-readable description of DPX.
-Call once and cache. No parameters required.
+Protocol discovery. Call once and cache. No parameters required.
 
-Example response (key fields):
-```json
-{
-  "schema": "dpx-manifest/1.0",
-  "name": "DPX",
-  "version": "2.1.0",
-  "category": "settlement_rail",
-  "network": "base",
-  "chainId": 8453,
-  "capabilities": [
-    "multi_currency_basket_settlement",
-    "esg_fee_redistribution",
-    "predictive_peg_management",
-    "pid_stability_control",
-    "non_custodial",
-    "on_chain_verification",
-    "30_90_day_early_warning",
-    "cross_border_fx_conversion",
-    "programmable_treasury_api",
-    "agent_native_api"
-  ],
-  "fees": {
-    "coreBps": 85,
-    "fxBps": 40,
-    "licenseBps": 1,
-    "esgMaxBps": 50,
-    "esgFormula": "(100 - esgScore) / 200",
-    "typicalTotalBps": 138.5,
-    "worstCaseTotalBps": 176,
-    "bestCaseTotalBps": 86
-  },
-  "supportedCurrencies": {
-    "live": ["USD", "EUR", "GBP"],
-    "planned": ["JPY", "CNY"]
-  },
-  "contracts": {
-    "token": "0x7A62dEcF6936675480F0991A2EF4a0d6f1023891",
-    "esgOracle": "0x7717e89bC45cBD5199b44595f6E874ac62d79786",
-    "redistribution": "0x4F3741252847E4F07730c4CEC3018b201Ac6ce87",
-    "stabilityPID": "0xda8aA06cDa9D06001554d948dA473EBe5282Ea17",
-    "basketPeg": "0xB5071fA48B92e3652701053eEd8826ab94014AaA"
-  },
-  "onboarding": {
-    "humanRequired": false,
-    "authMethod": "api_key"
-  }
-}
-```
-
----
+Key response fields:
+- `fees.coreBps` 85, `fees.fxBps` 40, `fees.licenseBps` 1
+- `fees.esgFormula` "(100 - esgScore) / 200"
+- `capabilities` — full list of protocol features
+- `contracts` — all deployed addresses on Base
+- `onboarding.humanRequired` false
 
 ### GET /fee-schedule
-Full fee table. Cache this for local pre-computation.
-No parameters required.
+Complete fee table with all tiers and scenario examples. Cache for local pre-computation.
 
----
-
-### GET /quote
-Exact fee breakdown for a transaction.
+### GET /quote?amountUsd=&hasFx=&esgScore=&monthlyVolumeUsd=
+Exact fee breakdown for a transaction. Returns quoteId valid for 300 seconds.
 
 Parameters:
-- `amountUsd` (required): Transaction amount in USD
-- `hasFx` (optional, default false): true if cross-currency
-- `esgScore` (optional, default 50): 0–100
-- `monthlyVolumeUsd` (optional, default 0): for volume discount tier
-
-Example:
-```
-GET /quote?amountUsd=1000000&hasFx=true&esgScore=75
-```
+- `amountUsd` (required) — transaction amount in USD
+- `hasFx` (optional, default false) — true if cross-currency
+- `esgScore` (optional, default 50) — ESG score 0–100
+- `monthlyVolumeUsd` (optional) — for volume discount tier
+- `sandbox` (optional, default false) — return mock data, no on-chain calls
 
 Example response:
 ```json
 {
-  "schema": "dpx-quote/1.0",
   "quoteId": "dpx-1234567890-abc123",
   "validForSeconds": 300,
   "fees": {
     "core":    { "bps": 85,   "usd": 8500 },
     "fx":      { "bps": 40,   "usd": 4000 },
-    "esg":     { "bps": 12.5, "usd": 1250, "score": 75, "tier": "Good",
-                 "formula": "(100 - esgScore) / 200",
-                 "note": "100% redistributed to on-chain ESG impact pool" },
+    "esg":     { "bps": 12.5, "usd": 1250, "score": 75, "tier": "Good" },
     "license": { "bps": 1,    "usd": 100 },
     "total":   { "bps": 138.5, "pct": 1.385, "usd": 13850 }
   },
-  "settlement": {
-    "netUsd": 986150,
-    "grossUsd": 1000000
-  },
+  "settlement": { "netUsd": 986150, "grossUsd": 1000000 },
   "esgImpact": {
     "poolContributionUsd": 1250,
     "redistribution": {
-      "oceanConservation": 375,
-      "renewableEnergy": 312.5,
-      "forestPreservation": 250,
-      "climateAction": 187.5,
-      "cleanWater": 125
+      "oceanConservation": 375, "renewableEnergy": 312.5,
+      "forestPreservation": 250, "climateAction": 187.5, "cleanWater": 125
     }
-  },
-  "competitive": {
-    "vsStripe": { "savings": 1150, "stripeRate": "1.5%" },
-    "vsWise":   { "savings": -4350, "wiseRate": "0.95% typical" },
-    "vsBankLow":  { "savings": 16150, "bankRate": "3.0%" },
-    "vsBankHigh": { "savings": 36150, "bankRate": "5.0%" }
   }
 }
 ```
 
 ### POST /quote
-Same as GET /quote but accepts JSON body:
-```json
-{ "amountUsd": 1000000, "hasFx": true, "esgScore": 75, "monthlyVolumeUsd": 10000000 }
-```
+Same as GET, accepts JSON body: `{"amountUsd": 1000000, "hasFx": true, "esgScore": 75}`
 
----
-
-### GET /verify-fees
-Compare off-chain quote against on-chain router.previewFees().
-
-Parameters: same as /quote (amountUsd, hasFx, esgScore)
-
-Example response:
-```json
-{
-  "offChain": { "totalPct": 1.385, "totalUsd": 13850, "netUsd": 986150 },
-  "onChain":  { "totalFees": "13850.0", "netAmount": "986150.0" },
-  "feesMatch": true,
-  "note": "On-chain and off-chain fees match — safe to settle"
-}
-```
-
----
+### GET /verify-fees?amountUsd=&hasFx=&esgScore=
+Confirms on-chain router.previewFees() matches off-chain /quote.
+Key field: `feesMatch: true` means safe to proceed with settlement.
 
 ### GET /reliability
-Live trust signals for settlement decisions.
+Live stability signals. Check before large settlements.
 
 Agent decision logic:
-- `isHealthy == true` → proceed
-- `stability.currentScore >= 90` → normal
-- `stability.currentScore 75–89` → proceed with caution
-- `stability.currentScore < 75` → defer large settlements
-- `peg.deviationBps >= 50` → hold, peg alert active
+- `isHealthy: true` → proceed
+- `stability.currentScore >= 90` → STABLE, normal operations
+- `stability.currentScore 75–89` → CAUTION, proceed and monitor
+- `stability.currentScore < 75` → UNSTABLE, defer large settlements
+- `peg.deviationBps >= 50` → PEG ALERT, hold all settlements
 
 Example response:
 ```json
 {
   "isHealthy": true,
-  "oracle": {
-    "status": "SUCCESS",
-    "uptimePct": 99.97,
-    "updateFrequencySeconds": 3600
-  },
   "stability": {
     "currentScore": 92,
-    "averageScore24h": 89.5,
-    "threshold": { "stable": 90, "caution": 75, "unstable": 0 }
+    "status": "STABLE",
+    "components": {
+      "climate": 88, "commodity": 91, "macro": 90, "fx": 94, "basket": 97
+    }
   },
-  "peg": {
-    "deviationBps": 3,
-    "deviationThresholdBps": 50,
-    "basketWeights": { "USD": "55%", "EUR": "36%", "GBP": "9%" },
-    "verificationCycleSeconds": 60
-  },
-  "confidence": { "score": 87, "scale": "0–100" }
+  "peg": { "deviationBps": 3, "alert": false },
+  "confidence": { "score": 91 },
+  "oracle": { "uptimePct": 99.97, "version": "6.0" }
 }
 ```
 
----
-
 ### GET /health
-Liveness check only.
-```json
-{ "status": "healthy", "oracle": "SUCCESS", "uptimeSeconds": 3600, "network": "base", "chainId": 8453 }
-```
-
----
+`{"status": "healthy", "oracle": "SUCCESS", "network": "base", "chainId": 8453}`
 
 ### GET /api/status
-Full raw oracle output from the latest run.
+Full raw oracle output from the latest run (all 6 tiers + cross-body data).
 
 ### GET /api/history
 Array of last 24 oracle results for trend analysis.
 
 ---
 
-## ESG Oracle Endpoints (port 3001)
+## Stability Oracle v6.0 Architecture
+
+The oracle is the world's first climate-aware stablecoin monitoring system. 25+ data sources across 3 continents. Runs every 60 seconds.
+
+### 6 Tiers
+
+**Tier 0 — Climate & Environmental (30–90 day lead time)**
+Sources: NOAA, NASA, Copernicus, WMO, USDA FAS
+Tracks: El Niño/La Niña, agricultural forecasts, hurricane probability, drought
+Example: Brazil drought flagged 30–90 days before coffee price spike → flows through commodity → CPI → FX → stability score
+
+**Tier 1 — Commodities & Energy (2–8 week lead time)**
+Sources: EIA, World Bank, PJM (Eastern US grid), ERCOT (Texas grid), ENTSO-E (Europe)
+Includes: AI data center impact modeling — structural electricity demand tracked separately because it creates non-cyclical upward pressure traditional models miss
+
+**Tier 2 — Macroeconomic (1–4 week lead time)**
+Sources: BLS, FRED, IMF, World Bank — 4 independent sources per indicator
+Indicators: GDP, M2, Fed Funds, CPI, unemployment, Treasury yields, breakeven inflation, TIPS spreads
+If sources disagree, data confidence warning is raised
+
+**Tier 3 — Currency & FX (Hours to days)**
+Sources: Open Exchange Rates, Frankfurter, Exchange Rate API, Forex API — 4 cross-validated
+All basket currencies covered. FX alert raised before volatility reaches the peg.
+
+**Tier 4 — Basket Verification (Real-time)**
+Queries Base network + 3 FX APIs, computes DPX basket on-chain, compares to API calculation
+Peg alert at >= 50 bps deviation
+
+**Tier 5 — Causal Chains & Predictive Signals (Multi-timeframe)**
+Proprietary climate causal chain models trace how major climate oscillations transmit through commodity markets into inflation and currency impacts, with coverage of agricultural supply chains, energy markets, and regional drought risk.
+
+Predictive signal timeframes: immediate (1–7d), short (1–4w), medium (1–3m), long (3–12m)
+
+### 4 Cross-Body Transmission Mechanisms
+
+**Geopolitical Risk** (FRED GPR)
+Shipping disruptions, sanctions impacts, trade route risk, CPI inflation from supply shocks
+Output: per-currency impact signals
+
+**Capital Flows** (FRED TIC)
+Cross-border flow direction, JPY carry risk, interest rate differentials, USD outlook
+
+**Tech & AI Supply Chain**
+Semiconductor health, AI infrastructure demand, data center electricity — proprietary composite index (0–100)
+
+**Cross-Region Commodity Matrix**
+Maps climate events to currency impacts via commodity transmission. Detects interaction effects when multiple channels amplify each other.
+
+### Recommendation Engine
+Outputs: stability score (0–100), status (STABLE/CAUTION/UNSTABLE), HIGH/MEDIUM/LOW alerts, proposed basket adjustments (% per currency), proposed fee adjustments (basis points).
+
+### Policy Manager
+Governance constraints apply proprietary confidence and stability thresholds to determine when basket and fee adjustments are executed, with hard limits, cooling periods, and a circuit breaker to prevent excessive changes.
+
+---
+
+## ESG Oracle API (port 3001)
 
 ### GET /manifest
-ESG oracle discovery. Returns capabilities, formula, data sources, contracts.
+ESG oracle discovery. Returns capabilities, data sources, fee formula, contracts.
 
 ### GET /esg-score
-Live E, S, G scores and current fee.
+Live E, S, G scores and current fee. Use `scores.average` as `esgScore` in Stability Oracle quotes.
 
 Example response:
 ```json
 {
-  "schema": "dpx-esg-score/1.0",
-  "status": "SUCCESS",
-  "scores": {
-    "environmental": 78,
-    "social": 72,
-    "governance": 81,
-    "average": 77
-  },
-  "fee": {
-    "pct": 0.115,
-    "bps": 11.5,
-    "tier": "Good",
-    "formula": "(100 - esgScore) / 200"
-  },
+  "scores": { "environmental": 78, "social": 72, "governance": 81, "average": 77 },
+  "fee": { "pct": 0.115, "bps": 11.5, "tier": "Good", "formula": "(100 - esgScore) / 200" },
   "redistribution": {
-    "oceanConservation": 0.30,
-    "renewableEnergy": 0.25,
-    "forestPreservation": 0.20,
-    "climateAction": 0.15,
-    "cleanWater": 0.10
+    "oceanConservation": 0.30, "renewableEnergy": 0.25,
+    "forestPreservation": 0.20, "climateAction": 0.15, "cleanWater": 0.10
   }
 }
 ```
@@ -318,14 +272,32 @@ Example response:
 ### GET /fee-schedule
 Full ESG fee table with tier breakdowns and example calculations.
 
-### GET /quote?amountUsd=1000000
-ESG fee for a specific transaction. If `esgScore` omitted, uses live oracle score.
+### GET /quote?amountUsd=&esgScore=
+ESG fee for a specific transaction. Omit `esgScore` to use live oracle score.
 
 ### GET /reliability
 Oracle uptime, last update, score history.
 
 ### GET /health
-Liveness check.
+`{"status": "healthy", "esgOracle": "SUCCESS"}`
+
+---
+
+## ESG Oracle — Data Sources
+
+**Environmental (E):**
+- World Bank API: CO2 emissions per capita (indicator EN.ATM.CO2E.PC)
+- Climate Monitor API: Live CO2 ppm + CH4 ppb readings
+
+**Social (S):**
+- UN SDG API: SDG 4.1.1 education / reading proficiency, SDG 3 health indicators
+
+**Governance (G):**
+- IMF API: Consumer Price Index (economic stability proxy)
+- OECD API: GDP data
+- SEC EDGAR: Corporate governance disclosures (XBRL)
+
+**Weights:** Proprietary allocations across environmental, social, and governance metrics calibrated to institutional ESG standards.
 
 ---
 
@@ -333,51 +305,81 @@ Liveness check.
 
 | Contract | Address | Purpose |
 |---|---|---|
-| DPX Token V3 | 0x7A62dEcF6936675480F0991A2EF4a0d6f1023891 | ERC20 token, 0.01% license fee |
-| StabilityFeeController | 0xda8aA06cDa9D06001554d948dA473EBe5282Ea17 | PID-controlled stability fees |
+| DPX Token | 0x7A62dEcF6936675480F0991A2EF4a0d6f1023891 | ERC-20, 0.01% license fee |
+| StabilityFeeController | 0xda8aA06cDa9D06001554d948dA473EBe5282Ea17 | PID-controlled stability |
 | BasketPegManager | 0xB5071fA48B92e3652701053eEd8826ab94014AaA | Multi-currency basket (USD/EUR/GBP) |
 | ESGCompliance | 0x7717e89bC45cBD5199b44595f6E874ac62d79786 | On-chain ESG score storage |
 | ESGRedistribution | 0x4F3741252847E4F07730c4CEC3018b201Ac6ce87 | Impact pool distribution |
 | PolicyManager | 0x741f3179786d9f72e134BdC699D6604eaB250D6E | Governance and policy control |
-| DPXSettlementRouter | pending deployment | Fee enforcement and settlement execution |
+| DPXSettlementRouter | pending deployment | Fee enforcement + settlement execution |
 
-Explorer: https://basescan.org/address/0x7A62dEcF6936675480F0991A2EF4a0d6f1023891
+Explorer: https://basescan.org
 
 ---
 
-## Discovery URLs
+## Verifiable Storage (Storacha / IPFS)
+
+Every oracle run and settlement receipt is saved to Storacha (IPFS + Filecoin).
+
+Existing CIDs (retrievable at https://<cid>.ipfs.w3s.link):
+- bafybeiaxaalw5ue25vv2tc2lh2ycocnypkut4zidsv662y4zkg2pa424lq (2025-11-22)
+- bafybeibhjyii6gnlcvreflfwpsjda5duzmvqc7yqmk57mo7ybgese6nmve (2025-11-26)
+- bafybeic3uqqmekg2gw73u4elh65lak75ahqnyer7u7pajsrauvaah677be (2025-11-22)
+- bafybeid7voxdsw5mu4wora2toi5trz6dga7m4fknv44ota5srlr6a6umfi (2025-11-26)
+- bafybeif5j64f46h6zz4f4eihkbgaqiulyxq3k6qkupil6fpfmfjckz3yei (2025-11-22)
+- bafybeifx4knzrw5f24diecxakuzh2lxkgwktsqcpiyd7fzrfnrxyjcc5bu (2025-11-26)
+
+---
+
+## Agent Integrations
+
+**MCP (Claude Desktop)**
+Config: dpx-protocol/dpx-mcp/claude_desktop_config.json
+8 tools: get_manifest, get_quote, get_esg_score, get_reliability, get_fee_schedule, verify_fees, get_oracle_status, compare_to_competitors
+
+**GPT Actions (ChatGPT Custom GPT)**
+Schema: dpx-protocol/dpx-agents/gpt-actions.yaml
+6 operationIds covering manifest, quote (GET+POST), reliability, fee-schedule, health
+
+**LangChain (Python)**
+File: dpx-protocol/dpx-agents/langchain_tools.py
+7 @tool functions, drop-in dpx_tools list
+
+**n8n**
+Use HTTP Request nodes. Base URL: stability.untitledfinancial.com
+
+---
+
+## Discovery URLs (Production)
 
 | URL | Format | Purpose |
 |---|---|---|
-| localhost:3000/llms.txt | Plain text | LLM navigation index |
-| localhost:3000/llms-full.txt | Plain text | Full documentation for LLM context |
-| localhost:3000/openapi.json | OpenAPI 3.0 | Machine-readable API schema |
-| localhost:3000/.well-known/ai-plugin.json | JSON | Agent framework discovery |
-| localhost:3000/manifest | JSON | DPX-native protocol manifest |
-| localhost:3001/llms.txt | Plain text | ESG oracle LLM navigation |
-| localhost:3001/openapi.json | OpenAPI 3.0 | ESG oracle API schema |
-| localhost:3001/.well-known/ai-plugin.json | JSON | ESG oracle agent discovery |
+| docs.untitledfinancial.com/llms.txt | Plain text | LLM navigation index |
+| docs.untitledfinancial.com/llms-full.txt | Plain text | This file — full docs |
+| docs.untitledfinancial.com/openapi.json | OpenAPI 3.0 | API schema |
+| docs.untitledfinancial.com/.well-known/ai-plugin.json | JSON | Agent plugin manifest |
+| stability.untitledfinancial.com/manifest | JSON | Live protocol manifest |
+| stability.untitledfinancial.com/openapi.json | OpenAPI 3.0 | Stability oracle schema |
+| esg.untitledfinancial.com/openapi.json | OpenAPI 3.0 | ESG oracle schema |
+| docs.untitledfinancial.com/sitemap-index.xml | XML | Sitemap |
 
 ---
 
-## Starting the Services
+## Beta Access
 
-```bash
-bash /Users/victoriacase/Documents/GitHub/start-dpx.sh
-```
+DPX is in beta. Pricing and ESG endpoints are fully live. Settlement execution is available for vetted partners pending router deployment.
 
-Or individually:
-```bash
-# Stability Oracle
-cd /Users/victoriacase/Documents/GitHub/Stability-Oracle/stability-oracle && npm start
-
-# ESG Oracle
-cd /Users/victoriacase/Documents/GitHub/ESG-Oracle/esg-oracle && npm start
-```
+To request beta access: docs.untitledfinancial.com/beta
+Contact: untitledfinancial.com
 
 ---
 
-## Contact
+## Competitive Positioning
 
-Victoria Lee Case — victoria@dpx.finance
-https://docs.dpx.finance
+| Provider | Rate | Per $1M | vs DPX |
+|---|---|---|---|
+| SWIFT / Bank Wire | 2.00–5.00% | $20K–$50K | DPX saves $6K–$36K |
+| Stripe stablecoin | 1.50% | $15,000 | DPX saves $1,150 |
+| DPX (typical) | 1.385% | $13,850 | — |
+| Wise cross-border | ~0.95% typical | ~$9,500 | Wise cheaper, but no stability oracle, no ESG, no agent API, no audit trail |
+| Raw USDC/USDT | ~0.10% | ~$1,000 | No stability, no ESG, no verifiability |

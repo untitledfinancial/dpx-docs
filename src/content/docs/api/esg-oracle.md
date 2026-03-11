@@ -1,11 +1,11 @@
 ---
 title: ESG Oracle API
-description: Complete endpoint reference for the DPX ESG Oracle (port 3001).
+description: Complete endpoint reference for the DPX ESG Oracle.
 ---
 
 No authentication required. All responses are JSON.
 
-**Base URL:** `localhost:3001` (local) · `https://esg.dpx.finance` (production)
+**Base URL:** `https://esg.untitledfinancial.com`
 
 ---
 
@@ -14,7 +14,7 @@ No authentication required. All responses are JSON.
 ESG oracle discovery. Call once and cache.
 
 ```bash
-curl localhost:3001/manifest
+curl https://esg.untitledfinancial.com/manifest
 ```
 
 ---
@@ -24,7 +24,7 @@ curl localhost:3001/manifest
 Live E, S, G scores and the current ESG fee. Use `scores.average` as the `esgScore` parameter when calling `/quote` on the Stability Oracle.
 
 ```bash
-curl localhost:3001/esg-score
+curl https://esg.untitledfinancial.com/esg-score
 ```
 
 **Response:**
@@ -47,7 +47,7 @@ curl localhost:3001/esg-score
 Full ESG fee table across all score tiers.
 
 ```bash
-curl localhost:3001/fee-schedule
+curl https://esg.untitledfinancial.com/fee-schedule
 ```
 
 ---
@@ -58,10 +58,10 @@ ESG fee for a specific transaction. Omit `esgScore` to use the live oracle score
 
 ```bash
 # Use live ESG score
-curl "localhost:3001/quote?amountUsd=1000000"
+curl "https://esg.untitledfinancial.com/quote?amountUsd=1000000"
 
 # Use a specific ESG score
-curl "localhost:3001/quote?amountUsd=1000000&esgScore=75"
+curl "https://esg.untitledfinancial.com/quote?amountUsd=1000000&esgScore=75"
 ```
 
 **Parameters:**
@@ -76,7 +76,7 @@ curl "localhost:3001/quote?amountUsd=1000000&esgScore=75"
 Same as GET, accepts JSON body:
 
 ```bash
-curl -X POST localhost:3001/quote \
+curl -X POST https://esg.untitledfinancial.com/quote \
   -H "Content-Type: application/json" \
   -d '{"amountUsd": 1000000, "esgScore": 75}'
 ```
@@ -88,7 +88,7 @@ curl -X POST localhost:3001/quote \
 ESG oracle uptime and score history.
 
 ```bash
-curl localhost:3001/reliability
+curl https://esg.untitledfinancial.com/reliability
 ```
 
 ---
@@ -98,7 +98,7 @@ curl localhost:3001/reliability
 ESG oracle liveness check.
 
 ```bash
-curl localhost:3001/health
+curl https://esg.untitledfinancial.com/health
 # {"status": "healthy", "esgOracle": "SUCCESS"}
 ```
 
@@ -108,6 +108,6 @@ curl localhost:3001/health
 
 | URL | Format |
 |---|---|
-| `localhost:3001/openapi.json` | ESG Oracle OpenAPI 3.0 |
-| `localhost:3001/.well-known/ai-plugin.json` | ESG Oracle plugin manifest |
-| `localhost:3001/llms.txt` | ESG Oracle LLM index |
+| `https://esg.untitledfinancial.com/openapi.json` | ESG Oracle OpenAPI 3.0 |
+| `https://esg.untitledfinancial.com/.well-known/ai-plugin.json` | ESG Oracle plugin manifest |
+| `https://esg.untitledfinancial.com/llms.txt` | ESG Oracle LLM index |

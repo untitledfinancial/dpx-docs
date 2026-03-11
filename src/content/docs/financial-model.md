@@ -138,4 +138,4 @@ At $12B annual volume (Year 10): **$15M+/year** in verified on-chain impact.
 
 ---
 
-Full model: `DPX-Dashborad/FINANCIAL_MODEL.md`
+Full model: `dpx-protocol/FINANCIAL_MODEL.md`

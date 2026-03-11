@@ -5,39 +5,41 @@
 DPX provides cross-border settlement infrastructure with the following fee structure: 0.85% core transfer fee, 0.40% FX conversion fee (cross-currency only), 0.00–0.50% ESG fee (live from oracle, formula: (100 - avgScore) / 200), and 0.01% fixed license fee. Typical all-in rate at ESG score 75 cross-border: 1.385%. All fees are enforced on-chain via the DPXSettlementRouter contract on Base.
 
 ## Getting Started
-- [Agent Quick Start](https://docs.dpx.finance/agent-quickstart): The 5-step settlement loop — discover, score, quote, verify, execute
-- [Run the Oracles](https://docs.dpx.finance/running): Start both oracles and verify they are live
-- [Protocol Manifest](https://stability.dpx.finance/manifest): Machine-readable protocol description with capabilities, fee structure, and contract addresses
-- [OpenAPI Spec](https://stability.dpx.finance/openapi.json): Full OpenAPI 3.0 schema for all Stability Oracle endpoints
+- [Agent Quick Start](https://docs.untitledfinancial.com/agent-quickstart): The 5-step settlement loop — discover, score, quote, verify, execute
+- [Run the Oracles](https://docs.untitledfinancial.com/running): Start both oracles and verify they are live
+- [Protocol Manifest](https://stability.untitledfinancial.com/manifest): Machine-readable protocol description with capabilities, fee structure, and contract addresses
+- [OpenAPI Spec](https://stability.untitledfinancial.com/openapi.json): Full OpenAPI 3.0 schema for all Stability Oracle endpoints
 
 ## Pricing & Fees
-- [Fee Structure](https://docs.dpx.finance/fees): Complete fee table with volume discount tiers, ESG tiers, and scenario examples
-- [Fee Schedule API](https://stability.dpx.finance/fee-schedule): Live fee table
-- [Quote Endpoint](https://stability.dpx.finance/quote?amountUsd=1000000&hasFx=true&esgScore=75): Live fee quote for $1M cross-border settlement at ESG score 75
-- [Fee Verification](https://stability.dpx.finance/verify-fees?amountUsd=1000000&hasFx=true): Verify off-chain quote matches on-chain router
+- [Fee Structure](https://docs.untitledfinancial.com/fees): Complete fee table with volume discount tiers, ESG tiers, and scenario examples
+- [Fee Schedule API](https://stability.untitledfinancial.com/fee-schedule): Live fee table
+- [Quote Endpoint](https://stability.untitledfinancial.com/quote?amountUsd=1000000&hasFx=true&esgScore=75): Live fee quote for $1M cross-border settlement at ESG score 75
+- [Fee Verification](https://stability.untitledfinancial.com/verify-fees?amountUsd=1000000&hasFx=true): Verify off-chain quote matches on-chain router
 
 ## Oracle & Reliability
-- [Reliability Metrics](https://stability.dpx.finance/reliability): Live uptime, stability score, peg deviation, confidence score
-- [Oracle Status](https://stability.dpx.finance/api/status): Full raw output from the latest oracle run
-- [24h History](https://stability.dpx.finance/api/history): Oracle history for trend analysis
-- [Health Check](https://stability.dpx.finance/health): Liveness check
+- [Reliability Metrics](https://stability.untitledfinancial.com/reliability): Live uptime, stability score, peg deviation, confidence score
+- [Oracle Status](https://stability.untitledfinancial.com/api/status): Full raw output from the latest oracle run
+- [24h History](https://stability.untitledfinancial.com/api/history): Oracle history for trend analysis
+- [Health Check](https://stability.untitledfinancial.com/health): Liveness check
 
 ## API Reference
-- [Stability Oracle API](https://docs.dpx.finance/api/stability-oracle): Complete endpoint reference for port 3000
-- [ESG Oracle API](https://docs.dpx.finance/api/esg-oracle): Complete endpoint reference for port 3001
+- [Stability Oracle API](https://docs.untitledfinancial.com/api/stability-oracle): Complete endpoint reference for port 3000
+- [ESG Oracle API](https://docs.untitledfinancial.com/api/esg-oracle): Complete endpoint reference for port 3001
 
 ## Agent Integrations
-- [MCP — Claude Desktop](https://docs.dpx.finance/integrations/mcp): Connect Claude via Model Context Protocol
-- [GPT Actions — ChatGPT](https://docs.dpx.finance/integrations/gpt-actions): Add DPX as a Custom GPT Action
-- [LangChain — Python](https://docs.dpx.finance/integrations/langchain): DPX tools for Python agents
-- [n8n — Workflow Automation](https://docs.dpx.finance/integrations/n8n): DPX in no-code workflows
+- [MCP — Claude Desktop](https://docs.untitledfinancial.com/integrations/mcp): Connect Claude via Model Context Protocol
+- [GPT Actions — ChatGPT](https://docs.untitledfinancial.com/integrations/gpt-actions): Add DPX as a Custom GPT Action
+- [LangChain — Python](https://docs.untitledfinancial.com/integrations/langchain): DPX tools for Python agents
+- [n8n — Workflow Automation](https://docs.untitledfinancial.com/integrations/n8n): DPX in no-code workflows
 
 ## Protocol
-- [Stability Oracle](https://docs.dpx.finance/protocol/stability-oracle): 6-tier signal pipeline
-- [ESG Oracle](https://docs.dpx.finance/protocol/esg-oracle): ESG scoring and fee redistribution
-- [Smart Contracts](https://docs.dpx.finance/protocol/contracts): DPXSettlementRouter on Base mainnet
+- [Stability Oracle](https://docs.untitledfinancial.com/protocol/stability-oracle): 6-tier signal pipeline
+- [ESG Oracle](https://docs.untitledfinancial.com/protocol/esg-oracle): ESG scoring and fee redistribution
+- [Smart Contracts](https://docs.untitledfinancial.com/protocol/contracts): DPXSettlementRouter on Base mainnet
 
 ## Optional
-- [ESG Oracle Discovery](https://esg.dpx.finance/llms.txt): ESG oracle — live E/S/G scores and ESG fee component
-- [AI Plugin Manifest](https://stability.dpx.finance/.well-known/ai-plugin.json): Plugin manifest for agent framework discovery
-- [Financial Model](https://docs.dpx.finance/financial-model): Buildout costs, margins, client scenarios, 10-year projections
+- [ESG Oracle Discovery](https://esg.untitledfinancial.com/llms.txt): ESG oracle — live E/S/G scores and ESG fee component
+- [AI Plugin Manifest](https://stability.untitledfinancial.com/.well-known/ai-plugin.json): Plugin manifest for agent framework discovery
+- [Financial Model](https://docs.untitledfinancial.com/financial-model): Buildout costs, margins, client scenarios, 10-year projections
+- [Investor Overview](https://docs.untitledfinancial.com/llms-investors.txt): Company overview for VC and institutional investors
+- [VC Discovery Index](https://docs.untitledfinancial.com/llms-vc.txt): Structured for LLM-assisted investor research and deal sourcing

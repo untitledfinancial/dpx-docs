@@ -7,12 +7,25 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "deploy": "node deploy-storacha.mjs",
+    "deploy:skip-build": "node deploy-storacha.mjs --skip-build",
+    "deploy:setup": "node deploy-storacha.mjs setup",
+    "deploy:cf": "astro build && wrangler pages deploy dist --project-name dpx-docs --branch main",
+    "deploy:cf:quick": "wrangler pages deploy dist --project-name dpx-docs --branch main"
   },
   "dependencies": {
     "@astrojs/markdoc": "^0.15.10",
     "@astrojs/starlight": "^0.37.6",
+    "@ipld/car": "^5.3.2",
+    "@ucanto/core": "^10.0.1",
+    "@ucanto/principal": "^9.0.1",
+    "@web3-storage/w3up-client": "^17.3.0",
     "astro": "^5.6.1",
+    "dotenv": "^16.3.1",
     "sharp": "^0.34.2"
+  },
+  "devDependencies": {
+    "wrangler": "^4.67.0"
   }
 }

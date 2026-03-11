@@ -16,4 +16,4 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
-Sitemap: https://docs.dpx.finance/sitemap-index.xml
+Sitemap: https://docs.untitledfinancial.com/sitemap-index.xml

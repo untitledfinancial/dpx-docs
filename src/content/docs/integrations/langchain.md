@@ -11,11 +11,6 @@ The DPX LangChain tools let any Python agent price settlements, check stability,
 pip install langchain langchain-openai httpx
 ```
 
-## Tool file
-
-```
-/Users/victoriacase/Documents/GitHub/DPX-Dashborad/dpx-agents/langchain_tools.py
-```
 
 ## Available tools
 
@@ -66,6 +61,6 @@ tools = await client.get_tools()
 ## Environment
 
 ```sh
-STABILITY_ORACLE_URL=http://localhost:3000
-ESG_ORACLE_URL=http://localhost:3001
+STABILITY_ORACLE_URL=https://stability.untitledfinancial.com
+ESG_ORACLE_URL=https://esg.untitledfinancial.com
 ```

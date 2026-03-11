@@ -5,7 +5,7 @@ description: Complete endpoint reference for the DPX Stability Oracle (port 3000
 
 No authentication required. All responses are JSON. All prices in USD.
 
-**Base URL:** `localhost:3000` (local) · `https://stability.dpx.finance` (production)
+**Base URL:** `https://stability.untitledfinancial.com`
 
 ---
 
@@ -14,7 +14,7 @@ No authentication required. All responses are JSON. All prices in USD.
 Protocol discovery. Call once and cache. Changes only when the protocol is updated.
 
 ```bash
-curl localhost:3000/manifest
+curl https://stability.untitledfinancial.com/manifest
 ```
 
 **Key response fields:**
@@ -36,7 +36,7 @@ curl localhost:3000/manifest
 Full fee table with all tiers. Cache this.
 
 ```bash
-curl localhost:3000/fee-schedule
+curl https://stability.untitledfinancial.com/fee-schedule
 ```
 
 ---
@@ -46,7 +46,7 @@ curl localhost:3000/fee-schedule
 Exact fee breakdown for a transaction. Returns a `quoteId` valid for 300 seconds.
 
 ```bash
-curl "localhost:3000/quote?amountUsd=1000000&hasFx=true&esgScore=75"
+curl "https://stability.untitledfinancial.com/quote?amountUsd=1000000&hasFx=true&esgScore=75"
 ```
 
 **Parameters:**
@@ -80,7 +80,7 @@ curl "localhost:3000/quote?amountUsd=1000000&hasFx=true&esgScore=75"
 Same as GET, accepts JSON body:
 
 ```bash
-curl -X POST localhost:3000/quote \
+curl -X POST https://stability.untitledfinancial.com/quote \
   -H "Content-Type: application/json" \
   -d '{"amountUsd": 1000000, "hasFx": true, "esgScore": 75}'
 ```
@@ -92,7 +92,7 @@ curl -X POST localhost:3000/quote \
 Confirms the on-chain `DPXSettlementRouter.previewFees()` returns the same number as the quote. If `feesMatch: true`, safe to proceed with settlement.
 
 ```bash
-curl "localhost:3000/verify-fees?amountUsd=1000000&hasFx=true&esgScore=75"
+curl "https://stability.untitledfinancial.com/verify-fees?amountUsd=1000000&hasFx=true&esgScore=75"
 ```
 
 **Key response field:** `feesMatch: true` means the on-chain and off-chain fee calculations agree.
@@ -104,7 +104,7 @@ curl "localhost:3000/verify-fees?amountUsd=1000000&hasFx=true&esgScore=75"
 Live stability and trust signals. Check before large settlements.
 
 ```bash
-curl localhost:3000/reliability
+curl https://stability.untitledfinancial.com/reliability
 ```
 
 **Key fields:**
@@ -134,7 +134,7 @@ curl localhost:3000/reliability
 Liveness check.
 
 ```bash
-curl localhost:3000/health
+curl https://stability.untitledfinancial.com/health
 # {"status": "healthy", "oracle": "SUCCESS", "network": "base"}
 ```
 
@@ -156,7 +156,7 @@ Array of last 24 oracle results.
 
 | URL | Format |
 |---|---|
-| `localhost:3000/openapi.json` | OpenAPI 3.0 |
-| `localhost:3000/.well-known/ai-plugin.json` | Agent plugin manifest |
-| `localhost:3000/llms.txt` | LLM navigation index |
-| `localhost:3000/llms-full.txt` | Full docs for LLM context |
+| `https://stability.untitledfinancial.com/openapi.json` | OpenAPI 3.0 |
+| `https://stability.untitledfinancial.com/.well-known/ai-plugin.json` | Agent plugin manifest |
+| `https://stability.untitledfinancial.com/llms.txt` | LLM navigation index |
+| `https://stability.untitledfinancial.com/llms-full.txt` | Full docs for LLM context |

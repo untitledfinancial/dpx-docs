@@ -1,174 +1,176 @@
-# Deploy DPX Docs — Full Guide
-## GoDaddy domain → Cloudflare Pages (Free)
+# Deploy DPX Docs
 
-This gets `docs.dpx.finance` live in about 15 minutes.
+Two options. Storacha is primary (Web3-native, your existing account). Cloudflare Pages is the fallback if you need faster load times later.
 
 ---
 
-## Step 1 — Initialize git and push to GitHub
+## Option A — Storacha + IPFS (Primary)
+**`docs.untitledfinancial.xyz`** — decentralized, verifiable, free, on-brand
 
-Run these commands in your terminal:
+Every deploy produces a permanent CID. You update one DNS TXT record in GoDaddy. Done.
+
+### Step 1 — Get credentials (one-time)
+
+```bash
+# Install w3 CLI
+npm install -g @web3-storage/w3cli
+
+# Log into your existing Storacha account
+npx w3 login your@email.com
+
+# See your spaces
+npx w3 space ls
+
+# Set the space you want to use
+npx w3 space use <your-space-name>
+
+# Generate a signing key — copy the output
+npx w3 key create
+
+# Generate a delegation proof — copy the base64 output
+npx w3 delegation create <DID-from-above> --can 'store/add' --can 'upload/add' | base64
+```
+
+### Step 2 — Add to `.env` in dpx-docs/
+
+```sh
+STORACHA_KEY=MgCa...        # from w3 key create
+STORACHA_PROOF=...base64    # from w3 delegation create | base64
+```
+
+### Step 3 — Deploy
 
 ```bash
 cd /Users/victoriacase/Documents/GitHub/dpx-docs
-
-# Initialize git
-git init
-git add .
-git commit -m "Initial DPX docs site — Astro + Starlight"
-
-# Create a new repo on GitHub (do this in the browser first)
-# → github.com → New repository → name: dpx-docs → Private or Public → Create
-# Then come back and run:
-
-git remote add origin https://github.com/YOUR_USERNAME/dpx-docs.git
-git branch -M main
-git push -u origin main
+npm run deploy
 ```
 
-> Replace `YOUR_USERNAME` with your GitHub username.
+This builds the site, uploads all files to Storacha, and prints the exact DNS record to set.
 
----
-
-## Step 2 — Connect to Cloudflare Pages
-
-1. Go to [pages.cloudflare.com](https://pages.cloudflare.com)
-2. Click **Create a project**
-3. Click **Connect to Git** → authorize GitHub if prompted
-4. Select your **dpx-docs** repository → click **Begin setup**
-5. Set build settings:
-
-| Setting | Value |
-|---|---|
-| Project name | `dpx-docs` |
-| Production branch | `main` |
-| Framework preset | `Astro` |
-| Build command | `npm run build` |
-| Build output directory | `dist` |
-| Node version (env var) | `18` |
-
-   To set Node version: scroll to **Environment variables** → Add variable → `NODE_VERSION` = `18`
-
-6. Click **Save and Deploy**
-
-Cloudflare will pull your repo, run `npm run build`, and publish the `dist` folder. First deploy takes ~2 minutes.
-
----
-
-## Step 3 — Add your custom domain in Cloudflare Pages
-
-Once the first deploy is done:
-
-1. In your Cloudflare Pages project → click **Custom domains** tab
-2. Click **Set up a custom domain**
-3. Type: `docs.dpx.finance`
-4. Click **Continue**
-5. Cloudflare will show you the DNS record to add. It will look like:
-
+Output will look like:
 ```
-Type:  CNAME
-Name:  docs
-Value: dpx-docs.pages.dev
+CID:      bafybeig...
+IPFS URL: https://bafybeig....ipfs.w3s.link
+
+NEXT: Update GoDaddy DNS
+
+  Name:   _dnslink.docs
+  Value:  dnslink=/ipfs/bafybeig...
+  TTL:    600
 ```
 
----
+### Step 4 — Update GoDaddy DNS
 
-## Step 4 — Add the CNAME in GoDaddy
-
-1. Log in to [godaddy.com](https://godaddy.com)
-2. Go to **My Products** → find `dpx.finance` → click **DNS**
-3. Scroll to the **CNAME** section → click **Add**
-4. Fill in:
+1. Go to GoDaddy → **untitledfinancial.xyz** → **DNS**
+2. Add a **TXT** record:
 
 | Field | Value |
 |---|---|
-| Type | CNAME |
-| Name | docs |
-| Value | dpx-docs.pages.dev |
-| TTL | 1 Hour (default) |
+| Type | TXT |
+| Name | `_dnslink.docs` |
+| Value | `dnslink=/ipfs/<CID-from-output>` |
+| TTL | 600 (10 min) |
 
-5. Click **Save**
+3. Wait 1–10 minutes for propagation
 
-> DNS changes can take 1–48 hours to propagate globally, but usually work within 5–10 minutes.
+### Step 5 — Access your site
 
----
-
-## Step 5 — Verify SSL in Cloudflare Pages
-
-Back in Cloudflare Pages:
-
-1. Go to your project → **Custom domains**
-2. Watch `docs.dpx.finance` status change from **Initializing** → **Active**
-3. Cloudflare issues a free SSL certificate automatically — no action needed
-
-Once Active, visit **https://docs.dpx.finance** — your docs are live.
-
----
-
-## What's deployed
-
-| URL | Page |
+| URL | Notes |
 |---|---|
-| `docs.dpx.finance` | Hero landing page |
-| `docs.dpx.finance/agent-quickstart` | 5-step settlement loop |
-| `docs.dpx.finance/running` | How to start oracles |
-| `docs.dpx.finance/fees` | Fee structure |
-| `docs.dpx.finance/financial-model` | Financial model |
-| `docs.dpx.finance/api/stability-oracle` | Stability Oracle API reference |
-| `docs.dpx.finance/api/esg-oracle` | ESG Oracle API reference |
-| `docs.dpx.finance/integrations/mcp` | MCP / Claude Desktop |
-| `docs.dpx.finance/integrations/gpt-actions` | GPT Actions |
-| `docs.dpx.finance/integrations/langchain` | LangChain |
-| `docs.dpx.finance/integrations/n8n` | n8n workflows |
-| `docs.dpx.finance/integrations/storacha` | Storacha verifiable storage |
-| `docs.dpx.finance/protocol/stability-oracle` | Oracle architecture |
-| `docs.dpx.finance/protocol/esg-oracle` | ESG oracle |
-| `docs.dpx.finance/protocol/contracts` | Smart contracts |
-| `docs.dpx.finance/llms.txt` | LLM navigation index |
-| `docs.dpx.finance/llms-full.txt` | Full compiled docs |
-| `docs.dpx.finance/openapi.json` | OpenAPI 3.0 schema |
-| `docs.dpx.finance/.well-known/ai-plugin.json` | Agent plugin manifest |
-| `docs.dpx.finance/sitemap-index.xml` | Sitemap |
-| `docs.dpx.finance/robots.txt` | Crawler permissions |
+| `https://docs.untitledfinancial.xyz` | Via IPFS gateway (after DNS propagates) |
+| `https://<cid>.ipfs.w3s.link` | Direct — works immediately, no DNS needed |
 
----
+### Future deploys
 
-## Future deploys (automatic)
-
-Every time you push to `main`, Cloudflare automatically rebuilds and redeploys. No manual steps.
+Every time you update content:
 
 ```bash
-# Make changes, then:
-git add .
-git commit -m "Update docs"
-git push
-# → Cloudflare deploys automatically in ~90 seconds
+npm run deploy          # build + upload + prints new CID
+# Then update _dnslink.docs TXT record in GoDaddy with the new CID
 ```
 
----
-
-## Cloudflare Pages free tier limits
-
-| Limit | Free tier |
-|---|---|
-| Builds per month | 500 |
-| Bandwidth | Unlimited |
-| Custom domains | Unlimited |
-| SSL certificates | Automatic, free |
-| Team members | 1 |
-
-No credit card required.
+The old CID stays on IPFS forever — every version of your docs is permanently archived.
 
 ---
 
-## Other subdomains you may want later
+## Option B — Cloudflare Pages (Fallback)
+**`docs.untitledfinancial.com`** — faster, auto-deploys on git push
 
-Once your DNS is in Cloudflare (not just GoDaddy), you can add more records for the oracle APIs:
+Use this if load speed becomes a concern. The Storacha IPFS gateway can be slower on first load.
 
-| Subdomain | Points to |
+### Step 1 — Push to GitHub
+
+```bash
+cd /Users/victoriacase/Documents/GitHub/dpx-docs
+git remote add origin https://github.com/YOUR_USERNAME/dpx-docs.git
+git push -u origin main
+```
+
+### Step 2 — Connect Cloudflare Pages
+
+1. [pages.cloudflare.com](https://pages.cloudflare.com) → **Create a project** → **Connect to Git**
+2. Select `dpx-docs`
+3. Build settings:
+   - Build command: `npm run build`
+   - Output directory: `dist`
+   - Environment variable: `NODE_VERSION` = `18`
+4. Deploy
+
+### Step 3 — GoDaddy CNAME
+
+In GoDaddy → **untitledfinancial.com** → DNS → Add CNAME:
+
+| Name | Value |
 |---|---|
-| `docs.dpx.finance` | Cloudflare Pages |
-| `stability.dpx.finance` | Your Stability Oracle server |
-| `esg.dpx.finance` | Your ESG Oracle server |
+| `docs` | `dpx-docs.pages.dev` |
 
-For the oracle servers, use an **A record** pointing to your server IP, or a **CNAME** if you're deploying to Railway / Render / Fly.io.
+Then in Cloudflare Pages → Custom domains → add `docs.untitledfinancial.com`
+
+SSL is automatic. Future deploys: `git push` → auto-redeploy in ~90 seconds.
+
+---
+
+## What's deployed (all pages)
+
+| Path | Content |
+|---|---|
+| `/` | Hero landing page |
+| `/beta` | Beta access and waitlist |
+| `/agent-quickstart` | 5-step settlement loop + sandbox |
+| `/running` | How to start oracles |
+| `/fees` | Fee structure |
+| `/financial-model` | Financial model |
+| `/api/stability-oracle` | Stability Oracle API reference |
+| `/api/esg-oracle` | ESG Oracle API reference |
+| `/integrations/mcp` | Claude Desktop / MCP |
+| `/integrations/gpt-actions` | ChatGPT Custom GPT |
+| `/integrations/langchain` | LangChain Python tools |
+| `/integrations/n8n` | n8n workflows |
+| `/integrations/storacha` | Storacha verifiable storage |
+| `/protocol/stability-oracle` | Oracle v6.0 architecture |
+| `/protocol/esg-oracle` | ESG oracle + redistribution |
+| `/protocol/contracts` | Smart contracts |
+| `/llms.txt` | LLM navigation index |
+| `/llms-full.txt` | Full compiled docs |
+| `/openapi.json` | OpenAPI 3.0 schema |
+| `/.well-known/ai-plugin.json` | Agent plugin manifest |
+| `/sitemap-index.xml` | Sitemap |
+| `/robots.txt` | Crawler permissions |
+
+---
+
+## Skip-build deploy (fastest)
+
+If you've already run `npm run build` and just want to re-upload the existing `dist/`:
+
+```bash
+npm run deploy:skip-build
+```
+
+## Setup help
+
+```bash
+npm run deploy:setup
+```
+
+Prints the full credential setup walkthrough.

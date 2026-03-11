@@ -22,7 +22,7 @@ Connect DPX to n8n using the **HTTP Request** node. n8n's no-code interface lets
 | Field | Value |
 |---|---|
 | Method | GET |
-| URL | `http://localhost:3000/quote` |
+| URL | `https://stability.untitledfinancial.com/quote` |
 | Query Parameters | `amountUsd`, `hasFx`, `esgScore` |
 | Authentication | None |
 | Response Format | JSON |
@@ -32,23 +32,21 @@ Connect DPX to n8n using the **HTTP Request** node. n8n's no-code interface lets
 | Field | Value |
 |---|---|
 | Method | GET |
-| URL | `http://localhost:3000/reliability` |
+| URL | `https://stability.untitledfinancial.com/reliability` |
 | Authentication | None |
 | Response Format | JSON |
 
 ## Example: Peg alert workflow
 
 1. **Schedule Trigger** — every 5 minutes
-2. **HTTP Request** — GET `localhost:3000/reliability`
+2. **HTTP Request** — GET `https://stability.untitledfinancial.com/reliability`
 3. **IF** — `{{ $json.peg.deviationBps }} >= 50`
 4. **Slack / Email** — Send alert with deviation value
 5. **Else** — No action
 
 ## Self-hosted n8n
 
-If running n8n locally, both oracle URLs are reachable at `localhost:3000` and `localhost:3001`.
-
-For n8n Cloud, deploy the oracles to a public URL (e.g. `https://stability.dpx.finance`) and use that as the base URL in your HTTP Request nodes.
+If running n8n locally, you can point to `http://localhost:3000` and `http://localhost:3001` instead.
 
 ## Credentials
 
