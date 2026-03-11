@@ -1,0 +1,43 @@
+name: Build & Deploy DPX Docs
+
+# Runs automatically on every push to main
+# You can also trigger it manually from the GitHub Actions tab
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:   # manual trigger button in GitHub UI
+
+jobs:
+  deploy:
+    name: Build & Deploy to Cloudflare Pages
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out the repo
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Set up Node 18
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      # 3. Install dependencies
+      - name: Install
+        run: npm ci
+
+      # 4. Build the Astro site
+      - name: Build
+        run: npm run build
+
+      # 5. Deploy dist/ to Cloudflare Pages
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: dpx-docs
+          directory: dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
