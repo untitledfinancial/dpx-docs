@@ -2,26 +2,105 @@
 // Site-wide footer — Untitled_ LuxPerpetua Technologies, Inc.
 ---
 <footer class="dpx-footer" data-pagefind-ignore>
-  <p>
-    DPX is a product of <strong>Untitled_ LuxPerpetua Technologies, Inc.</strong>
-    &nbsp;·&nbsp;
-    <a href="https://untitledfinancial.com">untitledfinancial.com</a>
-  </p>
+  <div class="dpx-footer-inner">
+    <div class="dpx-footer-brand">
+      <p class="dpx-footer-name">UNTITLED_</p>
+      <p class="dpx-footer-tagline">Building programmable money<br>with purpose.</p>
+    </div>
+    <div class="dpx-footer-links">
+      <div class="dpx-footer-group">
+        <p class="dpx-footer-heading">Protocol</p>
+        <a href="/protocol/stability-oracle">Stability Oracle</a>
+        <a href="/protocol/esg-oracle">ESG Oracle</a>
+        <a href="/protocol/contracts">Smart Contracts</a>
+        <a href="/fees">Fee Structure</a>
+      </div>
+      <div class="dpx-footer-group">
+        <p class="dpx-footer-heading">Agents</p>
+        <a href="/agent-quickstart">Quick Start</a>
+        <a href="/integrations/mcp">MCP — Claude</a>
+        <a href="/integrations/gpt-actions">GPT Actions</a>
+        <a href="/integrations/langchain">LangChain</a>
+      </div>
+      <div class="dpx-footer-group">
+        <p class="dpx-footer-heading">Connect</p>
+        <a href="https://untitledfinancial.com" target="_blank" rel="noopener">untitledfinancial.com ↗</a>
+        <a href="https://alternativeassetliteracy.com" target="_blank" rel="noopener">Alt Asset Literacy ↗</a>
+        <a href="mailto:beta@untitledfinancial.com">beta@untitledfinancial.com</a>
+        <a href="/beta">Request Beta Access</a>
+      </div>
+    </div>
+  </div>
+  <div class="dpx-footer-bottom">
+    <p>© 2026 Untitled_ LuxPerpetua Technologies, Inc. All rights reserved. IP Patents Pending.</p>
+    <p>Not financial advice. For informational purposes only.</p>
+  </div>
 </footer>
 
 <style>
   .dpx-footer {
     border-top: 1px solid var(--sl-color-hairline);
-    padding: 1.5rem var(--sl-nav-pad-x);
+    background: #f2f7f6;
+    padding: 3rem var(--sl-nav-pad-x) 1.5rem;
+    font-family: 'Inter', sans-serif;
+  }
+  .dpx-footer-inner {
+    display: flex;
+    gap: 3rem;
+    max-width: 1100px;
+    margin: 0 auto 2rem;
+    flex-wrap: wrap;
+  }
+  .dpx-footer-brand { min-width: 160px; flex: 0 0 auto; }
+  .dpx-footer-name {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #192f2d;
+    margin: 0 0 0.4rem;
+  }
+  .dpx-footer-tagline {
+    font-size: 0.75rem;
+    line-height: 1.6;
+    color: #787774;
+    margin: 0;
+  }
+  .dpx-footer-links {
+    display: flex;
+    gap: 2.5rem;
+    flex: 1;
+    flex-wrap: wrap;
+  }
+  .dpx-footer-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 130px;
+  }
+  .dpx-footer-heading {
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #9b9a97;
+    margin: 0 0 0.3rem;
+  }
+  .dpx-footer-group a {
+    font-size: 0.82rem;
+    color: #5a6e6c !important;
+    text-decoration: none !important;
+  }
+  .dpx-footer-group a:hover { color: #192f2d !important; }
+  .dpx-footer-bottom {
+    border-top: 1px solid #dce8e7;
+    padding-top: 1.25rem;
     text-align: center;
-    font-size: var(--sl-text-xs);
-    color: var(--sl-color-gray-3);
+    max-width: 1100px;
+    margin: 0 auto;
   }
-  .dpx-footer a {
-    color: var(--sl-color-gray-3);
-    text-decoration: none;
-  }
-  .dpx-footer a:hover {
-    color: var(--sl-color-text);
+  .dpx-footer-bottom p {
+    font-size: 0.72rem;
+    color: #9b9a97;
+    margin: 0.2rem 0;
   }
 </style>

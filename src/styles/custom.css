@@ -51,13 +51,11 @@
   --sl-font-mono:            'SF Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 }
 
-/* ── SITE HEADER ─────────────────────────────────────────────── */
+/* ── SITE HEADER — dark teal to match untitledfinancial.com ─── */
 header.header {
-  background: rgba(255,255,255,0.94) !important;
-  border-bottom: 1px solid #dce8e7 !important;
+  background: #192f2d !important;
+  border-bottom: 1px solid #254442 !important;
   box-shadow: none !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 
 /* ── BRAND NAME / SITE TITLE ─────────────────────────────────── */
@@ -70,9 +68,35 @@ a.site-title {
   letter-spacing: 0.22em !important;
   text-transform: uppercase !important;
   font-size: 0.72rem !important;
-  color: #192f2d !important;
+  color: #ffffff !important;
   text-decoration: none !important;
 }
+
+/* Header icons & nav — white on dark */
+header .social-icons a,
+header [data-icon],
+header nav a {
+  color: rgba(255,255,255,0.75) !important;
+}
+header .social-icons a:hover,
+header nav a:hover { color: #ffffff !important; }
+
+/* Hamburger — white */
+starlight-menu-button button,
+starlight-menu-button button svg { color: rgba(255,255,255,0.85) !important; }
+
+/* Back to main site link in header */
+header .header-link-main {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.55) !important;
+  letter-spacing: 0.04em;
+  text-decoration: none !important;
+  border-left: 1px solid rgba(255,255,255,0.15);
+  padding-left: 0.75rem;
+  margin-left: 0.25rem;
+}
+header .header-link-main:hover { color: rgba(255,255,255,0.9) !important; }
 
 /* ── PAGE BACKGROUND ─────────────────────────────────────────── */
 body,
@@ -392,14 +416,19 @@ nav[aria-label='On this page'] a:hover {
   font-weight: 500 !important;
 }
 
-/* ── SEARCH BOX ──────────────────────────────────────────────── */
+/* ── SEARCH BOX — white-on-dark for header ───────────────────── */
 site-search button[data-open-modal] {
-  background: #f2f7f6 !important;
-  border: 1px solid #dce8e7 !important;
+  background: rgba(255,255,255,0.08) !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
   border-radius: 4px !important;
-  color: #9b9a97 !important;
+  color: rgba(255,255,255,0.6) !important;
   font-family: 'Inter', sans-serif !important;
   font-size: 0.85rem !important;
+}
+site-search button[data-open-modal] kbd {
+  color: rgba(255,255,255,0.35) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+  background: transparent !important;
 }
 
 /* ── THEME TOGGLE — hide (forcing light mode) ────────────────── */

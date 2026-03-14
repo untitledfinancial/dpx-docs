@@ -28,7 +28,9 @@ export default defineConfig({
         themes: ['github-light'],
       },
       head: [
-        // Google Fonts — Cormorant Garamond + Inter
+        // Favicon — Winslow Homer "Undertow" painting thumbnail
+        { tag: 'link', attrs: { rel: 'icon', href: '/favicon.png', type: 'image/png' } },
+        // Google Fonts — Bebas Neue + Inter
         { tag: 'link', attrs: { rel: 'preconnect', href: 'https://fonts.googleapis.com' } },
         { tag: 'link', attrs: { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' } },
         { tag: 'link', attrs: { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;700&display=swap' } },
