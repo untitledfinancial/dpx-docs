@@ -1,0 +1,323 @@
+---
+// FeeCalculator — client-side, no server state needed
+---
+
+<div class="calc-wrap">
+
+  <div class="calc-inputs">
+
+    <div class="calc-field">
+      <label class="calc-label" for="calc-amount">Settlement amount (USD)</label>
+      <div class="calc-input-row">
+        <span class="calc-prefix">$</span>
+        <input id="calc-amount" class="calc-input" type="number" min="1000" step="10000" value="1000000" placeholder="1000000" />
+      </div>
+    </div>
+
+    <div class="calc-field">
+      <label class="calc-label" for="calc-esg">
+        ESG score
+        <span id="calc-esg-display" class="calc-score-badge calc-score-good">75</span>
+      </label>
+      <input id="calc-esg" class="calc-slider" type="range" min="0" max="100" value="75" />
+      <div class="calc-slider-labels"><span>0 — Poor</span><span>100 — Excellent</span></div>
+    </div>
+
+    <div class="calc-field calc-field-row">
+      <label class="calc-toggle-label" for="calc-fx">
+        <input id="calc-fx" type="checkbox" class="calc-checkbox" checked />
+        Cross-currency settlement
+        <span class="calc-hint">(+0.40% FX component)</span>
+      </label>
+    </div>
+
+    <button id="calc-btn" class="calc-btn">Get live quote →</button>
+
+  </div>
+
+  <div id="calc-result" class="calc-result calc-result--hidden">
+
+    <div class="calc-result-header">
+      <span class="calc-result-label">Live quote</span>
+      <span id="calc-quote-id" class="calc-quote-id"></span>
+    </div>
+
+    <!-- Fee breakdown -->
+    <div class="calc-fee-rows">
+      <div class="calc-fee-row">
+        <span class="calc-fee-name">Core transfer</span>
+        <span class="calc-fee-rate" id="r-core-rate"></span>
+        <span class="calc-fee-amount" id="r-core-usd"></span>
+      </div>
+      <div class="calc-fee-row" id="r-fx-row">
+        <span class="calc-fee-name">FX conversion</span>
+        <span class="calc-fee-rate" id="r-fx-rate"></span>
+        <span class="calc-fee-amount" id="r-fx-usd"></span>
+      </div>
+      <div class="calc-fee-row">
+        <span class="calc-fee-name">ESG fee <span class="calc-fee-name-sub">(100% redistributed to impact)</span></span>
+        <span class="calc-fee-rate" id="r-esg-rate"></span>
+        <span class="calc-fee-amount" id="r-esg-usd"></span>
+      </div>
+      <div class="calc-fee-row">
+        <span class="calc-fee-name">License</span>
+        <span class="calc-fee-rate">0.0100%</span>
+        <span class="calc-fee-amount" id="r-lic-usd"></span>
+      </div>
+      <div class="calc-fee-row calc-fee-row--total">
+        <span class="calc-fee-name">All-in total</span>
+        <span class="calc-fee-rate calc-fee-rate--total" id="r-total-rate"></span>
+        <span class="calc-fee-amount calc-fee-amount--total" id="r-total-usd"></span>
+      </div>
+    </div>
+
+    <!-- Competitor comparison -->
+    <div class="calc-comp-header">
+      <span class="calc-comp-label">Market comparison</span>
+      <span class="calc-comp-sub">Published rates and industry estimates · sources in footnotes</span>
+    </div>
+    <div id="calc-comp-rows" class="calc-comp-rows"></div>
+
+    <div class="calc-footnote">
+      ¹ Commercial bank wire: BofA markup commonly cited ~3%; Wells Fargo discloses rate "includes a markup" without publishing it. All-in 2.5–6% based on NerdWallet, Exiap, FNBO SWIFT GPI case study 2025.
+      ² SWIFT correspondent chain: multi-hop FX spread + lifting fees per bank. SMEs pay 5–8% all-in. FSB Annual Progress Report 2024; Thunes correspondent banking analysis; paymentlabs.io.
+      ³ PayPal Business: published fee structure — 2.99% base + 1.5% cross-border surcharge + 4% FX spread. Source: PayPal business fees page; Airwallex PayPal fee breakdown 2025.
+      ⁴ Convera (formerly WU Business Solutions): FX margin embedded in exchange rate, not disclosed. Range estimated from FXCompared review and Wise comparison 2025.
+      ⁵ Wise Business: published 0.33–0.59% all-in. Source: Wise pricing page; Wise Mission Update Q4 2025. World Bank global average (all providers) Q1 2025: 6.49%; banks specifically: 13.64%.
+      ⁶ Ripple ODL: ~0.15–0.30% estimate. CoinLaw XRP vs SWIFT Statistics 2025; Ripple marketing data.
+      All DPX fees enforced on-chain via DPXSettlementRouter on Base mainnet (chainId 8453).
+    </div>
+
+    <div class="calc-meta">
+      <span id="calc-expires">Quote valid 300 seconds.</span>
+    </div>
+
+  </div>
+
+  <div id="calc-error" class="calc-error calc-result--hidden">
+    <strong>Could not reach the oracle.</strong>
+    <span id="calc-error-msg"></span>
+    <span>Query directly: <code>GET https://stability.untitledfinancial.com/quote?amountUsd=1000000&hasFx=true&esgScore=75</code></span>
+  </div>
+
+</div>
+
+<script>
+const ORACLE = 'https://stability.untitledfinancial.com';
+
+// Mid-market corporate & institutional comparators — World Bank / BIS / published sources 2025
+// World Bank Q1 2025: global average 6.49% · banks specifically 13.64%
+// Sources footnoted below in calc-footnote section
+const COMPETITORS = [
+  {
+    name: 'Commercial Bank Wire (BofA / Wells Fargo / Chase)¹',
+    note: 'FX spread 2–5% above mid-market + wire fees. None of these banks publish their FX markup.',
+    rateMin: 0.025, rateMax: 0.06,
+    rateDisplay: '2.50–6.00%',
+    rateMid: 0.04,
+    what: 'Opaque FX markup · fees deducted en-route · short-payment risk · T+2–5 · no ESG · no oracle',
+    published: false,
+    tier: 'bank',
+  },
+  {
+    name: 'SWIFT Correspondent Chain (SME / Mid-Market)²',
+    note: 'Multi-hop SWIFT — FX spread + lifting fees per correspondent + receiving bank fee. SMEs pay 5–8%.',
+    rateMin: 0.03, rateMax: 0.08,
+    rateDisplay: '3.00–8.00%',
+    rateMid: 0.05,
+    what: 'Multi-hop opacity · lifting fees each hop · investigation fees on delay · no on-chain audit',
+    published: false,
+    tier: 'bank',
+  },
+  {
+    name: 'PayPal Business International³',
+    note: 'Published: 4% FX spread + 1.5% cross-border surcharge + 2.99% base fee.',
+    rateMin: 0.07, rateMax: 0.085,
+    rateDisplay: '7.00–8.50%',
+    rateMid: 0.075,
+    what: 'Consumer-grade · not programmable · no compliance layer · no ESG · no oracle',
+    published: true,
+    tier: 'bank',
+  },
+  {
+    name: 'Convera / WU Business Solutions⁴',
+    note: 'FX margin embedded in rate, not disclosed. Standard corporate without volume contract.',
+    rateMin: 0.015, rateMax: 0.04,
+    rateDisplay: '1.50–4.00%',
+    rateMid: 0.025,
+    what: 'FX-embedded pricing · no transparency · no ESG · no on-chain settlement',
+    published: false,
+    tier: 'bank',
+  },
+  {
+    name: 'Wise Business⁵',
+    note: 'Published all-in rate — the benchmark fintechs are measured against.',
+    rateMin: 0.0033, rateMax: 0.0059,
+    rateDisplay: '0.33–0.59%',
+    rateMid: 0.0045,
+    what: 'Best-in-class FX · no ESG layer · no stability oracle · no on-chain audit · no MiCA/FCA compliance',
+    published: true,
+    tier: 'fintech',
+  },
+  {
+    name: 'Ripple ODL / RippleNet⁶',
+    note: 'Blockchain settlement estimate. No ESG scoring, no peg oracle, regulatory clarity varies by jurisdiction.',
+    rateMin: 0.0015, rateMax: 0.003,
+    rateDisplay: '~0.15–0.30%',
+    rateMid: 0.0025,
+    what: 'Settlement rail only · no ESG redistribution · no stability oracle · no MiCA/FCA/Basel III layer',
+    published: false,
+    tier: 'fintech',
+  },
+];
+
+const amountEl   = document.getElementById('calc-amount') as HTMLInputElement;
+const esgEl      = document.getElementById('calc-esg') as HTMLInputElement;
+const esgDisplay = document.getElementById('calc-esg-display')!;
+const fxEl       = document.getElementById('calc-fx') as HTMLInputElement;
+const btn        = document.getElementById('calc-btn') as HTMLButtonElement;
+const resultEl   = document.getElementById('calc-result')!;
+const errorEl    = document.getElementById('calc-error')!;
+
+esgEl.addEventListener('input', () => {
+  const v = parseInt(esgEl.value, 10);
+  esgDisplay.textContent = String(v);
+  esgDisplay.className = 'calc-score-badge ' +
+    (v >= 75 ? 'calc-score-good' : v >= 50 ? 'calc-score-avg' : 'calc-score-poor');
+});
+
+btn.addEventListener('click', async () => {
+  const amount = parseFloat(amountEl.value) || 1000000;
+  const esg    = parseInt(esgEl.value, 10);
+  const hasFx  = fxEl.checked;
+
+  btn.textContent = 'Fetching…';
+  btn.disabled = true;
+  resultEl.classList.add('calc-result--hidden');
+  errorEl.classList.add('calc-result--hidden');
+
+  try {
+    const url = `${ORACLE}/quote?amountUsd=${amount}&hasFx=${hasFx}&esgScore=${esg}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Oracle returned ${res.status}`);
+    const data = await res.json();
+
+    const fmt    = (v: number) => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const fmtPct = (v: number) => v.toFixed(4) + '%';
+
+    // Oracle response shape: data.fees.{core,fx,esg,license,total}.{bps,pct,usd}
+    // bps fields are already in basis-points (85 = 0.85%)
+    // pct fields are already in percent    (1.385 = 1.385%)
+    const f = data.fees ?? {};
+    const coreUsd  = f.core?.usd    ?? amount * 0.0085;
+    const corePct  = f.core?.bps    != null ? f.core.bps / 100  : 0.85;
+    const fxUsd    = f.fx?.usd      ?? (hasFx ? amount * 0.004 : 0);
+    const fxPct    = f.fx?.bps      != null ? f.fx.bps / 100    : (hasFx ? 0.40 : 0);
+    const esgUsd   = f.esg?.usd     ?? amount * ((100 - esg) / 20000);
+    const esgPct   = f.esg?.pct     != null ? f.esg.pct          : (100 - esg) / 200;
+    const licUsd   = f.license?.usd ?? amount * 0.0001;
+    const totalUsd = f.total?.usd   ?? (coreUsd + fxUsd + esgUsd + licUsd);
+    const totalPct = f.total?.pct   != null ? f.total.pct        : (totalUsd / amount) * 100;
+
+    const setEl = (id: string, val: string) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    };
+
+    setEl('r-core-rate',  fmtPct(corePct));
+    setEl('r-core-usd',   fmt(coreUsd));
+    setEl('r-fx-rate',    fmtPct(fxPct));
+    setEl('r-fx-usd',     fmt(fxUsd));
+    setEl('r-esg-rate',   fmtPct(esgPct));
+    setEl('r-esg-usd',    fmt(esgUsd));
+    setEl('r-lic-usd',    fmt(licUsd));
+    setEl('r-total-rate', fmtPct(totalPct));
+    setEl('r-total-usd',  fmt(totalUsd));
+
+    const fxRow = document.getElementById('r-fx-row');
+    if (fxRow) fxRow.style.display = hasFx ? '' : 'none';
+
+    if (data.quoteId) setEl('calc-quote-id', `quoteId: ${data.quoteId}`);
+
+    // Build competitor rows
+    const compRows = document.getElementById('calc-comp-rows')!;
+    const dpxCost  = totalUsd;
+
+    // DPX advantages over lower-cost fintech/blockchain rails
+    const DPX_ADVANTAGES: Record<string, string[]> = {
+      'fintech': [
+        'On-chain ESG scoring — 100% of ESG fee redistributed to verified impact pools',
+        '6-tier stability oracle with 30–90 day early warning signals',
+        'Non-custodial settlement on Base mainnet — fully auditable on-chain',
+        'MiCA · FCA PSR · Basel III Group 1b regulatory positioning included',
+        'Programmable for autonomous AI agent treasury workflows',
+      ],
+    };
+
+    const bankRows   = COMPETITORS.filter(c => c.tier === 'bank');
+    const fintechRows = COMPETITORS.filter(c => c.tier === 'fintech');
+
+    const renderBank = (c: typeof COMPETITORS[0]) => {
+      const theirCost = amount * c.rateMid;
+      const saved     = theirCost - dpxCost;
+      const pct       = ((saved / theirCost) * 100).toFixed(0);
+      const pubBadge  = c.published
+        ? `<span class="calc-pub-badge calc-pub-badge--live">Published</span>`
+        : `<span class="calc-pub-badge">Estimated</span>`;
+      return `
+        <div class="calc-comp-row">
+          <div class="calc-comp-info">
+            <span class="calc-comp-name">${c.name} ${pubBadge}</span>
+            <span class="calc-comp-note">${c.what}</span>
+          </div>
+          <span class="calc-comp-rate">${c.rateDisplay}</span>
+          <span class="calc-comp-cost">${fmt(theirCost)}<span class="calc-comp-mid-note"> est. mid</span></span>
+          <span class="calc-comp-saving calc-comp-saving--pos">Save ${fmt(saved)} (${pct}%)</span>
+        </div>`;
+    };
+
+    const renderFintech = (c: typeof COMPETITORS[0]) => {
+      const pubBadge = c.published
+        ? `<span class="calc-pub-badge calc-pub-badge--live">Published</span>`
+        : `<span class="calc-pub-badge">Estimated</span>`;
+      const advantages = DPX_ADVANTAGES['fintech']
+        .map(a => `<li>${a}</li>`).join('');
+      return `
+        <div class="calc-comp-row calc-comp-row--fintech">
+          <div class="calc-comp-info">
+            <span class="calc-comp-name">${c.name} ${pubBadge}</span>
+            <span class="calc-comp-note">${c.note}</span>
+          </div>
+          <span class="calc-comp-rate">${c.rateDisplay}</span>
+          <span class="calc-comp-cost">${fmt(amount * c.rateMid)}<span class="calc-comp-mid-note"> est. mid</span></span>
+          <div class="calc-comp-why">
+            <span class="calc-comp-why-label">DPX adds</span>
+            <ul class="calc-comp-why-list">${advantages}</ul>
+          </div>
+        </div>`;
+    };
+
+    const sectionLabel = (label: string, sub: string) =>
+      `<div class="calc-comp-section-label"><span>${label}</span><span class="calc-comp-section-sub">${sub}</span></div>`;
+
+    compRows.innerHTML =
+      sectionLabel('Traditional banking', 'DPX vs what most corporate treasuries pay today') +
+      bankRows.map(renderBank).join('') +
+      sectionLabel('Fintech & blockchain rails', 'Lower raw rate — different product scope') +
+      fintechRows.map(renderFintech).join('');
+
+    resultEl.classList.remove('calc-result--hidden');
+
+  } catch (err: any) {
+    const msgEl = document.getElementById('calc-error-msg');
+    if (msgEl) msgEl.textContent = ' ' + (err.message || 'Network error.');
+    errorEl.classList.remove('calc-result--hidden');
+  } finally {
+    btn.textContent = 'Get live quote →';
+    btn.disabled = false;
+  }
+});
+
+// Auto-run on load
+btn.click();
+</script>

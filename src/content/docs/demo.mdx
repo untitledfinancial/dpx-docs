@@ -1,0 +1,47 @@
+---
+title: Live Fee Calculator
+description: Get a real-time fee quote from the DPX Stability Oracle — live on Base mainnet. No signup required.
+---
+
+import FeeCalculator from '../../components/FeeCalculator.astro';
+
+Prices pulled live from `stability.untitledfinancial.com`. Adjust the inputs and hit **Get live quote** — the oracle responds in real time.
+
+<FeeCalculator />
+
+---
+
+## How fees are calculated
+
+```
+total = core + fx (if cross-currency) + esg + license
+
+core    = 0.85%
+fx      = 0.40%  (cross-currency only)
+esg     = (100 - score) / 200     →  0.00% at score 100, 0.50% at score 0
+license = 0.01%  (fixed)
+```
+
+Volume discounts apply to the core fee only:
+
+| Tier | Monthly Volume | Core Discount |
+|---|---|---|
+| Standard | < $100K | 0% |
+| Growth | $100K – $1M | 10% |
+| Institutional | $1M – $10M | 20% |
+| Sovereign | $10M+ | 30% |
+
+## Query the oracle directly
+
+```bash
+# Standard binding quote (valid 300 seconds)
+curl "https://stability.untitledfinancial.com/quote?amountUsd=1000000&hasFx=true&esgScore=75"
+
+# Sandbox mode — real fee math, mock settlement reference
+curl "https://stability.untitledfinancial.com/quote?amountUsd=1000000&hasFx=true&esgScore=75&sandbox=true"
+
+# Verify quote against on-chain enforcement
+curl "https://stability.untitledfinancial.com/verify-fees"
+```
+
+See the full [API Reference →](/api/stability-oracle)

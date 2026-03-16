@@ -1,17 +1,19 @@
 ---
 title: ESG Oracle
-description: How the DPX ESG Oracle scores counterparties across Environmental, Social, and Governance dimensions using 6 real-world data sources — and how 100% of ESG fee revenue is redistributed to verified on-chain impact programs.
+description: How the DPX ESG Oracle scores counterparties across Environmental, Social, and Governance dimensions using 8 real-world data sources — including human rights and gender equity metrics — and how 100% of ESG fee revenue is redistributed to verified on-chain impact programs.
 ---
 
 > **Proprietary technology.** The ESG Oracle scoring methodology, weighting model, redistribution logic, and source code are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. API access is available to approved beta partners. Self-hosting requires a separate license agreement — contact [beta@untitledfinancial.com](mailto:beta@untitledfinancial.com).
 
-The DPX ESG Oracle produces live E, S, G scores from 6 real-world institutional data sources. Those scores flow directly into settlement fees: a higher score means a lower fee. 100% of ESG fee revenue is redistributed to verified on-chain impact programs — making every DPX settlement a direct contributor to measurable environmental and social outcomes.
+The DPX ESG Oracle produces live E, S, G scores from 8 real-world institutional data sources. Those scores flow directly into settlement fees: a higher score means a lower fee. 100% of ESG fee revenue is redistributed to verified on-chain impact programs — making every DPX settlement a direct contributor to measurable environmental and social outcomes.
+
+The Social (S) dimension includes **human rights metrics** (child labour, labour rights enforcement, safety from violence) and a **gender equity sub-score** (women in management, earnings parity, gender-responsive institutions) — making DPX the first stablecoin settlement rail with human rights and gender equity embedded directly in its fee structure.
 
 ---
 
 ## Data Sources
 
-The oracle pulls from 6 institutional data sources across the three ESG dimensions:
+The oracle pulls from 8 institutional data sources across the three ESG dimensions:
 
 ### Environmental (E)
 | Source | API | Metrics |
@@ -22,7 +24,9 @@ The oracle pulls from 6 institutional data sources across the three ESG dimensio
 ### Social (S)
 | Source | API | Metrics |
 |---|---|---|
-| **UN SDG API** | `unstats.un.org/SDGAPI` | SDG 4.1.1 — minimum proficiency in reading (education), SDG 3 health indicators |
+| **UN SDG API** | `unstats.un.org/SDGAPI` | SDG 4.1.1 — education; SDG 3 — health |
+| **UN SDG API — Human Rights** | `unstats.un.org/SDGAPI` | SDG 8.7.1 — child labour; SDG 16.1.3 — safety from violence; SDG 16.b.1 — non-discrimination; SDG 8.8.2 — labour rights compliance |
+| **UN SDG API — Gender Equity** | `unstats.un.org/SDGAPI` | SDG 5.5.2 — women in management; SDG 5.c.1 — gender-responsive budgeting; SDG 8.5.1 — earnings parity |
 
 ### Governance (G)
 | Source | API | Metrics |
@@ -30,6 +34,21 @@ The oracle pulls from 6 institutional data sources across the three ESG dimensio
 | **IMF** | `dataservices.imf.org` | Consumer Price Index (CPI) — economic stability proxy |
 | **OECD** | `sdmx.oecd.org` | GDP data — economic governance indicator |
 | **SEC EDGAR** | `data.sec.gov` | Corporate governance disclosures (XBRL company facts) |
+
+---
+
+## Social Score Composition
+
+The Social (S) score is a proprietary weighted composite across four sub-dimensions, drawing on OHCHR Universal Periodic Review frameworks, WEF Gender Gap Index methodology, and UN SDG data standards:
+
+| Sub-dimension | Source | What it captures |
+|---|---|---|
+| Human Rights | UN SDG 8.7, 16.1, 16.b | Child labour, safety from violence, non-discrimination, labour rights compliance |
+| Education | UN SDG 4.1.1 | Long-run human capital development |
+| Gender Equity | UN SDG 5.5, 5.c, 8.5 | Women in management, earnings parity, gender-responsive institutional frameworks |
+| Health | UN SDG 3 | Population wellbeing baseline |
+
+The weighting model is proprietary intellectual property. Full methodology documentation is available to approved institutional partners under NDA — contact [beta@untitledfinancial.com](mailto:beta@untitledfinancial.com).
 
 ---
 

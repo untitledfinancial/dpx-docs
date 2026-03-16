@@ -28,14 +28,38 @@ DPX is the first stablecoin settlement rail built for both institutional treasur
 
 ## Key numbers
 
-| | |
-|---|---|
-| Typical all-in rate (score 75, cross-border) | **1.385%** |
-| Best case (score 100, same-currency) | **0.86%** |
-| Network | **Base Mainnet** (chainId 8453) |
-| Auth required | **None** for pricing endpoints |
-| Oracle update cycle | **Hourly** |
-| Peg verification | **Every 60 seconds** |
+<div class="stats-row">
+  <div class="stat-box">
+    <span class="stat-label">Typical all-in rate</span>
+    <span class="stat-value">1.385%</span>
+    <span class="stat-sub">score 75, cross-border</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-label">Best case</span>
+    <span class="stat-value">0.86%</span>
+    <span class="stat-sub">score 100, same-currency</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-label">Network</span>
+    <span class="stat-value">Base</span>
+    <span class="stat-sub">Mainnet · chainId 8453</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-label">Auth required</span>
+    <span class="stat-value">None</span>
+    <span class="stat-sub">for pricing endpoints</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-label">Oracle update cycle</span>
+    <span class="stat-value">Hourly</span>
+    <span class="stat-sub">stability + ESG oracles</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-label">Peg verification</span>
+    <span class="stat-value">60s</span>
+    <span class="stat-sub">continuous on-chain check</span>
+  </div>
+</div>
 
 ## Start here
 
@@ -55,6 +79,90 @@ DPX is the first stablecoin settlement rail built for both institutional treasur
   <Card title="API Reference" icon="document">
     Every endpoint documented with parameters and example responses.
     [View API →](/api/stability-oracle)
+  </Card>
+</CardGrid>
+
+## AI agent integrations
+
+<CardGrid>
+  <Card title="MCP — Claude Desktop" icon="puzzle">
+    Native Claude integration via Model Context Protocol. Query fees, get quotes, execute settlements.
+    [Configure →](/integrations/mcp)
+  </Card>
+  <Card title="GPT Actions" icon="external">
+    Build a Custom GPT that calls DPX directly. No API key required for pricing endpoints.
+    [Configure →](/integrations/gpt-actions)
+  </Card>
+  <Card title="LangChain" icon="seti:python">
+    Python tool wrappers for LangChain agents. Drop-in settlement tools for any chain.
+    [Configure →](/integrations/langchain)
+  </Card>
+  <Card title="n8n Workflows" icon="setting">
+    No-code automation for treasury ops — trigger settlements from any webhook or schedule.
+    [Configure →](/integrations/n8n)
+  </Card>
+</CardGrid>
+
+## Treasury system integrations
+
+<CardGrid>
+  <Card title="REST API — Any TMS" icon="document">
+    Standard REST endpoints that connect to any treasury management system.
+    [View →](/integrations/rest-api)
+  </Card>
+  <Card title="Storacha Storage" icon="open-book">
+    Verifiable settlement records on IPFS via Storacha — permanent, auditable, decentralised.
+    [View →](/integrations/storacha)
+  </Card>
+  <Card title="Kyriba" icon="setting">
+    Native Kyriba connector for automated settlement routing.
+    [Coming soon →](/integrations/kyriba)
+  </Card>
+  <Card title="SAP TRM" icon="setting">
+    SAP Treasury & Risk Management integration for enterprise deployments.
+    [Coming soon →](/integrations/sap-trm)
+  </Card>
+</CardGrid>
+
+## Protocol
+
+<CardGrid>
+  <Card title="Stability Oracle" icon="star">
+    6-tier PID-controlled peg mechanism with 30–90 day macro early warning. Architecture and endpoints.
+    [Read →](/protocol/stability-oracle)
+  </Card>
+  <Card title="ESG Oracle" icon="approve-check">
+    ESG scoring engine across 8 institutional sources. Fee discount logic and impact pool redistribution.
+    [Read →](/protocol/esg-oracle)
+  </Card>
+  <Card title="Smart Contracts" icon="seti:config">
+    Deployed contract addresses, ABIs, and on-chain verification for all Base mainnet contracts.
+    [Read →](/protocol/contracts)
+  </Card>
+  <Card title="Regulatory Positioning" icon="information">
+    MiCA, SFDR, CSRD, FCA, PRA Basel III Group 1b, and OCC coverage across EU, UK, and US.
+    [Read →](/protocol/regulatory)
+  </Card>
+</CardGrid>
+
+## Enterprise
+
+<CardGrid>
+  <Card title="Multi-Tenant Setup" icon="setting">
+    Run isolated DPX instances per entity — separate fee schedules, oracles, and audit trails.
+    [Read →](/enterprise/multi-tenant)
+  </Card>
+  <Card title="White-Label Config" icon="seti:config">
+    Brand the settlement layer under your own identity. Custom domains, tokens, and reporting.
+    [Read →](/enterprise/white-label)
+  </Card>
+  <Card title="Financial Model" icon="information">
+    10-year revenue projection, break-even analysis, and buildout cost breakdown.
+    [Read →](/financial-model)
+  </Card>
+  <Card title="Beta Access" icon="rocket">
+    Request access to the live protocol. Sandbox environment available immediately.
+    [Apply →](/beta)
   </Card>
 </CardGrid>
 

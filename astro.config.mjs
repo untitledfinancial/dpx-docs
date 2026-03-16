@@ -2,10 +2,12 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import markdoc from '@astrojs/markdoc';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://docs.untitledfinancial.com',
   integrations: [
+    sitemap(),
     markdoc(),
     starlight({
       title: 'DPX Docs',
@@ -50,6 +52,7 @@ export default defineConfig({
         {
           label: 'Fees & Pricing',
           items: [
+            { label: '⚡ Live Calculator', slug: 'demo',            badge: { text: 'Live', variant: 'tip' } },
             { label: 'Fee Structure',      slug: 'fees' },
             { label: 'Financial Model',    slug: 'financial-model' },
           ],
@@ -83,9 +86,17 @@ export default defineConfig({
         {
           label: 'Protocol',
           items: [
-            { label: 'Stability Oracle',   slug: 'protocol/stability-oracle' },
-            { label: 'ESG Oracle',         slug: 'protocol/esg-oracle' },
-            { label: 'Smart Contracts',    slug: 'protocol/contracts' },
+            { label: 'Stability Oracle',      slug: 'protocol/stability-oracle' },
+            { label: 'ESG Oracle',            slug: 'protocol/esg-oracle' },
+            { label: 'Smart Contracts',       slug: 'protocol/contracts' },
+            { label: 'Regulatory Positioning', slug: 'protocol/regulatory', badge: { text: 'New', variant: 'tip' } },
+          ],
+        },
+        {
+          label: 'Enterprise',
+          items: [
+            { label: 'Multi-Tenant Setup', slug: 'enterprise/multi-tenant', badge: { text: 'New', variant: 'tip' } },
+            { label: 'White-Label Config', slug: 'enterprise/white-label',  badge: { text: 'New', variant: 'tip' } },
           ],
         },
       ],

@@ -32,13 +32,15 @@ curl https://esg.untitledfinancial.com/esg-score
 | Field | Example | Description |
 |---|---|---|
 | `scores.environmental` | 78 | Environmental score 0–100 |
-| `scores.social` | 72 | Social score 0–100 |
+| `scores.social` | 72 | Social score 0–100 (composite of education, health, human rights, gender equity) |
 | `scores.governance` | 81 | Governance score 0–100 |
 | `scores.average` | 77 | Average of E, S, G |
 | `fee.pct` | 0.115 | Current ESG fee % |
 | `fee.bps` | 11.5 | Current ESG fee in basis points |
 | `fee.tier` | "Good" | ESG tier label |
 | `fee.formula` | `"(100 - esgScore) / 200"` | Formula used |
+
+**Social (S) sub-dimensions** — the Social score is a proprietary composite including human rights, education, gender equity, and health indicators drawn from UN SDG and ILO data. Full methodology is available to approved partners under NDA.
 
 ---
 

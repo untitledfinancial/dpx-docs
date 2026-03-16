@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@astrojs/markdoc": "^0.15.10",
+    "@astrojs/sitemap": "^3.7.1",
     "@astrojs/starlight": "^0.37.6",
     "@ipld/car": "^5.3.2",
     "@ucanto/core": "^10.0.1",

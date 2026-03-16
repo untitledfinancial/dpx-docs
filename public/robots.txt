@@ -1,6 +1,27 @@
 User-agent: *
 Allow: /
 
+# AI Training Crawlers — content may NOT be used for model training without written permission
+# Contact: legal@untitledfinancial.com
+User-agent: CCBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+# Inference/search agents — allowed (read-only, not training)
 User-agent: GPTBot
 Allow: /
 
