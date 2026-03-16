@@ -13,13 +13,18 @@ DPX was designed to meet institutional regulatory requirements across all three 
 
 MiCA Title III entered full application in June 2024. It establishes the authorisation and operating requirements for stablecoin issuers in the EU.
 
-DPX's reserve structure is designed to comply with **MiCA Article 36** requirements, including:
-- Minimum 30% liquid asset reserve
-- Independent custody of reserve assets
-- Prohibition on lending reserve assets
-- Redemption at par on demand
+DPX's protocol architecture is **designed with MiCA Article 36 compliance as a foundational requirement**. The key Article 36 obligations — and DPX's current position on each — are:
 
-For EU institutions evaluating stablecoin settlement rails, MiCA authorisation status is the primary due diligence filter. DPX's reserve architecture addresses this requirement at the protocol level — it is not a configuration option.
+| Requirement | DPX Status |
+|---|---|
+| Minimum 30% liquid asset reserve | Roadmap — reserve structure will be established as settlement volume scales |
+| Independent custody of reserve assets | Architecture supports independent custody; implementation pending |
+| Prohibition on lending reserve assets | Enforced at protocol level — reserve assets are not lent |
+| Redemption at par on demand | Designed into the settlement router |
+
+DPX is currently in **beta** and does not yet hold a MiCA authorisation. Institutional partners in the EU should treat DPX as a pre-authorisation protocol built to the MiCA standard — not as a currently authorised e-money token issuer. Full MiCA compliance is a defined milestone on the DPX roadmap.
+
+For EU institutions beginning regulatory due diligence, contact [beta@untitledfinancial.com](mailto:beta@untitledfinancial.com) for the current compliance roadmap documentation.
 
 ---
 
@@ -99,7 +104,7 @@ Your risk team can reference PRA CP16/22 and PRA PS17/22 for the full capital tr
 
 The OCC issued Interpretive Letter #1179 in January 2021, confirming that **US national banks and federal savings associations may hold reserve assets for stablecoin issuers** and use stablecoins to facilitate payment transactions.
 
-US national banks are already legally authorised to engage with DPX. No additional regulatory clearance is required at the federal level for OCC-regulated institutions. DPX's reserve structure additionally meets MiCA Article 36 requirements — providing EU-equivalent compliance status for internationally-active US institutions.
+US national banks are already legally authorised to engage with DPX. No additional regulatory clearance is required at the federal level for OCC-regulated institutions. DPX's protocol architecture is built toward MiCA Article 36 alignment — providing a clear EU-equivalent compliance pathway for internationally-active US institutions as the protocol reaches full deployment.
 
 ---
 
