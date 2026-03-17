@@ -1,10 +1,10 @@
 name: Build & Deploy DPX Docs
 
-# Runs automatically on every push to main
-# You can also trigger it manually from the GitHub Actions tab
+# Auto-deploy disabled — trigger manually from GitHub Actions tab when ready
+# To re-enable auto-deploy, uncomment the push block below
 on:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
   workflow_dispatch:   # manual trigger button in GitHub UI
 
 jobs:
