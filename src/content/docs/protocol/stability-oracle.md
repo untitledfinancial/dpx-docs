@@ -1,11 +1,11 @@
 ---
 title: Stability Oracle
-description: DPX Stability Oracle v7.0 — 7-tier architecture, 30+ data sources, cross-body transmission, chaos theory, war destabilization, and active mitigation protocols.
+description: DPX Stability Oracle v7.2 — 7-tier architecture, 32+ data sources, cross-body transmission, chaos theory, war destabilization with GDELT real-time conflict signals, and active mitigation protocols.
 ---
 
 > **Proprietary technology.** The Stability Oracle architecture, signal pipeline, weighting model, and source code are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. API access is available to approved beta partners. Self-hosting requires a separate license agreement — contact [beta@untitledfinancial.com](mailto:beta@untitledfinancial.com).
 
-The DPX Stability Oracle v7.0 is a 7-tier signal pipeline that aggregates 30+ real-world data sources into a single actionable confidence score. It provides 0–90 day early warning signals across six independent transmission channels — and includes a full recommendation engine, policy manager, and **active war mitigation protocols** that can dynamically adjust basket weights in response to armed conflict escalation.
+The DPX Stability Oracle v7.2 is a 7-tier signal pipeline that aggregates 32+ real-world data sources into a single actionable confidence score. It provides 0–90 day early warning signals across six independent transmission channels — and includes a full recommendation engine, policy manager, and **active war mitigation protocols** with real-time GDELT conflict signals and ACLED event data integration.
 
 ---
 
@@ -80,7 +80,7 @@ Proprietary models trace how major climate oscillations transmit through commodi
 ---
 
 ### Tier 6 — Non-Linear Dynamics, War Economics & Infrastructure
-**v7.0 addition — continuous monitoring**
+**v7.0+ — continuously updated; v7.2 adds GDELT real-time conflict signals + expanded commodity coverage**
 
 Standard economic models assume linear relationships and Gaussian (normal) distributions. Tier 6 addresses the reality: real financial systems exhibit phase transitions, correlation collapse, cascade failures, and fat-tail events that standard models systematically miss.
 
@@ -92,15 +92,17 @@ Monitors the physical and digital chokepoints whose failure cascades into econom
 
 | Chokepoint | What's tracked | CPI transmission |
 |---|---|---|
-| **Shipping / Ports** | Baltic Dry Index (FRED), major port wait times | 2–4 months |
+| **Shipping / Ports** | Baltic Dry Index (FRED DBDI), major port wait times | 2–4 months |
 | **Semiconductor supply** | Taiwan concentration (92% advanced chips), US production index (FRED IPG334S) | 6–12 months |
-| **Critical minerals** | China rare earth/graphite concentration, copper price (FRED), export restriction risk | 6–18 months |
+| **Critical minerals** | Copper (FRED PCOPPUSDM), **nickel (FRED PNICKUSDM)**, **aluminum (FRED PALUMUSDM)** — all World Bank GEM series. China rare earth/graphite export restriction risk. | 6–18 months |
 | **Power grids** | EIA daily demand anomaly, European grid transition stress | Immediate to 2 months |
-| **Food/water** | Global wheat price (FRED PWHEAMTUSDM), corn price, drought index | 1–6 months |
+| **Food/water** | **FAO Food Price Index composite (FRED PFOODINDEXM)** — cereals, oils, dairy, meat, sugar. Wheat (PWHEAMTUSDM), corn (PMAIZMTUSDM), **sugar (PSUGAISAUSDM)**. Drought index. | 1–6 months |
 
 Cascade risk is assessed: when multiple chokepoints are stressed simultaneously, interconnected failures become non-linear.
 
 #### War Destabilization & Mitigation
+
+**v7.1+ adds real-time conflict signals via GDELT v2 Doc API** — 15-minute update cycle across 4 conflict regions (Ukraine-Russia, Middle East, Taiwan Strait, global). ACLED integration (Armed Conflict Location & Event Data) is built and will provide real-time fatality counts and event-type classification once API-tier access is active.
 
 Seven war-to-economy transmission channels are modelled for each active conflict:
 
@@ -199,7 +201,7 @@ War mitigation protocols add a second override layer: when escalation risk is HI
 
 ---
 
-## Data Sources (30+)
+## Data Sources (32+)
 
 | Tier | Sources |
 |---|---|
@@ -211,8 +213,8 @@ War mitigation protocols add a second override layer: when escalation risk is HI
 | Tier 4 — Basket | Base network Chainlink feeds + 3 FX APIs |
 | Tier 5 — Analysis | Enhanced causal modeling, predictive signals (4 timeframes) |
 | Cross-body | FRED GPR/EPU, FRED TIC, tech supply chain, climate-commodity matrix |
-| Tier 6 — Infrastructure | FRED Baltic Dry, FRED semiconductor production (IPG334S), FRED wheat/corn, EIA grid demand |
-| Tier 6 — War | FRED defence spending, FRED fiscal deficit, conflict registry (ACLED-calibrated) |
+| Tier 6 — Infrastructure | FRED Baltic Dry (DBDI), FRED semiconductor production (IPG334S), FRED copper/nickel/aluminum (World Bank GEM), **FAO Food Price Index composite (PFOODINDEXM)**, FRED wheat/corn/sugar, EIA grid demand |
+| Tier 6 — War | **GDELT v2 Doc API** (real-time conflict events, 4 regions, 15-min cycle), FRED defence spending, FRED fiscal deficit, **ACLED** (OAuth built, API-tier access pending) |
 | Tier 6 — Chaos | Computed from all above signals (no external API) |
 
 ---
