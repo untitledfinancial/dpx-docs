@@ -1,11 +1,11 @@
 ---
 title: Stability Oracle
-description: DPX Stability Oracle v7.2 — 7-tier architecture, 32+ data sources, cross-body transmission, chaos theory, war destabilization with GDELT real-time conflict signals, and active mitigation protocols.
+description: DPX Stability Oracle v8.0 — 7-tier architecture with cross-body integration, bond yield curve analysis, geopolitical risk, capital flows, tech supply chain, and full recommendation engine.
 ---
 
 > **Proprietary technology.** The Stability Oracle architecture, signal pipeline, weighting model, and source code are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. API access is available to approved beta partners. Self-hosting requires a separate license agreement — contact [beta@untitledfinancial.com](mailto:beta@untitledfinancial.com).
 
-The DPX Stability Oracle v7.2 is a 7-tier signal pipeline that aggregates 32+ real-world data sources into a single actionable confidence score. It provides 0–90 day early warning signals across six independent transmission channels — and includes a full recommendation engine, policy manager, and **active war mitigation protocols** with real-time GDELT conflict signals and ACLED event data integration.
+The DPX Stability Oracle v8.0 is a 7-tier signal pipeline that aggregates 32+ real-world data sources into a single actionable confidence score. It provides 0–90 day early warning signals across six independent transmission channels — and includes a full recommendation engine, policy manager, and **active war mitigation protocols** with real-time GDELT conflict signals and ACLED event data integration.
 
 ---
 
@@ -80,7 +80,7 @@ Proprietary models trace how major climate oscillations transmit through commodi
 ---
 
 ### Tier 6 — Non-Linear Dynamics, War Economics & Infrastructure
-**v7.0+ — continuously updated; v7.2 adds GDELT real-time conflict signals + expanded commodity coverage**
+**v8.0 — adds bond yield curve analysis, geopolitical EPU risk, capital flows (policy rate differentials), tech supply chain index, cross-body integration, macro signals (stagflation/goldilocks detection), predictive signals, and full recommendation engine**
 
 Standard economic models assume linear relationships and Gaussian (normal) distributions. Tier 6 addresses the reality: real financial systems exhibit phase transitions, correlation collapse, cascade failures, and fat-tail events that standard models systematically miss.
 
@@ -102,7 +102,7 @@ Cascade risk is assessed: when multiple chokepoints are stressed simultaneously,
 
 #### War Destabilization & Mitigation
 
-**v7.1+ adds real-time conflict signals via GDELT v2 Doc API** — 15-minute update cycle across 4 conflict regions (Ukraine-Russia, Middle East, Taiwan Strait, global). ACLED integration (Armed Conflict Location & Event Data) is built and will provide real-time fatality counts and event-type classification once API-tier access is active.
+**v8.0 adds real-time conflict signals via GDELT v2 Doc API** — 15-minute update cycle across 4 conflict regions (Ukraine-Russia, Middle East, Taiwan Strait, global). ACLED integration is architecturally present; data access requires ACLED API-tier subscription.
 
 Seven war-to-economy transmission channels are modelled for each active conflict:
 

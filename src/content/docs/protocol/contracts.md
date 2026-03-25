@@ -1,9 +1,9 @@
 ---
 title: Smart Contracts
-description: All 6 DPX on-chain contracts deployed on Base mainnet (chainId 8453) — addresses, roles, ABIs, and key functions.
+description: All 7 DPX on-chain contracts deployed on Base mainnet (chainId 8453) — addresses, roles, ABIs, and key functions.
 ---
 
-DPX is deployed on **Base mainnet** (chainId 8453). All 6 contracts are verified on Basescan. The settlement router enforces all fees on-chain — agents cannot submit settlements at rates different from what the oracle quoted.
+DPX is deployed on **Base mainnet** (chainId 8453). All contracts are verified on Basescan. The settlement router enforces all fees on-chain — agents cannot submit settlements at rates different from what the oracle quoted.
 
 Contract addresses are also returned by the `/manifest` endpoint and are always canonical.
 
@@ -13,22 +13,23 @@ Contract addresses are also returned by the `/manifest` endpoint and are always 
 
 | Contract | Address | Role |
 |---|---|---|
-| DPX Token | `0x7A62dEcF6936675480F0991A2EF4a0d6f1023891` | ERC-20 stablecoin · 0.01% license fee on every transfer |
+| DPX Token (V3) | `0x7A62dEcF6936675480F0991A2EF4a0d6f1023891` | Upgradeable ERC-20 (DOVPAXBRANCHUpgradeableV3) · 0.01% license fee on every transfer |
 | StabilityFeeController | `0xda8aA06cDa9D06001554d948dA473EBe5282Ea17` | PID-controlled stability mechanism |
 | BasketPegManager | `0xB5071fA48B92e3652701053eEd8826ab94014AaA` | Multi-currency basket · USD / EUR / GBP / JPY / CNY |
-| ESGCompliance | `0x7717e89bC45cBD5199b44595f6E874ac62d79786` | On-chain ESG score storage and verification |
-| ESGRedistribution | `0x4F3741252847E4F07730c4CEC3018b201Ac6ce87` | Impact pool · Ocean / Renewable / Forest / Climate / Water |
+| ESGOracle | `0x7717e89bC45cBD5199b44595f6E874ac62d79786` | On-chain ESG score storage · 6 providers · per-company scoring |
+| ESGRedistribution | `0x4F3741252847E4F07730c4CEC3018b201Ac6ce87` | Bad-actor fee redistribution · 10 industry buckets |
 | PolicyManager | `0x741f3179786d9f72e134BdC699D6604eaB250D6E` | Governance · basket and fee policy control |
+| DPXSettlementRouter | `0x7d2b0Cea5A2d19369548F59C6B8EEe9Fe3495c97` | Single settlement entry point · enforces all fees on-chain |
 
 **Basescan:** [basescan.org](https://basescan.org) → search any address above to verify deployment and inspect transactions.
 
 ---
 
-## DPX Token
+## DPX Token (V3)
 
 **Address:** `0x7A62dEcF6936675480F0991A2EF4a0d6f1023891`
 
-Standard ERC-20 with a protocol license fee enforced on every transfer. The license fee (1 bps / 0.01%) is immutable and cannot be disabled — it funds protocol development and is separate from settlement fees.
+Upgradeable ERC-20 (`DOVPAXBRANCHUpgradeableV3`) with a protocol license fee enforced on every transfer. The license fee (1 bps / 0.01%) is immutable and cannot be disabled — it funds protocol development and is separate from settlement fees.
 
 | Function | Description |
 |---|---|
@@ -46,10 +47,7 @@ PID (Proportional-Integral-Derivative) controlled stability mechanism. Monitors 
 
 | Function | Description |
 |---|---|
-| `settle(recipient, amount, isCrossCurrency, quoteId)` | Execute a settlement — enforces fees on-chain |
-| `previewFees(amountUsd, hasFx, esgScore)` | Off-chain fee preview (used by `/verify-fees`) |
-| `setFeeRates(coreBps, fxBps, esgDivisor)` | Admin: update fee rates |
-| `setFeeCollector(address)` | Admin: update treasury address |
+| `computeFee(sender, recipient, amount)` | Returns `(feeAmount, licenseFeeAmount)` for a transfer |
 
 ### Fee parameters (current)
 
@@ -61,17 +59,33 @@ PID (Proportional-Integral-Derivative) controlled stability mechanism. Monitors 
 | `ESG_MAX_BPS` | 50 |
 | License fee | 1 bps (enforced in DPX Token) |
 
+---
+
+## DPXSettlementRouter
+
+**Address:** `0x7d2b0Cea5A2d19369548F59C6B8EEe9Fe3495c97`
+
+The single entry point for all DPX settlements. Enforces the full fee structure (core + FX + ESG + license) before executing the token transfer. Agents and TMS integrations call `settle()` — never the token contract directly.
+
+| Function | Description |
+|---|---|
+| `settle(recipient, grossAmount, isCrossCurrency, quoteId)` | Execute a settlement — enforces all fees on-chain |
+| `previewFees(grossAmount, isCrossCurrency)` | Off-chain fee preview — call before submitting settlement |
+| `setFeeRates(coreFeeBps, fxFeeBps)` | Admin: update fee rates |
+| `setFeeCollector(address)` | Admin: update treasury address |
+| `setESGRedistribution(address)` | Admin: update redistribution contract address |
+
 ### Fee computation (on-chain)
 
 ```solidity
-uint256 coreFee = (amount * coreFeeBps) / 10_000;
-uint256 fxFee   = isCrossCurrency ? (amount * fxFeeBps) / 10_000 : 0;
-uint256 esgBps  = (100 - esgScore) / esgDivisor;
-uint256 esgFee  = (amount * esgBps) / 10_000;
-uint256 total   = coreFee + fxFee + esgFee;
+uint256 coreFee = (grossAmount * coreFeeBps) / 10_000;   // 0.85%
+uint256 fxFee   = isCrossCurrency ? (grossAmount * fxFeeBps) / 10_000 : 0;  // 0.40%
+uint256 esgBps  = (100 - avgEsgScore) * ESG_MAX_BPS / 100;  // 0.00–0.50%
+uint256 esgFee  = (grossAmount * esgBps) / 10_000;
+uint256 net     = grossAmount - coreFee - fxFee - esgFee;
 ```
 
-This matches the off-chain oracle formula exactly. The `/verify-fees` endpoint calls `previewFees()` to confirm agreement before settlement.
+The `/verify-fees` endpoint calls `previewFees()` to confirm on-chain fees match the oracle quote before settlement execution.
 
 ---
 
@@ -83,6 +97,8 @@ Manages the multi-currency basket backing DPX. Tracks weights across USD, EUR, G
 
 Basket adjustments are proposed by the Stability Oracle's recommendation engine and executed only after PolicyManager governance approval.
 
+Currency weights are modelled on IMF SDR pool recommendations.
+
 | Currency | Role |
 |---|---|
 | USD | Primary reserve anchor |
@@ -93,13 +109,26 @@ Basket adjustments are proposed by the Stability Oracle's recommendation engine 
 
 ---
 
-## ESGCompliance
+## ESGOracle
 
 **Address:** `0x7717e89bC45cBD5199b44595f6E874ac62d79786`
 
-On-chain storage and verification of ESG scores. The ESG Oracle posts scores here after each evaluation cycle. The StabilityFeeController reads from this contract at settlement time to compute the ESG fee component — ensuring the fee applied on-chain matches the oracle's latest verified score.
+On-chain storage and verification of ESG scores. The ESG Oracle service posts scores here after each evaluation cycle. Scores are stored per-company, per-provider — enabling weighted aggregation across multiple authoritative sources.
 
-Scores are posted per-counterparty and include E, S, and G sub-scores alongside the composite average.
+**Current configuration:**
+
+| Setting | Value |
+|---|---|
+| Oracle updater | `0x4fb89aC30e70f041CebaF814C08a1A2cf3f808C1` |
+| Registered providers | WorldBank · UN · ClimateMonitor · IMF · OECD · SEC |
+
+| Function | Description |
+|---|---|
+| `getESGScore(provider, company)` | Score for a specific company from a specific provider (0–100) |
+| `listProviders()` | All registered data providers |
+| `getAllScores(company)` | All provider scores for a company |
+| `setESGScore(provider, company, score)` | Oracle updater: post a new score |
+| `batchSetScores(provider, companies[], scores[])` | Oracle updater: bulk score update |
 
 ---
 
@@ -107,17 +136,32 @@ Scores are posted per-counterparty and include E, S, and G sub-scores alongside 
 
 **Address:** `0x4F3741252847E4F07730c4CEC3018b201Ac6ce87`
 
-Receives 100% of ESG fee revenue from the StabilityFeeController and distributes to five verified on-chain impact programs. Distribution weights are set at deployment and can only be changed via PolicyManager governance — not unilaterally.
+Redistributes fees from bad actors (companies with aggregated ESG score ≤ threshold) to a consolidated on-chain impact wallet. Weighted score is computed across all enabled providers — a company must score ≤ 40 across WorldBank, UN, ClimateMonitor, IMF, OECD, and SEC before redistribution is triggered.
 
-| Program | Share | Address |
+**Registered providers (weights):**
+
+| Provider | Weight | Status |
 |---|---|---|
-| Ocean Conservation | 30% | Verified on-chain |
-| Renewable Energy | 25% | Verified on-chain |
-| Forest Preservation | 20% | Verified on-chain |
-| Climate Action | 15% | Verified on-chain |
-| Clean Water | 10% | Verified on-chain |
+| WorldBank | 40 | Active |
+| UN | 30 | Active |
+| ClimateMonitor | 30 | Active |
+| IMF | 20 | Active |
+| OECD | 20 | Active |
+| SEC | 20 | Active |
 
-Every redistribution is recorded with: tx hash, per-program amounts, period dates, and total redistributed — stored on Storacha (IPFS) for independent verification.
+**Industry buckets (all route to consolidated impact wallet):**
+
+FossilFuels · Energy · Manufacturing · Agriculture · Technology · Finance · Consumer · Healthcare · RealEstate · Transportation
+
+| Function | Description |
+|---|---|
+| `aggregatedScore(company)` | Weighted average ESG score for a company (0–100) |
+| `isBelowThreshold(company)` | Returns true if company qualifies for redistribution |
+| `redistributeERC20(token, company, amount)` | Redistribute ERC20 fees from a bad actor |
+| `setCompanyIndustry(company, industry)` | Map a company address to an industry bucket |
+| `registerProvider(name, weight, enabled)` | Add or update a scoring provider |
+
+Every redistribution is recorded on-chain via `RedistributionExecuted` event — auditable by any counterparty, regulator, or auditor.
 
 ---
 
@@ -141,11 +185,13 @@ The PolicyManager is the only contract authorised to update ESGRedistribution pr
 DPX uses a hybrid fee enforcement model:
 
 - **License fee (0.01%)** — enforced in the DPX Token contract on every transfer
-- **Core, FX, and ESG fees** — enforced in StabilityFeeController
+- **Core, FX, and ESG fees** — enforced in DPXSettlementRouter
+- **ESG scoring** — stored in ESGOracle, aggregated in ESGRedistribution
+- **Bad-actor redistribution** — enforced in ESGRedistribution (not discretionary)
 - **Basket integrity** — enforced in BasketPegManager
-- **ESG redistribution** — enforced in ESGRedistribution (not discretionary)
+- **Governance bounds** — enforced in PolicyManager
 
-This separation allows settlement router fees to be updated via PolicyManager governance without touching the token contract.
+This separation allows settlement router fees to be updated via PolicyManager governance without touching the token contract. Integrators interact with the router only — never the token contract directly.
 
 ---
 
@@ -155,9 +201,9 @@ This separation allows settlement router fees to be updated via PolicyManager go
 dpx-protocol/dpx-deploy/contracts/DPXToken.sol
 dpx-protocol/dpx-deploy/contracts/StabilityFeeController.sol
 dpx-protocol/dpx-deploy/contracts/BasketPegManager.sol
-dpx-protocol/dpx-deploy/contracts/ESGCompliance.sol
+dpx-protocol/dpx-deploy/contracts/ESGOracle.sol
 dpx-protocol/dpx-deploy/contracts/ESGRedistribution.sol
 dpx-protocol/dpx-deploy/contracts/PolicyManager.sol
-dpx-protocol/dpx-deploy/deployRouter.sh
+dpx-protocol/dpx-deploy/contracts/DPXSettlementRouter.sol
 Stability-Oracle/stability-oracle/routes/settlerClient.js
 ```

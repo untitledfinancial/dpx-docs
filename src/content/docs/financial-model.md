@@ -1,141 +1,172 @@
 ---
-title: Financial Model
-description: DPX buildout costs, margins, client scenarios, and 10-year revenue projection.
+title: Client Savings Model
+description: How much your organization saves by settling on DPX instead of legacy rails — unit economics, market benchmarks, and ESG redistribution by volume.
+---
+
+## The problem DPX solves
+
+Cross-border institutional payments average **6.35% in fees** and take up to five days to settle (World Bank Q1 2025; a16z Crypto 2024). DPX delivers settlement at **1.385% typical all-in** — roughly **one-fifth the industry average cost** — with instant on-chain finality on Base mainnet.
+
 ---
 
 ## Fee structure
 
 | Component | Rate | Applies to |
 |---|---|---|
-| Core transfer | **0.85%** (85 bps) | Every settlement |
-| FX conversion | **0.40%** (40 bps) | Cross-currency only |
+| Core transfer | **0.85%** | Every settlement |
+| FX conversion | **0.40%** | Cross-currency only |
 | ESG fee | **0.00–0.50%** | Every settlement — live from oracle |
-| License | **0.01%** (1 bp) | Every settlement — fixed |
+| License | **0.01%** | Every settlement — on-chain enforced |
 | **Typical all-in** | **1.385%** | Score 75, cross-border |
+| **Best case all-in** | **0.86%** | Score 100, same-currency |
 
-## Competitive positioning
-
-| Provider | Typical Rate | Per $1M |
-|---|---|---|
-| SWIFT / Bank Wire | 2.00–5.00% | $20K–$50K |
-| Stripe stablecoin | 1.50% | $15,000 |
-| **DPX (typical)** | **1.385%** | **$13,850** |
-| Wise (cross-border) | 0.40–1.50% | ~$9,500 typical |
-| Ripple ODL | 0.20–0.50% | $2K–$5K |
-
-DPX saves $1,150/million vs Stripe stablecoin. The premium over Wise reflects instant settlement, on-chain auditability, ESG scoring + redistribution, and a 6-tier stability oracle.
-
-## Buildout cost milestones
-
-| Phase | Milestone | Cost | Cumulative |
-|---|---|---|---|
-| 1 | Core protocol + oracle MVP | $850K | $850K |
-| 2 | Security audit + Base mainnet deploy | $450K | $1.3M |
-| 3 | Agent integrations (MCP, GPT Actions, LangChain) | $280K | $1.58M |
-| 4 | Documentation + developer portal | $120K | $1.7M |
-| 5 | Regulatory + legal framework | $600K | $2.3M |
-| 6 | Institutional sales + BD | $1.2M | $3.5M |
-| 7 | ESG program infrastructure | $800K | $4.3M |
-| 8 | Scale engineering + redundancy | $2.1M | $6.4M |
-| 9 | Global compliance (5 jurisdictions) | $2.5M | $8.9M |
-| 10 | Reserve fund (6 months OpEx) | $2.456M | $11.356M |
-
-**Total buildout: $11.356M**
-
-## Annual operating expenses (at scale)
-
-| Item | Annual Cost |
-|---|---|
-| Engineering (8 FTE) | $1.6M |
-| Compliance & Legal | $800K |
-| Infrastructure | $400K |
-| BD & Sales | $700K |
-| ESG program management | $400K |
-| G&A | $300K |
-| **Total OpEx** | **$4.2M** |
-
-## Margin by volume tier
-
-| Annual Volume | Gross Revenue (1.385%) | OpEx | Net Operating Income | NOI Margin |
-|---|---|---|---|---|
-| $100M | $1.385M | $4.2M | ($2.815M) | — |
-| $500M | $6.925M | $4.2M | $2.725M | 39% |
-| $1B | $13.85M | $4.5M | $9.35M | 67% |
-| $5B | $69.25M | $5.5M | $63.75M | 92% |
-| $10B | $138.5M | $7M | $131.5M | 95% |
-
-**Break-even: ~$340M annual volume**
-
-## Client scenarios
-
-### Sovereign Wealth Fund — $5B/year
-- Tier: Sovereign (30% core discount), all-in 1.13%
-- Annual fees to DPX: $56.5M
-- Annual NOI (after OpEx share): ~$52.3M
-
-### Large Asset Manager — $1B/year
-- Tier: Institutional (20% core discount), all-in 1.215%
-- Annual fees to DPX: $12.15M
-- Annual NOI: ~$9.35M
-
-### Mid-size Asset Manager — $200M/year
-- Tier: Growth (10% core discount), all-in 1.30%
-- Annual fees to DPX: $2.6M
-- Annual NOI: ~$900K
-
-### Fintech Platform — $500M/year
-- Tier: Institutional, all-in 1.215%
-- Annual fees to DPX: $6.075M
-- Annual NOI: ~$3.5M
-
-### AI Agent Network — $50M/year
-- Tier: Standard, all-in 1.385%
-- Annual fees to DPX: $692K
-- Annual NOI: ~$200K (early contribution to fixed cost coverage)
-
-## 10-client portfolio (illustrative)
-
-Assuming 2 Sovereign + 3 Institutional + 3 Growth + 2 Standard clients:
-
-| Metric | Value |
-|---|---|
-| Combined annual volume | ~$12.5B |
-| Gross revenue | ~$154M |
-| Operating expenses | ~$7.5M |
-| **Net operating income** | **~$146.5M** |
-| NOI margin | **95%** |
-
-## 10-year revenue projection
-
-| Year | Annual Volume | Gross Revenue | NOI | Cumulative NOI |
-|---|---|---|---|---|
-| 1 | $50M | $692K | ($3.5M) | ($3.5M) |
-| 2 | $150M | $2.1M | ($2.1M) | ($5.6M) |
-| 3 | $400M | $5.54M | $1.3M | ($4.3M) |
-| 4 | $800M | $11.08M | $7.0M | $2.7M |
-| 5 | $1.5B | $20.8M | $16.8M | $19.5M |
-| 6 | $2.5B | $34.6M | $30.6M | $50.1M |
-| 7 | $4B | $55.4M | $51.4M | $101.5M |
-| 8 | $6B | $83.1M | $78.1M | $179.6M |
-| 9 | $9B | $124.7M | $119.7M | $299.3M |
-| 10 | $12B | $166.2M | $160.2M | $459.5M |
-
-**Payback on $11.356M buildout: Year 4** (cumulative NOI turns positive)
-
-## ESG impact at scale
-
-At $5B annual volume (Sovereign tier), the ESG fee pool generates **$6.25M/year** distributed to:
-
-| Program | Annual Impact |
-|---|---|
-| Ocean Conservation (30%) | $1.875M |
-| Renewable Energy (25%) | $1.5625M |
-| Forest Preservation (20%) | $1.25M |
-| Climate Action (15%) | $937.5K |
-| Clean Water (10%) | $625K |
-
-At $12B annual volume (Year 10): **$15M+/year** in verified on-chain impact.
+Fees are set by on-chain governance. The 0.01% license fee is permanently hardcoded into the token contract and accrues to the license holder in perpetuity, independent of company ownership.
 
 ---
 
-Full model: `dpx-protocol/FINANCIAL_MODEL.md`
+## Client savings at 1.385%
+
+These are the savings a client realises by switching from legacy rails to DPX. At 1.385% typical, DPX is not "half" the legacy cost — it is roughly **one-fifth**. The savings are larger than earlier projections.
+
+| Annual Volume | DPX Cost (1.385%) | vs Bank Wire (4% mid) | vs Industry Avg (6.35%) | vs Convera (2.5%) |
+|---|---|---|---|---|
+| $10M | $138.5K | Save $261.5K | Save $497K | Save $111.5K |
+| $100M | $1.385M | Save $2.615M | Save $4.965M | Save $1.115M |
+| $500M | $6.925M | Save $13.075M | Save $24.825M | Save $5.575M |
+| $1B | $13.85M | Save $26.15M | Save $49.65M | Save $11.15M |
+| $5B | $69.25M | Save $130.75M | Save $248.25M | Save $55.75M |
+
+**A $1B institutional fund switching from average bank wire rails to DPX saves ~$26M per year. Against the 6.35% global average, that savings exceeds $49M.**
+
+*Sources: World Bank Remittance Prices Worldwide Q1 2025 (global avg 6.49%, banks 13.64%); BofA/Wells Fargo/Chase FX markups estimated 2.5–6% (NerdWallet, FNBO SWIFT GPI case study 2025); Convera 1.5–4% (FXCompared 2025).*
+
+---
+
+## Competitive positioning
+
+| Provider | Typical Rate | Per $1B |
+|---|---|---|
+| Bank Wire (commercial) | 2.50–6.00% | $25M–$60M |
+| SWIFT Correspondent (SME) | 3.00–8.00% | $30M–$80M |
+| Convera / Corporate FX | 1.50–4.00% | $15M–$40M |
+| **DPX (typical)** | **1.385%** | **$13.85M** |
+| Wise Business | 0.33–0.59% | ~$4.5M |
+| Ripple ODL | 0.15–0.30% | ~$2.5M |
+
+DPX is priced at the low end of institutional FX rails with a compliance, stability, and ESG layer that no fintech rail currently offers. Wise and Ripple are cheaper on raw rate — they provide no on-chain ESG redistribution, no 6-tier stability oracle, no MiCA/FCA/Basel III compliance documentation, and no agent-native programmability.
+
+---
+
+## Market size
+
+| Market | Size | Source |
+|---|---|---|
+| Total global cross-border payments (TAM) | $150T/year | McKinsey Global Payments 2022 |
+| Programmable institutional flows (SAM) | $10–20T/year | a16z Crypto 2024 |
+| Enterprise treasury + B2B stablecoin SOM | $55–125B/year | a16z; Statista 2024 |
+| Treasury management software market | <$15B/year | Statista |
+
+Stablecoins processed **$15.6T in 2024** — on par with Visa. Monthly adjusted stablecoin volume reached **$702B in early 2025**, up 49% year-over-year (a16z Crypto State of Crypto 2024).
+
+0.5% of the $15.6T stablecoin market at DPX's 1.385% rate generates **~$1.1B/year** in fees. It takes a small number of high-volume institutional relationships to reach meaningful scale.
+
+---
+
+## Unit economics per $1M settled
+
+| Scenario | Rate | DPX Revenue |
+|---|---|---|
+| Same-currency, score 100 | 0.86% | $8,600 |
+| Same-currency, score 75 | 0.975% | $9,750 |
+| Cross-border, score 75 *(typical)* | 1.385% | $13,850 |
+| Cross-border, score 50 | 1.635% | $16,350 |
+| Cross-border, score 25 | 1.760% | $17,600 |
+
+---
+
+## Illustrative client scenarios
+
+*Pre-revenue. These scenarios are illustrative based on publicly available market data.*
+
+### Enterprise treasury client (Kyriba-scale)
+
+A single large enterprise treasury moving $1B/year in cross-border settlements.
+
+| Metric | Value |
+|---|---|
+| Annual volume | $1B |
+| Current rail cost (bank wire, ~4%) | $40M |
+| DPX cost (typical 1.385%) | $13.85M |
+| **Annual savings** | **$26.15M** |
+| ESG fees redistributed to verified impact | $1.25M/year |
+
+### Fintech platform embedding DPX
+
+A B2B fintech processing cross-border payments for SMEs, embedding DPX as its settlement layer.
+
+| Metric | Value |
+|---|---|
+| Annual volume | $200M |
+| Current rail cost (~4%) | $8M |
+| DPX cost (1.385%) | $2.77M |
+| **Annual savings** | **$5.23M** |
+| ESG redistribution pool | $250K/year |
+
+### AI agent treasury workflow
+
+Autonomous treasury agents running settlement workflows via the oracle API.
+
+| Metric | Value |
+|---|---|
+| Annual volume | $50M |
+| Current rail cost (~4%) | $2M |
+| DPX cost (1.385%) | $692K |
+| **Annual savings** | **$1.31M** |
+
+---
+
+## ESG redistribution model
+
+The ESG fee component is not retained as protocol revenue — it flows on-chain to verified impact pools via `ESGRedistribution` (`0x4F3741252847E4F07730c4CEC3018b201Ac6ce87`).
+
+**At $1B annual volume (counterparty ESG score 75):**
+
+| Program | Rate | Annual Impact |
+|---|---|---|
+| Ocean Conservation | 30% | $375K |
+| Renewable Energy | 25% | $312K |
+| Forest Preservation | 20% | $250K |
+| Climate Action | 15% | $188K |
+| Clean Water | 10% | $125K |
+| **Total redistributed** | | **$1.25M/year** |
+
+At $10B annual volume: **$12.5M+/year** redistributed — entirely on-chain, verifiable via IPFS receipts on Storacha.
+
+---
+
+## Licensing residual mechanics
+
+The 0.01% fee is hardcoded into the DPX token contract at `0x7A62dEcF6936675480F0991A2EF4a0d6f1023891` and enforced at the ERC-20 transfer level. It:
+
+- Survives any acquisition, dissolution, or change of control
+- Requires an on-chain governance vote to modify
+- Accrues to the designated license address on every settlement, automatically
+
+| Annual Volume | License Residual (in perpetuity) |
+|---|---|
+| $100M | $10K/year |
+| $1B | $100K/year |
+| $10B | $1M/year |
+| $100B | $10M/year |
+
+---
+
+## Sources
+
+- a16z Crypto: State of Crypto 2024 — stablecoin volume $15.6T, Visa parity
+- World Bank Remittance Prices Worldwide Q1 2025 — global avg 6.49%, banks 13.64%
+- McKinsey Global Payments Report 2022 — $150T cross-border TAM
+- Statista: stablecoin market, ESG ETF market, global remittance data
+- NerdWallet, FNBO SWIFT GPI case study 2025 — commercial bank wire FX markup range
+- FXCompared, Wise comparison 2025 — Convera rate estimate
+- Wise pricing page, Wise Mission Update Q4 2025 — 0.33–0.59% published all-in
