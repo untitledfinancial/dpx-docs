@@ -127,6 +127,19 @@ curl https://stability.untitledfinancial.com/reliability
 | `stability.currentScore < 75` | Defer large settlements |
 | `peg.deviationBps >= 50` | Hold — peg alert active |
 
+**AI intelligence layer** — when present, the `intelligence` object provides a synthesised view across all 32+ signals:
+
+| Field | Type | Description |
+|---|---|---|
+| `intelligence.reasoning` | string | Plain-language explanation of primary stability drivers and key risks |
+| `intelligence.confidence` | number (0–1) | AI confidence in the synthesis, reflecting signal clarity and data quality |
+| `intelligence.alerts` | string[] | Up to 3 concise action items for treasury and risk teams |
+| `intelligence.outlook` | string | `IMPROVING` / `STABLE` / `DETERIORATING` / `UNCERTAIN` |
+| `intelligence.model` | string | AI model used for synthesis |
+| `intelligence.generatedAt` | string | ISO 8601 timestamp of synthesis |
+
+The `intelligence` field augments but does not replace the quantitative scores. Always use `stability.currentScore` and `peg.deviationBps` as the authoritative inputs for settlement decisions.
+
 ---
 
 ## GET /health

@@ -3,7 +3,7 @@ title: Stability Oracle
 description: DPX Stability Oracle v8.0 — 7-tier architecture with cross-body integration, bond yield curve analysis, geopolitical risk, capital flows, tech supply chain, and full recommendation engine.
 ---
 
-> **Proprietary technology.** The Stability Oracle architecture, signal pipeline, weighting model, and source code are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. API access is available to approved beta partners. Self-hosting requires a separate license agreement — contact [beta@untitledfinancial.com](mailto:beta@untitledfinancial.com).
+> **Proprietary technology.** The Stability Oracle architecture, signal pipeline, weighting model, and source code are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. API access is available to approved beta partners. Self-hosting requires a separate license agreement — contact [partner@untitledfinancial.com](mailto:partner@untitledfinancial.com).
 
 The DPX Stability Oracle v8.0 is a 7-tier signal pipeline that aggregates 32+ real-world data sources into a single actionable confidence score. It provides 0–90 day early warning signals across six independent transmission channels — and includes a full recommendation engine, policy manager, and **active war mitigation protocols** with real-time GDELT conflict signals and ACLED event data integration.
 
@@ -198,6 +198,29 @@ Governance constraints on top of recommendations. The engine proposes — the po
 The policy manager applies proprietary confidence and stability thresholds to determine when basket and fee adjustments are executed. Hard constraints cap the magnitude of each adjustment, and cooling periods prevent rapid successive changes. A circuit breaker automatically halts all adjustments under extreme instability conditions.
 
 War mitigation protocols add a second override layer: when escalation risk is HIGH, the policy manager can block any automated weight change that would reduce USD exposure below conflict-level minimums.
+
+---
+
+## AI Intelligence Layer
+
+> **Proprietary technology.** The AI synthesis methodology, prompt architecture, and inference infrastructure are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc.
+
+The Stability Oracle includes an embedded AI intelligence layer that runs after all 32+ data sources are collected and all 7 tiers are computed. It synthesises the full signal set into a structured institutional briefing appended to every oracle response as an `intelligence` object.
+
+**What it produces:**
+
+| Output | Description |
+|---|---|
+| `reasoning` | 2–3 sentences explaining the primary stability drivers and key risks in plain language — written for treasury and risk management teams |
+| `confidence` | 0.0–1.0 reflecting the clarity and quality of the underlying signal set |
+| `alerts` | Up to 3 concise action items for institutional counterparties |
+| `outlook` | `IMPROVING` / `STABLE` / `DETERIORATING` / `UNCERTAIN` |
+
+**Design principles:**
+- The AI layer synthesises signals; it does not generate them. All inputs come from the quantitative pipeline.
+- If synthesis fails (network issue, model unavailable), the oracle still returns the full quantitative result. The `intelligence` field is omitted rather than degraded.
+- The `confidence` field in `intelligence` reflects signal quality, not a replacement for `stability.currentScore`. Always use the quantitative score for settlement decisions.
+- The synthesis runs entirely within Cloudflare's infrastructure — no raw data leaves the oracle's execution context.
 
 ---
 

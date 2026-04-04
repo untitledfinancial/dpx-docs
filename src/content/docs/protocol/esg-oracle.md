@@ -3,7 +3,7 @@ title: ESG Oracle
 description: How the DPX ESG Oracle scores counterparties across Environmental, Social, and Governance dimensions using 8 real-world data sources — including human rights and gender equity metrics — and how 100% of ESG fee revenue is redistributed to verified on-chain impact programs.
 ---
 
-> **Proprietary technology.** The ESG Oracle scoring methodology, weighting model, redistribution logic, and source code are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. API access is available to approved beta partners. Self-hosting requires a separate license agreement — contact [beta@untitledfinancial.com](mailto:beta@untitledfinancial.com).
+> **Proprietary technology.** The ESG Oracle scoring methodology, weighting model, redistribution logic, and source code are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. API access is available to approved beta partners. Self-hosting requires a separate license agreement — contact [partner@untitledfinancial.com](mailto:partner@untitledfinancial.com).
 
 The DPX ESG Oracle produces live E, S, G scores from 8 real-world institutional data sources. Those scores flow directly into settlement fees: a higher score means a lower fee. 100% of ESG fee revenue is redistributed to verified on-chain impact programs — making every DPX settlement a direct contributor to measurable environmental and social outcomes.
 
@@ -48,7 +48,7 @@ The Social (S) score is a proprietary weighted composite across four sub-dimensi
 | Gender Equity | UN SDG 5.5, 5.c, 8.5 | Women in management, earnings parity, gender-responsive institutional frameworks |
 | Health | UN SDG 3 | Population wellbeing baseline |
 
-The weighting model is proprietary intellectual property. Full methodology documentation is available to approved institutional partners under NDA — contact [beta@untitledfinancial.com](mailto:beta@untitledfinancial.com).
+The weighting model is proprietary intellectual property. Full methodology documentation is available to approved institutional partners under NDA — contact [partner@untitledfinancial.com](mailto:partner@untitledfinancial.com).
 
 ---
 
@@ -56,7 +56,7 @@ The weighting model is proprietary intellectual property. Full methodology docum
 
 The ESG Oracle score directly determines the ESG fee component of each settlement. A higher score means a lower fee. The component ranges from **0.00%** (score 100) to **0.50%** (score 0). The on-chain contract, oracle, and API always apply the same calculation consistently.
 
-The scoring methodology, sub-score weighting model, and fee calculation logic are **proprietary intellectual property** of Untitled_ LuxPerpetua Technologies, Inc. Full methodology documentation is available to approved institutional partners under NDA — contact [beta@untitledfinancial.com](mailto:beta@untitledfinancial.com).
+The scoring methodology, sub-score weighting model, and fee calculation logic are **proprietary intellectual property** of Untitled_ LuxPerpetua Technologies, Inc. Full methodology documentation is available to approved institutional partners under NDA — contact [partner@untitledfinancial.com](mailto:partner@untitledfinancial.com).
 
 ---
 
@@ -107,13 +107,34 @@ Every redistribution is verifiable on-chain. Any agent, auditor, or regulator ca
 
 ---
 
+## AI Intelligence Layer
+
+> **Proprietary technology.** The AI synthesis methodology, qualitative signal sources, and inference infrastructure are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc.
+
+The ESG Oracle includes an embedded AI intelligence layer that runs after scores are computed. It synthesises the quantitative E, S, G scores alongside live qualitative signals into a structured institutional briefing returned as an `intelligence` object on every oracle response.
+
+**What it produces:**
+
+| Output | Description |
+|---|---|
+| `reasoning` | Plain-language explanation of the primary ESG signal drivers and material risk areas |
+| `confidence` | 0.0–1.0 reflecting data freshness, source coverage, and signal clarity |
+| `alerts` | Up to 3 ESG risk items material to institutional counterparties or regulators |
+| `outlook` | `IMPROVING` / `STABLE` / `DETERIORATING` / `UNCERTAIN` |
+
+The AI layer draws on qualitative signals beyond the quantitative data sources — including real-time news events from global sources — to identify emerging ESG risks before they appear in institutional data feeds. The specific sources and synthesis methodology are proprietary.
+
+If synthesis is unavailable, the oracle returns the full quantitative result and omits the `intelligence` field. The quantitative scores are always the authoritative input for fee calculations.
+
+---
+
 ## Live Endpoint
 
 ```bash
 GET https://esg.untitledfinancial.com/esg-score
 ```
 
-Returns the current E, S, G scores, composite average, active fee rate, and tier label. Use `scores.average` as the `esgScore` parameter in settlement quotes on the Stability Oracle.
+Returns the current E, S, G scores, composite average, active fee rate, tier label, and AI intelligence synthesis. Use `scores.average` as the `esgScore` parameter in settlement quotes on the Stability Oracle.
 
 ---
 

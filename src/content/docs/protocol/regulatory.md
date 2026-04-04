@@ -24,7 +24,7 @@ DPX's protocol architecture is **designed with MiCA Article 36 compliance as a f
 
 DPX is currently in **beta** and does not yet hold a MiCA authorisation. Institutional partners in the EU should treat DPX as a pre-authorisation protocol built to the MiCA standard — not as a currently authorised e-money token issuer. Full MiCA compliance is a defined milestone on the DPX roadmap.
 
-For EU institutions beginning regulatory due diligence, contact [beta@untitledfinancial.com](mailto:beta@untitledfinancial.com) for the current compliance roadmap documentation.
+For EU institutions beginning regulatory due diligence, contact [partner@untitledfinancial.com](mailto:partner@untitledfinancial.com) for the current compliance roadmap documentation.
 
 ---
 
@@ -128,6 +128,28 @@ DPX's ESG data output is aligned with the reporting frameworks most commonly req
 
 ---
 
+## Continuous Compliance Monitoring
+
+DPX operates a continuous regulatory intelligence system that monitors major regulatory bodies across all relevant jurisdictions on a daily basis. Covered sources include FATF, FCA, SEC, ECB, BIS/CPMI, FSB, and OFAC.
+
+Each update is classified by relevance to DPX — stablecoin regulation, VASP/FATF Travel Rule developments, AML/KYC requirements, sanctions designations, MiCA technical standards, ESG disclosure rules, and cross-border payment policy. High-severity regulatory changes trigger immediate internal review.
+
+The system maintains a live compliance knowledge base tracking open and resolved gaps across all monitored regulatory areas. This ensures DPX's compliance posture adapts continuously as the regulatory landscape evolves, rather than relying on periodic manual reviews.
+
+### Open Compliance Areas (current)
+
+| Area | Status | Notes |
+|---|---|---|
+| FATF Travel Rule (Rec. 16) | In progress | VASP-to-VASP data fields spec under development |
+| MiCA Title III (Art. 19 Whitepaper) | In progress | Formal regulatory review underway |
+| OFAC SDN screening | Documented | Institutional integrators required to screen; architecture supports allowlist |
+| SFDR PAI reporting format | Roadmap | Data exists; SFDR-formatted output in development |
+| CBDC interoperability | Roadmap | Monitoring BIS Project Agorá, mBridge |
+
+For institutional partners requiring a compliance briefing or current gap assessment, contact [partner@untitledfinancial.com](mailto:partner@untitledfinancial.com).
+
+---
+
 ## Contact
 
-For regulatory due diligence enquiries, legal opinion requests, or to arrange a compliance briefing for your institution's legal or risk team — contact [beta@untitledfinancial.com](mailto:beta@untitledfinancial.com).
+For regulatory due diligence enquiries, legal opinion requests, or to arrange a compliance briefing for your institution's legal or risk team — contact [partner@untitledfinancial.com](mailto:partner@untitledfinancial.com).

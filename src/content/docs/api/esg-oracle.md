@@ -40,6 +40,19 @@ curl https://esg.untitledfinancial.com/esg-score
 | `fee.tier` | "Good" | ESG tier label |
 | `fee.formula` | `"(100 - esgScore) / 200"` | Formula used |
 
+**AI intelligence layer** — when present, the `intelligence` object provides synthesised ESG context:
+
+| Field | Type | Description |
+|---|---|---|
+| `intelligence.reasoning` | string | Plain-language explanation of primary ESG drivers, current data signals, and risk areas |
+| `intelligence.confidence` | number (0–1) | AI confidence in the synthesis, reflecting data freshness and source coverage |
+| `intelligence.alerts` | string[] | Up to 3 concise ESG risk items relevant to institutional counterparties |
+| `intelligence.outlook` | string | `IMPROVING` / `STABLE` / `DETERIORATING` / `UNCERTAIN` |
+| `intelligence.model` | string | AI model used for synthesis |
+| `intelligence.generatedAt` | string | ISO 8601 timestamp of synthesis |
+
+The `intelligence` field provides qualitative context only. Use `scores.average` as the authoritative input for fee calculations.
+
 **Social (S) sub-dimensions** — the Social score is a proprietary composite including human rights, education, gender equity, and health indicators drawn from UN SDG and ILO data. Full methodology is available to approved partners under NDA.
 
 ---
