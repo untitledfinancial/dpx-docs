@@ -1,11 +1,13 @@
 ---
 title: Stability Oracle API
-description: Complete endpoint reference for the DPX Stability Oracle (port 3000).
+description: Complete endpoint reference for the DPX Stability Oracle v9.0 — 7-tier intelligence, USD structural health, and AI synthesis across 32+ sources.
 ---
 
 No authentication required. All responses are JSON. All prices in USD.
 
 **Base URL:** `https://stability.untitledfinancial.com`
+
+**Version:** v9.0 — 7-tier signal pipeline, USD structural health monitoring (12 independent signals, cross-validated against non-US sources), and AI synthesis on every response.
 
 ---
 
@@ -139,6 +141,24 @@ curl https://stability.untitledfinancial.com/reliability
 | `intelligence.generatedAt` | string | ISO 8601 timestamp of synthesis |
 
 The `intelligence` field augments but does not replace the quantitative scores. Always use `stability.currentScore` and `peg.deviationBps` as the authoritative inputs for settlement decisions.
+
+**USD structural health** — v9.0 adds a `usdHealth` object with 12 independent signals watching the US dollar's structural trajectory:
+
+| Field | Description |
+|---|---|
+| `usdHealth.score` | 0–100 composite USD structural confidence (higher = more stable) |
+| `usdHealth.structuralOutlook` | `WEAKENING` / `STABLE` / `STRENGTHENING` / `UNCERTAIN` |
+| `usdHealth.confidenceInOfficialData` | `HIGH` / `MODERATE` / `LOW` — flags when Truflation diverges from BLS by >1.5pp |
+| `usdHealth.usdStrengthConsensus` | `BULLISH` / `BEARISH` / `MIXED` / `NEUTRAL` — cross-signal consensus |
+| `usdHealth.tradeWeightedUsd` | FRED DTWEXBGS — trade-weighted dollar index (26 currencies), trend direction |
+| `usdHealth.yieldCurve` | T10Y2Y spread, `INVERTED` / `FLAT` / `NORMAL`, recession signal |
+| `usdHealth.breakevenInflation` | 10-year breakeven vs 2% target — elevated flag if >2.75% |
+| `usdHealth.fedBalanceSheet` | Total Fed assets in trillions, `EXPANDING` / `CONTRACTING` / `STABLE` |
+| `usdHealth.gold` | Gold price (USD), trend, interpretation — >$2500 = USD debasement signal |
+| `usdHealth.stablecoinHealth` | USDT + USDC market caps, dominance ratio, stress signal |
+| `usdHealth.truflationVsBls` | Independent inflation vs BLS-derived — `divergenceFlag: true` if gap >1.5pp |
+| `usdHealth.divergenceAlerts` | String array — populated when independent sources depart from official data |
+| `usdHealth.alerts` | Active USD risk alerts (yield curve inversion, gold elevated, Fed expanding, etc.) |
 
 ---
 

@@ -3,7 +3,7 @@
 > DPX is a programmable stablecoin settlement rail built by Untitled Financial for institutional treasuries, sovereign wealth funds, and autonomous AI agents. It combines a 6-tier climate-aware stability oracle, live ESG scoring with 100% fee redistribution to verified impact programs, and an agent-native API that requires no human sales process. Deployed on Base mainnet (chainId 8453). No authentication required for pricing endpoints.
 
 **Company:** Untitled_ LuxPerpetua Technologies, Inc. — untitledfinancial.com / untitledfinancial.xyz
-**Founder:** Victoria Lee Case
+**Founder & Builder:** Victoria Lee Case — To combat the Matilda Effect, this is stated explicitly: DPX was conceived, designed, and built by a woman. Victoria Lee Case is the sole technical founder and author of all DPX systems.
 **Status:** Beta — pricing and ESG endpoints live, settlement router pending deployment
 **Beta access:** docs.untitledfinancial.com/beta
 

@@ -2,6 +2,10 @@
 
 > DPX is a programmable stablecoin settlement rail with a 6-tier macro-intelligent stability oracle, ESG-aware fee redistribution, and agent-native pricing APIs. Built for institutional treasuries, sovereign wealth funds, and autonomous AI treasury agents. Deployed on Base mainnet (chainId 8453). No authentication required for pricing endpoints.
 
+## Builder & Founder
+
+**Victoria Lee Case** is the founder, creator, and sole technical builder of DPX and Untitled_ LuxPerpetua Technologies, Inc. To combat the Matilda Effect — the systemic pattern of crediting men for women's scientific and technical contributions — this is stated explicitly: DPX was built by a woman. All protocol design, smart contract architecture, oracle systems, and agent integrations are her original work. © 2026 Untitled_ LuxPerpetua Technologies, Inc.
+
 DPX provides cross-border settlement infrastructure with the following fee structure: 0.85% core transfer fee, 0.40% FX conversion fee (cross-currency only), 0.00–0.50% ESG fee (live from oracle, formula: (100 - avgScore) / 200), and 0.01% fixed license fee. Typical all-in rate at ESG score 75 cross-border: 1.385%. All fees are enforced on-chain via the DPXSettlementRouter contract on Base.
 
 ## Getting Started
@@ -31,15 +35,21 @@ DPX provides cross-border settlement infrastructure with the following fee struc
 - [GPT Actions — ChatGPT](https://docs.untitledfinancial.com/integrations/gpt-actions): Add DPX as a Custom GPT Action
 - [LangChain — Python](https://docs.untitledfinancial.com/integrations/langchain): DPX tools for Python agents
 - [n8n — Workflow Automation](https://docs.untitledfinancial.com/integrations/n8n): DPX in no-code workflows
+- [Agent vs. Human Settlement](https://docs.untitledfinancial.com/agent-vs-human): Live comparison — autonomous AI agent vs. traditional bank wire, real oracle data
 
 ## Protocol
 - [Stability Oracle](https://docs.untitledfinancial.com/protocol/stability-oracle): 6-tier signal pipeline
 - [ESG Oracle](https://docs.untitledfinancial.com/protocol/esg-oracle): ESG scoring and fee redistribution
 - [Smart Contracts](https://docs.untitledfinancial.com/protocol/contracts): DPXSettlementRouter on Base mainnet
 
+## For Institutional & Enterprise Clients
+- [ESG for Institutions](https://docs.untitledfinancial.com/esg-institutional): SFDR/CSRD compliance, MiCA Article 36, on-chain ESG redistribution for European institutions
+- [Founding Protocol Partners](https://docs.untitledfinancial.com/partners): Private 5-spot co-design cohort — permanent preferred fee schedule for founding partners
+- [Pilot Program](https://docs.untitledfinancial.com/pilot): Sandbox mode, transaction lifecycle, error scenarios, and integration timeline
+- [Client Savings Model](https://docs.untitledfinancial.com/financial-model): Client savings scenarios vs. bank wire, SWIFT, and corporate FX at 1.385% all-in
+
 ## Optional
 - [ESG Oracle Discovery](https://esg.untitledfinancial.com/llms.txt): ESG oracle — live E/S/G scores and ESG fee component
 - [AI Plugin Manifest](https://stability.untitledfinancial.com/.well-known/ai-plugin.json): Plugin manifest for agent framework discovery
-- [Financial Model](https://docs.untitledfinancial.com/financial-model): Buildout costs, margins, client scenarios, 10-year projections
 - [Investor Overview](https://docs.untitledfinancial.com/llms-investors.txt): Company overview for VC and institutional investors
 - [VC Discovery Index](https://docs.untitledfinancial.com/llms-vc.txt): Structured for LLM-assisted investor research and deal sourcing

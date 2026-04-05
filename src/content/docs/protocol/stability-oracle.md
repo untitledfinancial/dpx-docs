@@ -1,11 +1,13 @@
 ---
 title: Stability Oracle
-description: DPX Stability Oracle v8.0 — 7-tier architecture with cross-body integration, bond yield curve analysis, geopolitical risk, capital flows, tech supply chain, and full recommendation engine.
+description: DPX Stability Oracle v9.0 — 7-tier architecture, USD structural health monitoring, AI intelligence synthesis, and cross-validated signals from independent non-US sources.
 ---
 
-> **Proprietary technology.** The Stability Oracle architecture, signal pipeline, weighting model, and source code are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. API access is available to approved beta partners. Self-hosting requires a separate license agreement — contact [partner@untitledfinancial.com](mailto:partner@untitledfinancial.com).
+> **Proprietary technology.** The Stability Oracle architecture, signal pipeline, weighting model, AI synthesis methodology, and source code are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc.
 
-The DPX Stability Oracle v8.0 is a 7-tier signal pipeline that aggregates 32+ real-world data sources into a single actionable confidence score. It provides 0–90 day early warning signals across six independent transmission channels — and includes a full recommendation engine, policy manager, and **active war mitigation protocols** with real-time GDELT conflict signals and ACLED event data integration.
+The DPX Stability Oracle v9.0 is a 7-tier signal pipeline that aggregates 32+ real-world data sources into a single actionable confidence score — with an AI intelligence layer that synthesises every signal into a plain-language briefing for treasury and risk teams. It provides 30–90 day early warning signals across seven independent transmission channels, includes a USD structural health module that cross-validates US official data against independent and non-US sources, and runs a full recommendation engine with active war mitigation protocols.
+
+**New in v9.0:** USD structural health monitoring (12 signals), Truflation independent inflation cross-check, CoinGecko stablecoin health, DeFiLlama TVL, ECB cross-validation, gold price debasement signal, USGS earthquake supply-chain impact — all feeding a `usdHealth` confidence score blended into the composite stability score.
 
 ---
 

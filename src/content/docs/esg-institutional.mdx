@@ -1,0 +1,122 @@
+---
+title: ESG Compliance for Institutions
+description: DPX is the only settlement rail that makes your ESG obligations a fee discount, not a reporting burden. Built for institutions under SFDR, CSRD, MiCA, and FCA ESG rules.
+---
+
+
+## The problem with ESG in payments
+
+Every institution under SFDR, CSRD, or FCA sustainability rules needs to demonstrate that its financial infrastructure aligns with its ESG commitments. Most settlement rails give you nothing — no score, no audit trail, no on-chain proof.
+
+DPX is different. The ESG layer is not a reporting module bolted on after the fact. It is enforced at the fee level, on-chain, on every settlement.
+
+---
+
+## How it works
+
+The DPX ESG Oracle scores every settlement counterparty across Environmental, Social, and Governance dimensions — drawn from six institutional data sources:
+
+| Source | Weight | Coverage |
+|---|---|---|
+| World Bank | 40 | Governance indicators, climate exposure |
+| UN Global Compact | 30 | SDG alignment, sustainability commitments |
+| Climate Monitor | 30 | Carbon metrics, transition risk |
+| IMF | 20 | Macro stability, policy risk |
+| OECD | 20 | Corporate governance, anti-corruption |
+| SEC / Regulatory filings | 20 | Disclosed ESG data where available |
+
+The score (0–100) sets the ESG fee component:
+
+```
+ESG fee = (100 − score) / 200
+
+Score 100 → 0.00% (zero ESG fee — best possible outcome)
+Score 75  → 0.125% (typical institutional counterparty)
+Score 50  → 0.25%
+Score 0   → 0.50% (maximum)
+```
+
+**The entire ESG fee is redistributed — none is retained.** It flows on-chain to verified impact programs via `ESGRedistribution` on Base mainnet.
+
+---
+
+## What this means for compliance teams
+
+  **SFDR Article 8 & 9** — Every settlement generates an IPFS-verifiable ESG receipt. The score, the fee, and the redistribution destination are all on-chain — suitable for SFDR Principal Adverse Impact disclosure.
+
+  **CSRD / ESRS** — The redistribution pools (Renewable Energy, Ocean, Forest, Climate Action, Clean Water) map to ESRS E1–E5 environmental categories. On-chain receipts are audit-ready without manual reporting.
+
+  **MiCA Article 36** — DPX's oracle-based stability monitoring and reserve disclosure mechanisms are structurally aligned with MiCA's significant e-money token requirements. Documented for EU regulatory review.
+
+  **FCA PSR / SDR** — DPX's ESG methodology and on-chain redistribution provides the kind of verifiable sustainability data the FCA's Sustainability Disclosure Requirements need from financial infrastructure.
+
+---
+
+## The financial case
+
+For an institution settling $500M/year in cross-border payments:
+
+| Metric | Value |
+|---|---|
+| Current bank wire cost (~4%) | $20M/year |
+| DPX cost at score 75 (1.385%) | $6.925M/year |
+| **Annual savings** | **$13.075M/year** |
+| ESG fee redistributed to verified impact | $625K/year |
+| IPFS audit receipts generated | Every settlement |
+| Manual ESG reporting hours saved | Significant |
+
+Compliance is not the cost here. It is the discount.
+
+---
+
+## On-chain ESG redistribution
+
+The ESG fee is not donated to a fund. It is programmatically distributed on-chain to verified impact programs — before the settlement completes. There is no human intermediary. The IPFS receipt exists before your sustainability report is written.
+
+| Impact Program | Allocation |
+|---|---|
+| Renewable Energy | 25% |
+| Ocean Conservation | 30% |
+| Forest Preservation | 20% |
+| Climate Action | 15% |
+| Clean Water | 10% |
+
+Every redistribution is traceable on Basescan and pinned to IPFS via Storacha. Your ESG team can verify the transaction directly — no vendor report required.
+
+---
+
+## For European institutions specifically
+
+The regulatory pressure is structural, not cyclical. SFDR Level 2 RTS, CSRD effective 2025, and the EU Taxonomy Regulation all create ongoing reporting obligations that require verified data about the sustainability of financial counterparties and infrastructure.
+
+DPX is the first settlement rail designed from the ground up to generate this data automatically, on-chain, as a byproduct of settlement — not as a separate reporting process.
+
+This is especially relevant for:
+- **Asset managers** reporting PAI indicators under SFDR Article 8/9
+- **Banks** with CSRD sustainability due diligence obligations
+- **Insurance companies** with SFDR regulatory requirements on investments
+- **Pension funds** and institutional investors with fiduciary ESG obligations
+
+---
+
+## Validation from policy research
+
+DPX's ESG design is grounded in published policy research:
+
+- **WEF Stakeholder Capitalism Metrics** — on-chain redistribution receipts solve the auditability problem WEF identifies as the core weakness in ESG claims
+- **UN PRI** — alignment with Principle 6 (reporting) through automatic IPFS audit trail
+- **GFANZ** — redistribution pool categories (Renewable/Ocean/Forest) map to GFANZ-aligned climate programs
+- **TCFD** — governance and climate risk scores from oracle sources align with TCFD disclosure categories
+- **OHCHR** — social score methodology includes SDG indicators covering education and health (OHCHR human rights dimensions roadmapped for next version)
+
+See the full [policy papers library →](https://untitledfinancial.com/policy-papers) — 43 papers covering MiCA, SFDR, FATF, CBDC policy, and cross-border payment regulation.
+
+---
+
+## Talk to us
+
+If you are a sustainability, ESG reporting, or treasury team at a European institution and you need settlement infrastructure that generates verifiable ESG data — not just claims it — we want to hear from you.
+
+DPX is accepting applications for the [Founding Protocol Partners](/partners) cohort. European institutions under SFDR/CSRD are a first priority for the inaugural cohort.
+
+[Apply for the partner program →](/partners) · [See live ESG scores →](/demo) · [Read the regulatory positioning →](/protocol/regulatory)

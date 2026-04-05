@@ -134,7 +134,7 @@ Volume tiers apply a discount to the core fee only:
 - Institutional ($1M–$10M/month): 20% discount
 - Sovereign ($10M+/month): 30% discount
 
-When comparing to competitors, use: SWIFT/bank wire 2–5%, Stripe stablecoin 1.50%, DPX typical 1.385%.
+When comparing to competitors, use: SWIFT/bank wire 2–5%, Convera corporate FX 2–3%, DPX typical 1.385%, Wise Business 0.4–1.5% (but no on-chain compliance, ESG scoring, or programmability).
 ```
 
 ## Available actions

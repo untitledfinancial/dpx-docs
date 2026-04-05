@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DPX Playground — Untitled_</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --brand:      #192f2d;
+    --brand-mid:  #254442;
+    --brand-tint: #e8f0ef;
+    --bg:         #ffffff;
+    --sidebar-bg: #f2f7f6;
+    --border:     #dce8e7;
+    --border-mid: #c5d8d7;
+    --text:       #37352f;
+    --text-dark:  #192f2d;
+    --text-muted: #9b9a97;
+    --text-sub:   #787774;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-display: 'Bebas Neue', 'Arial Black', sans-serif;
+    --font-mono: 'SF Mono','JetBrains Mono','Fira Code',ui-monospace,monospace;
+    --radius: 4px;
+    --green: #254442;
+    --green-bg: #e8f0ef;
+    --red: #787774;
+  }
+  body{
+    background:var(--bg);color:var(--text);
+    font-family:var(--font);font-size:14px;line-height:1.6;
+    min-height:100vh;display:flex;flex-direction:column
+  }
+
+  /* ── Header ─────────────────────────────────────────────────── */
+  header{
+    background:var(--brand);
+    padding:0 24px;height:52px;
+    display:flex;align-items:center;gap:20px;
+    flex-shrink:0;border-bottom:1px solid var(--brand-mid)
+  }
+  .logo{
+    font-family:var(--font);font-size:0.72rem;font-weight:600;
+    letter-spacing:0.22em;text-transform:uppercase;color:#fff;
+    text-decoration:none
+  }
+  .logo-sep{
+    font-size:0.72rem;color:rgba(255,255,255,.25);
+    border-left:1px solid rgba(255,255,255,.15);padding-left:16px;
+    margin-left:4px;letter-spacing:0.06em;font-weight:300;color:rgba(255,255,255,.5)
+  }
+  .header-status{
+    margin-left:auto;display:flex;align-items:center;gap:6px;
+    font-size:0.72rem;color:rgba(255,255,255,.6);letter-spacing:0.04em
+  }
+  .status-dot{
+    width:6px;height:6px;border-radius:50%;background:#c5d8d7;
+    transition:background .3s
+  }
+  .status-dot.live{background:#6abeaf;animation:pulse 2.5s infinite}
+  .status-dot.error{background:#9b9a97}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+  /* ── Tab bar ─────────────────────────────────────────────────── */
+  .tabs{
+    display:flex;align-items:flex-end;gap:0;
+    border-bottom:1px solid var(--border);
+    padding:0 24px;background:var(--bg);flex-shrink:0
+  }
+  .tab{
+    padding:11px 18px 10px;font-size:0.82rem;font-weight:500;
+    cursor:pointer;color:var(--text-muted);border:none;background:transparent;
+    border-bottom:2px solid transparent;font-family:var(--font);
+    transition:color .15s,border-color .15s;letter-spacing:0.01em;
+    margin-bottom:-1px
+  }
+  .tab:hover{color:var(--text)}
+  .tab.active{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+  /* ── Layout ──────────────────────────────────────────────────── */
+  .main{flex:1;overflow:hidden}
+  .panel{display:none;height:100%;overflow-y:auto}
+  .panel.active{display:flex;gap:0}
+
+  .sidebar{
+    width:260px;flex-shrink:0;background:var(--sidebar-bg);
+    border-right:1px solid var(--border);padding:20px 16px;
+    overflow-y:auto;display:flex;flex-direction:column;gap:20px
+  }
+  .content-main{
+    flex:1;padding:24px;overflow-y:auto;
+    display:flex;flex-direction:column;gap:16px;min-width:0
+  }
+
+  /* ── Section label ───────────────────────────────────────────── */
+  .section-label{
+    font-size:0.65rem;font-weight:600;letter-spacing:0.14em;
+    text-transform:uppercase;color:var(--text-muted);margin-bottom:8px
+  }
+
+  /* ── Form controls ───────────────────────────────────────────── */
+  .form-group{margin-bottom:12px}
+  label{
+    display:block;font-size:0.68rem;font-weight:600;
+    letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--text-muted);margin-bottom:5px
+  }
+  input,select,textarea{
+    width:100%;background:var(--bg);border:1px solid var(--border);
+    color:var(--text);border-radius:var(--radius);
+    padding:7px 10px;font-family:var(--font);font-size:0.88rem;
+    outline:none;transition:border-color .15s
+  }
+  input:focus,select:focus,textarea:focus{border-color:var(--brand-mid)}
+  input[type=range]{padding:4px 0;border:none;background:transparent;accent-color:var(--brand)}
+  .input-row{display:flex;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--bg)}
+  .input-row input{border:none;border-radius:0;padding:7px 10px;flex:1}
+  .input-prefix{
+    padding:7px 10px;background:var(--sidebar-bg);border-right:1px solid var(--border);
+    font-size:0.88rem;color:var(--text-muted);white-space:nowrap;user-select:none
+  }
+
+  /* ── Buttons ─────────────────────────────────────────────────── */
+  .btn{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:8px 16px;border-radius:var(--radius);font-size:0.82rem;
+    font-weight:500;cursor:pointer;transition:background .15s,border-color .15s;
+    font-family:var(--font);letter-spacing:0.04em;text-transform:uppercase;border:none
+  }
+  .btn-primary{background:var(--brand);color:#fff}
+  .btn-primary:hover{background:var(--brand-mid)}
+  .btn-primary:disabled{background:var(--border);color:var(--text-muted);cursor:not-allowed}
+  .btn-secondary{
+    background:transparent;color:var(--text);
+    border:1px solid var(--border)
+  }
+  .btn-secondary:hover{background:var(--sidebar-bg);border-color:var(--border-mid)}
+  .btn-sm{padding:5px 12px;font-size:0.72rem}
+  .btn-full{width:100%;justify-content:center}
+  .btn-row{display:flex;gap:8px;flex-wrap:wrap}
+
+  /* ── Stat grid ───────────────────────────────────────────────── */
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+    background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+  .stat-box{background:var(--bg);padding:14px 16px}
+  .stat-val{
+    font-family:var(--font-display);font-size:1.8rem;font-weight:400;
+    letter-spacing:0.04em;color:var(--brand);line-height:1.1
+  }
+  .stat-val.muted{color:var(--text-sub)}
+  .stat-key{
+    font-size:0.65rem;font-weight:600;letter-spacing:0.1em;
+    text-transform:uppercase;color:var(--text-muted);margin-top:3px
+  }
+
+  /* ── Panel card ──────────────────────────────────────────────── */
+  .pcard{
+    border:1px solid var(--border);border-radius:var(--radius);
+    overflow:hidden
+  }
+  .pcard-header{
+    padding:8px 14px;background:var(--sidebar-bg);
+    border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between
+  }
+  .pcard-title{
+    font-size:0.65rem;font-weight:600;letter-spacing:0.1em;
+    text-transform:uppercase;color:var(--text-muted)
+  }
+  .pcard-body{padding:14px}
+
+  /* ── Code / output box ───────────────────────────────────────── */
+  .code-box{
+    background:var(--sidebar-bg);border:1px solid var(--border);
+    border-radius:var(--radius);padding:12px 14px;
+    font-family:var(--font-mono);font-size:0.78rem;
+    color:var(--text-sub);white-space:pre-wrap;word-break:break-all;
+    min-height:60px;line-height:1.7;max-height:220px;overflow-y:auto
+  }
+
+  /* ── ESG tiles ───────────────────────────────────────────────── */
+  .esg-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+    background:var(--border);border:1px solid var(--border);
+    border-radius:var(--radius);overflow:hidden;margin-top:4px}
+  .esg-tile{background:var(--bg);padding:10px;text-align:center}
+  .esg-tile-val{font-family:var(--font-display);font-size:1.4rem;color:var(--brand)}
+  .esg-tile-key{font-size:0.6rem;font-weight:600;letter-spacing:0.1em;
+    text-transform:uppercase;color:var(--text-muted);margin-top:2px}
+
+  /* ── Quote result ─────────────────────────────────────────────── */
+  .quote-cols{display:grid;grid-template-columns:1fr 1fr;gap:1px;
+    background:var(--border);border:1px solid var(--border);
+    border-radius:var(--radius);overflow:hidden}
+  .quote-rail{background:var(--bg);padding:20px;text-align:center}
+  .quote-rail.dpx{background:var(--brand-tint)}
+  .quote-rail-name{font-size:0.65rem;font-weight:600;letter-spacing:0.1em;
+    text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+  .quote-pct{font-family:var(--font-display);font-size:2.2rem;letter-spacing:0.04em;color:var(--brand)}
+  .quote-usd{font-size:0.82rem;color:var(--text-sub);margin-top:3px}
+  .quote-rail:not(.dpx) .quote-pct{color:var(--text-muted)}
+
+  .savings-bar{
+    border:1px solid var(--border-mid);border-top:none;
+    background:var(--brand-tint);padding:14px 20px;text-align:center;
+    border-radius:0 0 var(--radius) var(--radius)
+  }
+  .savings-val{font-family:var(--font-display);font-size:1.8rem;color:var(--brand);letter-spacing:0.04em}
+  .savings-label{font-size:0.72rem;color:var(--text-sub);margin-top:2px}
+
+  .fee-breakdown{margin-top:12px}
+  .fee-row{
+    display:flex;justify-content:space-between;
+    font-size:0.82rem;padding:6px 0;
+    border-bottom:1px solid var(--border);color:var(--text)
+  }
+  .fee-row:last-child{border:none;font-weight:600;color:var(--brand)}
+  .fee-key{color:var(--text-muted)}
+
+  /* ── Empty state ─────────────────────────────────────────────── */
+  .empty-state{
+    display:flex;flex-direction:column;align-items:center;
+    justify-content:center;padding:48px 24px;
+    color:var(--text-muted);text-align:center;gap:10px;
+    border:1px solid var(--border);border-radius:var(--radius);
+    background:var(--sidebar-bg)
+  }
+  .empty-icon{font-size:28px;opacity:.4}
+  .empty-title{font-size:0.9rem;font-weight:600;color:var(--text-sub)}
+  .empty-sub{font-size:0.8rem;max-width:300px}
+
+  /* ── Notice / callout ────────────────────────────────────────── */
+  .notice{
+    background:var(--brand-tint);border:1px solid var(--border-mid);
+    border-left:3px solid var(--brand);border-radius:0 var(--radius) var(--radius) 0;
+    padding:10px 12px;font-size:0.78rem;color:var(--text-sub);line-height:1.5
+  }
+
+  /* ── Spinner ─────────────────────────────────────────────────── */
+  .spinner{
+    width:13px;height:13px;border:2px solid var(--border);
+    border-top-color:var(--brand);border-radius:50%;
+    animation:spin .5s linear infinite;flex-shrink:0
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ── Status bar ──────────────────────────────────────────────── */
+  .statusbar{
+    border-top:1px solid var(--border);padding:5px 24px;
+    background:var(--sidebar-bg);flex-shrink:0;
+    display:flex;align-items:center;gap:0;flex-wrap:wrap
+  }
+  .sb-item{
+    font-size:0.68rem;color:var(--text-muted);
+    padding:0 12px;border-right:1px solid var(--border);
+    white-space:nowrap
+  }
+  .sb-item:first-child{padding-left:0}
+  .sb-item:last-child{border:none}
+
+  @media(max-width:720px){
+    .panel.active{flex-direction:column}
+    .sidebar{width:100%;border-right:none;border-bottom:1px solid var(--border)}
+    .stat-grid{grid-template-columns:repeat(2,1fr)}
+    .quote-cols{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <a href="https://docs.untitledfinancial.com" class="logo">Untitled_</a>
+  <span class="logo-sep">DPX Playground</span>
+  <div class="header-status">
+    <span class="status-dot" id="hdr-dot"></span>
+    <span id="hdr-label">Connecting…</span>
+  </div>
+</header>
+
+<!-- Tabs -->
+<nav class="tabs">
+  <button class="tab active" data-tab="status">Protocol Status</button>
+  <button class="tab" data-tab="quote">Settlement Calculator</button>
+</nav>
+
+<div class="main">
+
+<!-- ══ TAB 1: Protocol Status ══════════════════════════════════════════════ -->
+<div class="panel active" id="panel-status">
+  <div class="sidebar">
+    <div>
+      <div class="section-label">Oracle endpoints</div>
+      <div class="form-group">
+        <label>Stability</label>
+        <input value="https://stability.untitledfinancial.com" readonly/>
+      </div>
+      <div class="form-group">
+        <label>ESG</label>
+        <input value="https://esg.untitledfinancial.com" readonly/>
+      </div>
+      <button class="btn btn-primary btn-full btn-sm" onclick="refreshAll()">↻ Refresh</button>
+    </div>
+
+    <div>
+      <div class="section-label">Live ESG scores</div>
+      <div class="esg-row">
+        <div class="esg-tile">
+          <div class="esg-tile-val" id="esg-e">—</div>
+          <div class="esg-tile-key">Environ.</div>
+        </div>
+        <div class="esg-tile">
+          <div class="esg-tile-val" id="esg-s">—</div>
+          <div class="esg-tile-key">Social</div>
+        </div>
+        <div class="esg-tile">
+          <div class="esg-tile-val" id="esg-g">—</div>
+          <div class="esg-tile-key">Govern.</div>
+        </div>
+      </div>
+      <div style="font-size:0.72rem;color:var(--text-muted);margin-top:8px">
+        ESG fee: <span id="esg-fee-rate" style="color:var(--text)">—</span>
+      </div>
+    </div>
+
+    <div class="notice">Auto-refreshes every 30 seconds. All data is live from the deployed oracle services.</div>
+  </div>
+
+  <div class="content-main">
+    <div class="stat-grid">
+      <div class="stat-box">
+        <div class="stat-val" id="st-score">—</div>
+        <div class="stat-key">Stability score</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val muted" id="st-dev">—</div>
+        <div class="stat-key">Peg deviation</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="st-conf">—</div>
+        <div class="stat-key">Confidence</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="st-uptime">—</div>
+        <div class="stat-key">Oracle uptime</div>
+      </div>
+    </div>
+
+    <div class="pcard">
+      <div class="pcard-header">
+        <span class="pcard-title">Stability Oracle — /reliability</span>
+        <span style="font-size:0.65rem;color:var(--text-muted)" id="st-ts">—</span>
+      </div>
+      <div class="pcard-body">
+        <div class="code-box" id="stability-raw">Fetching…</div>
+      </div>
+    </div>
+
+    <div class="pcard">
+      <div class="pcard-header">
+        <span class="pcard-title">ESG Oracle — /esg-score</span>
+      </div>
+      <div class="pcard-body">
+        <div class="code-box" id="esg-raw">Fetching…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TAB 2: Settlement Calculator ════════════════════════════════════════ -->
+<div class="panel" id="panel-quote">
+  <div class="sidebar">
+    <div>
+      <div class="section-label">Parameters</div>
+      <div class="form-group">
+        <label>Amount (USD)</label>
+        <div class="input-row">
+          <span class="input-prefix">$</span>
+          <input id="q-amount" type="number" value="1000000" min="1000" step="10000"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Settlement type</label>
+        <select id="q-type">
+          <option value="cross">Cross-border (includes FX fee)</option>
+          <option value="same">Same-currency</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>ESG score — <span id="q-esg-val" style="color:var(--brand);font-weight:700">75</span></label>
+        <input id="q-esg" type="range" min="0" max="100" value="75"
+          oninput="document.getElementById('q-esg-val').textContent=this.value"/>
+        <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text-muted);margin-top:3px">
+          <span>0 (max fee)</span><span>100 (no ESG fee)</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Compare against</label>
+        <select id="q-compare">
+          <option value="4.0">Bank wire — 4.0% (mid-market)</option>
+          <option value="6.49">Industry avg — 6.49% (World Bank 2025)</option>
+          <option value="2.5">Best-rate bank — 2.5%</option>
+          <option value="0.6">Wise — 0.6%</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="runQuote()">Get live quote →</button>
+    </div>
+
+    <div class="notice">
+      Quotes are live from the Stability Oracle, valid 300 seconds, and enforceable on-chain via DPXSettlementRouter on Base mainnet (chainId 8453).
+    </div>
+  </div>
+
+  <div class="content-main">
+    <div id="quote-result-wrap">
+      <div class="empty-state">
+        <div class="empty-icon">⚡</div>
+        <div class="empty-title">Enter parameters and run a quote</div>
+        <div class="empty-sub">Live prices fetched directly from the Stability Oracle — no intermediary</div>
+      </div>
+    </div>
+
+    <div class="pcard">
+      <div class="pcard-header"><span class="pcard-title">Raw oracle response</span></div>
+      <div class="pcard-body">
+        <div class="code-box" id="quote-raw">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</div><!-- end .main -->
+
+<!-- Status bar -->
+<div class="statusbar">
+  <span class="sb-item" id="sb-stability">Stability: —</span>
+  <span class="sb-item" id="sb-esg">ESG Oracle: —</span>
+  <span class="sb-item">Base mainnet · chainId 8453</span>
+  <span class="sb-item" id="sb-clock">—</span>
+</div>
+
+<script>
+const STABILITY_URL = 'https://stability.untitledfinancial.com';
+const ESG_URL       = 'https://esg.untitledfinancial.com';
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab').forEach(function(b){ b.classList.remove('active'); });
+    document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ── Clock ─────────────────────────────────────────────────────────────────────
+setInterval(function() {
+  document.getElementById('sb-clock').textContent = new Date().toUTCString().replace(' GMT','');
+}, 1000);
+
+// ── Fetch helper ──────────────────────────────────────────────────────────────
+async function go(url) {
+  try { var r = await fetch(url, {headers:{Accept:'application/json'}}); return await r.json(); }
+  catch(e) { return {error: e.message}; }
+}
+
+// ── Tab 1: Status ─────────────────────────────────────────────────────────────
+async function refreshAll() {
+  document.getElementById('stability-raw').textContent = 'Fetching…';
+  document.getElementById('esg-raw').textContent = 'Fetching…';
+
+  var rel = await go(STABILITY_URL + '/reliability');
+  var esg = await go(ESG_URL + '/esg-score');
+
+  // Stability
+  document.getElementById('stability-raw').textContent = JSON.stringify(rel, null, 2);
+  document.getElementById('st-ts').textContent = new Date().toLocaleTimeString();
+  if (!rel.error) {
+    var score = (rel.stability && rel.stability.currentScore != null) ? rel.stability.currentScore
+                : (rel.stability && rel.stability.averageScore24h != null) ? rel.stability.averageScore24h
+                : rel.stabilityScore || rel.score;
+    document.getElementById('st-score').textContent = score != null ? parseFloat(score).toFixed(1) : '—';
+    var devBps = (rel.peg && rel.peg.deviationBps != null) ? rel.peg.deviationBps : null;
+    document.getElementById('st-dev').textContent = devBps != null ? (devBps/100).toFixed(3)+'%' : '—';
+    var conf = (rel.confidence && rel.confidence.score != null) ? rel.confidence.score
+               : rel.confidence;
+    document.getElementById('st-conf').textContent = conf != null ? parseFloat(conf).toFixed(1) : '—';
+    var up = (rel.oracle && rel.oracle.uptimePct != null) ? rel.oracle.uptimePct : rel.uptimePct;
+    document.getElementById('st-uptime').textContent = up != null ? parseFloat(up).toFixed(2)+'%' : '—';
+    document.getElementById('hdr-dot').className = 'status-dot live';
+    document.getElementById('hdr-label').textContent = 'Live';
+    document.getElementById('sb-stability').textContent = 'Stability score: '+(score!=null?parseFloat(score).toFixed(1):'—');
+  } else {
+    document.getElementById('hdr-dot').className = 'status-dot error';
+    document.getElementById('hdr-label').textContent = 'Oracle offline';
+    document.getElementById('sb-stability').textContent = 'Stability: offline';
+  }
+
+  // ESG
+  document.getElementById('esg-raw').textContent = JSON.stringify(esg, null, 2);
+  if (!esg.error) {
+    var sc = esg.scores || {};
+    var e = sc.environmental != null ? sc.environmental : esg.environmental;
+    var s = sc.social        != null ? sc.social        : esg.social;
+    var g = sc.governance    != null ? sc.governance    : esg.governance;
+    document.getElementById('esg-e').textContent = e != null ? parseFloat(e).toFixed(0) : '—';
+    document.getElementById('esg-s').textContent = s != null ? parseFloat(s).toFixed(0) : '—';
+    document.getElementById('esg-g').textContent = g != null ? parseFloat(g).toFixed(0) : '—';
+    var avg = sc.average != null ? sc.average : (esg.averageScore || esg.avgScore || esg.score);
+    if (avg != null) {
+      var fee = ((100-avg)/200*100).toFixed(2);
+      document.getElementById('esg-fee-rate').textContent = fee+'% (score '+parseFloat(avg).toFixed(0)+')';
+    }
+    document.getElementById('sb-esg').textContent = 'ESG avg: '+(avg!=null?parseFloat(avg).toFixed(0):'—')+'/100';
+  } else {
+    document.getElementById('sb-esg').textContent = 'ESG Oracle: offline';
+  }
+}
+refreshAll();
+setInterval(refreshAll, 30000);
+
+// ── Tab 2: Quote ─────────────────────────────────────────────────────────────
+async function runQuote() {
+  var amount   = parseFloat(document.getElementById('q-amount').value)||1000000;
+  var isFx     = document.getElementById('q-type').value === 'cross';
+  var esgScore = parseInt(document.getElementById('q-esg').value);
+  var bankRate = parseFloat(document.getElementById('q-compare').value);
+
+  document.getElementById('quote-raw').textContent = 'Fetching…';
+  document.getElementById('quote-result-wrap').innerHTML =
+    '<div class="empty-state"><div class="spinner"></div><div class="empty-sub">Fetching live quote from oracle…</div></div>';
+
+  var url = STABILITY_URL+'/quote?amountUsd='+amount+'&hasFx='+isFx+'&esgScore='+esgScore;
+  var data = await go(url);
+  document.getElementById('quote-raw').textContent = JSON.stringify(data, null, 2);
+
+  if (data.error) {
+    data = {
+      coreFee:0.0085, fxFee:isFx?0.004:0,
+      esgFee:(100-esgScore)/20000, licenseFee:0.0001,
+      totalFeePercent:0.0085+(isFx?0.004:0)+(100-esgScore)/20000+0.0001,
+      quoteId:'ESTIMATED'
+    };
+  }
+
+  var dpxPct = (data.totalFeePercent||data.total_fee_percent||0.0138)*100;
+  var dpxUsd = data.totalFeeUsd||data.total_fee_usd||(amount*dpxPct/100);
+  var bankUsd = amount*bankRate/100;
+  var savings = bankUsd-dpxUsd;
+  var savePct = (savings/bankUsd*100).toFixed(1);
+
+  var core = ((data.coreFee||0.0085)*100).toFixed(2);
+  var fx   = ((data.fxFee||0)*100).toFixed(2);
+  var esgF = ((data.esgFee||0)*100).toFixed(2);
+  var lic  = ((data.licenseFee||0.0001)*100).toFixed(2);
+
+  document.getElementById('quote-result-wrap').innerHTML =
+    '<div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:8px">'+
+      fmtN(amount)+' · '+(isFx?'Cross-border':'Same-currency')+' · ESG score '+esgScore+
+    '</div>'+
+    '<div class="quote-cols">'+
+      '<div class="quote-rail dpx">'+
+        '<div class="quote-rail-name">DPX Protocol</div>'+
+        '<div class="quote-pct">'+dpxPct.toFixed(3)+'%</div>'+
+        '<div class="quote-usd">'+fmtU(dpxUsd)+'</div>'+
+      '</div>'+
+      '<div class="quote-rail">'+
+        '<div class="quote-rail-name">'+document.getElementById('q-compare').options[document.getElementById('q-compare').selectedIndex].text+'</div>'+
+        '<div class="quote-pct">'+bankRate.toFixed(2)+'%</div>'+
+        '<div class="quote-usd">'+fmtU(bankUsd)+'</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="savings-bar">'+
+      '<div class="savings-val">'+fmtU(savings)+' saved</div>'+
+      '<div class="savings-label">'+savePct+'% cost reduction per settlement</div>'+
+    '</div>'+
+    '<div class="fee-breakdown">'+
+      '<div class="fee-row"><span class="fee-key">Core transfer fee</span><span>'+core+'%</span></div>'+
+      (isFx?'<div class="fee-row"><span class="fee-key">FX conversion</span><span>'+fx+'%</span></div>':'')+
+      '<div class="fee-row"><span class="fee-key">ESG fee (score '+esgScore+')</span><span>'+esgF+'%</span></div>'+
+      '<div class="fee-row"><span class="fee-key">License fee</span><span>'+lic+'%</span></div>'+
+      '<div class="fee-row"><span class="fee-key">Total</span><span>'+dpxPct.toFixed(3)+'%</span></div>'+
+    '</div>'+
+    (data.quoteId&&data.quoteId!=='ESTIMATED'?'<div style="margin-top:8px;font-size:0.65rem;color:var(--text-muted)">Quote ID: '+data.quoteId+' · valid 300s · enforceable on-chain</div>':'<div style="margin-top:8px;font-size:0.65rem;color:var(--text-muted)">Calculated estimate (oracle offline)</div>');
+}
+
+function fmtN(n){ return '$'+n.toLocaleString('en-US',{maximumFractionDigits:0}); }
+function fmtU(n){ return '$'+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+
+</script>
+</body>
+</html>

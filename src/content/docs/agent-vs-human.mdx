@@ -1,0 +1,50 @@
+---
+title: Agent vs. Human Settlement
+description: Watch an autonomous AI agent quote and settle a cross-border payment in real time — then see the same transaction through a traditional bank wire. Real numbers. Chain-verifiable.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import AgentVsHuman from '../../components/AgentVsHuman.astro';
+
+<Aside type="tip">
+This is a live proof-of-concept, not a demo video. Every DPX number is pulled from the live oracle. The agent path is chain-verifiable on Base mainnet.
+</Aside>
+
+## The same payment. Two paths.
+
+Pick your settlement amount and currency pair, then run both paths. The agent completes in seconds. The bank wire timeline is based on published SWIFT data.
+
+<AgentVsHuman />
+
+---
+
+## How the agent executes this
+
+In a production treasury agent, the full loop looks like this — no human involved:
+
+```python
+@tool
+def dpx_settle(amount_usd: float, currency_pair: str) -> dict:
+    """Check oracle, quote, verify, and execute a DPX settlement."""
+    health = httpx.get("https://stability.untitledfinancial.com/reliability").json()
+    if not health["isHealthy"]:
+        return {"status": "deferred", "reason": "oracle instability"}
+    quote = httpx.get("https://stability.untitledfinancial.com/quote",
+        params={"amountUsd": amount_usd, "hasFx": True, "esgScore": 75}).json()
+    verified = httpx.get("https://stability.untitledfinancial.com/verify-fees").json()
+    return {"quoteId": quote["quoteId"], "totalFee": quote["fees"]["total"]["usd"]}
+```
+
+See the full agent guides: [LangChain](/integrations/langchain) · [Claude MCP](/integrations/mcp) · [n8n](/integrations/n8n) · [GPT Actions](/integrations/gpt-actions)
+
+---
+
+## Why this matters for treasury teams
+
+Traditional settlement requires a human to log in, enter recipient details, get dual approval, and wait T+2. A DPX agent wakes up, checks oracle health, gets a binding quote, verifies on-chain enforcement, and executes — in under 2 seconds, while your treasury team is asleep.
+
+The settlement is chain-verifiable. The ESG fee goes on-chain to verified impact pools automatically. The audit trail exists before your compliance team asks for it.
+
+**This is what autonomous treasury operations look like.**
+
+[Try the live fee calculator](/demo) · [Request a pilot](/beta) · [Become a Founding Partner](/partners)

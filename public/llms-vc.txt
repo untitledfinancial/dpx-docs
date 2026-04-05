@@ -411,7 +411,7 @@ mandate, IPFS-auditable impact redistribution.
 
 ## Contact & Discovery
 
-Beta partnerships and investor inquiries: beta@untitledfinancial.com
+Beta partnerships and investor inquiries: partner@untitledfinancial.com
 Company: https://untitledfinancial.com
 Technical documentation: https://docs.untitledfinancial.com
 Financial model: https://docs.untitledfinancial.com/financial-model

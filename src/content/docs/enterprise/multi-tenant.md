@@ -50,7 +50,7 @@ Each client account is configured with the following settings:
 
 ## Getting Started
 
-To set up a client account, contact [beta@untitledfinancial.com](mailto:beta@untitledfinancial.com). Accounts are provisioned with an API key and initial configuration during onboarding.
+To set up a client account, contact [partner@untitledfinancial.com](mailto:partner@untitledfinancial.com). Accounts are provisioned with an API key and initial configuration during onboarding.
 
 ---
 

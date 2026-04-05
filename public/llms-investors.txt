@@ -96,7 +96,7 @@ Settlement execution on Base mainnet available to vetted early partners.
 
 - DPX Token: 0x7A62dEcF6936675480F0991A2EF4a0d6f1023891
 - DPXSettlementRouter: deployment in progress
-- Beta applications: beta@untitledfinancial.com
+- Beta applications: partner@untitledfinancial.com
 
 ## Links
 

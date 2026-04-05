@@ -25,7 +25,13 @@ Disallow: /
 User-agent: GPTBot
 Allow: /
 
+User-agent: OAI-SearchBot
+Allow: /
+
 User-agent: Claude-Web
+Allow: /
+
+User-agent: ClaudeBot
 Allow: /
 
 User-agent: anthropic-ai
@@ -35,6 +41,12 @@ User-agent: PerplexityBot
 Allow: /
 
 User-agent: Googlebot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: cohere-ai
 Allow: /
 
 Sitemap: https://docs.untitledfinancial.com/sitemap-index.xml

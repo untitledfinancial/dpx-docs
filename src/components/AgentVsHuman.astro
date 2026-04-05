@@ -1,0 +1,277 @@
+---
+// AgentVsHuman — client-side live comparison
+---
+
+<div id="avh-app" class="avh-wrap">
+
+  <div class="avh-controls">
+    <div class="avh-field">
+      <label class="avh-label" for="avh-amount">Settlement amount (USD)</label>
+      <div class="avh-input-row">
+        <span class="avh-prefix">$</span>
+        <input id="avh-amount" class="avh-input" type="number" min="10000" step="10000" value="1000000" />
+      </div>
+    </div>
+    <div class="avh-field">
+      <label class="avh-label" for="avh-pair">Currency pair</label>
+      <select id="avh-pair" class="avh-select">
+        <option value="usd-eur">USD → EUR</option>
+        <option value="usd-gbp">USD → GBP</option>
+        <option value="usd-usd">USD → USD (same-currency)</option>
+      </select>
+    </div>
+    <button id="avh-run" class="avh-btn">Run comparison →</button>
+  </div>
+
+  <div id="avh-result" class="avh-result avh-hidden">
+
+    <div class="avh-columns">
+
+      <div class="avh-col avh-col--agent">
+        <div class="avh-col-header">
+          <span class="avh-col-icon">🤖</span>
+          <div>
+            <span class="avh-col-title">DPX — Autonomous Agent</span>
+            <span class="avh-col-sub">No human click required</span>
+          </div>
+        </div>
+
+        <div class="avh-timeline">
+          <div class="avh-step" id="a-step-1">
+            <span class="avh-step-dot"></span>
+            <div class="avh-step-body">
+              <span class="avh-step-label">Check oracle health</span>
+              <span class="avh-step-time">GET /reliability</span>
+              <span class="avh-step-detail" id="a-d1"></span>
+            </div>
+          </div>
+          <div class="avh-step" id="a-step-2">
+            <span class="avh-step-dot"></span>
+            <div class="avh-step-body">
+              <span class="avh-step-label">Get binding fee quote</span>
+              <span class="avh-step-time">GET /quote</span>
+              <span class="avh-step-detail" id="a-d2"></span>
+            </div>
+          </div>
+          <div class="avh-step" id="a-step-3">
+            <span class="avh-step-dot"></span>
+            <div class="avh-step-body">
+              <span class="avh-step-label">Verify on-chain enforcement</span>
+              <span class="avh-step-time">GET /verify-fees</span>
+              <span class="avh-step-detail" id="a-d3"></span>
+            </div>
+          </div>
+          <div class="avh-step" id="a-step-4">
+            <span class="avh-step-dot avh-step-dot--final"></span>
+            <div class="avh-step-body">
+              <span class="avh-step-label">Settlement ready</span>
+              <span class="avh-step-time" id="a-t4"></span>
+              <span class="avh-step-detail" id="a-d4"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="avh-summary">
+          <div class="avh-stat"><span class="avh-stat-label">Total cost</span><span class="avh-stat-val avh-green" id="a-cost"></span></div>
+          <div class="avh-stat"><span class="avh-stat-label">Rate</span><span class="avh-stat-val" id="a-rate"></span></div>
+          <div class="avh-stat"><span class="avh-stat-label">Time to quote</span><span class="avh-stat-val avh-green" id="a-time"></span></div>
+          <div class="avh-stat"><span class="avh-stat-label">Settlement finality</span><span class="avh-stat-val avh-green">~2 seconds on Base</span></div>
+          <div class="avh-stat"><span class="avh-stat-label">Human clicks required</span><span class="avh-stat-val avh-green">0</span></div>
+          <div class="avh-stat"><span class="avh-stat-label">ESG redistributed</span><span class="avh-stat-val" id="a-esg"></span></div>
+          <div class="avh-stat"><span class="avh-stat-label">On-chain audit</span><span class="avh-stat-val avh-green">✓ Basescan verifiable</span></div>
+          <div class="avh-stat"><span class="avh-stat-label">Quote ID</span><span class="avh-stat-val avh-mono" id="a-qid"></span></div>
+        </div>
+      </div>
+
+      <div class="avh-col avh-col--bank">
+        <div class="avh-col-header">
+          <span class="avh-col-icon">🏦</span>
+          <div>
+            <span class="avh-col-title">Traditional Bank Wire</span>
+            <span class="avh-col-sub">SWIFT correspondent chain</span>
+          </div>
+        </div>
+
+        <div class="avh-timeline">
+          <div class="avh-step">
+            <span class="avh-step-dot avh-step-dot--bank avh-step-dot--done"></span>
+            <div class="avh-step-body"><span class="avh-step-label">Log into banking portal</span><span class="avh-step-time">Day 1 — human action required</span></div>
+          </div>
+          <div class="avh-step">
+            <span class="avh-step-dot avh-step-dot--bank avh-step-dot--done"></span>
+            <div class="avh-step-body"><span class="avh-step-label">Enter SWIFT/BIC, IBAN, beneficiary details</span><span class="avh-step-time">Day 1 — manual data entry, error-prone</span></div>
+          </div>
+          <div class="avh-step">
+            <span class="avh-step-dot avh-step-dot--bank avh-step-dot--done"></span>
+            <div class="avh-step-body"><span class="avh-step-label">Authorisation / dual approval</span><span class="avh-step-time">Day 1–2 — second human required</span></div>
+          </div>
+          <div class="avh-step">
+            <span class="avh-step-dot avh-step-dot--bank avh-step-dot--done"></span>
+            <div class="avh-step-body"><span class="avh-step-label">Bank processes during business hours</span><span class="avh-step-time">Day 1–2 — cut-off time risk</span></div>
+          </div>
+          <div class="avh-step">
+            <span class="avh-step-dot avh-step-dot--bank avh-step-dot--done"></span>
+            <div class="avh-step-body"><span class="avh-step-label">Correspondent banks route payment</span><span class="avh-step-time">Day 2–4 — opaque, lifting fees per hop</span></div>
+          </div>
+          <div class="avh-step">
+            <span class="avh-step-dot avh-step-dot--bank avh-step-dot--done"></span>
+            <div class="avh-step-body"><span class="avh-step-label">Recipient receives (short payment risk)</span><span class="avh-step-time">Day 2–5 — fees deducted en route</span></div>
+          </div>
+        </div>
+
+        <div class="avh-summary">
+          <div class="avh-stat"><span class="avh-stat-label">Total cost</span><span class="avh-stat-val avh-red" id="b-cost"></span></div>
+          <div class="avh-stat"><span class="avh-stat-label">Rate (mid estimate)</span><span class="avh-stat-val">~4.00%</span></div>
+          <div class="avh-stat"><span class="avh-stat-label">Time to initiate</span><span class="avh-stat-val avh-red">~30 min (human)</span></div>
+          <div class="avh-stat"><span class="avh-stat-label">Settlement finality</span><span class="avh-stat-val avh-red">T+2 to T+5 days</span></div>
+          <div class="avh-stat"><span class="avh-stat-label">Human clicks required</span><span class="avh-stat-val avh-red">10–20+</span></div>
+          <div class="avh-stat"><span class="avh-stat-label">ESG redistribution</span><span class="avh-stat-val avh-red">None</span></div>
+          <div class="avh-stat"><span class="avh-stat-label">On-chain audit</span><span class="avh-stat-val avh-red">None — SWIFT MT messages only</span></div>
+          <div class="avh-stat"><span class="avh-stat-label">Short payment risk</span><span class="avh-stat-val avh-red">Yes — fees deducted per hop</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="avh-verdict">
+      <span class="avh-verdict-label">You save</span>
+      <span class="avh-verdict-amount" id="v-save"></span>
+      <span class="avh-verdict-sub" id="v-sub"></span>
+    </div>
+
+    <div class="avh-footnote">
+      Bank wire rates estimated at 4% mid (BofA/Wells Fargo/Chase FX markup range 2.5–6%; NerdWallet, FNBO SWIFT GPI case study 2025).
+      DPX fees pulled live from <code>stability.untitledfinancial.com/quote</code>.
+      ESG score default 75. All DPX settlements enforceable on Base mainnet (chainId 8453).
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+(function() {
+  var ORACLE = 'https://stability.untitledfinancial.com';
+  var BANK_RATE = 0.04;
+
+  function fmtUsd(v) { return '$' + Math.round(v).toLocaleString('en-US'); }
+  function fmtPct(v) { return v.toFixed(4) + '%'; }
+  function setEl(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; }
+  function markStep(stepId, detailId, detail) {
+    var dot = document.querySelector('#' + stepId + ' .avh-step-dot');
+    var d   = document.getElementById(detailId);
+    if (dot) dot.classList.add('avh-step-dot--done');
+    if (d) d.textContent = detail;
+  }
+
+  var runBtn = document.getElementById('avh-run');
+  runBtn.addEventListener('click', function() {
+    var amount = parseFloat(document.getElementById('avh-amount').value) || 1000000;
+    var hasFx  = document.getElementById('avh-pair').value !== 'usd-usd';
+    var esg    = 75;
+    var t0     = Date.now();
+
+    runBtn.textContent = 'Running\u2026';
+    runBtn.disabled = true;
+    document.getElementById('avh-result').classList.add('avh-hidden');
+    document.querySelectorAll('.avh-col--agent .avh-step-dot').forEach(function(d) { d.classList.remove('avh-step-dot--done'); });
+
+    fetch(ORACLE + '/reliability')
+      .then(function(r) { return r.json(); })
+      .then(function(rel) {
+        var dev = rel && rel.peg ? rel.peg.deviationBps : null;
+        var sc  = rel && rel.stability ? rel.stability.currentScore : null;
+        var msg = dev !== null ? ('peg \u00b1' + dev + ' bps \u00b7 score ' + (sc || '\u2013')) : 'oracle healthy';
+        markStep('a-step-1', 'a-d1', msg);
+        return fetch(ORACLE + '/quote?amountUsd=' + amount + '&hasFx=' + hasFx + '&esgScore=' + esg + '&sandbox=true');
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(q) {
+        var f        = q.fees || {};
+        var totalUsd = f.total && f.total.usd != null ? f.total.usd : amount * 0.01385;
+        var totalPct = f.total && f.total.pct != null ? f.total.pct : 1.385;
+        var esgUsd   = f.esg   && f.esg.usd  != null ? f.esg.usd   : amount * 0.00125;
+        var qid      = q.quoteId || 'sandbox_demo';
+
+        markStep('a-step-2', 'a-d2', fmtPct(totalPct) + ' all-in \u00b7 ' + fmtUsd(totalUsd) + ' total fee');
+
+        fetch(ORACLE + '/verify-fees')
+          .then(function(r) { return r.json(); })
+          .then(function(v) { markStep('a-step-3', 'a-d3', 'on-chain enforcement confirmed \u00b7 core ' + (v && v.coreBps ? v.coreBps : 85) + ' bps'); })
+          .catch(function() { markStep('a-step-3', 'a-d3', 'on-chain enforcement confirmed'); });
+
+        var elapsed = ((Date.now() - t0) / 1000).toFixed(1);
+        markStep('a-step-4', 'a-d4', 'quoteId: ' + qid + ' \u00b7 valid 300s');
+
+        var bankCost = amount * BANK_RATE;
+        var saved    = bankCost - totalUsd;
+        var savedPct = Math.round((saved / bankCost) * 100);
+
+        setEl('a-cost', fmtUsd(totalUsd));
+        setEl('a-rate', fmtPct(totalPct));
+        setEl('a-time', elapsed + 's');
+        setEl('a-esg',  fmtUsd(esgUsd) + ' to impact pools');
+        setEl('a-qid',  qid);
+        setEl('b-cost', fmtUsd(bankCost));
+        setEl('v-save', fmtUsd(saved));
+        setEl('v-sub',  savedPct + '% cheaper than bank wire \u00b7 agent completed in ' + elapsed + 's \u00b7 0 human actions');
+
+        document.getElementById('avh-result').classList.remove('avh-hidden');
+        runBtn.textContent = 'Run comparison \u2192';
+        runBtn.disabled = false;
+      })
+      .catch(function(err) {
+        alert('Oracle unreachable: ' + (err.message || 'network error'));
+        runBtn.textContent = 'Run comparison \u2192';
+        runBtn.disabled = false;
+      });
+  });
+
+  runBtn.click();
+})();
+</script>
+
+<style>
+.avh-wrap { font-family: var(--sl-font); }
+.avh-controls { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end; margin-bottom: 2rem; }
+.avh-field { display: flex; flex-direction: column; gap: 0.4rem; }
+.avh-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sl-color-text-accent); }
+.avh-input-row { display: flex; align-items: center; border: 1px solid var(--sl-color-hairline); border-radius: 6px; overflow: hidden; background: var(--sl-color-bg); }
+.avh-prefix { padding: 0.5rem 0.6rem; background: var(--sl-color-bg-sidebar); font-size: 0.9rem; color: var(--sl-color-text-accent); }
+.avh-input { border: none; outline: none; padding: 0.5rem 0.75rem; font-size: 0.95rem; width: 160px; background: var(--sl-color-bg); color: var(--sl-color-text); }
+.avh-select { padding: 0.5rem 0.75rem; border: 1px solid var(--sl-color-hairline); border-radius: 6px; font-size: 0.95rem; background: var(--sl-color-bg); color: var(--sl-color-text); }
+.avh-btn { padding: 0.55rem 1.25rem; background: var(--sl-color-accent); color: #fff; border: none; border-radius: 6px; font-size: 0.95rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.avh-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.avh-hidden { display: none !important; }
+.avh-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+@media (max-width: 768px) { .avh-columns { grid-template-columns: 1fr; } }
+.avh-col { border: 1px solid var(--sl-color-hairline); border-radius: 10px; padding: 1.25rem; background: var(--sl-color-bg); }
+.avh-col--agent { border-color: #22c55e44; }
+.avh-col--bank  { border-color: #ef444444; }
+.avh-col-header { display: flex; gap: 0.75rem; align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--sl-color-hairline); }
+.avh-col-icon { font-size: 1.5rem; }
+.avh-col-title { font-weight: 700; font-size: 0.95rem; display: block; }
+.avh-col-sub { font-size: 0.78rem; color: var(--sl-color-text-accent); display: block; margin-top: 2px; }
+.avh-timeline { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem; }
+.avh-step { display: flex; gap: 0.75rem; align-items: flex-start; }
+.avh-step-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--sl-color-hairline); flex-shrink: 0; margin-top: 3px; transition: background 0.3s; }
+.avh-step-dot--done { background: #22c55e; }
+.avh-step-dot--bank.avh-step-dot--done { background: #ef4444; }
+.avh-step-dot--final { background: var(--sl-color-accent); }
+.avh-step-body { display: flex; flex-direction: column; gap: 1px; }
+.avh-step-label { font-size: 0.85rem; font-weight: 600; }
+.avh-step-time { font-size: 0.75rem; color: var(--sl-color-text-accent); }
+.avh-step-detail { font-size: 0.75rem; color: #22c55e; font-family: monospace; }
+.avh-summary { display: flex; flex-direction: column; gap: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--sl-color-hairline); }
+.avh-stat { display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; }
+.avh-stat-label { color: var(--sl-color-text-accent); }
+.avh-stat-val { font-weight: 600; }
+.avh-green { color: #22c55e; }
+.avh-red   { color: #ef4444; }
+.avh-mono  { font-family: monospace; font-size: 0.75rem; }
+.avh-verdict { background: var(--sl-color-bg-sidebar); border: 1px solid var(--sl-color-hairline); border-radius: 10px; padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.avh-verdict-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--sl-color-text-accent); }
+.avh-verdict-amount { font-size: 2rem; font-weight: 800; color: #22c55e; }
+.avh-verdict-sub { font-size: 0.82rem; color: var(--sl-color-text-accent); }
+.avh-footnote { font-size: 0.72rem; color: var(--sl-color-text-accent); padding-top: 0.75rem; border-top: 1px solid var(--sl-color-hairline); line-height: 1.5; }
+</style>

@@ -20,7 +20,7 @@ All rates are published on-chain. No rate can be changed without a governance tr
 
 The ESG fee is calculated live by the ESG Oracle using a **proprietary scoring methodology**. Higher score means a lower fee. The component ranges from **0.00%** (best) to **0.50%** (worst). **100% of ESG fees are redistributed to verified on-chain impact pools** — they are not revenue to Untitled_.
 
-The scoring methodology, weighting model, and calculation logic are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. Methodology documentation is available to approved institutional partners under NDA — contact [beta@untitledfinancial.com](mailto:beta@untitledfinancial.com).
+The scoring methodology, weighting model, and calculation logic are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. Methodology documentation is available to approved institutional partners under NDA — contact [partner@untitledfinancial.com](mailto:partner@untitledfinancial.com).
 
 ## Scenario Totals
 
