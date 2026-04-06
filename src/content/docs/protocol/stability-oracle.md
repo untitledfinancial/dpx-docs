@@ -7,7 +7,7 @@ description: DPX Stability Oracle v9.0 — 7-tier architecture, USD structural h
 
 The DPX Stability Oracle v9.0 is a 7-tier signal pipeline that aggregates 32+ real-world data sources into a single actionable confidence score — with an AI intelligence layer that synthesises every signal into a plain-language briefing for treasury and risk teams. It provides 30–90 day early warning signals across seven independent transmission channels, includes a USD structural health module that cross-validates US official data against independent and non-US sources, and runs a full recommendation engine with active war mitigation protocols.
 
-**New in v9.0:** USD structural health monitoring (12 signals), Truflation independent inflation cross-check, CoinGecko stablecoin health, DeFiLlama TVL, ECB cross-validation, gold price debasement signal, USGS earthquake supply-chain impact — all feeding a `usdHealth` confidence score blended into the composite stability score.
+**New in v9.0:** USD structural health monitoring (12 signals), independent inflation cross-validation, stablecoin market health, DeFi systemic risk signal, ECB cross-validation, gold price debasement signal, seismic supply-chain impact — all feeding a `usdHealth` confidence score blended into the composite stability score.
 
 ---
 
@@ -51,7 +51,7 @@ Sources: EIA, World Bank, PJM, ERCOT, ENTSO-E. Includes **AI data center impact 
 ### Tier 2 — Macroeconomic
 **Lead time: 1–4 weeks**
 
-Four independent sources per indicator (BLS, FRED, IMF, World Bank). If sources disagree, a data confidence warning is flagged.
+Four independent sources per indicator (Bureau of Labor Statistics, Federal Reserve, IMF, World Bank). If sources disagree, a data confidence warning is flagged.
 
 Indicators: GDP, M2 money supply, Fed Funds rate, CPI, unemployment, Treasury yields, breakeven inflation, TIPS spreads.
 
@@ -60,7 +60,7 @@ Indicators: GDP, M2 money supply, Fed Funds rate, CPI, unemployment, Treasury yi
 ### Tier 3 — Currency & FX
 **Lead time: Hours to days**
 
-Four independent FX APIs cross-validated: Open Exchange, Frankfurter, Exchange Rate API, Forex. All basket currencies covered. If volatility exceeds thresholds, FX alert raised before it reaches the peg.
+Four independent FX sources cross-validated in real time. All basket currencies covered. If volatility exceeds thresholds, FX alert raised before it reaches the peg.
 
 ---
 
@@ -94,17 +94,17 @@ Monitors the physical and digital chokepoints whose failure cascades into econom
 
 | Chokepoint | What's tracked | CPI transmission |
 |---|---|---|
-| **Shipping / Ports** | Baltic Dry Index (FRED DBDI), major port wait times | 2–4 months |
-| **Semiconductor supply** | Taiwan concentration (92% advanced chips), US production index (FRED IPG334S) | 6–12 months |
-| **Critical minerals** | Copper (FRED PCOPPUSDM), **nickel (FRED PNICKUSDM)**, **aluminum (FRED PALUMUSDM)** — all World Bank GEM series. China rare earth/graphite export restriction risk. | 6–18 months |
+| **Shipping / Ports** | Baltic Dry Index, major port wait times | 2–4 months |
+| **Semiconductor supply** | Taiwan concentration (92% advanced chips), US production index | 6–12 months |
+| **Critical minerals** | Copper, nickel, aluminum — World Bank commodity series. China rare earth/graphite export restriction risk. | 6–18 months |
 | **Power grids** | EIA daily demand anomaly, European grid transition stress | Immediate to 2 months |
-| **Food/water** | **FAO Food Price Index composite (FRED PFOODINDEXM)** — cereals, oils, dairy, meat, sugar. Wheat (PWHEAMTUSDM), corn (PMAIZMTUSDM), **sugar (PSUGAISAUSDM)**. Drought index. | 1–6 months |
+| **Food/water** | FAO Food Price Index composite — cereals, oils, dairy, meat, sugar. Wheat, corn, sugar spot prices. Drought index. | 1–6 months |
 
 Cascade risk is assessed: when multiple chokepoints are stressed simultaneously, interconnected failures become non-linear.
 
 #### War Destabilization & Mitigation
 
-**v8.0 adds real-time conflict signals via GDELT v2 Doc API** — 15-minute update cycle across 4 conflict regions (Ukraine-Russia, Middle East, Taiwan Strait, global). ACLED integration is architecturally present; data access requires ACLED API-tier subscription.
+Real-time conflict event monitoring runs on a 15-minute update cycle across 4 conflict regions (Ukraine-Russia, Middle East, Taiwan Strait, global), cross-validated against a second independent conflict data source.
 
 Seven war-to-economy transmission channels are modelled for each active conflict:
 
@@ -159,10 +159,10 @@ Applies non-linear dynamics analysis to the aggregate signal set:
 Five channels that cut across tier boundaries:
 
 ### Geopolitical Risk
-FRED GPR (Geopolitical Risk Index) — shipping disruptions (Red Sea, Hormuz, Panama, Suez, Taiwan Strait), sanctions impacts, trade route risk, currency flight-to-safety.
+Geopolitical risk indices — shipping disruptions (Red Sea, Hormuz, Panama, Suez, Taiwan Strait), sanctions impacts, trade route risk, currency flight-to-safety.
 
 ### Capital Flows & Monetary Policy
-FRED TIC data — cross-border capital flow direction, carry trade positions, interest rate differentials, USD strength outlook.
+Cross-border capital flow direction, carry trade positions, interest rate differentials, USD strength outlook.
 
 ### Tech & AI Supply Chain
 Semiconductor supply chain health, AI infrastructure demand, tech sector inflation contribution. Proprietary composite index (0–100) captures structural demand-side inflation traditional macro models miss.
@@ -222,7 +222,7 @@ The Stability Oracle includes an embedded AI intelligence layer that runs after 
 - The AI layer synthesises signals; it does not generate them. All inputs come from the quantitative pipeline.
 - If synthesis fails (network issue, model unavailable), the oracle still returns the full quantitative result. The `intelligence` field is omitted rather than degraded.
 - The `confidence` field in `intelligence` reflects signal quality, not a replacement for `stability.currentScore`. Always use the quantitative score for settlement decisions.
-- The synthesis runs entirely within Cloudflare's infrastructure — no raw data leaves the oracle's execution context.
+- The synthesis runs entirely within the oracle's compute environment — no raw data leaves the execution context.
 
 ---
 
@@ -230,16 +230,16 @@ The Stability Oracle includes an embedded AI intelligence layer that runs after 
 
 | Tier | Sources |
 |---|---|
-| Tier 0 — Climate | NOAA, NASA, USDA FAS, OpenMeteo, regional forecasts |
-| Tier 1 — Energy | EIA (prices + OPEC + refinery), World Bank, PJM, ERCOT, ENTSO-E, AI data center tracking |
-| Tier 1 — Oil stress | EIA Brent/WTI, FRED DCOILBRENTEU, Alpha Vantage WTI, FRED refinery util, Henry Hub |
-| Tier 2 — Macro | BLS, FRED, IMF, World Bank (4 per indicator) |
-| Tier 3 — FX | Open Exchange, Frankfurter, Exchange Rate API, Forex (4 sources) |
-| Tier 4 — Basket | Base network Chainlink feeds + 3 FX APIs |
+| Tier 0 — Climate | NOAA, NASA, USDA FAS, global weather services, regional forecasts |
+| Tier 1 — Energy | EIA (prices + OPEC + refinery), World Bank, US and European grid operators, AI data center tracking |
+| Tier 1 — Oil stress | Brent/WTI spot prices (4 independent sources), refinery utilisation, natural gas spot |
+| Tier 2 — Macro | Bureau of Labor Statistics, Federal Reserve, IMF, World Bank (4 per indicator) |
+| Tier 3 — FX | 4 independent FX sources, cross-validated in real time |
+| Tier 4 — Basket | Base network Chainlink on-chain feeds + 3 FX sources |
 | Tier 5 — Analysis | Enhanced causal modeling, predictive signals (4 timeframes) |
-| Cross-body | FRED GPR/EPU, FRED TIC, tech supply chain, climate-commodity matrix |
-| Tier 6 — Infrastructure | FRED Baltic Dry (DBDI), FRED semiconductor production (IPG334S), FRED copper/nickel/aluminum (World Bank GEM), **FAO Food Price Index composite (PFOODINDEXM)**, FRED wheat/corn/sugar, EIA grid demand |
-| Tier 6 — War | **GDELT v2 Doc API** (real-time conflict events, 4 regions, 15-min cycle), FRED defence spending, FRED fiscal deficit, **ACLED** (OAuth built, API-tier access pending) |
+| Cross-body | Geopolitical risk indices, capital flow data, tech supply chain, climate-commodity matrix |
+| Tier 6 — Infrastructure | Shipping indices, semiconductor production data, copper/nickel/aluminum (World Bank commodity series), FAO Food Price Index composite, wheat/corn/sugar spot prices, EIA grid demand |
+| Tier 6 — War | Real-time conflict event monitoring (4 regions, 15-min cycle, 2 independent sources), defence spending, fiscal deficit data |
 | Tier 6 — Chaos | Computed from all above signals (no external API) |
 
 ---

@@ -148,15 +148,15 @@ The `intelligence` field augments but does not replace the quantitative scores. 
 |---|---|
 | `usdHealth.score` | 0–100 composite USD structural confidence (higher = more stable) |
 | `usdHealth.structuralOutlook` | `WEAKENING` / `STABLE` / `STRENGTHENING` / `UNCERTAIN` |
-| `usdHealth.confidenceInOfficialData` | `HIGH` / `MODERATE` / `LOW` — flags when Truflation diverges from BLS by >1.5pp |
+| `usdHealth.confidenceInOfficialData` | `HIGH` / `MODERATE` / `LOW` — flags when independent inflation data diverges from official sources by >1.5pp |
 | `usdHealth.usdStrengthConsensus` | `BULLISH` / `BEARISH` / `MIXED` / `NEUTRAL` — cross-signal consensus |
-| `usdHealth.tradeWeightedUsd` | FRED DTWEXBGS — trade-weighted dollar index (26 currencies), trend direction |
+| `usdHealth.tradeWeightedUsd` | Trade-weighted dollar index (26 currencies, Federal Reserve), trend direction |
 | `usdHealth.yieldCurve` | T10Y2Y spread, `INVERTED` / `FLAT` / `NORMAL`, recession signal |
 | `usdHealth.breakevenInflation` | 10-year breakeven vs 2% target — elevated flag if >2.75% |
 | `usdHealth.fedBalanceSheet` | Total Fed assets in trillions, `EXPANDING` / `CONTRACTING` / `STABLE` |
 | `usdHealth.gold` | Gold price (USD), trend, interpretation — >$2500 = USD debasement signal |
 | `usdHealth.stablecoinHealth` | USDT + USDC market caps, dominance ratio, stress signal |
-| `usdHealth.truflationVsBls` | Independent inflation vs BLS-derived — `divergenceFlag: true` if gap >1.5pp |
+| `usdHealth.truflationVsBls` | Independent inflation source vs official CPI — `divergenceFlag: true` if gap >1.5pp |
 | `usdHealth.divergenceAlerts` | String array — populated when independent sources depart from official data |
 | `usdHealth.alerts` | Active USD risk alerts (yield curve inversion, gold elevated, Fed expanding, etc.) |
 
