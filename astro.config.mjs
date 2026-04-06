@@ -42,7 +42,7 @@ export default defineConfig({
           items: [
             { label: 'What is DPX?',      slug: 'index' },
             { label: 'Agent Quick Start', slug: 'agent-quickstart' },
-            { label: 'Pilot Program',     slug: 'pilot' },
+            { label: 'Sandbox',            slug: 'sandbox' },
           ],
         },
         {
