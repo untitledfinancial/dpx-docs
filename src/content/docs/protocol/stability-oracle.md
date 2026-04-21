@@ -226,6 +226,57 @@ The Stability Oracle includes an embedded AI intelligence layer that runs after 
 
 ---
 
+## Adaptive Layer
+
+> **Proprietary technology.** The adaptive learning architecture, weight regression model, calibration methodology, and policy execution logic are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc.
+
+The Stability Oracle includes a fully autonomous adaptive layer that continuously improves signal weighting, calibrates confidence, and executes on-chain policy adjustments — running entirely on Cloudflare native infrastructure with no external compute dependencies.
+
+**Architecture overview:**
+
+| Component | Technology | Role |
+|---|---|---|
+| Prediction ledger | Cloudflare D1 | Logs every oracle run; resolves predictions against actuals; scores accuracy per tier |
+| Weight regression | Cloudflare Workflows (WLSQ) | Damped Weighted Least Squares regression over 30-day accuracy history — adjusts the 7 tier weights weekly |
+| Confidence calibration | Cloudflare Workflows (Platt scaling) | Fits sigmoid A/B parameters against historical prediction outcomes weekly |
+| Semantic memory | Cloudflare Vectorize | 7-dimensional signal fingerprints; recalls top-3 similar historical scenarios and injects them into the AI synthesis prompt |
+| Async event pipeline | Cloudflare Queues | Non-blocking bridge — oracle response is never delayed by adaptive writes |
+| Policy execution | Cloudflare Workflows | 5-gate safety check before any on-chain call to `BasketPegManager` or `StabilityFeeController` |
+
+**The 5 policy execution gates:**
+
+1. **Calibrated confidence** — Platt-scaled confidence must exceed `ADAPTIVE_CONFIDENCE_THRESHOLD` (defaults to `0.99`, effectively unreachable; lowered to `0.80` after testnet validation)
+2. **Circuit breakers** — D1-backed breakers (3 consecutive failures → open; auto-reset 24h)
+3. **Cooling period** — 23 hours must elapse since last confirmed on-chain execution
+4. **Safety bounds** — immutable TypeScript `const` — max ±5% per-currency shift, blocked regimes (`CATASTROPHE`, `NUCLEAR_EXTREME_ESCALATION`), max $10M policy notional
+5. **Missing credentials** — `EXECUTOR_PRIVATE_KEY` and contract addresses must be present
+
+**Adaptive weight bounds:**
+
+The learning system cannot shift any tier weight by more than 2% per week, and cannot push any tier below a 5% floor — enforced by the frozen `SAFETY_BOUNDS` object, which cannot be overridden at runtime.
+
+**Semantic memory:**
+
+Each oracle run is fingerprinted as a normalised 7-vector (one value per tier). Vectorize finds the 3 most similar historical runs (cosine similarity > 0.85) and injects them as an "Institutional Memory" block into the AI synthesis prompt — allowing the AI layer to reason about what happened last time conditions looked like this.
+
+**Adaptive status endpoint:**
+
+```bash
+GET /api/adaptive/status
+```
+
+Returns current adaptive weights, prediction ledger count, and circuit breaker state.
+
+**Cron schedule:**
+
+| Cron | Job |
+|---|---|
+| `* * * * *` (every minute) | Hourly oracle update |
+| `0 3 * * 0` (Sunday 03:00 UTC) | Weight regression workflow |
+| `0 4 * * 0` (Sunday 04:00 UTC) | Calibration workflow |
+
+---
+
 ## Data Sources (32+)
 
 | Tier | Sources |

@@ -128,6 +128,50 @@ If synthesis is unavailable, the oracle returns the full quantitative result and
 
 ---
 
+## Adaptive Layer
+
+> **Proprietary technology.** The adaptive learning architecture, weight regression model, entity bootstrapping methodology, and policy execution logic are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc.
+
+The ESG Oracle includes a fully autonomous adaptive layer that continuously improves E/S/G score weighting, calibrates confidence, and bootstraps ESG profiles for new counterparties — running entirely on Cloudflare native infrastructure.
+
+**Architecture overview:**
+
+| Component | Technology | Role |
+|---|---|---|
+| Prediction ledger | Cloudflare D1 | Logs every oracle run; resolves E/S/G predictions against actuals; scores per-dimension accuracy |
+| Weight regression | Cloudflare Workflows (correlation) | Adjusts the E/S/G weighting using 30-day accuracy correlation — weekly |
+| Confidence calibration | Cloudflare Workflows (Platt scaling) | Sigmoid calibration of raw confidence scores weekly |
+| Semantic memory | Cloudflare Vectorize (3-dim signals) | Fingerprints each run as normalised [E, S, G] vector; recalls top-3 similar historical scenarios for AI prompt injection |
+| Entity profiles | Cloudflare Vectorize (5-dim profiles) | Stores per-counterparty [E, S, G, settlement_count, avg_fee] vectors; nearest-neighbour bootstrapping for new entities |
+| Async event pipeline | Cloudflare Queues | Non-blocking — oracle response latency is never affected by adaptive writes |
+| Policy execution | Cloudflare Workflows | 5-gate safety check before any on-chain call to `ESGCompliance.setESGFee()` |
+
+**Entity bootstrapping:**
+
+When a new counterparty address has no ESG history, the ESG Oracle queries Vectorize for the nearest known entity by profile similarity (cosine score > 0.90). If found, the new entity inherits that neighbour's E/S/G priors as a starting point — rather than defaulting to an arbitrary equal-weight score. This means first-settlement pricing is informed by comparable actors rather than a cold start.
+
+**Adaptive weight bounds:**
+
+The minimum weight floor per E/S/G component is 10% (higher than Stability Oracle's 5% — justified by the smaller number of components). Max shift per week: 2%. All bounds enforced by immutable TypeScript `SAFETY_BOUNDS`.
+
+**Cron schedule:**
+
+| Cron | Job |
+|---|---|
+| `0 * * * *` (every hour) | Oracle update |
+| `0 5 * * 0` (Sunday 05:00 UTC) | Weight regression workflow |
+| `0 6 * * 0` (Sunday 06:00 UTC) | Calibration workflow |
+
+**Adaptive status endpoint:**
+
+```bash
+GET /api/adaptive/status
+```
+
+Returns current E/S/G adaptive weights, prediction count, and circuit breaker state.
+
+---
+
 ## Live Endpoint
 
 ```bash

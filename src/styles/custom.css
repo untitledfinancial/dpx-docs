@@ -58,6 +58,19 @@ header.header {
   box-shadow: none !important;
 }
 
+/* ── LOGO — constrain PNG to header bar height ───────────────── */
+.site-title img,
+a.site-title img,
+header .site-title img,
+header a[class*='site-title'] img {
+  height: 22px !important;
+  width: auto !important;
+  object-fit: contain !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  flex-shrink: 0 !important;
+}
+
 /* ── BRAND NAME / SITE TITLE ─────────────────────────────────── */
 .site-title,
 .site-title span,
@@ -70,6 +83,8 @@ a.site-title {
   font-size: 0.72rem !important;
   color: #ffffff !important;
   text-decoration: none !important;
+  gap: 0.6rem !important;
+  align-items: center !important;
 }
 
 /* Header icons & nav — white on dark */
@@ -200,21 +215,28 @@ h1, h2, h3, h4, h5, h6,
 
 /* ── HERO (index page) ───────────────────────────────────────── */
 .hero h1,
-.hero > div h1 {
+.hero > div h1,
+.hero .sl-flex h1,
+[data-has-hero] .hero h1,
+.sl-markdown-content .hero h1 {
   font-family: 'Bebas Neue', 'Arial Black', sans-serif !important;
   font-size: clamp(2.5rem, 5vw, 3.5rem) !important;
   font-weight: 400 !important;
   letter-spacing: 0.04em !important;
   line-height: 1.05 !important;
   color: #192f2d !important;
+  border-bottom: none !important;   /* override h2 border if hero h2 bleeds */
 }
 
-.hero .tagline {
+.hero .tagline,
+.hero p.tagline,
+[data-has-hero] .tagline {
   font-family: 'Inter', sans-serif !important;
   font-size: 1rem !important;
   font-weight: 300 !important;
   color: #787774 !important;
   line-height: 1.65 !important;
+  max-width: 54ch !important;
 }
 
 .hero .actions a {

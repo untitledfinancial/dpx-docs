@@ -98,6 +98,25 @@ curl -X POST https://esg.untitledfinancial.com/quote \
 
 ---
 
+## GET /api/adaptive/status
+
+Adaptive layer diagnostics — current learned E/S/G weights, prediction ledger count, and circuit breaker state.
+
+```bash
+curl https://esg.untitledfinancial.com/api/adaptive/status
+```
+
+**Response:**
+
+| Field | Description |
+|---|---|
+| `status` | `ACTIVE` / `DISABLED` |
+| `weights` | Current adaptive E/S/G weights `{ e, s, g }` (sum = 1.0) |
+| `predictions` | Total resolved prediction rows in the ledger |
+| `circuitBreakers` | Array of breaker states `{ breaker_name, is_open, failure_count }` |
+
+---
+
 ## GET /reliability
 
 ESG oracle uptime and score history.

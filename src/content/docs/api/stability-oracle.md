@@ -185,6 +185,27 @@ Array of last 24 oracle results.
 
 ---
 
+## GET /api/adaptive/status
+
+Adaptive layer diagnostics — current learned weights, prediction ledger count, and circuit breaker state.
+
+```bash
+curl https://stability.untitledfinancial.com/api/adaptive/status
+```
+
+**Response:**
+
+| Field | Description |
+|---|---|
+| `status` | `ACTIVE` / `DISABLED` (disabled if D1 not bound) |
+| `weights` | Current adaptive tier weights `{ climate, commodity, macro, fx, basket, geopolitical, capital }` |
+| `predictions` | Total resolved prediction rows in the ledger |
+| `circuitBreakers` | Array of breaker states `{ breaker_name, is_open, failure_count }` |
+
+When the adaptive layer is active, `weights` will gradually drift from the default values as the regression learns which tiers are most predictive. The `ADAPTIVE_CONFIDENCE_THRESHOLD` environment variable controls whether autonomous on-chain policy execution is enabled (default `0.99` = disabled until manually lowered after testnet validation).
+
+---
+
 ## Machine Discovery
 
 | URL | Format |
