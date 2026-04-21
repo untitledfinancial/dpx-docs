@@ -1,19 +1,19 @@
 ---
 title: Stability Oracle
-description: DPX Stability Oracle v9.0 — 7-tier architecture, USD structural health monitoring, AI intelligence synthesis, and cross-validated signals from independent non-US sources.
+description: DPX Stability Oracle v9.0 — 9-layer architecture, USD structural health monitoring, AI intelligence synthesis, and cross-validated signals from independent non-US sources.
 ---
 
 > **Proprietary technology.** The Stability Oracle architecture, signal pipeline, weighting model, AI synthesis methodology, and source code are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc.
 
-The DPX Stability Oracle v9.0 is a 7-tier signal pipeline that aggregates 32+ real-world data sources into a single actionable confidence score — with an AI intelligence layer that synthesises every signal into a plain-language briefing for treasury and risk teams. It provides 30–90 day early warning signals across seven independent transmission channels, includes a USD structural health module that cross-validates US official data against independent and non-US sources, and runs a full recommendation engine with active war mitigation protocols.
+The DPX Stability Oracle v9.0 is a 9-layer signal pipeline that aggregates 32+ real-world data sources into a single actionable confidence score — with an AI intelligence layer that synthesises every signal into a plain-language briefing for treasury and risk teams. It runs 7 primary signal tiers (Tiers 0–6), a cross-body integration synthesis pass, and a USD structural health module (v9.0) that cross-validates US official data against independent and non-US sources — all feeding into a full recommendation engine with active war mitigation protocols and 30–90 day early warning signals.
 
 **New in v9.0:** USD structural health monitoring (12 signals), independent inflation cross-validation, stablecoin market health, DeFi systemic risk signal, ECB cross-validation, gold price debasement signal, seismic supply-chain impact — all feeding a `usdHealth` confidence score blended into the composite stability score.
 
 ---
 
-## The 7 Tiers
+## The 9 Layers
 
-Each tier feeds into the next. The output of Tier 0 causally influences Tier 1, which propagates through to Tier 6.
+The first 7 layers are numbered signal tiers (0–6). Each tier feeds into the next — the output of Tier 0 causally influences Tier 1, propagating through to Tier 6. Two additional layers run on top: a cross-body integration synthesis pass (v8.0) and the USD Structural Health module (v9.0).
 
 ### Tier 0 — Climate & Environmental
 **Lead time: 30–90 days**
@@ -207,7 +207,7 @@ War mitigation protocols add a second override layer: when escalation risk is HI
 
 > **Proprietary technology.** The AI synthesis methodology, prompt architecture, and inference infrastructure are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc.
 
-The Stability Oracle includes an embedded AI intelligence layer that runs after all 32+ data sources are collected and all 7 tiers are computed. It synthesises the full signal set into a structured institutional briefing appended to every oracle response as an `intelligence` object.
+The Stability Oracle includes an embedded AI intelligence layer that runs after all 32+ data sources are collected and all 7 tiers are computed. It synthesises the full signal set across all 9 layers into a structured institutional briefing appended to every oracle response as an `intelligence` object.
 
 **What it produces:**
 
@@ -237,9 +237,9 @@ The Stability Oracle includes a fully autonomous adaptive layer that continuousl
 | Component | Technology | Role |
 |---|---|---|
 | Prediction ledger | Cloudflare D1 | Logs every oracle run; resolves predictions against actuals; scores accuracy per tier |
-| Weight regression | Cloudflare Workflows (WLSQ) | Damped Weighted Least Squares regression over 30-day accuracy history — adjusts the 7 tier weights weekly |
+| Weight regression | Cloudflare Workflows (WLSQ) | Damped Weighted Least Squares regression over 30-day accuracy history — adjusts tier weights weekly |
 | Confidence calibration | Cloudflare Workflows (Platt scaling) | Fits sigmoid A/B parameters against historical prediction outcomes weekly |
-| Semantic memory | Cloudflare Vectorize | 7-dimensional signal fingerprints; recalls top-3 similar historical scenarios and injects them into the AI synthesis prompt |
+| Semantic memory | Cloudflare Vectorize | Signal fingerprints stored as embeddings; recalls top-3 similar historical scenarios and injects them into the AI synthesis prompt |
 | Async event pipeline | Cloudflare Queues | Non-blocking bridge — oracle response is never delayed by adaptive writes |
 | Policy execution | Cloudflare Workflows | 5-gate safety check before any on-chain call to `BasketPegManager` or `StabilityFeeController` |
 

@@ -72,7 +72,7 @@ World Bank Remittance Prices Q1 2025: global average **6.49%** · banks specific
 | Wise Business *(published)* | 0.33–0.59% | Best-in-class FX rate — no ESG, no oracle, no compliance layer |
 | Ripple ODL *(estimated)* | 0.15–0.30% | Blockchain settlement rail — no ESG, no stability oracle, no regulatory positioning |
 
-DPX is not the cheapest on raw rate. It is the only settlement rail that combines programmable execution, live ESG scoring with on-chain impact redistribution, a 6-tier stability oracle with 30–90 day early warning signals, and structural alignment with MiCA, FCA PSR, and Basel III Group 1b — in a single non-custodial on-chain product.
+DPX is not the cheapest on raw rate. It is the only settlement rail that combines programmable execution, live ESG scoring with on-chain impact redistribution, a 9-layer stability oracle with 30–90 day early warning signals, and structural alignment with MiCA, FCA PSR, and Basel III Group 1b — in a single non-custodial on-chain product.
 
 ## Get a live quote
 
