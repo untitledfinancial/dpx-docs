@@ -1,28 +1,20 @@
 ---
 title: MCP — Connect Claude
-description: Connect Claude Desktop, Cursor, or any MCP-compatible host to DPX using the Model Context Protocol. Price settlements, check stability, and retrieve ESG scores natively in conversation.
+description: Connect Claude Desktop, Cursor, or any MCP-compatible host to DPX. Price settlements, check stability, execute cross-border settlements, and retrieve ESG scores natively in conversation.
 ---
 
-The DPX MCP server gives Claude Desktop and Cursor native access to all pricing, stability, and ESG endpoints. No browser, no copy-paste — Claude can price settlements, check peg health, and compare fees directly in conversation using live protocol data.
+The DPX MCP server v2.0 gives Claude Desktop and Cursor native access to the full DPX settlement lifecycle — from oracle checks to live settlement execution. No browser, no API calls, no copy-paste. Claude can price, evaluate conditions, and execute settlements directly in conversation.
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org) 18 or later
 - Claude Desktop or Cursor (any MCP-compatible host)
-- DPX MCP package — available to beta partners ([request access](/beta))
 
 ## Install
 
 ```bash
-npm install -g @untitledfinancial/dpx-mcp
-```
-
-Or clone and build locally (for beta partners with repo access):
-
-```bash
-git clone https://github.com/untitledfinancial/dpx-mcp
-cd dpx-mcp
-npm install && npm run build
+cd /path/to/dpx-protocol/dpx-mcp
+npm install
 ```
 
 ## Configure Claude Desktop
@@ -33,84 +25,93 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 {
   "mcpServers": {
     "dpx": {
-      "command": "npx",
-      "args": ["-y", "@untitledfinancial/dpx-mcp"],
+      "command": "node",
+      "args": ["/absolute/path/to/dpx-protocol/dpx-mcp/index.js"],
       "env": {
         "STABILITY_ORACLE_URL": "https://stability.untitledfinancial.com",
-        "ESG_ORACLE_URL": "https://esg.untitledfinancial.com"
+        "SETTLEMENT_AGENT_URL": "https://agent.untitledfinancial.com",
+        "SANDBOX_MODE": "true"
       }
     }
   }
 }
 ```
 
-If you cloned the repo locally, replace the `command`/`args` with:
+Replace `/absolute/path/to/dpx-protocol/dpx-mcp/index.js` with your actual path. Restart Claude Desktop — **DPX** appears in the MCP toolbar with 10 tools.
 
-```json
-{
-  "mcpServers": {
-    "dpx": {
-      "command": "node",
-      "args": ["/absolute/path/to/dpx-mcp/dist/index.js"]
-    }
-  }
-}
-```
-
-Restart Claude Desktop. You should see **DPX** listed under MCP in the toolbar.
+:::note[Sandbox mode]
+`SANDBOX_MODE: "true"` means `settle` runs real calculations with no on-chain execution. Set to `"false"` only when you are ready for live settlements with real USDC.
+:::
 
 ## Configure Cursor
 
-In Cursor: **Settings → MCP → Add Server** and paste:
+**Settings → MCP → Add Server**:
 
 ```json
 {
   "dpx": {
-    "command": "npx",
-    "args": ["-y", "@untitledfinancial/dpx-mcp"],
+    "command": "node",
+    "args": ["/absolute/path/to/dpx-protocol/dpx-mcp/index.js"],
     "env": {
       "STABILITY_ORACLE_URL": "https://stability.untitledfinancial.com",
-      "ESG_ORACLE_URL": "https://esg.untitledfinancial.com"
+      "SETTLEMENT_AGENT_URL": "https://agent.untitledfinancial.com",
+      "SANDBOX_MODE": "true"
     }
   }
 }
 ```
 
-## Verify the connection
+## Available tools (10)
 
-Ask Claude:
-
-> *"Use the DPX tools to get me a quote for a $1M cross-border settlement"*
-
-You should see Claude call `get_quote` and return a full fee breakdown with a `quoteId`.
-
-## Available tools
-
-| Tool | Description |
+| Tool | What it does |
 |---|---|
-| `get_manifest` | Protocol capabilities and contract addresses |
-| `get_quote` | Full fee breakdown for a settlement |
-| `get_esg_score` | Live E, S, G scores and current fee |
-| `get_reliability` | Stability signals and peg health |
+| `get_manifest` | DPX capabilities, supported assets, contract addresses |
+| `get_quote` | Binding fee quote — core, FX, ESG, license, net amount (300s TTL) |
+| `get_esg_score` | Live E/S/G scores for a wallet address |
+| `get_reliability` | Oracle stability status — STABLE / CAUTION / UNSTABLE |
+| `get_oracle_status` | Full 9-layer oracle signal with AI briefing |
 | `get_fee_schedule` | Complete fee table with volume tiers |
-| `verify_fees` | Confirm on-chain fees match quote |
-| `get_oracle_status` | Raw oracle output |
-| `compare_to_competitors` | DPX vs Stripe, Wise, SWIFT |
+| `verify_fees` | Confirm off-chain quote matches on-chain router |
+| `compare_to_competitors` | DPX vs Stripe, Wise, SWIFT, bank wire |
+| `settle` | **Execute a settlement** — oracle check → Claude reasoning → on-chain |
+| `get_settlement_status` | Look up any settlement by ID |
 
 ## Example prompts
 
-Once connected, you can ask Claude:
+**Pricing and analysis:**
+- *"Price a $2M cross-border settlement at ESG score 75"*
+- *"Compare our fees to Stripe and SWIFT for a $500K transfer"*
+- *"What's the Sovereign tier volume discount and what does it save us monthly?"*
 
-- *"Price a $2M cross-border settlement at our current ESG score"*
-- *"Is the oracle stable enough to proceed with a $10M settlement today?"*
-- *"How do our fees compare to Stripe for a $500K transfer?"*
-- *"Get a quote and tell me the quoteId — I'll need it for execution"*
-- *"What's our current ESG score and how much would improving it by 10 points save on a $5M monthly volume?"*
+**Oracle and conditions:**
+- *"Is the oracle stable enough to execute a $5M settlement today?"*
+- *"What is the current stability score and what's driving it?"*
+- *"Are there any active war mitigation protocols affecting the basket?"*
+
+**Settlement execution (sandbox):**
+- *"Get a quote and execute a $100,000 intercompany settlement to 0x1E05... in sandbox mode"*
+- *"Check oracle conditions and settle $500K USD same-currency to 0x... with reference INV-2026-001"*
+- *"Execute the full settlement flow for our Q2 intercompany transfer — $2M, USD, sandbox"*
+
+**Status and audit:**
+- *"Look up settlement dpx_a1b2c3... and show me the full receipt"*
+- *"What was the oracle status when that settlement executed?"*
+
+## The full settlement flow in Claude
+
+```
+You: "Check oracle conditions and execute a $100,000 intercompany settlement 
+to 0x1E05306A20A738917EFa010f5BE3fb5EE7290dD8 in sandbox mode"
+
+Claude calls:
+  1. get_reliability → STABLE (88/100), IMPROVING
+  2. get_quote → 1.385% all-in, net $98,615, quoteId dpx_abc...
+  3. settle → { status: "sandbox", settlementId: "dpx_7f8a...",
+                netAmount: 98615, reasoning: "Oracle stable, executing" }
+```
+
+No browser. No API call. No manual fee calculation. The full loop in one prompt.
 
 ## Transport
 
-The MCP server uses **stdio transport** (JSON-RPC 2.0). All tool logging goes to stderr; stdout is reserved for the protocol.
-
-## Source
-
-Available to beta partners. [Request access →](/beta)
+stdio (JSON-RPC 2.0). All tool logging goes to stderr; stdout is reserved for the protocol stream.
