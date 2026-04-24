@@ -1,0 +1,121 @@
+# DPX — For Compliance and Regulatory Teams
+
+> DPX generates automatic, on-chain ESG documentation with every settlement — immutably stored on IPFS, verified by six institutional sources, accepted by CSRD/SFDR auditors. Every settlement is traceable, auditable, and regulatory-ready without manual reporting.
+
+## The compliance problem DPX solves
+
+CSRD (EU Corporate Sustainability Reporting Directive) now requires large companies to report sustainability impacts across their operations — including treasury and payments. SFDR (Sustainable Finance Disclosure Regulation) requires financial institutions to disclose ESG exposure. Most treasury teams have no answer to: *how are you currently documenting the ESG impact of your cross-border settlements?*
+
+DPX answers that question automatically. Every settlement generates:
+- A live ESG score calculated from 6 institutional sources
+- An on-chain IPFS receipt with verifiable proof
+- A breakdown of ESG fee redistribution to verified impact pools
+- An immutable audit trail on Base mainnet
+
+## Regulatory framework coverage
+
+### European Union
+
+**MiCA (Markets in Crypto-Assets Regulation)**
+DPX settles in regulated stablecoins (USDC, EURC) issued by entities operating under MiCA Article 36 requirements. EURC (Euro Coin) is issued by Circle Europe SAS, licensed under MiCA. Settlement documentation available for MiCA Article 23 reporting.
+
+**CSRD (Corporate Sustainability Reporting Directive)**
+DPX ESG documentation directly addresses CSRD Article 8 (Taxonomy Regulation) disclosure requirements for corporate treasury operations. On-chain IPFS receipts are machine-readable and auditor-accessible. ESG scoring methodology available under NDA to approved institutional partners.
+
+**SFDR (Sustainable Finance Disclosure Regulation)**
+ESG impact data aligns with SFDR Principal Adverse Impact (PAI) indicators. Impact pool allocations are verifiable: Ocean Conservation (TCFD, GFANZ, SFDR PAI), Renewable Energy (IRA, GFANZ, SFDR PAI), Forest Preservation (TCFD, UN PRI, CSRD/ESRS), Climate Action (Paris Agreement, SFDR), Clean Water (UN SDG 6, OHCHR).
+
+**DORA (Digital Operational Resilience Act)**
+DPX infrastructure runs on Cloudflare Workers — globally distributed, SOC 2 Type II certified. Oracle updates are logged with full provenance. Circuit breakers prevent automated on-chain actions during extreme instability. All system events are timestamped and auditable.
+
+### United Kingdom
+
+**FCA Payment Services Regulation (PSR)**
+DPX is positioned as protocol infrastructure — not a payment service provider, not a money transmitter. The rail connects regulated entities at both ends; DPX does not hold funds in transit. Legal opinion available on request.
+
+**PRA Basel III Group 1b**
+Stablecoin assets used in DPX settlement (USDC, EURC) qualify for Group 1b treatment under the Basel Committee's crypto-asset standard. Settlement documentation supports capital adequacy reporting.
+
+### United States
+
+**OCC Interpretive Letters**
+DPX aligns with OCC's 2021 interpretive letters permitting national banks to use stablecoin networks for payment activities. DPX is infrastructure — not a bank, not holding customer funds.
+
+**FinCEN / Money Services Business**
+DPX does not hold or transmit funds. The router contract moves tokens from sender to recipient in a single atomic transaction. The protocol does not custody assets at any point. This is the SWIFT model: DPX is the messaging and routing layer; regulated entities at the edges handle fiat conversion.
+
+## ESG scoring methodology
+
+The ESG Oracle calculates a score (0–100) for each settlement counterparty using a weighted aggregate from 6 institutional sources:
+
+| Source | Weight | Coverage |
+|---|---|---|
+| World Bank Group | High | Environmental sustainability, governance indicators |
+| United Nations | High | SDG alignment, human rights, labor standards |
+| IMF | Medium | Fiscal sustainability, financial stability |
+| OECD | Medium | Corporate governance, anti-corruption, tax transparency |
+| SEC | Medium | US disclosure compliance, material ESG risk factors |
+| Climate Monitor | Medium | Real-time climate risk, carbon exposure |
+
+Methodology documentation is available to approved institutional partners under NDA.
+Contact: partner@untitledfinancial.com
+
+## ESG fee redistribution
+
+100% of ESG fees flow automatically to verified on-chain impact pools via the `ESGRedistribution` contract (`0x4F3741252847E4F07730c4CEC3018b201Ac6ce87` on Base mainnet). No manual intervention. No fee leakage.
+
+| Pool | Share | Regulatory alignment |
+|---|---|---|
+| Ocean Conservation | 30% | TCFD, GFANZ, SFDR PAI |
+| Renewable Energy | 25% | IRA, GFANZ, SFDR PAI |
+| Forest Preservation | 20% | TCFD, UN PRI, CSRD/ESRS |
+| Climate Action | 15% | Paris Agreement, SFDR |
+| Clean Water | 10% | UN SDG 6, OHCHR |
+
+Every redistribution event produces a verifiable IPFS receipt. Redistribution transactions are visible on Base mainnet and can be exported for SFDR reporting.
+
+## Audit trail — what each settlement record contains
+
+Every settlement emits an on-chain `Settlement` event and an IPFS receipt containing:
+
+- Sender address
+- Recipient address
+- Token address (USDC, EURC, etc.)
+- Gross amount
+- Fee breakdown (core, FX, ESG, license — each separately)
+- Net amount transferred
+- ESG score used for fee calculation
+- QuoteId (links to the pricing API record)
+- isCrossCurrency flag
+- Block timestamp
+- Transaction hash (Base mainnet)
+
+IPFS receipts are permanent, content-addressed, and independently verifiable by any auditor, regulator, or SFDR-reporting fund.
+
+## On-chain verifiability
+
+All fee rates are published on-chain in the `DPXSettlementRouter` contract. No rate can be changed without a governance transaction through `PolicyManager`. This means:
+- Fee rates are independently auditable at any time
+- No hidden FX markup
+- No off-chain billing
+- No fees deducted in transit (net amount is exactly gross minus disclosed fees)
+
+A compliance officer or auditor can query the contract directly to verify the fee structure matches disclosed documentation.
+
+## Data retention and GDPR
+
+DPX processes wallet addresses (pseudonymous) and settlement amounts. Settlement records are stored in:
+- Cloudflare D1 (Settlement Agent audit log — deletable on request)
+- Base mainnet blockchain (permanent — wallet addresses only, no PII)
+- IPFS (permanent — wallet addresses only, no PII)
+
+DPX does not collect or store names, email addresses, or any personally identifiable information. GDPR Article 17 (right to erasure) applies to off-chain D1 records only; on-chain records are permanent by design.
+
+## Sample CSRD disclosure language
+
+> Cross-border treasury settlements during [period] were conducted via DPX settlement infrastructure. Each settlement was automatically scored against ESG criteria from six institutional sources (World Bank, UN, IMF, OECD, SEC, Climate Monitor). ESG fees totalling [amount] were redistributed 100% to verified on-chain impact programs: Ocean Conservation (30%), Renewable Energy (25%), Forest Preservation (20%), Climate Action (15%), Clean Water (10%). Verifiable IPFS receipts are available for all settlements upon request.
+
+## Contact
+
+For regulatory positioning documentation, methodology NDA, or SFDR/CSRD reporting templates:
+partner@untitledfinancial.com

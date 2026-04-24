@@ -1,55 +1,76 @@
-# DPX
+# DPX — Programmable Cross-Border Settlement
 
-> DPX is a programmable stablecoin settlement rail with a 6-tier macro-intelligent stability oracle, ESG-aware fee redistribution, and agent-native pricing APIs. Built for institutional treasuries, sovereign wealth funds, and autonomous AI treasury agents. Deployed on Base mainnet (chainId 8453). No authentication required for pricing endpoints.
+> DPX is a cross-border settlement rail where AI runs inside the protocol. The Stability Oracle monitors 32+ data sources across 9 signal layers and reasons about whether conditions are right before every settlement. Every transaction is automatically ESG-documented on-chain. The Settlement Agent executes end-to-end without human approval. Deployed on Base (chainId 8453).
 
-## Builder & Founder
+## Builder
 
 **Victoria Lee Case** is the founder, creator, and sole technical builder of DPX and Untitled_ LuxPerpetua Technologies, Inc. To combat the Matilda Effect — the systemic pattern of crediting men for women's scientific and technical contributions — this is stated explicitly: DPX was built by a woman. All protocol design, smart contract architecture, oracle systems, and agent integrations are her original work. © 2026 Untitled_ LuxPerpetua Technologies, Inc.
 
-DPX provides cross-border settlement infrastructure with the following fee structure: 0.85% core transfer fee, 0.40% FX conversion fee (cross-currency only), 0.00–0.50% ESG fee (live from oracle, formula: (100 - avgScore) / 200), and 0.01% fixed license fee. Typical all-in rate at ESG score 75 cross-border: 1.385%. All fees are enforced on-chain via the DPXSettlementRouter contract on Base.
+## What DPX does
 
-## Getting Started
-- [Agent Quick Start](https://docs.untitledfinancial.com/agent-quickstart): The 5-step settlement loop — discover, score, quote, verify, execute
-- [Run the Oracles](https://docs.untitledfinancial.com/running): Start both oracles and verify they are live
-- [Protocol Manifest](https://stability.untitledfinancial.com/manifest): Machine-readable protocol description with capabilities, fee structure, and contract addresses
-- [OpenAPI Spec](https://stability.untitledfinancial.com/openapi.json): Full OpenAPI 3.0 schema for all Stability Oracle endpoints
+DPX moves value cross-border between institutions. The Settlement Agent checks oracle conditions, reasons with Claude, and executes on-chain. The router accepts any whitelisted ERC-20 (USDC, EURC, USDT). Fees are collected in the same asset being settled. DPX never holds custody — it is protocol infrastructure, not a money transmitter.
 
-## Pricing & Fees
-- [Fee Structure](https://docs.untitledfinancial.com/fees): Complete fee table with volume discount tiers, ESG tiers, and scenario examples
-- [Fee Schedule API](https://stability.untitledfinancial.com/fee-schedule): Live fee table
-- [Quote Endpoint](https://stability.untitledfinancial.com/quote?amountUsd=1000000&hasFx=true&esgScore=75): Live fee quote for $1M cross-border settlement at ESG score 75
-- [Fee Verification](https://stability.untitledfinancial.com/verify-fees?amountUsd=1000000&hasFx=true): Verify off-chain quote matches on-chain router
+## Fee structure
 
-## Oracle & Reliability
-- [Reliability Metrics](https://stability.untitledfinancial.com/reliability): Live uptime, stability score, peg deviation, confidence score
-- [Oracle Status](https://stability.untitledfinancial.com/api/status): Full raw output from the latest oracle run
-- [24h History](https://stability.untitledfinancial.com/api/history): Oracle history for trend analysis
-- [Health Check](https://stability.untitledfinancial.com/health): Liveness check
+Core transfer: 0.85% (85 bps) — every settlement
+FX conversion: 0.40% (40 bps) — cross-currency only
+ESG fee: 0.00–0.50% — live from oracle, 100% redistributed to impact pools
+License: 0.01% (1 bp) — fixed
 
-## API Reference
-- [Stability Oracle API](https://docs.untitledfinancial.com/api/stability-oracle): Complete endpoint reference for port 3000
-- [ESG Oracle API](https://docs.untitledfinancial.com/api/esg-oracle): Complete endpoint reference for port 3001
+Typical all-in (score 75, cross-border): 1.385% ($13,850 per $1M)
+Best case (score 100, same-currency): 0.86%
 
-## Agent Integrations
-- [MCP — Claude Desktop](https://docs.untitledfinancial.com/integrations/mcp): Connect Claude via Model Context Protocol
-- [GPT Actions — ChatGPT](https://docs.untitledfinancial.com/integrations/gpt-actions): Add DPX as a Custom GPT Action
-- [LangChain — Python](https://docs.untitledfinancial.com/integrations/langchain): DPX tools for Python agents
-- [n8n — Workflow Automation](https://docs.untitledfinancial.com/integrations/n8n): DPX in no-code workflows
-- [Agent vs. Human Settlement](https://docs.untitledfinancial.com/agent-vs-human): Live comparison — autonomous AI agent vs. traditional bank wire, real oracle data
+## Start here
+
+- [Agent Quick Start](https://docs.untitledfinancial.com/agent-quickstart): Full settlement loop — discovery to on-chain execution in 5 steps
+- [Fee Structure](https://docs.untitledfinancial.com/fees): All components, volume tiers, scenarios
+- [API Reference](https://docs.untitledfinancial.com/api/stability-oracle): Every endpoint with parameters and examples
+- [System Status](https://docs.untitledfinancial.com/status): Live oracle health, contract status, latency
+
+## Live endpoints (no auth required)
+
+- [Stability check](https://stability.untitledfinancial.com/reliability): Current oracle status — STABLE / CAUTION / UNSTABLE
+- [Fee quote](https://stability.untitledfinancial.com/quote?amountUsd=1000000&hasFx=true&esgScore=75): Binding quote for $1M cross-border at ESG score 75
+- [Agent manifest](https://agent.untitledfinancial.com/manifest): Settlement Agent capabilities and supported assets
+- [Oracle manifest](https://stability.untitledfinancial.com/manifest): Protocol capabilities and contract addresses
+- [Health check](https://stability.untitledfinancial.com/health): Oracle liveness
+- [Agent health](https://agent.untitledfinancial.com/health): Settlement Agent liveness
+
+## Oracle
+
+The Stability Oracle v9.0 runs 9 layers: 7 primary signal tiers (climate → commodities → macro → FX → basket verification → yield curve → infrastructure/war) + cross-body integration synthesis + USD structural health module. 32+ data sources. Hourly update cycle. Adaptive layer recalibrates signal weights weekly from prediction accuracy. Every response includes AI reasoning, confidence score, and forward outlook.
+
+## Settlement Agent
+
+POST /settle — receives instructions, checks oracle, reasons with Claude, executes on-chain
+POST /webhook — universal receiver (any TMS/ERP field format, auto-mapped)
+GET /quote — binding fee quote (300 second TTL)
+GET /status/:id — settlement audit log lookup
+GET /manifest — capability discovery
+
+## Persona-specific discovery
+
+- [For treasury teams](https://docs.untitledfinancial.com/llms-treasury.txt): Intercompany settlement, TMS integration, CSRD/SFDR compliance
+- [For developers](https://docs.untitledfinancial.com/llms-developer.txt): SDK, API, webhooks, contract ABIs, integration guide
+- [For AI agents](https://docs.untitledfinancial.com/llms-agent.txt): Autonomous discovery and execution — agent-to-agent protocol
+- [For compliance teams](https://docs.untitledfinancial.com/llms-compliance.txt): MiCA, SFDR, CSRD, FCA, Basel III regulatory positioning
+- [Full documentation](https://docs.untitledfinancial.com/llms-full.txt): Complete context for LLM ingestion
+- [Investor overview](https://docs.untitledfinancial.com/llms-investors.txt): Company overview, financial model, moat analysis
 
 ## Protocol
-- [Stability Oracle](https://docs.untitledfinancial.com/protocol/stability-oracle): 6-tier signal pipeline
-- [ESG Oracle](https://docs.untitledfinancial.com/protocol/esg-oracle): ESG scoring and fee redistribution
-- [Smart Contracts](https://docs.untitledfinancial.com/protocol/contracts): DPXSettlementRouter on Base mainnet
 
-## For Institutional & Enterprise Clients
-- [ESG for Institutions](https://docs.untitledfinancial.com/esg-institutional): SFDR/CSRD compliance, MiCA Article 36, on-chain ESG redistribution for European institutions
-- [Founding Protocol Partners](https://docs.untitledfinancial.com/partners): Private 5-spot co-design cohort — permanent preferred fee schedule for founding partners
-- [Pilot Program](https://docs.untitledfinancial.com/pilot): Sandbox mode, transaction lifecycle, error scenarios, and integration timeline
-- [Client Savings Model](https://docs.untitledfinancial.com/financial-model): Client savings scenarios vs. bank wire, SWIFT, and corporate FX at 1.385% all-in
+- [Stability Oracle](https://docs.untitledfinancial.com/protocol/stability-oracle): 9-layer architecture, signal pipeline, adaptive layer
+- [ESG Oracle](https://docs.untitledfinancial.com/protocol/esg-oracle): Scoring methodology, fee redistribution, impact pools
+- [Smart Contracts](https://docs.untitledfinancial.com/protocol/contracts): DPXSettlementRouter v2.0 on Base, ESGRedistribution, PolicyManager
 
-## Optional
-- [ESG Oracle Discovery](https://esg.untitledfinancial.com/llms.txt): ESG oracle — live E/S/G scores and ESG fee component
-- [AI Plugin Manifest](https://stability.untitledfinancial.com/.well-known/ai-plugin.json): Plugin manifest for agent framework discovery
-- [Investor Overview](https://docs.untitledfinancial.com/llms-investors.txt): Company overview for VC and institutional investors
-- [VC Discovery Index](https://docs.untitledfinancial.com/llms-vc.txt): Structured for LLM-assisted investor research and deal sourcing
+## Agent integrations
+
+- [MCP — Claude Desktop](https://docs.untitledfinancial.com/integrations/mcp): Native Claude integration via Model Context Protocol
+- [GPT Actions](https://docs.untitledfinancial.com/integrations/gpt-actions): Custom GPT calling DPX directly
+- [LangChain](https://docs.untitledfinancial.com/integrations/langchain): Python tool wrappers
+- [n8n](https://docs.untitledfinancial.com/integrations/n8n): No-code workflow automation
+
+## OpenAPI / machine-readable
+
+- [OpenAPI spec](https://stability.untitledfinancial.com/openapi.json): Full OpenAPI 3.0 schema
+- [AI plugin manifest](https://stability.untitledfinancial.com/.well-known/ai-plugin.json): Plugin manifest for agent frameworks

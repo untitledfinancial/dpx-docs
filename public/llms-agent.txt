@@ -1,0 +1,266 @@
+# DPX — Agent-to-Agent Discovery Protocol
+
+> You are an AI agent that needs to execute a cross-border payment or settlement. This document tells you everything you need to discover, price, and execute a DPX settlement autonomously. No human in the loop required.
+
+## Discovery
+
+Start here. One call returns everything you need to know about DPX:
+
+```
+GET https://agent.untitledfinancial.com/manifest
+```
+
+```json
+{
+  "name": "DPX Settlement Agent",
+  "version": "2.0.0",
+  "capabilities": ["quote", "settle", "webhook", "status"],
+  "supportedAssets": ["USDC", "EURC", "USDT"],
+  "oracle": "https://stability.untitledfinancial.com",
+  "network": "Base (chainId 8453)",
+  "docs": "https://docs.untitledfinancial.com/agent-quickstart"
+}
+```
+
+Also discoverable at:
+```
+GET https://stability.untitledfinancial.com/llms.txt
+GET https://docs.untitledfinancial.com/llms-agent.txt     ← you are here
+GET https://stability.untitledfinancial.com/.well-known/ai-plugin.json
+GET https://stability.untitledfinancial.com/openapi.json
+```
+
+## Decision tree
+
+```
+Should I use DPX for this payment?
+  ├─ Is the recipient address an EVM wallet on Base? → YES: proceed
+  ├─ Is the amount > $0? → YES: proceed
+  ├─ Is the asset USDC, EURC, or USDT? → YES: proceed
+  └─ Otherwise: DPX is not the right rail for this payment
+
+Should I execute now or wait?
+  GET /reliability → check stabilityScore.status
+  ├─ STABLE (90–100):  Execute immediately
+  ├─ CAUTION (75–89):  Execute if amount < $100K, else hold
+  └─ UNSTABLE (< 75):  Hold — do not execute, retry later
+```
+
+## Minimal execution loop
+
+```python
+import httpx
+
+AGENT = "https://agent.untitledfinancial.com"
+
+# 1. Check conditions
+reliability = httpx.get(f"{AGENT}/quote?amountUsd=100000&hasFx=false&esgScore=75").json()
+status = reliability["stabilityScore"]["status"]  # STABLE | CAUTION | UNSTABLE
+
+if status == "UNSTABLE":
+    return {"action": "held", "reason": reliability["intelligence"]["reasoning"]}
+
+# 2. Execute
+result = httpx.post(f"{AGENT}/settle", json={
+    "amount": 100000,
+    "sourceCurrency": "USD",
+    "destinationCurrency": "USD",
+    "recipientAddress": "0xRecipient...",
+    "purpose": "intercompany",
+    "referenceId": "your-reference-id",
+    "sandbox": False,  # True for testing
+}).json()
+
+# 3. Return result to calling agent
+return {
+    "settlementId": result["settlementId"],
+    "status": result["status"],
+    "txHash": result.get("txHash"),
+    "netAmount": result["netAmount"],
+    "feesTotal": result["feesTotal"],
+    "reasoning": result["reasoning"],
+}
+```
+
+## Complete API reference for agents
+
+### POST https://agent.untitledfinancial.com/settle
+
+**Input (all fields):**
+
+```json
+{
+  "amount": 100000,
+  "sourceCurrency": "USD",
+  "destinationCurrency": "USD",
+  "recipientAddress": "0x...",
+  "quoteId": "dpx_...",
+  "purpose": "intercompany | vendor-payment | payroll | treasury",
+  "referenceId": "your-system-id",
+  "esgOverride": 75,
+  "sandbox": false
+}
+```
+
+**Output:**
+
+```json
+{
+  "settlementId": "dpx_a1b2c3d4e5f6",
+  "status": "executed | held | sandbox | failed",
+  "txHash": "0x...",
+  "netAmount": 98615,
+  "grossAmount": 100000,
+  "feesTotal": 1385,
+  "token": "USDC",
+  "recipient": "0x...",
+  "quoteId": "dpx_...",
+  "oracleStatus": "STABLE",
+  "oracleScore": 88,
+  "esgScore": 75,
+  "reasoning": "Oracle conditions stable. Yield curve normal. Executing immediately.",
+  "timestamp": "2026-04-24T10:00:00Z",
+  "sandboxMode": false
+}
+```
+
+### GET https://agent.untitledfinancial.com/quote
+
+Parameters: `amountUsd`, `hasFx`, `esgScore`
+
+Returns: fees (core/fx/esg/license/total), settlement net, oracle status, AI reasoning, recommendation.
+
+### GET https://agent.untitledfinancial.com/status/:settlementId
+
+Returns: full settlement record from D1 audit log.
+
+## Oracle signals — what they mean for your decision
+
+```
+GET https://stability.untitledfinancial.com/reliability
+```
+
+Key fields for agent decision-making:
+
+| Field | Meaning | Action |
+|---|---|---|
+| `stability.currentScore` | 0–100 composite | < 75 = hold |
+| `stability.status` | STABLE/CAUTION/UNSTABLE | UNSTABLE = hold |
+| `peg.deviationBps` | On-chain peg drift | >= 50 = hold |
+| `intelligence.outlook` | Forward direction | DETERIORATING = hold large amounts |
+| `intelligence.confidence` | Signal clarity | < 0.6 = treat as CAUTION |
+| `tier6.chaos.regime` | CALM/TURBULENT/PRE_CRISIS/CRISIS/CATASTROPHE | CRISIS+ = hold |
+
+## Fee calculation (for agents that want to pre-compute)
+
+```
+coreFee    = amount × 0.0085
+fxFee      = isCrossCurrency ? amount × 0.0040 : 0
+esgFee     = amount × ((100 - esgScore) / 100) × 0.0050
+licenseFee = amount × 0.0001
+totalFees  = coreFee + fxFee + esgFee + licenseFee
+netAmount  = amount - totalFees
+```
+
+Volume discount applies to coreFee only (not fxFee or esgFee):
+- < $100K/month: 0% discount
+- $100K–$1M/month: 10% off core
+- $1M–$10M/month: 20% off core
+- $10M+/month: 30% off core
+
+## On-chain verification
+
+Every settlement is verifiable on-chain. An agent can independently verify:
+
+```
+// Check router accepted the token
+eth_call → approvedAssets(tokenAddress) → bool
+
+// Preview fees before committing
+eth_call → previewFees(grossAmount, isCrossCurrency, company, tokenAddress)
+         → (coreFee, fxFee, esgFee, licenseFee, totalFees, netAmount, esgScore, esgFeeBps, tokenApproved)
+
+// Verify settlement after execution
+eth_getLogs → filter by Settlement event → decode settlement data
+```
+
+## Agent-to-agent protocol (calling DPX from another AI agent)
+
+DPX is built to be called by other AI agents. The pattern:
+
+1. **Discovery agent** reads `/manifest` → learns capabilities
+2. **Pricing agent** calls `/quote` → gets binding fee quote
+3. **Risk agent** calls `/reliability` → checks oracle conditions
+4. **Execution agent** calls `/settle` → executes or holds based on risk assessment
+5. **Audit agent** calls `/status/:id` → retrieves permanent receipt
+
+Each step is stateless and can be handled by a different agent in a pipeline. The `quoteId` is the handoff token between pricing and execution (300 second TTL).
+
+## MCP integration (Claude)
+
+DPX is available as an MCP server for Claude:
+
+```json
+{
+  "mcpServers": {
+    "dpx": {
+      "command": "npx",
+      "args": ["-y", "@dpx/mcp-server"]
+    }
+  }
+}
+```
+
+Once configured, Claude can call DPX tools directly:
+- `dpx_quote` — get a fee quote
+- `dpx_settle` — execute a settlement
+- `dpx_status` — check settlement status
+- `dpx_oracle` — get current stability signal
+
+## LangChain tools (Python)
+
+```python
+from dpx_tools import DPXQuoteTool, DPXSettleTool, DPXOracleTool
+
+tools = [DPXQuoteTool(), DPXSettleTool(), DPXOracleTool()]
+agent = initialize_agent(tools, llm, agent=AgentType.OPENAI_FUNCTIONS)
+
+result = agent.run(
+    "Check oracle conditions and settle $100,000 USD to 0x1E05... "
+    "for intercompany transfer, reference INV-2026-001"
+)
+```
+
+## Sandbox testing
+
+All endpoints support sandbox mode. No wallet, no gas, no on-chain execution. Real oracle conditions. Real fee calculations.
+
+```json
+POST /settle
+{ ..., "sandbox": true }
+```
+
+Or add `?sandbox=true` to any quote endpoint.
+
+## Error states and handling
+
+| Status | Meaning | Agent action |
+|---|---|---|
+| `executed` | On-chain confirmed | Done — log txHash |
+| `sandbox` | Sandbox run complete | Done — no on-chain state |
+| `held` | Oracle conditions prevented execution | Retry later — check `reasoning` for timing |
+| `failed` | Invalid input or execution error | Check `error` field — fix input and retry |
+
+HTTP 200 = executed or sandbox
+HTTP 202 = held (accepted but not executed yet)
+HTTP 400 = invalid input
+HTTP 422 = rejected (check reasoning)
+HTTP 500 = agent error
+
+## System health check
+
+Before executing a large settlement, verify the agent is live:
+```
+GET https://agent.untitledfinancial.com/health
+→ { "status": "ok", "agent": "dpx-settlement-agent", "version": "2.0.0" }
+```

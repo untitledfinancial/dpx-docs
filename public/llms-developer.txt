@@ -1,0 +1,264 @@
+# DPX — For Developers
+
+> DPX is a cross-border settlement rail with a TypeScript SDK, REST API, webhook receiver, on-chain Solidity contract, and Cloudflare Workers infrastructure. No auth required for pricing endpoints. Deploy to Base Sepolia in minutes.
+
+## Stack
+
+- **Settlement Agent**: Cloudflare Worker (TypeScript) — `agent.untitledfinancial.com`
+- **Stability Oracle**: Cloudflare Worker (TypeScript) — `stability.untitledfinancial.com`
+- **On-chain**: Solidity 0.8.20 on Base (chainId 8453) / Base Sepolia (chainId 84532)
+- **SDK**: `@dpx/sdk` — TypeScript, works in Node.js, Cloudflare Workers, browser
+- **Storage**: Cloudflare D1 (settlement audit log), KV (quote cache), Vectorize (oracle semantic memory)
+
+## SDK quickstart
+
+```bash
+npm install @dpx/sdk
+```
+
+```typescript
+import { DPXClient } from '@dpx/sdk';
+
+const dpx = new DPXClient(); // points to production by default
+
+// Get a quote
+const quote = await dpx.quote({ amountUsd: 500_000, hasFx: true, esgScore: 75 });
+console.log(quote.fees.total.pct + '%');  // "1.385%"
+console.log(quote.stabilityScore.status); // "STABLE"
+
+// Execute a settlement (sandbox mode)
+const result = await dpx.settle({
+  amount: 500_000,
+  sourceCurrency: 'USD',
+  destinationCurrency: 'USD',
+  recipientAddress: '0x...',
+  purpose: 'intercompany',
+  referenceId: 'INV-2026-001',
+  sandbox: true,
+});
+
+console.log(result.status);       // "sandbox"
+console.log(result.settlementId); // "dpx_a1b2c3..."
+console.log(result.reasoning);    // Claude's reasoning string
+```
+
+## Settlement Agent API
+
+Base URL: `https://agent.untitledfinancial.com`
+
+### POST /settle
+
+```typescript
+// Request
+{
+  amount: number,              // in source currency units
+  sourceCurrency: string,      // "USD" | "EUR" | "GBP" | "USDC" | "EURC"
+  destinationCurrency: string,
+  recipientAddress: string,    // 0x... EVM address
+  quoteId?: string,            // pre-fetched quote (optional)
+  purpose?: string,            // "intercompany" | "vendor-payment" | "payroll"
+  referenceId?: string,        // your external ID
+  sandbox?: boolean,           // true = no on-chain execution
+}
+
+// Response
+{
+  settlementId: string,        // "dpx_..."
+  status: "executed" | "held" | "sandbox" | "failed",
+  txHash?: string,             // on Base mainnet when status = "executed"
+  netAmount: number,
+  feesTotal: number,
+  token: string,               // "USDC" | "EURC" | "USDT"
+  oracleStatus: string,        // "STABLE" | "CAUTION" | "UNSTABLE"
+  oracleScore: number,         // 0–100
+  esgScore: number,            // 0–100
+  reasoning: string,           // Claude's reasoning in plain language
+  timestamp: string,
+  sandboxMode: boolean,
+}
+```
+
+### POST /webhook
+
+Universal receiver — auto-maps field names from any TMS/ERP format:
+
+```bash
+curl -X POST https://agent.untitledfinancial.com/webhook \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 50000,
+    "currency": "USD",
+    "destination_currency": "USD",
+    "recipient": "0x...",
+    "reference_id": "INV-001"
+  }'
+```
+
+Accepted field aliases:
+- amount: `amount`, `value`, `gross_amount`, `payment_amount`
+- sourceCurrency: `currency`, `source_currency`, `from_currency`, `ccy`
+- recipientAddress: `recipient`, `recipient_address`, `to_address`, `wallet`
+- referenceId: `reference`, `reference_id`, `id`, `invoice_id`, `external_id`
+
+### GET /quote
+
+```
+GET /quote?amountUsd=1000000&hasFx=true&esgScore=75
+```
+
+### GET /status/:id
+
+```
+GET /status/dpx_a1b2c3...
+```
+
+### GET /manifest
+
+Machine-readable capability manifest. Returns supported assets, endpoint list, oracle URL, network.
+
+## Stability Oracle API
+
+Base URL: `https://stability.untitledfinancial.com`
+
+No authentication required for: `/reliability`, `/health`, `/manifest`, `/quote`, `/fee-schedule`, `/esg-score`
+
+| Endpoint | Returns |
+|---|---|
+| `GET /reliability` | Current stability score, peg health, AI briefing |
+| `GET /quote?amountUsd=N&hasFx=bool&esgScore=N` | Binding fee quote (300s TTL) |
+| `GET /health` | Oracle liveness + last update age |
+| `GET /manifest` | Protocol capabilities, contract addresses |
+| `GET /fee-schedule` | Full fee table |
+| `GET /esg-score?address=0x...` | ESG score for a wallet address |
+| `GET /openapi.json` | OpenAPI 3.0 schema |
+
+## On-chain — DPXSettlementRouter v2.0
+
+Network: Base (chainId 8453) / Base Sepolia (chainId 84532)
+
+### Core function
+
+```solidity
+function settle(
+  address recipient,       // destination wallet
+  uint256 grossAmount,     // token units (6 decimals for USDC)
+  bool isCrossCurrency,    // true if USD→EUR etc.
+  bytes32 quoteId,         // from /quote endpoint
+  address tokenAddress     // any whitelisted ERC-20
+) external returns (uint256 netAmount)
+```
+
+### Read functions
+
+```solidity
+function previewFees(
+  uint256 grossAmount,
+  bool isCrossCurrency,
+  address company,
+  address tokenAddress
+) external view returns (
+  uint256 coreFee, uint256 fxFee, uint256 esgFee, uint256 licenseFee,
+  uint256 totalFees, uint256 netAmount, uint256 esgScore,
+  uint256 esgFeeBps, bool tokenApproved
+)
+
+function approvedAssets(address token) external view returns (bool)
+function getApprovedAssets() external view returns (address[] memory)
+```
+
+### Approved tokens (Base mainnet)
+
+| Token | Address |
+|---|---|
+| USDC | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` |
+| EURC | `0x60a3E35Cc302bFA44Cb288Bc5a4F316Fdb1adb42` |
+
+### Approved tokens (Base Sepolia)
+
+| Token | Address |
+|---|---|
+| USDC | `0x036CbD53842c5426634e7929541eC2318f3dCF7e` |
+
+### Settlement event
+
+```solidity
+event Settlement(
+  address indexed sender,
+  address indexed recipient,
+  address indexed tokenAddress,
+  uint256 grossAmount,
+  uint256 coreFee,
+  uint256 fxFee,
+  uint256 esgFee,
+  uint256 licenseFee,
+  uint256 netAmount,
+  bool isCrossCurrency,
+  uint256 esgScore,
+  bytes32 quoteId
+)
+```
+
+## Execute on-chain directly (ethers.js)
+
+```typescript
+import { ethers } from 'ethers';
+
+const ROUTER_ABI = [
+  'function settle(address,uint256,bool,bytes32,address) external returns (uint256)',
+  'function previewFees(uint256,bool,address,address) external view returns (uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,bool)',
+];
+const ERC20_ABI = ['function approve(address,uint256) external returns (bool)'];
+
+const provider = new ethers.JsonRpcProvider('https://mainnet.base.org');
+const wallet   = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
+const router   = new ethers.Contract(ROUTER_V2_ADDRESS, ROUTER_ABI, wallet);
+const usdc     = new ethers.Contract(USDC_ADDRESS, ERC20_ABI, wallet);
+
+// 1. Approve
+await (await usdc.approve(ROUTER_V2_ADDRESS, grossAmountRaw)).wait();
+
+// 2. Settle
+const tx = await router.settle(
+  recipientAddress,
+  grossAmountRaw,       // BigInt, 6 decimals
+  isCrossCurrency,
+  quoteIdBytes32,       // ethers.zeroPadBytes(...)
+  USDC_ADDRESS,
+);
+const receipt = await tx.wait();
+console.log(receipt.hash);
+```
+
+## MCP (Claude Desktop)
+
+```json
+{
+  "mcpServers": {
+    "dpx": {
+      "command": "npx",
+      "args": ["-y", "@dpx/mcp-server"],
+      "env": { "DPX_AGENT_URL": "https://agent.untitledfinancial.com" }
+    }
+  }
+}
+```
+
+## Local dev
+
+```bash
+# Settlement Agent
+cd dpx-agents/settlement-agent
+npm install && npm run dev
+# → http://localhost:8787
+
+# Run Mercury sandbox test
+cd dpx-agents/mercury
+MERCURY_API_KEY=sandbox_... npm test
+```
+
+## Resources
+
+- [GitHub](https://github.com/untitledfinancial/DPX-API): Full source — contracts, agent, oracle, SDK
+- [OpenAPI spec](https://stability.untitledfinancial.com/openapi.json): Machine-readable API schema
+- [Agent Quick Start](https://docs.untitledfinancial.com/agent-quickstart): Full integration walkthrough
+- [System status](https://docs.untitledfinancial.com/status): Live health dashboard

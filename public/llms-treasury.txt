@@ -1,0 +1,102 @@
+# DPX — For Treasury Teams
+
+> DPX is cross-border settlement infrastructure for institutional treasury operations. It plugs into any TMS via webhook or REST API, checks macro conditions before every settlement, documents ESG impact automatically for CSRD/SFDR reporting, and executes without manual approval. The rail — not the FX desk.
+
+## The first use case: intercompany settlement
+
+A multinational moves funds between its own subsidiaries. Both sides are controlled by the same treasury team. DPX is ideal here because:
+- No counterparty trust required — both ends are yours
+- Oracle conditions are checked automatically before every transfer
+- ESG documentation is generated on-chain with each settlement
+- The saving vs. bank wire is immediate and measurable at any volume
+
+At $10M/month intercompany volume (Sovereign tier), DPX costs 1.130% all-in vs. 2.50–6.00% via bank wire. That is $119,000–$487,000 saved per $10M.
+
+## How it plugs into your TMS
+
+DPX accepts payment instructions via webhook. Any system that can POST JSON can trigger a settlement:
+
+```
+POST https://agent.untitledfinancial.com/webhook
+{
+  "amount": 500000,
+  "currency": "USD",
+  "destination_currency": "EUR",
+  "recipient": "0xRecipientWalletAddress",
+  "reference_id": "INV-2026-001",
+  "type": "intercompany"
+}
+```
+
+The Settlement Agent maps common TMS field names automatically. No custom integration code required for Kyriba, SAP TRM, or any REST-capable treasury system.
+
+## What happens on every settlement
+
+1. Stability Oracle checks 9 signal layers — climate, commodities, macro, FX, basket, yield curve, infrastructure, geopolitical risk, USD structural health
+2. Claude reasons about whether conditions are right: STABLE = execute, CAUTION = hold if large amount, UNSTABLE = hold
+3. Router executes on-chain: fees deducted, net transferred to recipient wallet, ESG fee to impact pools
+4. IPFS receipt generated — permanent, auditable, accepted by CSRD/SFDR auditors
+
+## Oracle conditions and settlement timing
+
+The oracle tells you when to settle, not just that it settled:
+
+| Oracle status | Score | DPX action |
+|---|---|---|
+| STABLE | 90–100 | Execute immediately |
+| CAUTION | 75–89 | Execute under $100K — hold larger amounts |
+| UNSTABLE | < 75 | Hold — notify treasury, retry when conditions improve |
+
+CAUTION signals include: yield curve inverting, FX volatility elevated, shipping disruption, energy stress. The oracle provides 30–90 day early warning on these conditions — not reactive monitoring.
+
+## Fee structure
+
+| Component | Rate | Applies |
+|---|---|---|
+| Core transfer | 0.85% | Every settlement |
+| FX conversion | 0.40% | Cross-currency only |
+| ESG fee | 0.00–0.50% | Every settlement — live from oracle |
+| License | 0.01% | Every settlement — fixed |
+
+ESG fee formula: `(100 - yourESGScore) / 200`. Score 100 = 0% ESG fee. Score 75 = 0.125%.
+
+## Volume discount tiers
+
+| Tier | Monthly volume | Core discount | All-in (score 75, FX) |
+|---|---|---|---|
+| Standard | < $100K | 0% | 1.385% |
+| Growth | $100K–$1M | 10% | 1.300% |
+| Institutional | $1M–$10M | 20% | 1.215% |
+| Sovereign | $10M+ | 30% | 1.130% |
+
+## ESG and CSRD compliance
+
+DPX generates on-chain ESG documentation with every settlement:
+- Score calculated from 6 institutional sources (World Bank, UN, IMF, OECD, SEC, Climate Monitor)
+- IPFS receipt with verifiable proof — accepted by CSRD/SFDR auditors
+- ESG fee (0–0.50%) redistributed 100% to verified impact pools: Ocean Conservation (30%), Renewable Energy (25%), Forest Preservation (20%), Climate Action (15%), Clean Water (10%)
+- Directly addresses CSRD Article 8 (Taxonomy Regulation) disclosure requirements for treasury operations
+
+## Supported assets
+
+USDC (USD Coin), EURC (Euro Coin), USDT — all on Base mainnet. 1:1 stability maintained by stablecoin issuers (Circle, Tether). For cross-currency: DPX moves value intact, receiving system handles fiat conversion — exactly the SWIFT model, without SWIFT correspondent chain fees.
+
+## Get a quote
+
+```bash
+curl "https://stability.untitledfinancial.com/quote?amountUsd=1000000&hasFx=true&esgScore=75"
+```
+
+Returns fees, net amount, oracle status, AI reasoning, and a quoteId valid for 300 seconds.
+
+## Integration
+
+- [Webhook receiver](https://docs.untitledfinancial.com/integrations/rest-api): Connect any TMS in minutes
+- [Kyriba connector](https://docs.untitledfinancial.com/integrations/kyriba): Native Kyriba integration (coming soon)
+- [SAP TRM](https://docs.untitledfinancial.com/integrations/sap-trm): SAP Treasury & Risk Management (coming soon)
+- [Agent Quick Start](https://docs.untitledfinancial.com/agent-quickstart): Full settlement loop documentation
+- [Pilot program](https://docs.untitledfinancial.com/pilot): Sandbox with real oracle data, no funds moved
+
+## Contact
+
+partner@untitledfinancial.com — for institutional onboarding and volume pricing
