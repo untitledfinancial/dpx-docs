@@ -56,7 +56,7 @@ At Sovereign tier, the all-in rate for a typical cross-border settlement (score 
 | Climate Action | 15% | Paris Agreement, SFDR |
 | Clean Water | 10% | UN SDG 6, OHCHR |
 
-Every redistribution event produces a verifiable IPFS receipt. At $5B annual volume (Sovereign tier), the ESG pool generates approximately **$6.25M/year** in on-chain-verified impact — auditable by any counterparty, regulator, or SFDR-reporting fund.
+Every redistribution event is recorded on-chain via the `RedistributionExecuted` event — auditable by any counterparty, regulator, or SFDR-reporting fund without relying on DPX infrastructure. At $5B annual volume (Sovereign tier), the ESG pool generates approximately **$6.25M/year** in on-chain-verified impact.
 
 ## Competitive Context
 
@@ -68,7 +68,7 @@ World Bank Remittance Prices Q1 2025: global average **6.49%** · banks specific
 | SWIFT correspondent chain (SME / mid-market) | 3.00–8.00% | Multi-hop fees, short-payment risk, no on-chain receipt |
 | PayPal Business international | 7.00–8.50% | Consumer-grade, not programmable |
 | Convera / WU Business | 1.50–4.00% | FX margin embedded, non-transparent |
-| **DPX — typical (score 75, cross-border)** | **1.385%** | On-chain enforcement, ESG scoring, 6-tier oracle, MiCA/FCA/Basel III positioning |
+| **DPX — typical (score 75, cross-border)** | **1.385%** | On-chain enforcement, ESG scoring, 9-layer oracle, MiCA/FCA/Basel III positioning |
 | Wise Business *(published)* | 0.33–0.59% | Best-in-class FX rate — no ESG, no oracle, no compliance layer |
 | Ripple ODL *(estimated)* | 0.15–0.30% | Blockchain settlement rail — no ESG, no stability oracle, no regulatory positioning |
 

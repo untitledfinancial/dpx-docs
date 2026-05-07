@@ -53,7 +53,7 @@ These are the savings a client realises by switching from legacy rails to DPX. A
 | Wise Business | 0.33–0.59% | ~$4.5M |
 | Ripple ODL | 0.15–0.30% | ~$2.5M |
 
-DPX is priced at the low end of institutional FX rails with a compliance, stability, and ESG layer that no fintech rail currently offers. Wise and Ripple are cheaper on raw rate — they provide no on-chain ESG redistribution, no 6-tier stability oracle, no MiCA/FCA/Basel III compliance documentation, and no agent-native programmability.
+DPX is priced at the low end of institutional FX rails with a compliance, stability, and ESG layer that no fintech rail currently offers. Wise and Ripple are cheaper on raw rate — they provide no on-chain ESG redistribution, no 9-layer stability oracle, no MiCA/FCA/Basel III compliance documentation, and no agent-native programmability.
 
 ---
 
@@ -140,7 +140,7 @@ The ESG fee component is not retained as protocol revenue — it flows on-chain 
 | Clean Water | 10% | $125K |
 | **Total redistributed** | | **$1.25M/year** |
 
-At $10B annual volume: **$12.5M+/year** redistributed — entirely on-chain, verifiable via IPFS receipts on Storacha.
+At $10B annual volume: **$12.5M+/year** redistributed — entirely on-chain, verifiable on Base Blockscout by any counterparty or auditor.
 
 ---
 

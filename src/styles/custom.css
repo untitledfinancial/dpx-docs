@@ -8,7 +8,11 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap');
+@import '@fontsource/inter/300.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/bebas-neue/400.css';
 
 /* ── VARIABLES ───────────────────────────────────────────────── */
 :root,

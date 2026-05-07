@@ -3,7 +3,7 @@ title: Smart Contracts
 description: All 7 DPX on-chain contracts deployed on Base mainnet (chainId 8453) — addresses, roles, ABIs, and key functions.
 ---
 
-DPX is deployed on **Base mainnet** (chainId 8453). All contracts are verified on Basescan. The settlement router enforces all fees on-chain — agents cannot submit settlements at rates different from what the oracle quoted.
+DPX is deployed on **Base mainnet** (chainId 8453). All contracts are verified on Base Blockscout. The settlement router enforces all fees on-chain — agents cannot submit settlements at rates different from what the oracle quoted.
 
 Contract addresses are also returned by the `/manifest` endpoint and are always canonical.
 
@@ -19,9 +19,9 @@ Contract addresses are also returned by the `/manifest` endpoint and are always 
 | ESGOracle | `0x7717e89bC45cBD5199b44595f6E874ac62d79786` | On-chain ESG score storage · 6 providers · per-company scoring |
 | ESGRedistribution | `0x4F3741252847E4F07730c4CEC3018b201Ac6ce87` | Bad-actor fee redistribution · 10 industry buckets |
 | PolicyManager | `0x741f3179786d9f72e134BdC699D6604eaB250D6E` | Governance · basket and fee policy control |
-| DPXSettlementRouter | `0x7d2b0Cea5A2d19369548F59C6B8EEe9Fe3495c97` | Single settlement entry point · enforces all fees on-chain |
+| DPXSettlementRouter v2.0 | `0xe333551E18ef0471A71d7e8e761212766aa5AD4f` | Single settlement entry point · enforces all fees on-chain |
 
-**Basescan:** [basescan.org](https://basescan.org) → search any address above to verify deployment and inspect transactions.
+**Base Blockscout:** [base.blockscout.com](https://base.blockscout.com) → search any address above to verify deployment and inspect transactions.
 
 ---
 
@@ -61,9 +61,9 @@ PID (Proportional-Integral-Derivative) controlled stability mechanism. Monitors 
 
 ---
 
-## DPXSettlementRouter
+## DPXSettlementRouter v2.0
 
-**Address:** `0x7d2b0Cea5A2d19369548F59C6B8EEe9Fe3495c97`
+**Address:** `0xe333551E18ef0471A71d7e8e761212766aa5AD4f`
 
 The single entry point for all DPX settlements. Enforces the full fee structure (core + FX + ESG + license) before executing the token transfer. Agents and TMS integrations call `settle()` — never the token contract directly.
 

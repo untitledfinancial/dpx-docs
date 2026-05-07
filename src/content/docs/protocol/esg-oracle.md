@@ -103,7 +103,7 @@ All redistributed fees consolidate to a single on-chain impact wallet (`0x5b2632
 | $1B | ~$2M | 100% to impact wallet |
 | $5B | ~$10M | 100% to impact wallet |
 
-Every redistribution is verifiable on-chain. Any agent, auditor, or regulator can independently confirm funds reached the impact wallet via BaseScan.
+Every redistribution is verifiable on-chain. Any agent, auditor, or regulator can independently confirm funds reached the impact wallet via Base Blockscout.
 
 ---
 

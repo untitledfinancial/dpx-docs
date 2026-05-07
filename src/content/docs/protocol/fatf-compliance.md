@@ -37,7 +37,7 @@ The Travel Rule applies to VASPs — entities that transfer virtual assets on be
 | TRM Labs | Compatible — on-chain address screening pre-settlement |
 | Chainalysis KYT | Compatible — transaction monitoring post-settlement |
 
-The on-chain settlement receipt (IPFS-linked, produced by `ESGRedistribution`) provides an immutable audit record that satisfies record-keeping requirements under Travel Rule implementations.
+The on-chain settlement receipt (produced by `ESGRedistribution` and verifiable on Base Blockscout) provides an immutable audit record that satisfies record-keeping requirements under Travel Rule implementations.
 
 ## IVMS 101 — Identity Data Standard
 
@@ -62,7 +62,7 @@ DPX does not:
 
 DPX does:
 - Execute settlement on-chain with full transaction traceability
-- Produce immutable IPFS receipts for every settlement event
+- Produce immutable on-chain records for every settlement event, verifiable on Base Blockscout
 - Support pre-settlement address screening via compatible KYT/KYC providers
 - Operate under governance policies set by `PolicyManager` with on-chain auditability
 

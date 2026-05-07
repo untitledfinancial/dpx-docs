@@ -154,8 +154,8 @@ curl -X POST https://agent.untitledfinancial.com/settle \
 Every settled transaction is verifiable:
 
 ```bash
-# Basescan (Base Mainnet)
-https://basescan.org/tx/<txHash>
+# Base Blockscout (Base Mainnet)
+https://base.blockscout.com/tx/<txHash>
 
 # Or query the router directly
 cast call 0x<ROUTER_V2_ADDRESS> \

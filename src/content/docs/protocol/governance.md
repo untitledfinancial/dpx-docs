@@ -28,7 +28,7 @@ This is the institutional governance standard: **no off-chain admin panels, no b
 
 ## Transparency
 
-All contracts are verified on Basescan. Any change to any protocol parameter can be independently confirmed:
+All contracts are verified on Base Blockscout. Any change to any protocol parameter can be independently confirmed:
 
 ```bash
 # Check current fee configuration

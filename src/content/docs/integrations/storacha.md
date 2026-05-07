@@ -1,10 +1,10 @@
 ---
 title: Verifiable Storage — Settlement Receipts
-description: DPX settlement receipts are verified via on-chain transaction hash (Basescan) and a Cloudflare D1 audit log. No external storage provider required.
+description: DPX settlement receipts are verified via on-chain transaction hash (Base Blockscout) and a Cloudflare D1 audit log. No external storage provider required.
 ---
 
 :::note[IPFS layer removed]
-The IPFS/Storacha storage layer has been removed. It is not needed. Every settlement is verifiable via its on-chain transaction hash — independently auditable on Basescan without relying on DPX infrastructure.
+The IPFS/Storacha storage layer has been removed. It is not needed. Every settlement is verifiable via its on-chain transaction hash — independently auditable on Base Blockscout without relying on DPX infrastructure.
 :::
 
 ## How settlement receipts work
@@ -13,10 +13,10 @@ Every DPX settlement produces two independent audit artifacts:
 
 | Artifact | Where | Who can verify |
 |---|---|---|
-| **On-chain tx hash** | Base mainnet (Basescan) | Anyone — no API key, no trust required |
+| **On-chain tx hash** | Base mainnet (Base Blockscout) | Anyone — no API key, no trust required |
 | **D1 audit log entry** | Cloudflare D1 (`dpx-settlements`) | DPX operators + institutional partners |
 
-The tx hash is embedded in the settlement response and emitted in the `Settlement` event on-chain. Any agent, compliance team, or auditor can verify a settlement at `https://basescan.org/tx/<txHash>` without relying on DPX's servers.
+The tx hash is embedded in the settlement response and emitted in the `Settlement` event on-chain. Any agent, compliance team, or auditor can verify a settlement at `https://base.blockscout.com/tx/<txHash>` without relying on DPX's servers.
 
 ## Settlement response
 
@@ -24,7 +24,7 @@ The tx hash is embedded in the settlement response and emitted in the `Settlemen
 {
   "status": "SUCCESS",
   "txHash": "0xabc123...",
-  "explorerUrl": "https://basescan.org/tx/0xabc123...",
+  "explorerUrl": "https://base.blockscout.com/tx/0xabc123...",
   "quoteId": "quote_...",
   "recipient": "0x...",
   "amountDPX": "1000000000000000000",

@@ -34,7 +34,7 @@ Sandbox responses are identical in shape to production responses. The only diffe
 | `quoteId` | Mock UUID prefixed `sandbox_` | Real UUID, on-chain verifiable |
 | `settlementRef` | Mock reference | On-chain tx hash on Base |
 | `onChain` | `false` | `true` after settlement executes |
-| `esgRedistribution.txHash` | `null` | IPFS CID |
+| `esgRedistribution.txHash` | `null` | On-chain tx hash on Base |
 
 ---
 
@@ -57,7 +57,7 @@ QUOTED → VERIFYING → EXECUTING → CONFIRMED → REDISTRIBUTING → COMPLETE
 | `EXECUTING` | Transaction submitted to Base mainnet | Wait for block confirmation (~2 seconds on Base). |
 | `CONFIRMED` | Settlement tx included in a block | Safe to notify counterparty. TxHash is available. |
 | `REDISTRIBUTING` | ESG fee being distributed to impact pools | Automatic. Completes within 1 block after settlement. |
-| `COMPLETE` | All components settled and ESG redistributed | Final state. IPFS receipt available. |
+| `COMPLETE` | All components settled and ESG redistributed | Final state. Verifiable on Base Blockscout. |
 | `FAILED` | Transaction reverted or oracle unreachable | See error scenarios below. Funds not moved. |
 | `REFUNDED` | Failed settlement — funds returned to sender | Confirmed by on-chain event. No action needed. |
 
@@ -76,12 +76,12 @@ curl "https://stability.untitledfinancial.com/settlement/{quoteId}"
 
 Response includes current state, txHash (once EXECUTING), and ESG redistribution receipts (once REDISTRIBUTING).
 
-### On-chain via Basescan
+### On-chain via Base Blockscout
 
-Every confirmed settlement is visible at `basescan.org` with the Base mainnet tx hash. Search by:
+Every confirmed settlement is visible at `base.blockscout.com` with the Base mainnet tx hash. Search by:
 - Transaction hash (`0x...`)
 - Sender wallet address
-- `DPXSettlementRouter` contract address: [`0x7d2b0Cea5A2d19369548F59C6B8EEe9Fe3495c97`](https://basescan.org/address/0x7d2b0Cea5A2d19369548F59C6B8EEe9Fe3495c97)
+- `DPXSettlementRouter` contract address: [`0xe333551E18ef0471A71d7e8e761212766aa5AD4f`](https://base.blockscout.com/address/0xe333551E18ef0471A71d7e8e761212766aa5AD4f)
 
 ### Via oracle health
 
@@ -145,22 +145,22 @@ curl "https://stability.untitledfinancial.com/reliability"
 
 **What to do:**
 1. Wait up to 60 seconds before taking action.
-2. Check `basescan.org` for the sender wallet address — if the transaction appears as pending, it is in the mempool and will confirm.
+2. Check `base.blockscout.com` for the sender wallet address — if the transaction appears as pending, it is in the mempool and will confirm.
 3. **Do not resubmit.** Resubmitting creates a duplicate transaction risk. The first one will resolve.
-4. If no pending tx on Basescan after 60 seconds, the submission may have failed silently — check `/settlement/{quoteId}` for state update.
+4. If no pending tx on Base Blockscout after 60 seconds, the submission may have failed silently — check `/settlement/{quoteId}` for state update.
 
 ---
 
 ### ESG redistribution didn't appear
 
-**Symptom:** Settlement is `CONFIRMED` but `esgRedistribution` shows no IPFS receipt.
+**Symptom:** Settlement is `CONFIRMED` but `esgRedistribution` shows no tx hash.
 
 **What happened:** The redistribution call happens in a separate transaction after settlement confirmation. It is automatic but separate.
 
 **What to do:**
 1. Wait for one additional block (~2 seconds on Base).
-2. Re-query `/settlement/{quoteId}` — the `esgRedistribution.txHash` and IPFS CID will appear once the redistribution transaction confirms.
-3. If after 5 minutes there's no receipt, contact [partner@untitledfinancial.com](mailto:partner@untitledfinancial.com) with the quoteId.
+2. Re-query `/settlement/{quoteId}` — the `esgRedistribution.txHash` will appear once the redistribution transaction confirms.
+3. If after 5 minutes there's no tx hash, contact [partner@untitledfinancial.com](mailto:partner@untitledfinancial.com) with the quoteId.
 
 ---
 
@@ -191,7 +191,7 @@ Before settling real funds for the first time:
 - [ ] Grant ERC-20 approval to `DPXSettlementRouter` for at least the settlement amount
 - [ ] Record the `quoteId` before submitting — this is your recovery key
 - [ ] Have the oracle health endpoint bookmarked: `https://stability.untitledfinancial.com/health`
-- [ ] Have Basescan open with your wallet address ready to verify tx inclusion
+- [ ] Have Base Blockscout open with your wallet address ready to verify tx inclusion
 
 ---
 
