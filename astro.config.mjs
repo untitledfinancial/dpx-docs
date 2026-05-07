@@ -11,7 +11,11 @@ export default defineConfig({
     markdoc(),
     starlight({
       title: 'DPX Docs',
-      description: 'Programmable stablecoin settlement rails — AI-powered oracles, ESG-weighted fees, and 7-tier stability intelligence on Base mainnet.',
+      description: 'Programmable stablecoin settlement rails — AI-powered oracles, ESG-weighted fees, and 9-layer stability intelligence on Base mainnet.',
+      favicon: {
+        href: '/favicon.png',
+        type: 'image/png',
+      },
       components: {
         Banner:  './src/components/Banner.astro',
         Footer:  './src/components/Footer.astro',
@@ -30,7 +34,6 @@ export default defineConfig({
         themes: ['github-light'],
       },
       head: [
-        { tag: 'link', attrs: { rel: 'icon', href: '/favicon.png', type: 'image/png' } },
         { tag: 'link', attrs: { rel: 'alternate', type: 'application/json', href: '/openapi.json', title: 'DPX OpenAPI Spec' } },
       ],
       sidebar: [
