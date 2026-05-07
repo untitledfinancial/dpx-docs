@@ -35,7 +35,7 @@ The Settlement Agent maps common TMS field names automatically. No custom integr
 1. Stability Oracle checks 9 signal layers — climate, commodities, macro, FX, basket, yield curve, infrastructure, geopolitical risk, USD structural health
 2. Claude reasons about whether conditions are right: STABLE = execute, CAUTION = hold if large amount, UNSTABLE = hold
 3. Router executes on-chain: fees deducted, net transferred to recipient wallet, ESG fee to impact pools
-4. IPFS receipt generated — permanent, auditable, accepted by CSRD/SFDR auditors
+4. Settlement record emitted on-chain — permanently auditable on Base Blockscout, accepted by CSRD/SFDR auditors
 
 ## Oracle conditions and settlement timing
 
@@ -72,8 +72,8 @@ ESG fee formula: `(100 - yourESGScore) / 200`. Score 100 = 0% ESG fee. Score 75 
 ## ESG and CSRD compliance
 
 DPX generates on-chain ESG documentation with every settlement:
-- Score calculated from 6 institutional sources (World Bank, UN, IMF, OECD, SEC, Climate Monitor)
-- IPFS receipt with verifiable proof — accepted by CSRD/SFDR auditors
+- Score calculated from 8 institutional sources (World Bank, Climate Monitor, UN SDG, UN Human Rights, UN Gender Equity, IMF, OECD, SEC EDGAR)
+- On-chain settlement record — verifiable on Base Blockscout, accepted by CSRD/SFDR auditors
 - ESG fee (0–0.50%) redistributed 100% to verified impact pools: Ocean Conservation (30%), Renewable Energy (25%), Forest Preservation (20%), Climate Action (15%), Clean Water (10%)
 - Directly addresses CSRD Article 8 (Taxonomy Regulation) disclosure requirements for treasury operations
 
@@ -99,4 +99,4 @@ Returns fees, net amount, oracle status, AI reasoning, and a quoteId valid for 3
 
 ## Contact
 
-partner@untitledfinancial.com — for institutional onboarding and volume pricing
+For institutional onboarding and volume pricing — [beta access page](https://docs.untitledfinancial.com/beta)

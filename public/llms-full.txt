@@ -311,6 +311,44 @@ Oracle uptime, last update, score history.
 
 ---
 
+## ESG Oracle — AI Intelligence Layer
+
+Every ESG oracle response includes an `intelligence` object synthesising quantitative E/S/G scores with live qualitative signals (real-time news, emerging risk events):
+
+| Field | Description |
+|---|---|
+| `reasoning` | Plain-language explanation of primary ESG signal drivers and material risk areas |
+| `confidence` | 0.0–1.0 — reflects data freshness, source coverage, and signal clarity |
+| `alerts` | Up to 3 ESG risk items material to institutional counterparties or regulators |
+| `outlook` | `IMPROVING` / `STABLE` / `DETERIORATING` / `UNCERTAIN` |
+
+If synthesis is unavailable, the oracle returns quantitative results and omits `intelligence`. Quantitative scores are always the authoritative input for fee calculations.
+
+---
+
+## Adaptive Layers (Both Oracles)
+
+Both the Stability Oracle and ESG Oracle run fully autonomous adaptive layers on Cloudflare native infrastructure. They continuously improve without manual intervention.
+
+**Shared architecture:**
+- **Prediction ledger** (Cloudflare D1): logs every oracle run; resolves predictions against actuals; scores per-dimension accuracy
+- **Weight regression** (Cloudflare Workflows): adjusts signal weights using 30-day accuracy correlation — runs weekly
+- **Confidence calibration** (Cloudflare Workflows): Platt scaling sigmoid calibration of raw confidence scores — weekly
+- **Semantic memory** (Cloudflare Vectorize): fingerprints each run as a normalised vector; recalls top-3 similar historical scenarios for AI prompt injection
+- **Entity profiles** (Cloudflare Vectorize): per-counterparty profiles; nearest-neighbour bootstrapping for new entities (cosine score > 0.90 threshold)
+- **Async pipeline** (Cloudflare Queues): non-blocking writes — oracle response latency is never affected by adaptive writes
+- **Policy execution** (Cloudflare Workflows): 5-gate safety check before any on-chain parameter update
+
+**ESG Oracle weight bounds:** minimum 10% per E/S/G component; max 2% shift per week
+**Stability Oracle weight bounds:** minimum 5% per tier; max 5% shift per week
+
+**Cron schedule (both oracles):**
+- `0 * * * *` (every hour): oracle update run
+- `0 5 * * 0` (Sunday 05:00 UTC): weight regression workflow
+- `0 6 * * 0` (Sunday 06:00 UTC): confidence calibration workflow
+
+---
+
 ## Deployed Contracts (Base Mainnet, chainId 8453)
 
 | Contract | Address | Purpose |

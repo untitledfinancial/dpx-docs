@@ -91,12 +91,13 @@ meaning competitive positioning exceeds initial model assumptions.
 
 ## Proprietary IP — The Moat
 
-### 6-Tier Stability Oracle (Proprietary)
+### 9-Layer Stability Oracle (Proprietary)
 The most significant technical moat. Proprietary architecture, not open source.
 
-The Stability Oracle is a 6-tier signal pipeline aggregating 25+ real-world data
+The Stability Oracle is a 9-layer signal pipeline aggregating 32+ real-world data
 sources into a single confidence score with 30–90 day early warning capability.
-No competitor offers oracle-grade settlement intelligence at this depth.
+Every response includes AI-synthesised reasoning, a confidence score, and a forward
+outlook. No competitor offers oracle-grade settlement intelligence at this depth.
 
 Tier architecture (causal, each tier feeds the next):
 - **Tier 0 — Climate & Environmental** (30–90 day lead time): NOAA, NASA,
@@ -118,16 +119,18 @@ more data → better predictions → more institutional trust → more volume.
 This compounding effect creates a durable moat that grows with adoption.
 
 ### ESG Oracle (Proprietary)
-Live E, S, G scoring from 6 institutional data sources (World Bank, UN SDG API,
-IMF, OECD, SEC EDGAR, Climate Monitor). Score flows directly into settlement fee
-calculation — automatically, on-chain, at execution time.
+Live E, S, G scoring from 8 institutional data sources (World Bank, Climate Monitor,
+UN SDG Education/Health, UN SDG Human Rights, UN SDG Gender Equity, IMF, OECD,
+SEC EDGAR). Score flows directly into settlement fee calculation — automatically,
+on-chain, at execution time. Includes AI intelligence layer (reasoning, confidence,
+alerts, outlook) and autonomous adaptive weight calibration.
 
 100% of ESG fees redistribute to verified on-chain impact programs:
 - Ocean Conservation (30%), Renewable Energy (25%), Forest Preservation (20%),
   Climate Action (15%), Clean Water (10%)
 
 At $5B annual volume (Sovereign tier): **$6.25M/year** in verifiable on-chain impact.
-This is auditable on IPFS/Filecoin — not self-reported, not a sustainability pledge.
+Every redistribution is auditable on Base Blockscout — not self-reported, not a sustainability pledge.
 
 ### DPX Token + License Fee
 License fee (0.01%) is hardcoded into the DPX token contract itself — enforced
@@ -362,8 +365,8 @@ in the digital payments space.
 ## Traction & Status
 
 - **Protocol live on Base mainnet** — DPX token deployed, verifiable on-chain
-- **Stability Oracle live** — 6-tier, 25+ data sources, hourly oracle runs
-- **ESG Oracle live** — 6 institutional sources, live E/S/G scoring
+- **Stability Oracle v9.0 live** — 9-layer, 32+ data sources, hourly runs + AI synthesis
+- **ESG Oracle live** — 8 institutional sources, live E/S/G scoring + AI intelligence layer
 - **APIs fully live** — pricing, quoting, verification, stability signals
 - **Agent integrations shipped** — MCP, GPT Actions, LangChain, n8n
 - **Beta pipeline active** — institutional and AI agent framework partners
@@ -405,13 +408,13 @@ Gulf sovereign-adjacent family offices.
 banks exploring stablecoin capability, Base ecosystem companies.
 
 **Impact / Regenerative Finance** — on-chain ESG verification, Triple Bottom Line
-mandate, IPFS-auditable impact redistribution.
+mandate, on-chain-auditable impact redistribution (Base Blockscout).
 
 ---
 
 ## Contact & Discovery
 
-Beta partnerships and investor inquiries: partner@untitledfinancial.com
+Beta partnerships and investor inquiries: [docs.untitledfinancial.com/beta](https://docs.untitledfinancial.com/beta)
 Company: https://untitledfinancial.com
 Technical documentation: https://docs.untitledfinancial.com
 Financial model: https://docs.untitledfinancial.com/financial-model

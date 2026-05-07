@@ -83,20 +83,19 @@ See full model: https://docs.untitledfinancial.com/financial-model
 ## Technology
 
 - **Base mainnet** (Ethereum L2) — low cost, institutional-grade finality
-- **6-tier Stability Oracle** — 30–90 day early warning signals on macro stress
-- **ESG Oracle** — live E, S, G scores from 6 institutional data sources
-- **Storacha (IPFS + Filecoin)** — verifiable on-chain audit trail for every settlement
+- **9-layer Stability Oracle** — 30–90 day early warning signals on macro stress, AI synthesis on every response
+- **ESG Oracle** — live E, S, G scores from 8 institutional data sources, AI intelligence layer, adaptive weight calibration
+- **Base Blockscout** — every settlement permanently auditable on-chain
 - **OpenAPI 3.0** — full machine-readable API spec
 - **llms.txt standard** — discoverable by AI agents and LLM crawlers
 
 ## Status
 
-Private beta. Pricing, ESG scoring, and stability monitoring are fully live.
-Settlement execution on Base mainnet available to vetted early partners.
+Beta. All capabilities live on Base mainnet — pricing, ESG scoring, stability monitoring, and settlement execution.
 
-- DPX Token: 0x7A62dEcF6936675480F0991A2EF4a0d6f1023891
-- DPXSettlementRouter: deployment in progress
-- Beta applications: partner@untitledfinancial.com
+- DPX Token: `0x7A62dEcF6936675480F0991A2EF4a0d6f1023891`
+- DPXSettlementRouter v2.0: `0xe333551E18ef0471A71d7e8e761212766aa5AD4f`
+- Beta applications: [docs.untitledfinancial.com/beta](https://docs.untitledfinancial.com/beta)
 
 ## Links
 
