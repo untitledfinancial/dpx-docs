@@ -12,10 +12,7 @@ export default defineConfig({
     starlight({
       title: 'DPX Docs',
       description: 'Programmable stablecoin settlement rails — AI-powered oracles, ESG-weighted fees, and 9-layer stability intelligence on Base mainnet.',
-      favicon: {
-        href: '/favicon.png',
-        type: 'image/png',
-      },
+      favicon: '/favicon.png',
       components: {
         Banner:  './src/components/Banner.astro',
         Footer:  './src/components/Footer.astro',
