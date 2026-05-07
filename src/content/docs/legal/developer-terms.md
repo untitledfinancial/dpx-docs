@@ -73,7 +73,7 @@ You must not:
 | `GET /manifest` | 10 req/min | Cache recommended |
 | Settlement Router | Gas limits apply | No API-layer rate limit |
 
-You are responsible for the security of your Credentials. Notify [security@untitledfinancial.com](mailto:security@untitledfinancial.com) immediately upon actual or suspected compromise.
+You are responsible for the security of your Credentials. Notify Untitled_ immediately upon actual or suspected compromise via the contact form at [untitledfinancial.com](https://untitledfinancial.com).
 
 ---
 
@@ -150,7 +150,7 @@ DPX smart contracts are licensed under **BUSL-1.1**. The oracle scoring methodol
 
 - API usage telemetry is collected for operational purposes and is not sold to third parties.
 - Settlement Transaction data is publicly visible on the Base blockchain. Inform End Users accordingly.
-- For EU/EEA personal data processing, contact [legal@untitledfinancial.com](mailto:legal@untitledfinancial.com) for a Data Processing Agreement.
+- For EU/EEA personal data processing, contact Untitled_ via the contact form at [untitledfinancial.com](https://untitledfinancial.com) to request a Data Processing Agreement.
 
 ---
 
@@ -187,5 +187,4 @@ Delaware law governs. Disputes resolved by JAMS arbitration if not resolved info
 
 **Untitled_ LuxPerpetua Technologies, Inc.**
 Attn: Legal / Developer Relations
-[legal@untitledfinancial.com](mailto:legal@untitledfinancial.com)
 [untitledfinancial.com](https://untitledfinancial.com)

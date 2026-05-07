@@ -3,7 +3,7 @@ title: ESG Oracle
 description: How the DPX ESG Oracle scores counterparties across Environmental, Social, and Governance dimensions using 8 real-world data sources — including human rights and gender equity metrics — and how 100% of ESG fee revenue is redistributed to verified on-chain impact programs.
 ---
 
-> **Proprietary technology.** The ESG Oracle scoring methodology, weighting model, redistribution logic, and source code are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. API access is available to approved beta partners. Self-hosting requires a separate license agreement — contact [partner@untitledfinancial.com](mailto:partner@untitledfinancial.com).
+> **Proprietary technology.** The ESG Oracle scoring methodology, weighting model, redistribution logic, and source code are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. API access is available to approved beta partners. Self-hosting requires a separate license agreement — apply via the [beta access page](/beta).
 
 The DPX ESG Oracle produces live E, S, G scores from 8 real-world institutional data sources. Those scores flow directly into settlement fees: a higher score means a lower fee. 100% of ESG fee revenue is redistributed to verified on-chain impact programs — making every DPX settlement a direct contributor to measurable environmental and social outcomes.
 
@@ -48,7 +48,7 @@ The Social (S) score is a proprietary weighted composite across four sub-dimensi
 | Gender Equity | UN SDG 5.5, 5.c, 8.5 | Women in management, earnings parity, gender-responsive institutional frameworks |
 | Health | UN SDG 3 | Population wellbeing baseline |
 
-The weighting model is proprietary intellectual property. Full methodology documentation is available to approved institutional partners under NDA — contact [partner@untitledfinancial.com](mailto:partner@untitledfinancial.com).
+The weighting model is proprietary intellectual property. Full methodology documentation is available to approved institutional partners under NDA — apply via the [beta access page](/beta).
 
 ---
 
@@ -56,7 +56,7 @@ The weighting model is proprietary intellectual property. Full methodology docum
 
 The ESG Oracle score directly determines the ESG fee component of each settlement. A higher score means a lower fee. The component ranges from **0.00%** (score 100) to **0.50%** (score 0). The on-chain contract, oracle, and API always apply the same calculation consistently.
 
-The scoring methodology, sub-score weighting model, and fee calculation logic are **proprietary intellectual property** of Untitled_ LuxPerpetua Technologies, Inc. Full methodology documentation is available to approved institutional partners under NDA — contact [partner@untitledfinancial.com](mailto:partner@untitledfinancial.com).
+The scoring methodology, sub-score weighting model, and fee calculation logic are **proprietary intellectual property** of Untitled_ LuxPerpetua Technologies, Inc. Full methodology documentation is available to approved institutional partners under NDA — apply via the [beta access page](/beta).
 
 ---
 

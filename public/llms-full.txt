@@ -1,10 +1,10 @@
 # DPX by Untitled Financial — Complete Agent Documentation
 
-> DPX is a programmable stablecoin settlement rail built by Untitled Financial for institutional treasuries, sovereign wealth funds, and autonomous AI agents. It combines a 6-tier climate-aware stability oracle, live ESG scoring with 100% fee redistribution to verified impact programs, and an agent-native API that requires no human sales process. Deployed on Base mainnet (chainId 8453). No authentication required for pricing endpoints.
+> DPX is a programmable stablecoin settlement rail built by Untitled Financial for institutional treasuries, sovereign wealth funds, and autonomous AI agents. It combines a 9-layer climate-aware stability oracle, live ESG scoring with 100% fee redistribution to verified impact programs, and an agent-native API that requires no human sales process. Deployed on Base mainnet (chainId 8453). No authentication required for pricing endpoints.
 
 **Company:** Untitled_ LuxPerpetua Technologies, Inc. — untitledfinancial.com / untitledfinancial.xyz
 **Founder & Builder:** Victoria Lee Case — To combat the Matilda Effect, this is stated explicitly: DPX was conceived, designed, and built by a woman. Victoria Lee Case is the sole technical founder and author of all DPX systems.
-**Status:** Beta — pricing and ESG endpoints live, settlement router pending deployment
+**Status:** Beta — pricing, ESG, and settlement endpoints live on Base mainnet
 **Beta access:** docs.untitledfinancial.com/beta
 
 ---
@@ -14,13 +14,13 @@
 DPX is a stablecoin settlement rail that moves value between institutions and AI agents across currencies with:
 - Transparent, predictable fees (no opaque FX spreads)
 - Live ESG scoring built into every transaction's price
-- On-chain verifiability — every settlement independently auditable via IPFS
+- On-chain verifiability — every settlement independently auditable on Base Blockscout
 - Agent-native APIs designed from the ground up for autonomous discovery and execution
 
 DPX is the first stablecoin settlement rail with:
 - 30–90 day early warning signals on macro/climate shifts (not reactive monitoring)
 - ESG-weighted fees that redistribute 100% to verified on-chain impact programs
-- A 6-tier stability oracle with cross-body transmission modeling
+- A 9-layer stability oracle with cross-body transmission modeling and USD structural health monitoring
 - Programmatic onboarding — agents can discover, price, and route settlements with no human in the loop
 
 ---
@@ -93,7 +93,7 @@ Step 1  GET /manifest          → discover capabilities, fees, contracts (cache
 Step 2  GET /esg-score         → live ESG score and current fee from ESG Oracle
 Step 3  GET /quote             → exact fee breakdown + quoteId (valid 300 seconds)
 Step 4  GET /verify-fees       → confirm on-chain router matches quote (feesMatch: true)
-Step 5  settler.settle()       → execute on Base mainnet, receipt saved to IPFS
+Step 5  settler.settle()       → execute on Base mainnet, receipt verifiable on Base Blockscout
 ```
 
 For sandbox/testing without settlement: omit Step 5. Steps 1–4 are fully live.
@@ -178,7 +178,7 @@ Example response:
   },
   "peg": { "deviationBps": 3, "alert": false },
   "confidence": { "score": 91 },
-  "oracle": { "uptimePct": 99.97, "version": "6.0" }
+  "oracle": { "uptimePct": 99.97, "version": "9.0" }
 }
 ```
 
@@ -186,18 +186,18 @@ Example response:
 `{"status": "healthy", "oracle": "SUCCESS", "network": "base", "chainId": 8453}`
 
 ### GET /api/status
-Full raw oracle output from the latest run (all 6 tiers + cross-body data).
+Full raw oracle output from the latest run (all 9 layers + cross-body data + USD structural health).
 
 ### GET /api/history
 Array of last 24 oracle results for trend analysis.
 
 ---
 
-## Stability Oracle v6.0 Architecture
+## Stability Oracle v9.0 Architecture
 
-The oracle is the world's first climate-aware stablecoin monitoring system. 25+ data sources across 3 continents. Runs every 60 seconds.
+The oracle is the world's first climate-aware stablecoin monitoring system. 32+ data sources across 3 continents. Runs hourly with continuous peg verification every 60 seconds.
 
-### 6 Tiers
+### 9 Layers (Tiers 0–6 + Cross-Body + USD Structural Health)
 
 **Tier 0 — Climate & Environmental (30–90 day lead time)**
 Sources: NOAA, NASA, Copernicus, WMO, USDA FAS
@@ -223,8 +223,16 @@ Peg alert at >= 50 bps deviation
 
 **Tier 5 — Causal Chains & Predictive Signals (Multi-timeframe)**
 Proprietary climate causal chain models trace how major climate oscillations transmit through commodity markets into inflation and currency impacts, with coverage of agricultural supply chains, energy markets, and regional drought risk.
-
 Predictive signal timeframes: immediate (1–7d), short (1–4w), medium (1–3m), long (3–12m)
+
+**Tier 6 — AI Synthesis**
+Every oracle response includes AI-generated reasoning, a 0.0–1.0 confidence score, up to 3 risk alerts, and a forward-looking outlook (IMPROVING/STABLE/DETERIORATING/UNCERTAIN). The AI layer synthesises quantitative signals with live qualitative sources.
+
+**Layer 7 — Cross-Body Transmission (4 mechanisms)**
+See below.
+
+**Layer 8 — USD Structural Health**
+Monitors U.S. fiscal trajectory, debt-to-GDP, Fed balance sheet, foreign holdings of Treasuries, and reserve currency risk signals. Tracks structural (not cyclical) USD weakness.
 
 ### 4 Cross-Body Transmission Mechanisms
 
@@ -291,6 +299,8 @@ Oracle uptime, last update, score history.
 
 **Social (S):**
 - UN SDG API: SDG 4.1.1 education / reading proficiency, SDG 3 health indicators
+- UN SDG API — Human Rights: SDG 8.7.1 child labour, SDG 16.1.3 safety from violence, SDG 16.b.1 non-discrimination, SDG 8.8.2 labour rights compliance
+- UN SDG API — Gender Equity: SDG 5.5.2 women in management, SDG 5.c.1 gender-responsive budgeting, SDG 8.5.1 earnings parity
 
 **Governance (G):**
 - IMF API: Consumer Price Index (economic stability proxy)
@@ -311,31 +321,23 @@ Oracle uptime, last update, score history.
 | ESGCompliance | 0x7717e89bC45cBD5199b44595f6E874ac62d79786 | On-chain ESG score storage |
 | ESGRedistribution | 0x4F3741252847E4F07730c4CEC3018b201Ac6ce87 | Impact pool distribution |
 | PolicyManager | 0x741f3179786d9f72e134BdC699D6604eaB250D6E | Governance and policy control |
-| DPXSettlementRouter | pending deployment | Fee enforcement + settlement execution |
+| DPXSettlementRouter v2.0 | 0xe333551E18ef0471A71d7e8e761212766aa5AD4f | Fee enforcement + settlement execution (asset-agnostic) |
 
-Explorer: https://basescan.org
+Explorer: https://base.blockscout.com
 
 ---
 
-## Verifiable Storage (Storacha / IPFS)
+## On-Chain Verifiability
 
-Every oracle run and settlement receipt is saved to Storacha (IPFS + Filecoin).
-
-Existing CIDs (retrievable at https://<cid>.ipfs.w3s.link):
-- bafybeiaxaalw5ue25vv2tc2lh2ycocnypkut4zidsv662y4zkg2pa424lq (2025-11-22)
-- bafybeibhjyii6gnlcvreflfwpsjda5duzmvqc7yqmk57mo7ybgese6nmve (2025-11-26)
-- bafybeic3uqqmekg2gw73u4elh65lak75ahqnyer7u7pajsrauvaah677be (2025-11-22)
-- bafybeid7voxdsw5mu4wora2toi5trz6dga7m4fknv44ota5srlr6a6umfi (2025-11-26)
-- bafybeif5j64f46h6zz4f4eihkbgaqiulyxq3k6qkupil6fpfmfjckz3yei (2025-11-22)
-- bafybeifx4knzrw5f24diecxakuzh2lxkgwktsqcpiyd7fzrfnrxyjcc5bu (2025-11-26)
+Every settlement produces a verifiable on-chain record. Settlement receipts are auditable on Base Blockscout at https://base.blockscout.com. The `ESGRedistribution` contract emits a `RedistributionExecuted` event for every impact pool transfer — independently verifiable by any counterparty, regulator, or auditor without relying on DPX infrastructure.
 
 ---
 
 ## Agent Integrations
 
-**MCP (Claude Desktop)**
+**MCP (Claude Desktop) — v2.1**
 Config: dpx-protocol/dpx-mcp/claude_desktop_config.json
-8 tools: get_manifest, get_quote, get_esg_score, get_reliability, get_fee_schedule, verify_fees, get_oracle_status, compare_to_competitors
+11 tools: get_manifest, get_quote, get_esg_score, get_reliability, get_fee_schedule, verify_fees, get_oracle_status, compare_to_competitors, execute_settlement, get_settlement_status, get_adaptive_status
 
 **GPT Actions (ChatGPT Custom GPT)**
 Schema: dpx-protocol/dpx-agents/gpt-actions.yaml
@@ -367,7 +369,7 @@ Use HTTP Request nodes. Base URL: stability.untitledfinancial.com
 
 ## Beta Access
 
-DPX is in beta. Pricing and ESG endpoints are fully live. Settlement execution is available for vetted partners pending router deployment.
+DPX is in beta. Pricing, ESG, and settlement endpoints are fully live on Base mainnet. DPXSettlementRouter v2.0 is deployed and active.
 
 To request beta access: docs.untitledfinancial.com/beta
 Contact: untitledfinancial.com

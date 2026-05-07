@@ -1,38 +1,19 @@
 ---
 title: What is DPX?
-description: DPX is a programmable cross-border settlement rail — the only rail where AI runs inside the protocol, not on the edges. Intelligence that changes outcomes, ESG compliance on-chain, and the first rail AI agents can reason about before executing.
-template: splash
-hero:
-  tagline: Every other rail moves money. DPX moves money and tells you why the conditions are right to do it.
-  actions:
-    - text: Agent Quick Start
-      link: /agent-quickstart
-      icon: right-arrow
-      variant: primary
-    - text: API Reference
-      link: /api/stability-oracle
-      icon: external
-      variant: minimal
+description: DPX programmable stablecoin settlement rails — AI runs inside the oracles, not on the edges. 9-layer stability intelligence, ESG scoring, and continuous compliance monitoring on Base mainnet.
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## The moat
+## What DPX does
 
-Every major stablecoin rail — Bridge, BVNK, Tazapay, Zero Hash — moves money. They are fast, cheap, and well-capitalised. DPX does something none of them do: it reasons about whether the conditions are right before every settlement, documents the ESG impact of every transaction on-chain, and is the only rail structured for AI agents to interact with natively.
+DPX is a stablecoin settlement rail built with a fundamentally different architecture — where AI is structural, not additive, and embedded across every layer of the protocol. Rather than treating intelligence as a feature, DPX distributes it throughout the system. Compliance, stability, climate modeling, and capital allocation each operate through their own dedicated intelligence layer, producing a coordinated but modular form of agentic finance.
 
-That distinction compounds. Every settlement DPX processes is scored against its own predictions. Accuracy data accumulates. Signal weights recalibrate weekly. The oracle that runs today is more precise than the one that ran last month — and no competitor can replicate that history without running the same system for the same amount of time.
+At the core is the Stability Oracle, a continuously updating model of global conditions. It ingests climate signals, commodity markets, macroeconomic indicators, FX movements, and geopolitical risk, then sequences them through interconnected analytical tiers. Each layer reinterprets the relationships between signals based on current system states — for example, a drought affecting agricultural inputs, a policy shift altering energy pricing, or a supply chain disruption reshaping inflation dynamics. The result is not a static forecast, but a living model that continuously recalibrates. Treasury teams receive each API response with structured reasoning, a confidence score, and a forward-looking outlook. In practice, this enables cross-border settlement in minutes rather than days, at 50–60% lower cost than traditional financial rails.
 
-**Three things make this a durable moat:**
+DPX is also explicitly designed around the Triple Bottom Line — people, planet, and profit — with ESG logic encoded directly into transaction mechanics. Every transfer carries an ESG score that determines the fee applied to it. Higher-impact or more responsible activity benefits from lower costs, while activity with negative externalities incurs higher fees. These fees are not absorbed into a generic treasury. They are programmatically redistributed in real time to sector-specific impact channels: fossil fuel-linked activity may fund ocean restoration and renewable energy infrastructure, while fashion-related flows may be directed toward garment worker protections and sustainable materials innovation. This creates a transparent, traceable feedback loop between economic activity and its environmental and social consequences.
 
-**1. Intelligence that changes outcomes, not just informs them.**
-The 9-layer Stability Oracle produces STABLE / CAUTION / UNSTABLE signals with 30–90 day early warning. When the oracle flags CAUTION — yield curve inverting, shipping disruption, FX stress converging — treasury teams and agents hold large settlements. That is a risk management function with a measurable dollar value, not a dashboard feature.
-
-**2. ESG compliance built into every transaction.**
-CSRD in Europe now requires large companies to report sustainability impacts across their operations — including treasury and payments. SFDR requires financial institutions to disclose ESG exposure. DPX makes every settlement automatically ESG-documented with on-chain proof, verified by six institutional sources, and immutably recorded on-chain. The question to ask any European treasury team: *how are you currently documenting the ESG impact of your cross-border settlements for CSRD reporting?* DPX answers that question automatically.
-
-**3. The only rail AI agents can reason about.**
-Bridge and BVNK are built for humans using dashboards. DPX is built for agents making decisions. Every API response includes structured reasoning, a confidence score, and a forward-looking outlook — not just a price. Agents discover the protocol at `/manifest`, request a binding fee quote, verify terms on-chain, and execute settlement end-to-end without human approval. The MCP integration, GPT Actions schema, and LangChain tool wrappers are native — not bolted on.
+This same infrastructure also makes DPX native to the emerging agentic economy. Autonomous AI systems can interact directly with the protocol: discovering liquidity, requesting binding fee quotes, verifying terms on-chain, and executing settlement end-to-end without human intervention. Smart contracts are designed to be agent-executable, APIs are machine-readable by default, and every layer used by human treasury teams is equally accessible to software agents making real-time financial decisions. In this structure, DPX becomes not just a payments rail, but a programmable settlement layer for both institutions and autonomous economic actors.
 
 We created a system that teaches itself. Every oracle run is scored against its own predictions. Every outcome is logged, measured, and fed back into the model. Signal weights adjust on a weekly cycle. Confidence calibrates over time. The longer DPX runs, the more precisely it understands which conditions matter most — and the more accurately it prices them. There is no fixed version of DPX. There is only the version running now, which is always more informed than the one before it.
 
@@ -148,7 +129,7 @@ We created a system that teaches itself. Every oracle run is scored against its 
 
 <CardGrid>
   <Card title="Stability Oracle" icon="star">
-    9-layer signal pipeline with 30–90 day early warning. The intelligence layer that tells you whether conditions are right to settle. Architecture and endpoints.
+    9-layer signal pipeline with 30–90 day early warning. Architecture and endpoints.
     [Read →](/protocol/stability-oracle)
   </Card>
   <Card title="ESG Oracle" icon="approve-check">
@@ -160,7 +141,7 @@ We created a system that teaches itself. Every oracle run is scored against its 
     [Read →](/protocol/contracts)
   </Card>
   <Card title="Regulatory Positioning" icon="information">
-    MiCA, SFDR, CSRD, FCA, PRA Basel III Group 1b, and OCC coverage across EU, UK, and US.
+    MiCA, SFDR, CSRD, FCA, Basel III Group 1b, and OCC coverage across EU, UK, and US.
     [Read →](/protocol/regulatory)
   </Card>
 </CardGrid>
@@ -171,10 +152,6 @@ We created a system that teaches itself. Every oracle run is scored against its 
   <Card title="Multi-Tenant Setup" icon="setting">
     Run isolated DPX instances per entity — separate fee schedules, oracles, and audit trails.
     [Read →](/enterprise/multi-tenant)
-  </Card>
-  <Card title="White-Label Config" icon="seti:config">
-    Brand the settlement layer under your own identity. Custom domains, tokens, and reporting.
-    [Read →](/enterprise/white-label)
   </Card>
   <Card title="Financial Model" icon="information">
     10-year revenue projection, break-even analysis, and buildout cost breakdown.
