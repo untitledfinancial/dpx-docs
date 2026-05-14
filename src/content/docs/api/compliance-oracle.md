@@ -7,6 +7,10 @@ FATF Recommendation 16 compliant VoP for every payment. Automatic resolution —
 
 **Base URL:** `https://compliance.untitledfinancial.com`
 
+:::note[Live — VoP verified 2026-05-14]
+First live VoP check returned score 100 (EXACT_NORMALIZED). Entity registration (SELF_DECLARED) working. LEI optional — upgrade to GLEIF_VERIFIED when LEI is obtained.
+:::
+
 :::note
 Institutions using the [Integration API](/api/integration-api) do not need to call this directly — VoP runs automatically on every `POST /payments/initiate`. This reference is for direct integrations.
 :::
@@ -120,9 +124,30 @@ curl https://compliance.untitledfinancial.com/lei/7LTWFZYICNSX8D621K86
 
 ## POST /register — Register a wallet (admin)
 
-Bearer-authenticated with `ORACLE_SIGNING_KEY`. Verifies the LEI against GLEIF before registering.
+Bearer-authenticated with `ORACLE_SIGNING_KEY`. LEI is optional — omit it to register as `SELF_DECLARED`. Provide it to verify against GLEIF and register as `GLEIF_VERIFIED`.
+
+**Registration types:**
+
+| Type | LEI required | VoP score | Use case |
+|---|---|---|---|
+| `SELF_DECLARED` | No | Up to 100 (name match) | Self-onboarding without LEI |
+| `GLEIF_VERIFIED` | Yes | Up to 100 (LEI match) | Full institutional verification |
+
+You can register as `SELF_DECLARED` now and upgrade to `GLEIF_VERIFIED` later by resubmitting with an LEI.
 
 ```bash
+# SELF_DECLARED — no LEI required
+curl -X POST https://compliance.untitledfinancial.com/register \
+  -H "Authorization: Bearer <signing-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "walletAddress": "0xabc...",
+    "legalName":     "Acme Corp",
+    "country":       "US",
+    "aliases":       ["Acme"]
+  }'
+
+# GLEIF_VERIFIED — with LEI
 curl -X POST https://compliance.untitledfinancial.com/register \
   -H "Authorization: Bearer <signing-key>" \
   -H "Content-Type: application/json" \

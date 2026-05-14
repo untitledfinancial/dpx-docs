@@ -11,6 +11,10 @@ The DPX Integration API is the entry point for institutional treasury systems. I
 
 Every payment automatically runs VoP (via the Compliance Oracle), fetches the live FX rate (via the Stability Oracle), settles on the DPX rail, and returns a full compliance attestation. No separate oracle integration required.
 
+:::note[Live — end-to-end verified 2026-05-14]
+Full stack tested on Base mainnet. VoP returned score 100 (EXACT_NORMALIZED). FATF R16, MiCA, and GENIUS Act compliance flags confirmed. ISO 20022 pacs.002 returned on every response.
+:::
+
 ---
 
 ## POST /payments/initiate
