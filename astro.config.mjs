@@ -53,8 +53,10 @@ export default defineConfig({
         {
           label: 'API Reference',
           items: [
+            { label: 'Integration API',   slug: 'api/integration-api',   badge: { text: 'New', variant: 'tip' } },
             { label: 'Stability Oracle',  slug: 'api/stability-oracle' },
             { label: 'ESG Oracle',        slug: 'api/esg-oracle' },
+            { label: 'Compliance Oracle', slug: 'api/compliance-oracle' },
           ],
         },
         {
@@ -69,9 +71,9 @@ export default defineConfig({
         {
           label: 'Treasury Systems',
           items: [
-            { label: 'Kyriba',            slug: 'integrations/kyriba',   badge: { text: 'Coming Soon', variant: 'caution' } },
-            { label: 'SAP TRM',           slug: 'integrations/sap-trm',  badge: { text: 'Coming Soon', variant: 'caution' } },
-            { label: 'Webhook Events',    slug: 'integrations/webhooks', badge: { text: 'Coming Soon', variant: 'caution' } },
+            { label: 'Kyriba',            slug: 'integrations/kyriba' },
+            { label: 'SAP TRM',           slug: 'integrations/sap-trm' },
+            { label: 'Webhook Events',    slug: 'integrations/webhooks' },
           ],
         },
         {
