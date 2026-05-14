@@ -1,9 +1,9 @@
 ---
 title: Smart Contracts
-description: All 7 DPX on-chain contracts deployed on Base mainnet (chainId 8453) — addresses, roles, ABIs, and key functions.
+description: All 10 DPX on-chain contracts deployed on Base mainnet (chainId 8453) — addresses, roles, ABIs, and key functions.
 ---
 
-DPX is deployed on **Base mainnet** (chainId 8453). All contracts are verified on Base Blockscout. The settlement router enforces all fees on-chain — agents cannot submit settlements at rates different from what the oracle quoted.
+DPX is deployed on **Base mainnet** (chainId 8453). All contracts are verified on Sourcify / Base Blockscout. The settlement router enforces all fees on-chain — agents cannot submit settlements at rates different from what the oracle quoted.
 
 Contract addresses are also returned by the `/manifest` endpoint and are always canonical.
 
@@ -11,15 +11,25 @@ Contract addresses are also returned by the `/manifest` endpoint and are always 
 
 ## Deployed Contracts
 
+### Settlement & Stability
+
 | Contract | Address | Role |
 |---|---|---|
-| DPX Token (V3) | `0x7A62dEcF6936675480F0991A2EF4a0d6f1023891` | Upgradeable ERC-20 (DOVPAXBRANCHUpgradeableV3) · 0.01% license fee on every transfer |
+| DPX Token (V3) | `0x7A62dEcF6936675480F0991A2EF4a0d6f1023891` | Upgradeable ERC-20 · 0.01% license fee on every transfer |
 | StabilityFeeController | `0xda8aA06cDa9D06001554d948dA473EBe5282Ea17` | PID-controlled stability mechanism |
 | BasketPegManager | `0xB5071fA48B92e3652701053eEd8826ab94014AaA` | Multi-currency basket · USD / EUR / GBP / JPY / CNY |
 | ESGOracle | `0x7717e89bC45cBD5199b44595f6E874ac62d79786` | On-chain ESG score storage · 6 providers · per-company scoring |
 | ESGRedistribution | `0x4F3741252847E4F07730c4CEC3018b201Ac6ce87` | Bad-actor fee redistribution · 10 industry buckets |
 | PolicyManager | `0x741f3179786d9f72e134BdC699D6604eaB250D6E` | Governance · basket and fee policy control |
 | DPXSettlementRouter v2.0 | `0xe333551E18ef0471A71d7e8e761212766aa5AD4f` | Single settlement entry point · enforces all fees on-chain |
+
+### Compliance (deployed 2026-05-14)
+
+| Contract | Address | Role |
+|---|---|---|
+| DPXEntityRegistry | `0xF18313e708cFf6d80b6123De972290246543cC94` | On-chain wallet → LEI registry · source of truth for VoP |
+| DPXVerificationOfPayee | `0xB594604c8b46C7EcFa19C485B35F43A04f6DAcbf` | On-chain VoP attestations · FATF R16 · called by settlement contracts |
+| DPXCompliance | `0x2F05608dbb71E96e308487DD30F7f59822c66e2B` | Composite compliance primitive · FATF R16 / MiCA / GENIUS Act |
 
 **Base Blockscout:** [base.blockscout.com](https://base.blockscout.com) → search any address above to verify deployment and inspect transactions.
 
@@ -192,6 +202,68 @@ DPX uses a hybrid fee enforcement model:
 - **Governance bounds** — enforced in PolicyManager
 
 This separation allows settlement router fees to be updated via PolicyManager governance without touching the token contract. Integrators interact with the router only — never the token contract directly.
+
+---
+
+---
+
+## DPXEntityRegistry
+
+**Address:** `0xF18313e708cFf6d80b6123De972290246543cC94`  
+**Verified:** [Sourcify](https://repo.sourcify.dev/8453/0xF18313e708cFf6d80b6123De972290246543cC94)
+
+On-chain mirror of the Compliance Oracle's entity registry. Any protocol can call it to confirm wallet → LEI mappings without going through the oracle API.
+
+| Function | Description |
+|---|---|
+| `isRegistered(wallet)` | Returns true if wallet has an active registration |
+| `getEntity(wallet)` | Returns full Entity struct (LEI, name, country, timestamps) |
+| `getWalletsForLei(lei)` | All wallets registered under a given LEI |
+| `register(wallet, lei, name, country)` | Admin: register a new entity |
+| `deactivate(wallet, reason)` | Admin: deactivate a registration |
+| `updateLeiStatus(wallet, active)` | Admin: sync LEI status from GLEIF |
+
+---
+
+## DPXVerificationOfPayee
+
+**Address:** `0xB594604c8b46C7EcFa19C485B35F43A04f6DAcbf`  
+**Verified:** [Sourcify](https://repo.sourcify.dev/8453/0xB594604c8b46C7EcFa19C485B35F43A04f6DAcbf)
+
+Issues on-chain VoP attestations after each oracle check. Settlement contracts call `verify()` before executing transfers. The Compliance Oracle worker acts as the RELAYER — after each VoP check it calls `recordAttestation()` with the result.
+
+| Function | Description |
+|---|---|
+| `verify(wallet)` | Returns latest `(proceedSafe, score, result, timestamp)` for a wallet |
+| `hasRecentAttestation(wallet, maxAge)` | True if a valid attestation exists within `maxAge` seconds |
+| `recordAttestation(requestId, wallet, name, score, result, proceedSafe)` | Relayer: record a new VoP result |
+| `walletHistory(wallet)` | Array of all requestIds for a wallet |
+
+---
+
+## DPXCompliance
+
+**Address:** `0x2F05608dbb71E96e308487DD30F7f59822c66e2B`  
+**Verified:** [Sourcify](https://repo.sourcify.dev/8453/0x2F05608dbb71E96e308487DD30F7f59822c66e2B)
+
+Composite compliance primitive — the single integration point for any external protocol (DEX, lending market, DAO treasury, TMS) that needs a FATF R16 / MiCA / GENIUS Act proof on-chain.
+
+| Function | Description |
+|---|---|
+| `checkCompliance(wallet, amount, currency)` | Returns full `ComplianceStatus` struct |
+| `checkComplianceBatch(wallets[], amounts[], currency)` | Batch compliance check for multi-leg settlements |
+
+**ComplianceStatus fields:**
+
+| Field | Type | Description |
+|---|---|---|
+| `approved` | bool | True if FATF R16 satisfied |
+| `fatfR16Satisfied` | bool | LEI active + VoP score ≥ 75 |
+| `leiActive` | bool | Entity registered and active in DPXEntityRegistry |
+| `vopPassed` | bool | Latest VoP proceedSafe + score ≥ 75 |
+| `vopScore` | uint8 | Raw VoP score (0–100) |
+| `attestedAt` | uint64 | Timestamp of last VoP attestation |
+| `regulatoryNote` | string | Human-readable compliance summary |
 
 ---
 
