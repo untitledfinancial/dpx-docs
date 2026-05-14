@@ -24,11 +24,51 @@ DPX's institutional clients and integration partners are responsible for their o
 
 ## FATF Recommendation 16 — The Travel Rule
 
-FATF Recommendation 16 (the "Travel Rule") requires that VASPs transmit originator and beneficiary information alongside virtual asset transfers above a threshold (USD/EUR 1,000 in most jurisdictions).
+FATF Recommendation 16 (the "Travel Rule") requires that VASPs transmit originator and beneficiary information alongside virtual asset transfers above a threshold (USD/EUR 1,000 in most jurisdictions). The June 2025 expansion extended R16 to cover crypto wallet transfers, requiring **Verification of Payee (VoP)** — confirming the identity of the entity behind a wallet address before settlement.
 
-The Travel Rule applies to VASPs — entities that transfer virtual assets on behalf of customers. Because DPX is non-custodial and does not transfer assets on behalf of third parties, it does not independently trigger Travel Rule obligations.
+### DPX Compliance Oracle — VoP built in
 
-**However:** institutional clients integrating DPX who are themselves VASPs must ensure their Travel Rule compliance stack passes required information through any DPX-routed settlement. DPX is designed to be compatible with the major Travel Rule solutions:
+DPX satisfies FATF R16 VoP through the **DPX Compliance Oracle** (`compliance.untitledfinancial.com`), which runs automatically on every payment processed by the Integration API. No separate Travel Rule solution required for DPX-routed settlements.
+
+**How it works:**
+
+1. Every `POST /payments/initiate` triggers a VoP check against the Compliance Oracle before settlement executes
+2. The oracle resolves the counterparty wallet against a GLEIF-verified LEI registry
+3. A compliance attestation is returned with every settlement response:
+
+```json
+"compliance": {
+  "fatfR16Compliant": true,
+  "micaCompliant":    true,
+  "geniusCompliant":  true,
+  "regulatoryNote":   "FATF R16 VoP satisfied — settlement compliant."
+}
+```
+
+4. Every attestation is recorded on-chain via `DPXVerificationOfPayee` (`0xB594604c8b46C7EcFa19C485B35F43A04f6DAcbf`) — immutable, auditable, verifiable by any regulator
+
+**VoP resolution tiers:**
+
+| Result | Score | Settlement | FATF R16 |
+|---|---|---|---|
+| `LEI_MATCH` | 100 | ✅ Proceeds | ✅ Satisfied |
+| `VERIFIED` | 90–100 | ✅ Proceeds | ✅ Satisfied |
+| `PROCEED_HIGH_CONFIDENCE` | 75–89 | ✅ Proceeds | ✅ Satisfied |
+| `PROCEED_FLAGGED` | 55–74 | ✅ Proceeds | ⚠️ Noted |
+| `NOT_REGISTERED` | — | ✅ Proceeds | ⚠️ Unverified |
+| `BLOCKED` | <35 | ❌ Blocked | ❌ Failed |
+
+No human review queues. All resolution is automatic.
+
+**On-chain contracts (Base mainnet):**
+
+| Contract | Address | Role |
+|---|---|---|
+| DPXEntityRegistry | `0xF18313e708cFf6d80b6123De972290246543cC94` | Wallet → LEI registry |
+| DPXVerificationOfPayee | `0xB594604c8b46C7EcFa19C485B35F43A04f6DAcbf` | VoP attestations |
+| DPXCompliance | `0x2F05608dbb71E96e308487DD30F7f59822c66e2B` | Composite compliance check |
+
+For institutions that use the Travel Rule solutions below for other flows, DPX remains compatible:
 
 | Solution | Compatibility |
 |---|---|
@@ -37,7 +77,7 @@ The Travel Rule applies to VASPs — entities that transfer virtual assets on be
 | TRM Labs | Compatible — on-chain address screening pre-settlement |
 | Chainalysis KYT | Compatible — transaction monitoring post-settlement |
 
-The on-chain settlement receipt (produced by `ESGRedistribution` and verifiable on Base Blockscout) provides an immutable audit record that satisfies record-keeping requirements under Travel Rule implementations.
+The on-chain settlement receipt (verifiable on Base Blockscout) provides an immutable audit record satisfying record-keeping requirements under all major Travel Rule implementations.
 
 ## IVMS 101 — Identity Data Standard
 

@@ -140,7 +140,7 @@ The system maintains a live compliance knowledge base tracking open and resolved
 
 | Area | Status | Notes |
 |---|---|---|
-| FATF Travel Rule (Rec. 16) | In progress | VASP-to-VASP data fields spec under development |
+| FATF Travel Rule (Rec. 16) | ✅ Live | VoP satisfied via DPX Compliance Oracle — automatic on every payment, on-chain attestation |
 | MiCA Title III (Art. 19 Whitepaper) | In progress | Formal regulatory review underway |
 | OFAC SDN screening | Documented | Institutional integrators required to screen; architecture supports allowlist |
 | SFDR PAI reporting format | Roadmap | Data exists; SFDR-formatted output in development |
