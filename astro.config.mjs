@@ -84,6 +84,7 @@ export default defineConfig({
             { label: 'Smart Contracts',        slug: 'protocol/contracts' },
             { label: 'Regulatory Positioning', slug: 'protocol/regulatory' },
             { label: 'FATF & Travel Rule',     slug: 'protocol/fatf-compliance' },
+            { label: 'FinCEN Travel Rule (US)', slug: 'protocol/fincen-travel-rule', badge: { text: 'New', variant: 'tip' } },
             { label: 'Governance',             slug: 'protocol/governance' },
           ],
         },

@@ -87,7 +87,7 @@ FATF recommends the InterVASP Messaging Standard (IVMS 101) for structuring iden
 
 | Jurisdiction | Framework | DPX Alignment |
 |---|---|---|
-| United States | FinCEN Travel Rule (>$3,000 threshold) | Non-custodial model; client VASP handles MSB obligations |
+| United States | FinCEN Travel Rule (>$3,000 threshold) | ✅ Native — IVMS 101 generated, stored, and transmitted automatically. See [FinCEN Travel Rule](/protocol/fincen-travel-rule) |
 | European Union | MiCA Title IV + FATF Rec 16 (>EUR 1,000) | Protocol-level MiCA alignment; VASP clients use IVMS 101 |
 | United Kingdom | FCA PS21/24 + JMLSG Guidance | Non-custodial; FCA-authorised client handles Travel Rule |
 | Singapore | MAS PSA Part 3 | Non-custodial; client PSP handles Travel Rule |
