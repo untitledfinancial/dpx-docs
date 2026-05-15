@@ -47,7 +47,7 @@ export default defineConfig({
           items: [
             { label: '⚡ Fee Calculator',  slug: 'demo',  badge: { text: 'Live', variant: 'tip' } },
             { label: 'Fee Structure',      slug: 'fees' },
-            { label: 'Savings Model',      slug: 'financial-model' },
+            { label: 'Fee Model',          slug: 'financial-model' },
           ],
         },
         {
