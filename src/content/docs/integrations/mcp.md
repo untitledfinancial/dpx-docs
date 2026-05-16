@@ -3,7 +3,9 @@ title: MCP — Connect Claude
 description: Connect Claude Desktop, Cursor, or any MCP-compatible host to DPX. Price settlements, check stability, execute cross-border and domestic settlements, check local rail health, and retrieve ESG scores natively in conversation.
 ---
 
-The DPX MCP server v2.1 gives Claude Desktop and Cursor native access to the full DPX settlement lifecycle — from oracle checks to live settlement execution. Supports both **cross-border** and **domestic (intra-country)** settlements. No browser, no API calls, no copy-paste. Claude can price, evaluate conditions, check local payment rail health, and execute settlements directly in conversation.
+The DPX MCP server v2.4.1 gives Claude Desktop, Cursor, and any MCP-compatible host native access to the full DPX settlement lifecycle — from oracle checks to live settlement execution. Supports both **cross-border** and **domestic (intra-country)** settlements. No browser, no API calls, no copy-paste. Claude can price, evaluate conditions, check local payment rail health, and execute settlements directly in conversation.
+
+**Also available on [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp)** — install with one click from the Smithery marketplace.
 
 ## Prerequisites
 
@@ -13,9 +15,10 @@ The DPX MCP server v2.1 gives Claude Desktop and Cursor native access to the ful
 ## Install
 
 ```bash
-cd /path/to/dpx-protocol/dpx-mcp
-npm install
+npx @untitledfinancial/dpx-mcp
 ```
+
+Or install from [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp) with one click.
 
 ## Configure Claude Desktop
 
@@ -25,8 +28,8 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 {
   "mcpServers": {
     "dpx": {
-      "command": "node",
-      "args": ["/absolute/path/to/dpx-protocol/dpx-mcp/index.js"],
+      "command": "npx",
+      "args": ["-y", "@untitledfinancial/dpx-mcp"],
       "env": {
         "STABILITY_ORACLE_URL": "https://stability.untitledfinancial.com",
         "SETTLEMENT_AGENT_URL": "https://agent.untitledfinancial.com",
@@ -37,7 +40,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 }
 ```
 
-Replace `/absolute/path/to/dpx-protocol/dpx-mcp/index.js` with your actual path. Restart Claude Desktop — **DPX** appears in the MCP toolbar with 11 tools.
+Restart Claude Desktop — **DPX** appears in the MCP toolbar with 13 tools.
 
 :::note[Sandbox mode]
 `SANDBOX_MODE: "true"` means `settle` runs real calculations with no on-chain execution. Set to `"false"` only when you are ready for live settlements with real USDC.
@@ -50,8 +53,8 @@ Replace `/absolute/path/to/dpx-protocol/dpx-mcp/index.js` with your actual path.
 ```json
 {
   "dpx": {
-    "command": "node",
-    "args": ["/absolute/path/to/dpx-protocol/dpx-mcp/index.js"],
+    "command": "npx",
+    "args": ["-y", "@untitledfinancial/dpx-mcp"],
     "env": {
       "STABILITY_ORACLE_URL": "https://stability.untitledfinancial.com",
       "SETTLEMENT_AGENT_URL": "https://agent.untitledfinancial.com",
@@ -61,7 +64,7 @@ Replace `/absolute/path/to/dpx-protocol/dpx-mcp/index.js` with your actual path.
 }
 ```
 
-## Available tools (11)
+## Available tools (13)
 
 | Tool | What it does |
 |---|---|
@@ -69,13 +72,15 @@ Replace `/absolute/path/to/dpx-protocol/dpx-mcp/index.js` with your actual path.
 | `get_quote` | Binding fee quote — core, FX, ESG, license, net amount (300s TTL) |
 | `get_esg_score` | Live E/S/G scores for a wallet address |
 | `get_reliability` | Oracle stability status — STABLE / CAUTION / UNSTABLE (cross-border and domestic) |
-| `get_oracle_status` | Full 9-layer oracle signal with AI briefing |
+| `get_oracle_status` | Full 10-layer Stability Oracle v9.0 signal — ESG Oracle is separate |
 | `get_fee_schedule` | Complete fee table with volume tiers |
 | `verify_fees` | Confirm off-chain quote matches on-chain router |
 | `compare_to_competitors` | DPX vs Stripe, Wise, SWIFT, bank wire |
 | `get_rail_status` | **Live health of local payment rails** — PIX, SEPA, FedACH, CHAPS, UPI, PromptPay |
 | `settle` | **Execute a settlement** — cross-border or domestic — oracle + rail check → on-chain |
 | `get_settlement_status` | Look up any settlement by ID |
+| `get_investment_context` | Structured investment memo for AI due diligence agents |
+| `get_intelligence` | MPP-gated macro intelligence briefing — 0.001 USDC/call on Base mainnet |
 
 ## Example prompts
 
