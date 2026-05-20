@@ -72,6 +72,28 @@ For UK-regulated entities, the FCA Innovation Pathways provides a structured reg
 
 ---
 
+### Bank of England — Stablecoin Rules Under Revision (May 2026)
+
+The Bank of England's proposed stablecoin restrictions — published late 2025 — are currently being revised following significant industry pushback. BofE Deputy Governor Sarah Breeden confirmed in May 2026 that the central bank is actively reconsidering both core elements of the proposal:
+
+**Ownership caps (under revision):**
+The proposed temporary limits — £20,000 per individual and £10 million per business per stablecoin — are being reconsidered. The BofE has acknowledged the limits are "cumbersome operationally for a temporary measure" and is open to alternative approaches to achieve its systemic risk objectives.
+
+**Reserve deposit requirement (under revision):**
+The proposed requirement for systemic stablecoin issuers to hold ≥40% of backing assets on deposit at the Bank of England (earning no interest) is also under review. The BofE is assessing whether the 40% floor is "overly conservative."
+
+**What this means for DPX:**
+
+| Aspect | Current position |
+|---|---|
+| UK institutional settlement | DPX is non-custodial — ownership caps apply to stablecoin *holders*, not to settlement infrastructure |
+| USDC issuer health | Relaxed reserve requirements improve Circle's UK economics, reducing issuer stress signals in the Stability Oracle |
+| Enterprise treasury clients | Softening of ownership caps directly expands the addressable UK corporate treasury market |
+
+The BofE consultation remains open. This page will be updated as the revised framework is published. Institutional clients should engage their FCA compliance team for firm-specific guidance during this transitional period.
+
+---
+
 ### UK TCFD — Mandatory Reporting
 
 **FCA PS21/24** made TCFD reporting mandatory for:
@@ -142,6 +164,7 @@ The system maintains a live compliance knowledge base tracking open and resolved
 |---|---|---|
 | FATF Travel Rule (Rec. 16) | ✅ Live | VoP satisfied via DPX Compliance Oracle — automatic on every payment, on-chain attestation |
 | MiCA Title III (Art. 19 Whitepaper) | In progress | Formal regulatory review underway |
+| BofE stablecoin rules (UK) | Monitoring | Ownership caps and reserve requirements under active revision — May 2026 |
 | OFAC SDN screening | Documented | Institutional integrators required to screen; architecture supports allowlist |
 | SFDR PAI reporting format | Roadmap | Data exists; SFDR-formatted output in development |
 | CBDC interoperability | Roadmap | Monitoring BIS Project Agorá, mBridge |
