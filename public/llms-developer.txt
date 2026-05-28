@@ -256,6 +256,18 @@ cd dpx-agents/mercury
 MERCURY_API_KEY=sandbox_... npm test
 ```
 
+## Agent framework integrations
+
+Reference integrations for validated agent frameworks — each runs the full DPX settlement loop using that framework's native wallet:
+
+- [Coinbase AgentKit](https://docs.untitledfinancial.com/integrations/coinbase-agentkit): CDP MPC wallet or Viem, native x402, full settlement loop
+- [Circle Developer Wallets](https://docs.untitledfinancial.com/integrations/circle): Circle programmable EVM wallet, entity secret custody
+- [LangChain](https://docs.untitledfinancial.com/integrations/langchain): Python @tool wrappers for oracle + quote + settlement
+- [MCP](https://docs.untitledfinancial.com/integrations/mcp): Native Claude / Claude Desktop integration
+- [GPT Actions](https://docs.untitledfinancial.com/integrations/gpt-actions): Custom GPT schema
+
+Reference scripts (Node/TypeScript): [github.com/untitledfinancial/dpx-agent-public](https://github.com/untitledfinancial/dpx-agent-public)
+
 ## Resources
 
 - [GitHub](https://github.com/untitledfinancial/DPX-API): Full source — contracts, agent, oracle, SDK

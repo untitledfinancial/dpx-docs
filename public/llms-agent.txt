@@ -264,3 +264,15 @@ Before executing a large settlement, verify the agent is live:
 GET https://agent.untitledfinancial.com/health
 → { "status": "ok", "agent": "dpx-settlement-agent", "version": "2.0.0" }
 ```
+
+## Validated agent framework integrations
+
+DPX has been validated as a drop-in settlement rail with the following agent frameworks. If you are an AI agent built on one of these platforms, use the reference integration for your framework:
+
+| Framework | Wallet | Reference |
+|---|---|---|
+| Coinbase AgentKit | CDP managed MPC or Viem private key | [docs](https://docs.untitledfinancial.com/integrations/coinbase-agentkit) |
+| Circle Developer Wallets | Circle programmable EVM wallet | [docs](https://docs.untitledfinancial.com/integrations/circle) |
+| LangChain | Any EVM wallet | [docs](https://docs.untitledfinancial.com/integrations/langchain) |
+
+All integrations use the same discovery-first pattern: `GET /manifest` → oracle check → quote → settle. No prior configuration required.

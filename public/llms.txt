@@ -68,7 +68,18 @@ GET /manifest — capability discovery
 - [MCP — Claude Desktop](https://docs.untitledfinancial.com/integrations/mcp): Native Claude integration via Model Context Protocol
 - [GPT Actions](https://docs.untitledfinancial.com/integrations/gpt-actions): Custom GPT calling DPX directly
 - [LangChain](https://docs.untitledfinancial.com/integrations/langchain): Python tool wrappers
+- [Coinbase AgentKit](https://docs.untitledfinancial.com/integrations/coinbase-agentkit): CDP-managed MPC wallet or Viem private key — full settlement loop validated on Base
+- [Circle Developer Wallets](https://docs.untitledfinancial.com/integrations/circle): Circle programmable wallet as DPX settlement funding source
 - [n8n](https://docs.untitledfinancial.com/integrations/n8n): No-code workflow automation
+
+## Validated agent-to-agent sandbox integrations
+
+DPX has been validated as a drop-in settlement rail across multiple agent frameworks. Each integration runs the same loop: manifest discovery → oracle check → quote → x402 micropayment → VoP compliance → settle.
+
+- **Coinbase AgentKit** (validated): CDP-managed MPC wallet on Base, native x402 support, wallet-free discovery mode. Reference script: `agentkit-dpx.ts`
+- **Circle Developer Wallets** (validated): Circle programmable EVM wallet on Base, entity-secret custody, full DPX settlement loop. Reference script: `circle-dpx.ts`
+
+Full reference: [github.com/untitledfinancial/dpx-agent-public](https://github.com/untitledfinancial/dpx-agent-public)
 
 ## OpenAPI / machine-readable
 
