@@ -1,9 +1,9 @@
 ---
 title: Agent Quick Start
-description: The complete DPX agent settlement loop — from discovery to on-chain execution in 5 steps.
+description: The complete autonomous settlement loop — discover, quote, gate on oracle conditions, pay via x402, execute on-chain. No onboarding, no API key, no human step.
 ---
 
-DPX is designed for autonomous agents. No sales process, no onboarding call. An agent discovers DPX, gets a binding fee quote, checks oracle conditions, and executes a cross-border settlement end-to-end — in a single loop, without human approval.
+DPX is the payment and settlement layer for the agentic internet. Any agent can discover DPX, get a binding fee quote, check oracle conditions, and execute a cross-border settlement end-to-end — no onboarding, no API key, no human step. The x402 USDC payment IS the authorization: agents pay the gross settlement amount and execution proceeds.
 
 ## What you're working with
 
@@ -11,8 +11,8 @@ The DPX settlement stack has three layers:
 
 | Layer | What it does |
 |---|---|
-| **Stability Oracle** | 9-layer signal pipeline. Returns `STABLE / CAUTION / UNSTABLE` with confidence score and reasoning. Agents check this before every large settlement. |
-| **Settlement Agent** | Cloudflare Worker. Receives payment instructions, reasons with Claude, and calls the router. |
+| **Stability Oracle** | 10-layer signal pipeline. Returns `STABLE / CAUTION / UNSTABLE` with confidence score and reasoning. Agents check this before every large settlement. |
+| **Settlement Agent** | Cloudflare Worker. Receives payment instructions, applies oracle conditions and compliance checks, and calls the router. |
 | **DPXSettlementRouter v2.0** | On-chain contract (Base). Accepts any whitelisted ERC-20 (USDC, EURC, USDT). Enforces fees, sends net to recipient. |
 
 **No DPX token required in the payment flow.** The router accepts USDC, EURC, USDT — whichever stablecoin you're settling in. 1:1 is maintained by the stablecoin issuers (Circle, etc.). The Stability Oracle monitors FX stress and the Settlement Agent holds during CAUTION periods.
@@ -27,13 +27,13 @@ The DPX settlement stack has three layers:
 GET https://agent.untitledfinancial.com/manifest
 ```
 
-Returns capabilities, supported assets, oracle URL, and router address. Cache this — it only changes on protocol upgrades.
+Returns everything an agent needs to transact from a cold start — capabilities, x402 payment requirements, oracle endpoints, ESG preflight URL, webhook signature algorithm, and contract addresses. Cache this — it only changes on protocol upgrades.
 
 ```json
 {
   "name": "DPX Settlement Agent",
-  "version": "2.0.0",
-  "capabilities": ["quote", "settle", "webhook", "status"],
+  "version": "2.1.0",
+  "capabilities": ["quote", "settle", "webhook", "status", "x402"],
   "supportedAssets": ["USDC", "EURC", "USDT"],
   "oracle": "https://stability.untitledfinancial.com",
   "network": "Base (chainId 8453)",
@@ -80,7 +80,7 @@ Returns a full fee breakdown. The `quoteId` is valid for **300 seconds** and use
 
 ---
 
-### Step 3 — Check oracle conditions
+### Step 3 — Gate on oracle conditions
 
 Oracle status drives the settlement decision:
 
@@ -95,9 +95,11 @@ The Settlement Agent applies this logic automatically when you call `/settle`. F
 
 ---
 
-### Step 4 — Execute via the Settlement Agent
+### Step 4 — Execute via the Settlement Agent (x402)
 
-Send a `POST /settle` request. The agent handles oracle checks, Claude reasoning, and on-chain execution.
+Live settlements use the x402 payment standard — no API key, no account. The fee payment IS the authorization.
+
+**First call — receive a quote and payment requirements:**
 
 ```bash
 curl -X POST https://agent.untitledfinancial.com/settle \
@@ -107,10 +109,63 @@ curl -X POST https://agent.untitledfinancial.com/settle \
     "sourceCurrency": "USD",
     "destinationCurrency": "USD",
     "recipientAddress": "0xRecipientWalletAddress",
-    "quoteId": "dpx_a1b2c3d4...",
     "purpose": "intercompany",
     "referenceId": "INV-2026-001"
   }'
+```
+
+**Response — 402 Payment Required:**
+
+```json
+{
+  "x402Version": 1,
+  "accepts": [{
+    "scheme": "exact",
+    "network": "base-mainnet",
+    "maxAmountRequired": "1013850000000",
+    "resource": "https://agent.untitledfinancial.com/settle",
+    "description": "DPX Settlement — 1013850.00 USDC gross. Net to recipient: 1000000.00 USDC. Fees: 139 bps (13850.00 USDC).",
+    "payTo": "0xExecutorWalletAddress",
+    "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+  }],
+  "settlementNonce": "a1b2c3d4-...",
+  "preview": {
+    "grossUsd": 1013850,
+    "netAmountUsd": 1000000,
+    "feesTotalUsd": 13850,
+    "feeBps": 139,
+    "oracleStatus": "STABLE",
+    "esgScore": 75
+  }
+}
+```
+
+**Retry with payment — attach X-PAYMENT header and settlementNonce:**
+
+```typescript
+import { withPaymentInterceptor } from 'x402-fetch';
+import { createWalletClient, http } from 'viem';
+import { base } from 'viem/chains';
+
+const wallet = createWalletClient({ chain: base, transport: http() });
+const fetchWithPayment = withPaymentInterceptor(fetch, wallet);
+
+const result = await fetchWithPayment(
+  'https://agent.untitledfinancial.com/settle',
+  {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      amount: 1000000,
+      sourceCurrency: 'USD',
+      destinationCurrency: 'USD',
+      recipientAddress: '0xRecipientWalletAddress',
+      purpose: 'intercompany',
+      referenceId: 'INV-2026-001',
+      settlementNonce: 'a1b2c3d4-...',   // from the 402 response
+    }),
+  }
+);
 ```
 
 **Response (executed):**
@@ -120,32 +175,38 @@ curl -X POST https://agent.untitledfinancial.com/settle \
   "settlementId": "dpx_7f8a9b2c...",
   "status": "executed",
   "txHash": "0xabc123...",
-  "netAmount": 986150,
-  "grossAmount": 1000000,
+  "netAmount": 1000000,
+  "grossAmount": 1013850,
   "feesTotal": 13850,
   "token": "USDC",
   "recipient": "0xRecipientWalletAddress",
   "oracleStatus": "STABLE",
   "oracleScore": 91,
   "esgScore": 75,
-  "reasoning": "Oracle conditions are stable. Yield curve normal, FX stress low. Executing immediately.",
+  "reasoning": "Oracle conditions are stable. Yield curve normal, FX stress low. Executing immediately. [x402 payment verified]",
   "timestamp": "2026-04-23T14:32:00Z",
   "sandboxMode": false
 }
 ```
 
-**Response (held — CAUTION conditions):**
+**Response (held — UNSTABLE oracle):**
+
+The Settlement Agent returns `202` before asking for payment if oracle conditions are `UNSTABLE`. No payment is requested until conditions improve.
 
 ```json
 {
-  "settlementId": "dpx_4d5e6f7a...",
   "status": "held",
-  "oracleStatus": "CAUTION",
-  "oracleScore": 78,
-  "reasoning": "Yield curve inversion detected. Holding settlement over $100K until conditions improve. Retry in 4–8 hours.",
+  "oracleStatus": "UNSTABLE",
+  "oracleScore": 44,
+  "reasoning": "Peg deviation 62 bps exceeds 50 bps threshold — holding until peg stabilises.",
+  "hint": "Oracle conditions UNSTABLE. Retry when oracle returns CAUTION or STABLE.",
   "timestamp": "2026-04-23T14:32:00Z"
 }
 ```
+
+:::note[Sandbox mode]
+Set `"sandbox": true` in the request body to skip x402 entirely. Real oracle checks, real fee calculations, no on-chain execution, no payment required. Use this to test the full loop without USDC.
+:::
 
 ---
 
@@ -242,7 +303,7 @@ console.log(receipt.hash);
 
 ## Integration guides
 
-- [MCP — Connect Claude Desktop](/integrations/mcp)
+- [MCP — Any MCP-compatible host](/integrations/mcp)
 - [GPT Actions — Connect ChatGPT](/integrations/gpt-actions)
 - [LangChain — Python tools](/integrations/langchain)
 - [n8n — Workflow automation](/integrations/n8n)

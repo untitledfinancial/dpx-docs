@@ -1,17 +1,17 @@
 ---
 title: What is DPX?
-description: DPX programmable stablecoin settlement rails — AI runs inside the oracles, not on the edges. 10-layer stability intelligence, ESG scoring, and continuous compliance monitoring on Base mainnet.
+description: DPX is the payment and settlement layer for the agentic internet — compliance-grade stablecoin rails where any AI agent can discover, price, and settle without human intervention.
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## TL;DR
 
-Untitled_(sustainability) is building DPX — a stablecoin settlement rail where AI is structural, not additive. Every payment clears a multi-layer compliance oracle (sanctions, behavioural analysis, counterparty network risk, Verification of Payee) before execution. A Stability Oracle continuously models global conditions across climate, energy, macro, and FX — with 30–90 day early-warning signals. ESG scores are applied to every payment and determine a fee surcharge, with 100% of ESG fees redistributed to verified on-chain impact programs. Signal weights self-calibrate per cohort from observed payment data. Callable via MCP, GPT Actions, or LangChain. Contracts deployed on Base mainnet.
+DPX is the payment and settlement layer for the agentic internet. Any autonomous agent can call `/manifest` to discover DPX, `/quote` to get a binding fee, and `POST /settle` to execute — no onboarding, no API key, no human step. The fee payment IS the authorization: agents pay the gross settlement amount via x402 USDC and the settlement executes on-chain. A 10-layer Stability Oracle gates every settlement on real-world conditions — climate, macro, FX, geopolitical — and holds automatically when conditions are UNSTABLE. ESG scores are a congestion fee, not a gate: every counterparty can settle, higher-impact activity simply costs more, and 100% of ESG fees are redistributed to verified on-chain impact programs. MCP-native, x402-native, ISO 20022-compatible. Seven contracts live on Base mainnet.
 
 ## What DPX does
 
-DPX is a stablecoin settlement rail built with a fundamentally different architecture — where AI is structural, not additive, and embedded across every layer of the protocol. Rather than treating intelligence as a feature, DPX distributes it throughout the system. Compliance, stability, climate modeling, and capital allocation each operate through their own dedicated intelligence layer, producing a coordinated but modular form of agentic finance.
+DPX is the programmable settlement infrastructure for autonomous AI systems — built with a fundamentally different architecture where AI is structural, not additive, and embedded across every layer of the protocol. Rather than treating intelligence as a feature, DPX distributes it throughout the system. Compliance, stability, climate modeling, and capital allocation each operate through their own dedicated intelligence layer, producing a coordinated but modular form of agentic finance.
 
 At the core is the Stability Oracle, a continuously updating model of global conditions. It ingests climate signals, commodity markets, macroeconomic indicators, FX movements, and geopolitical risk, then sequences them through interconnected analytical tiers. Each layer reinterprets the relationships between signals based on current system states — for example, a drought affecting agricultural inputs, a policy shift altering energy pricing, or a supply chain disruption reshaping inflation dynamics. The result is not a static forecast, but a living model that continuously recalibrates. Treasury teams receive each API response with structured reasoning, a confidence score, and a forward-looking outlook. In practice, this enables cross-border settlement in minutes rather than days, at 50–60% lower cost than traditional financial rails.
 
@@ -42,7 +42,12 @@ We created a system that teaches itself. Every oracle run is scored against its 
   <div class="stat-box">
     <span class="stat-label">Auth required</span>
     <span class="stat-value">None</span>
-    <span class="stat-sub">for pricing endpoints</span>
+    <span class="stat-sub">pricing · discovery · ESG preflight</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-label">Settlement auth</span>
+    <span class="stat-value">x402</span>
+    <span class="stat-sub">USDC payment · no API key · no account</span>
   </div>
   <div class="stat-box">
     <span class="stat-label">Oracle update cycle</span>
@@ -70,24 +75,24 @@ We created a system that teaches itself. Every oracle run is scored against its 
 
 <CardGrid>
   <Card title="Agent Quick Start" icon="rocket">
-    The complete settlement loop in 5 steps — from discovery to on-chain execution.
+    The complete autonomous settlement loop — discover, quote, gate on oracle, pay via x402, execute on-chain.
     [Get started →](/agent-quickstart)
   </Card>
-  <Card title="Fee Structure" icon="information">
-    Core, FX, ESG, and license fee breakdown with volume discount tiers and scenarios.
-    [See fees →](/fees)
+  <Card title="Agent-to-Agent Payments" icon="star">
+    DPX as the payment and settlement layer for the agentic internet — use cases, x402 flow, ESG pricing.
+    [Read →](/use-cases/agent-economy)
   </Card>
   <Card title="MCP — Claude" icon="puzzle">
-    Connect Claude Desktop directly to DPX via Model Context Protocol.
+    13 tools for Claude Desktop and Cursor — quote, settle, check oracle, query ESG, verify fees.
     [Set up MCP →](/integrations/mcp)
   </Card>
-  <Card title="Integration API" icon="document">
-    ISO 20022 bridge for treasury systems — Kyriba, SAP, Oracle, or any TMS. VoP + compliance included.
-    [View API →](/api/integration-api)
+  <Card title="Fee Structure" icon="information">
+    Core, FX, ESG congestion fee, and license breakdown with volume discount tiers.
+    [See fees →](/fees)
   </Card>
 </CardGrid>
 
-## AI agent integrations
+## Agent integrations & SDKs
 
 <CardGrid>
   <Card title="MCP — Claude Desktop" icon="puzzle">
@@ -103,7 +108,7 @@ We created a system that teaches itself. Every oracle run is scored against its 
     [Configure →](/integrations/langchain)
   </Card>
   <Card title="n8n Workflows" icon="setting">
-    No-code automation for treasury ops — trigger settlements from any webhook or schedule.
+    No-code automation — trigger settlements from any webhook, schedule, or external system.
     [Configure →](/integrations/n8n)
   </Card>
 </CardGrid>

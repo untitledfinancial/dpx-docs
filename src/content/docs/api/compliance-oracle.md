@@ -81,7 +81,6 @@ The only hard block is `BLOCKED` — when names are so dissimilar the payment is
     "likelyCause":           "Legal suffix difference — 'GmbH' vs 'GmbH & Co. KG'",
     "rationale":             "The submitted name is a common shortened form of the registered legal name, consistent with standard German entity naming conventions.",
     "proceedRecommendation": "PROCEED",
-    "model":                 "claude-haiku-4-5",
     "processedAt":           1748123456
   }
 }
@@ -198,9 +197,18 @@ Machine-readable x402 payment requirements for autonomous agents. Call once and 
   "version": 1,
   "endpoints": {
     "POST /vop/verify": {
-      "price": { "amount": "75000", "currency": "USDC", "decimals": 6 },
-      "network": "base",
-      "facilitator": "https://x402.org/facilitator"
+      "price":        { "amount": "75000", "currency": "USDC", "decimals": 6 },
+      "network":      "base",
+      "facilitator":  "https://x402.org/facilitator"
+    },
+    "POST /stream/open": {
+      "variableAmount": true,
+      "minUsdc":        0.01,
+      "maxUsdc":        10000,
+      "unitTypes":      ["second", "token", "call", "byte"],
+      "network":        "base",
+      "facilitator":    "https://x402.org/facilitator",
+      "description":    "Open a streaming micropayment session. Pay upfront for a credit bucket; service ticks units against the balance."
     }
   }
 }
@@ -238,7 +246,7 @@ For agents integrated via the [Integration API](/api/integration-api), this cost
 
 ## AML Oracle
 
-Four compliance checks run before every payment. Internal-only — called by the Integration API; direct access requires `X-Internal-Key`.
+Five compliance layers run before every payment. Internal-only — called by the Integration API; direct access requires `X-Internal-Key`.
 
 ### POST /aml/screen
 
@@ -301,7 +309,6 @@ When `action` is `FLAG` (riskScore 50–74), the response includes a `reasoning`
     "confidence":     "HIGH",
     "rationale":      "Single marginal signal on a mature wallet with 247 prior transactions. Pattern is not consistent with structuring or layering.",
     "keyFactors":     ["established profile", "single low-severity signal", "no sanctions exposure"],
-    "model":          "claude-haiku-4-5",
     "processedAt":    1748123456
   }
 }
@@ -357,7 +364,7 @@ curl https://compliance.untitledfinancial.com/aml/events/0xabc... \
 
 ## ESG Scoring
 
-Entity-level ESG scores are computed by the Compliance Oracle and applied automatically as a fee surcharge on every payment. Direct access is free.
+Entity-level ESG scores are computed by the Compliance Oracle and applied automatically on every payment. Direct access is free.
 
 ### GET /esg/score/:lei
 
