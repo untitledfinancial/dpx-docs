@@ -43,6 +43,12 @@ export default defineConfig({
           ],
         },
         {
+          label: 'Use Cases',
+          items: [
+            { label: 'Agent-to-Agent Payments', slug: 'use-cases/agent-economy', badge: { text: 'New', variant: 'tip' } },
+          ],
+        },
+        {
           label: 'Live Data',
           items: [
             { label: '⚡ Fee Calculator',  slug: 'demo',  badge: { text: 'Live', variant: 'tip' } },
@@ -55,16 +61,19 @@ export default defineConfig({
           items: [
             { label: 'Integration API',   slug: 'api/integration-api',   badge: { text: 'New', variant: 'tip' } },
             { label: 'Stability Oracle',  slug: 'api/stability-oracle' },
+            { label: 'Intelligence API',  slug: 'api/intelligence-api',  badge: { text: 'New', variant: 'tip' } },
             { label: 'ESG Oracle',        slug: 'api/esg-oracle' },
             { label: 'Compliance Oracle', slug: 'api/compliance-oracle' },
           ],
         },
         {
-          label: 'Agent Integrations',
+          label: 'Agent Integrations & SDKs',
           items: [
             { label: 'MCP — Claude',      slug: 'integrations/mcp' },
             { label: 'GPT Actions',       slug: 'integrations/gpt-actions' },
             { label: 'LangChain',         slug: 'integrations/langchain' },
+            { label: 'Coinbase AgentKit', slug: 'integrations/coinbase-agentkit', badge: { text: 'New', variant: 'tip' } },
+            { label: 'Circle Wallets',    slug: 'integrations/circle',            badge: { text: 'New', variant: 'tip' } },
             { label: 'REST API',          slug: 'integrations/rest-api' },
           ],
         },
