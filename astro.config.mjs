@@ -49,6 +49,17 @@ export default defineConfig({
           ],
         },
         {
+          label: 'European Institutions',
+          items: [
+            { label: 'Quickstart',          slug: 'guides/european-institutions', badge: { text: 'New', variant: 'tip' } },
+            { label: 'SFDR & CSRD',         slug: 'protocol/sfdr-csrd',           badge: { text: 'New', variant: 'tip' } },
+            { label: 'EURC Settlement',     slug: 'integrations/eurc',            badge: { text: 'New', variant: 'tip' } },
+            { label: 'SWIFT Compatibility', slug: 'integrations/swift',           badge: { text: 'New', variant: 'tip' } },
+            { label: 'Kyriba',              slug: 'integrations/kyriba' },
+            { label: 'SAP TRM',             slug: 'integrations/sap-trm' },
+          ],
+        },
+        {
           label: 'Live Data',
           items: [
             { label: '⚡ Fee Calculator',  slug: 'demo',  badge: { text: 'Live', variant: 'tip' } },
@@ -92,6 +103,7 @@ export default defineConfig({
             { label: 'ESG Oracle',             slug: 'protocol/esg-oracle' },
             { label: 'Smart Contracts',        slug: 'protocol/contracts' },
             { label: 'Regulatory Positioning', slug: 'protocol/regulatory' },
+            { label: 'SFDR & CSRD',            slug: 'protocol/sfdr-csrd' },
             { label: 'FATF & Travel Rule',     slug: 'protocol/fatf-compliance' },
             { label: 'FinCEN Travel Rule (US)', slug: 'protocol/fincen-travel-rule', badge: { text: 'New', variant: 'tip' } },
             { label: 'Governance',             slug: 'protocol/governance' },
