@@ -45,7 +45,8 @@ export default defineConfig({
         {
           label: 'Use Cases',
           items: [
-            { label: 'Agent-to-Agent Payments', slug: 'use-cases/agent-economy', badge: { text: 'New', variant: 'tip' } },
+            { label: 'Instant Stablecoin Payments', slug: 'use-cases/instant-stablecoin-payments', badge: { text: 'New', variant: 'tip' } },
+            { label: 'Agent-to-Agent Payments',     slug: 'use-cases/agent-economy' },
           ],
         },
         {
@@ -94,6 +95,13 @@ export default defineConfig({
             { label: 'Kyriba',            slug: 'integrations/kyriba' },
             { label: 'SAP TRM',           slug: 'integrations/sap-trm' },
             { label: 'Webhook Events',    slug: 'integrations/webhooks' },
+          ],
+        },
+        {
+          label: 'Fiat On-Ramps',
+          items: [
+            { label: 'Circle Mint',      slug: 'integrations/circle-mint',    badge: { text: 'New', variant: 'tip' } },
+            { label: 'Coinbase Prime',   slug: 'integrations/coinbase-prime', badge: { text: 'New', variant: 'tip' } },
           ],
         },
         {
