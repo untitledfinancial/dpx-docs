@@ -45,17 +45,17 @@ export default defineConfig({
         {
           label: 'Use Cases',
           items: [
-            { label: 'Instant Stablecoin Payments', slug: 'use-cases/instant-stablecoin-payments', badge: { text: 'New', variant: 'tip' } },
+            { label: 'Instant Stablecoin Payments', slug: 'use-cases/instant-stablecoin-payments' },
             { label: 'Agent-to-Agent Payments',     slug: 'use-cases/agent-economy' },
           ],
         },
         {
           label: 'European Institutions',
           items: [
-            { label: 'Quickstart',          slug: 'guides/european-institutions', badge: { text: 'New', variant: 'tip' } },
-            { label: 'SFDR & CSRD',         slug: 'protocol/sfdr-csrd',           badge: { text: 'New', variant: 'tip' } },
-            { label: 'EURC Settlement',     slug: 'integrations/eurc',            badge: { text: 'New', variant: 'tip' } },
-            { label: 'SWIFT Compatibility', slug: 'integrations/swift',           badge: { text: 'New', variant: 'tip' } },
+            { label: 'Quickstart',          slug: 'guides/european-institutions' },
+            { label: 'SFDR & CSRD',         slug: 'protocol/sfdr-csrd' },
+            { label: 'EURC Settlement',     slug: 'integrations/eurc' },
+            { label: 'SWIFT Compatibility', slug: 'integrations/swift' },
             { label: 'Kyriba',              slug: 'integrations/kyriba' },
             { label: 'SAP TRM',             slug: 'integrations/sap-trm' },
           ],
@@ -63,7 +63,7 @@ export default defineConfig({
         {
           label: 'Live Data',
           items: [
-            { label: '⚡ Fee Calculator',  slug: 'demo',  badge: { text: 'Live', variant: 'tip' } },
+            { label: '⚡ Fee Calculator',  slug: 'demo' },
             { label: 'Fee Structure',      slug: 'fees' },
             { label: 'Fee Model',          slug: 'financial-model' },
           ],
@@ -71,9 +71,9 @@ export default defineConfig({
         {
           label: 'API Reference',
           items: [
-            { label: 'Integration API',   slug: 'api/integration-api',   badge: { text: 'New', variant: 'tip' } },
+            { label: 'Integration API',   slug: 'api/integration-api' },
             { label: 'Stability Oracle',  slug: 'api/stability-oracle' },
-            { label: 'Intelligence API',  slug: 'api/intelligence-api',  badge: { text: 'New', variant: 'tip' } },
+            { label: 'Intelligence API',  slug: 'api/intelligence-api' },
             { label: 'ESG Oracle',        slug: 'api/esg-oracle' },
             { label: 'Compliance Oracle', slug: 'api/compliance-oracle' },
           ],
@@ -84,8 +84,8 @@ export default defineConfig({
             { label: 'MCP — Claude',      slug: 'integrations/mcp' },
             { label: 'GPT Actions',       slug: 'integrations/gpt-actions' },
             { label: 'LangChain',         slug: 'integrations/langchain' },
-            { label: 'Coinbase AgentKit', slug: 'integrations/coinbase-agentkit', badge: { text: 'New', variant: 'tip' } },
-            { label: 'Circle Wallets',    slug: 'integrations/circle',            badge: { text: 'New', variant: 'tip' } },
+            { label: 'Coinbase AgentKit', slug: 'integrations/coinbase-agentkit' },
+            { label: 'Circle Wallets',    slug: 'integrations/circle' },
             { label: 'REST API',          slug: 'integrations/rest-api' },
           ],
         },
@@ -100,8 +100,8 @@ export default defineConfig({
         {
           label: 'Fiat On-Ramps',
           items: [
-            { label: 'Circle Mint',      slug: 'integrations/circle-mint',    badge: { text: 'New', variant: 'tip' } },
-            { label: 'Coinbase Prime',   slug: 'integrations/coinbase-prime', badge: { text: 'New', variant: 'tip' } },
+            { label: 'Circle Mint',      slug: 'integrations/circle-mint' },
+            { label: 'Coinbase Prime',   slug: 'integrations/coinbase-prime' },
           ],
         },
         {
@@ -113,7 +113,7 @@ export default defineConfig({
             { label: 'Regulatory Positioning', slug: 'protocol/regulatory' },
             { label: 'SFDR & CSRD',            slug: 'protocol/sfdr-csrd' },
             { label: 'FATF & Travel Rule',     slug: 'protocol/fatf-compliance' },
-            { label: 'FinCEN Travel Rule (US)', slug: 'protocol/fincen-travel-rule', badge: { text: 'New', variant: 'tip' } },
+            { label: 'FinCEN Travel Rule (US)', slug: 'protocol/fincen-travel-rule' },
             { label: 'Governance',             slug: 'protocol/governance' },
           ],
         },
