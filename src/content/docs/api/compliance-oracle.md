@@ -410,13 +410,13 @@ curl "https://compliance.untitledfinancial.com/esg/score/7LTWFZYICNSX8D621K86?na
 
 **ESG fee surcharge tiers:**
 
-| Score | Tier | Settlement surcharge |
+| Score | Tier | ESG fee |
 |---|---|---|
-| 85–100 | `EXCELLENT` | +0.00% |
-| 70–84 | `GOOD` | +0.10% |
-| 50–69 | `AVERAGE` | +0.25% |
-| 30–49 | `BELOW_AVERAGE` | +0.40% |
-| 0–29 | `POOR` | +0.50% |
+| 85–100 | `EXCELLENT` | Lowest |
+| 70–84 | `GOOD` | Low |
+| 50–69 | `AVERAGE` | Moderate |
+| 30–49 | `BELOW_AVERAGE` | Elevated |
+| 0–29 | `POOR` | Maximum |
 
 **AI narration** (`?narrate=true`) — adds a `narration` string field: 2–3 sentences covering the overall picture, main pillar driver, and any notable risk or strength. ~$0.001 per call, 8s timeout, omitted on failure.
 

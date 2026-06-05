@@ -11,7 +11,7 @@ The DPX settlement stack has three layers:
 
 | Layer | What it does |
 |---|---|
-| **Stability Oracle** | 10-layer signal pipeline. Returns `STABLE / CAUTION / UNSTABLE` with confidence score and reasoning. Agents check this before every large settlement. |
+| **Stability Oracle** | 9-layer signal pipeline. Returns `STABLE / CAUTION / UNSTABLE` with confidence score and reasoning. Agents check this before every large settlement. |
 | **Settlement Agent** | Cloudflare Worker. Receives payment instructions, applies oracle conditions and compliance checks, and calls the router. |
 | **DPXSettlementRouter v2.0** | On-chain contract (Base). Accepts any whitelisted ERC-20 (USDC, EURC, USDT). Enforces fees, sends net to recipient. |
 
@@ -57,14 +57,14 @@ Returns a full fee breakdown. The `quoteId` is valid for **300 seconds** and use
     "quoteId": "dpx_a1b2c3d4e5f6...",
     "validForSeconds": 300,
     "fees": {
-      "core":    { "bps": 85,    "usd": 8500 },
-      "fx":      { "bps": 40,    "usd": 4000 },
-      "esg":     { "bps": 12.5,  "usd": 1250, "score": 75 },
-      "license": { "bps": 1,     "usd": 100 },
-      "total":   { "bps": 138.5, "pct": 1.385, "usd": 13850 }
+      "core":    { "bps": "...", "usd": "..." },
+      "fx":      { "bps": "...", "usd": "..." },
+      "esg":     { "bps": "...", "usd": "...", "score": 75 },
+      "license": { "bps": "...", "usd": "..." },
+      "total":   { "bps": "...", "pct": "...", "usd": "..." }
     },
     "settlement": {
-      "netUsd": 986150,
+      "netUsd": "...",
       "grossUsd": 1000000
     }
   },

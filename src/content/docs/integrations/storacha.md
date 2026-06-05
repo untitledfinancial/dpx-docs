@@ -28,7 +28,7 @@ The tx hash is embedded in the settlement response and emitted in the `Settlemen
   "quoteId": "quote_...",
   "recipient": "0x...",
   "amountDPX": "1000000000000000000",
-  "fees": { "total": { "pct": 1.385, "bps": 138.5 } }
+  "fees": { "total": { "pct": "...", "bps": "..." } }
 }
 ```
 

@@ -72,7 +72,7 @@ Restart Claude Desktop — **DPX** appears in the MCP toolbar with 13 tools.
 | `get_quote` | Binding fee quote — core, FX, ESG, license, net amount (300s TTL) |
 | `get_esg_score` | Live E/S/G scores for a wallet address |
 | `get_reliability` | Oracle stability status — STABLE / CAUTION / UNSTABLE (cross-border and domestic) |
-| `get_oracle_status` | Full 10-layer Stability Oracle v9.0 signal — ESG Oracle is separate |
+| `get_oracle_status` | Full 9-layer Stability Oracle v9.0 signal — ESG Oracle is separate |
 | `get_fee_schedule` | Complete fee table with volume tiers |
 | `verify_fees` | Confirm off-chain quote matches on-chain router |
 | `compare_to_competitors` | DPX vs Stripe, Wise, SWIFT, bank wire |
@@ -119,7 +119,7 @@ to 0x1E05306A20A738917EFa010f5BE3fb5EE7290dD8 in sandbox mode"
 
 Claude calls:
   1. get_reliability → STABLE (88/100), IMPROVING
-  2. get_quote → 1.385% all-in, net $98,615, quoteId dpx_abc...
+  2. get_quote → quoted fee, net amount, quoteId dpx_abc...
   3. settle → { status: "sandbox", settlementId: "dpx_7f8a...",
                 netAmount: 98615, reasoning: "Oracle stable, executing" }
 ```
@@ -131,7 +131,7 @@ You: "Check rail health and settle $500K USD→USD domestic to 0x... sandbox"
 Claude calls:
   1. get_rail_status (region: "us") → FedACH: OPERATIONAL
   2. get_reliability → STABLE (91/100)
-  3. get_quote (hasFx: false) → 0.86% all-in (no FX fee), net $495,700
+  3. get_quote (hasFx: false) → quoted fee (no FX component), net amount
   4. settle → { status: "sandbox", settlementId: "dpx_9c2e...",
                 netAmount: 495700, reasoning: "Rail operational, oracle stable" }
 ```

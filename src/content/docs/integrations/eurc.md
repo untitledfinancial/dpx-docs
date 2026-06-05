@@ -85,11 +85,11 @@ The DPX fee structure applies identically to EURC settlements. Since EURC is a s
 
 | Fee component | EUR-to-EUR (EURC) | EUR-to-USD (USDC) |
 |---|---|---|
-| Core settlement | 1.50% | 1.50% |
-| FX fee | 0.00% | +0.40% |
-| ESG surcharge | 0.00–0.50% | 0.00–0.50% |
-| License fee | 0.01% | 0.01% |
-| **Typical all-in** | **~1.635%** (score 75) | **~2.035%** |
+| Core settlement | Applies | Applies |
+| FX fee | Not applicable | Applies |
+| ESG surcharge | Dynamic, oracle-based | Dynamic, oracle-based |
+| License fee | Applies | Applies |
+| **Typical all-in** | Lower (no FX component) | Standard cross-currency |
 
 ---
 

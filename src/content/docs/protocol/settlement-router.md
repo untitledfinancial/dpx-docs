@@ -1,10 +1,10 @@
 ---
 title: DPXSettlementRouter
-description: DPXSettlementRouter v1.2 — single entry point for all DPX settlement flows on Base mainnet.
+description: DPXSettlementRouter v2.0 — single entry point for all DPX settlement flows on Base mainnet.
 ---
 
-**Version:** 1.2
-**Address:** `0x7d2b0Cea5A2d19369548F59C6B8EEe9Fe3495c97`
+**Version:** 2.0
+**Address:** `0xe333551E18ef0471A71d7e8e761212766aa5AD4f`
 **Network:** Base Mainnet (chainId 8453)
 
 ---
@@ -17,7 +17,7 @@ The DPXSettlementRouter is the single entry point for all DPX settlement flows. 
 
 ## How It Works
 
-1. Sender approves the router: `dpxToken.approve(routerAddress, amount)`
+1. Sender approves the router: `usdc.approve(routerAddress, amount)` (or EURC/USDT)
 2. Sender calls `settle(recipient, grossAmount, isCrossCurrency, quoteId)`
 3. Router pulls `grossAmount` from sender
 4. Router computes fees (core + FX + ESG + license)
@@ -66,14 +66,14 @@ Read-only fee preview. Returns the full fee breakdown for a prospective settleme
 
 ## Fee Structure
 
-| Fee | Basis Points | Rate | Destination |
-|---|---|---|---|
-| Core | 85 bps | 0.85% | feeCollector (`0x160e920012fb4bae2e465c1ed8815c5fd51b5ce0`) |
-| FX | 40 bps | 0.40% | feeCollector (cross-currency only) |
-| ESG | 0–50 bps | 0–0.50% | ESGRedistribution (dynamic, oracle-based) |
-| License | 1 bp | 0.01% | licensingWallet (`0x0259a1735BAEDeD02e4784A9E28eCCe85c5a99ef`) |
+| Fee | Applies to | Destination |
+|---|---|---|
+| Core | Every settlement | feeCollector (`0x160e920012fb4bae2e465c1ed8815c5fd51b5ce0`) |
+| FX | Cross-currency only | feeCollector |
+| ESG | Every settlement — dynamic, oracle-based | ESGRedistribution |
+| License | Every settlement — fixed, in token contract | licensingWallet (`0x0259a1735BAEDeD02e4784A9E28eCCe85c5a99ef`) |
 
-The ESG fee is computed from the company's weighted aggregate score across all active ESGOracle providers. A score of 100 produces a 0 bps ESG fee; a score of 0 produces the maximum 50 bps.
+The ESG fee is computed from the company's weighted aggregate score across all active ESGOracle providers. A score of 100 produces a zero ESG fee; a score of 0 produces the maximum ESG fee.
 
 ---
 
@@ -111,7 +111,7 @@ curl "https://stability.untitledfinancial.com/verify-fees?amountUsd=1000000&hasF
 # Confirm feesMatch: true before proceeding
 
 # 3. Approve the router (on-chain)
-# dpxToken.approve("0x7d2b0Cea5A2d19369548F59C6B8EEe9Fe3495c97", grossAmount)
+# dpxToken.approve("0xe333551E18ef0471A71d7e8e761212766aa5AD4f", grossAmount)
 
 # 4. Execute settlement (on-chain)
 # router.settle(recipient, grossAmount, isCrossCurrency, quoteId)
@@ -121,7 +121,7 @@ curl "https://stability.untitledfinancial.com/verify-fees?amountUsd=1000000&hasF
 
 ## API Endpoints (Stability Oracle)
 
-The DPXSettlementRouter is accessible via REST API at `https://stability.dpx.finance`. No authentication required.
+The DPXSettlementRouter is accessible via REST API at `https://stability.untitledfinancial.com`. No authentication required.
 
 ### GET /esg-score
 Returns the on-chain ESG score for a company address.

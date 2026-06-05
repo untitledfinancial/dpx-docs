@@ -16,10 +16,10 @@ Prices pulled live from `stability.untitledfinancial.com`. Adjust the inputs and
 ```
 total = core + fx (if cross-currency) + esg + license
 
-core    = 0.85%
-fx      = 0.40%  (cross-currency only)
-esg     = (100 - score) / 200     →  0.00% at score 100, 0.50% at score 0
-license = 0.01%  (fixed)
+core    = published on-chain
+fx      = cross-currency only
+esg     = (100 - score) / esgDivisor  →  lowest at score 100, highest at score 0
+license = fixed, immutable
 ```
 
 Volume discounts apply to the core fee only:

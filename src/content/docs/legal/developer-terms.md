@@ -129,12 +129,12 @@ Settlement Transactions are **irreversible** once confirmed on the Base blockcha
 
 ## 9. Fee Structure
 
-| Component | Rate | Applies |
-|---|---|---|
-| Core settlement | 0.85% (85 bps) | All settlements |
-| FX basket | 0.40% (40 bps) | Cross-currency only |
-| ESG-linked | 0–0.50% | Based on company score |
-| License fee | 0.01% (1 bp) | Every DPX token transfer (on-chain) |
+| Component | Applies |
+|---|---|
+| Core settlement | All settlements |
+| FX basket | Cross-currency only |
+| ESG-linked | Based on company score — 100% redistributed to impact pools |
+| License fee | Every DPX token transfer (on-chain, immutable) |
 
 API oracle access is currently provided at no charge under a fair use policy. Untitled_ reserves the right to introduce access fees with 60 days' written notice.
 

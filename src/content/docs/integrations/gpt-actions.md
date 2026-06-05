@@ -56,7 +56,7 @@ paths:
         - name: hasFx
           in: query
           required: false
-          description: "true if cross-currency (adds 0.40% FX component)"
+          description: "true if cross-currency (adds FX component)"
           schema:
             type: boolean
             default: false
@@ -123,10 +123,10 @@ When pricing a settlement:
 - For large settlements ($1M+), also call getDPXReliability and flag any stability concerns.
 
 Fee components:
-- Core: 0.85% on every settlement
-- FX: 0.40% for cross-currency only
-- ESG: (100 - score) / 200 — ranges 0% to 0.50%
-- License: 0.01% fixed
+- Core: applies to every settlement
+- FX: applies to cross-currency only
+- ESG: calculated live from oracle score — 100% redistributed to verified on-chain impact pools
+- License: fixed — enforced in token contract
 
 Volume tiers apply a discount to the core fee only:
 - Standard (<$100K/month): 0%
@@ -134,7 +134,7 @@ Volume tiers apply a discount to the core fee only:
 - Institutional ($1M–$10M/month): 20% discount
 - Sovereign ($10M+/month): 30% discount
 
-When comparing to competitors, use: SWIFT/bank wire 2–5%, Convera corporate FX 2–3%, DPX typical 1.385%, Wise Business 0.4–1.5% (but no on-chain compliance, ESG scoring, or programmability).
+When comparing to competitors, use: SWIFT/bank wire 2–5%, Convera corporate FX 2–3%, Wise Business 0.4–1.5% (but no on-chain compliance, ESG scoring, or programmability). Always call getDPXQuote for the current DPX rate.
 ```
 
 ## Available actions

@@ -207,7 +207,7 @@ War mitigation protocols add a second override layer: when escalation risk is HI
 
 > **Proprietary technology.** The AI synthesis methodology, prompt architecture, and inference infrastructure are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc.
 
-The Stability Oracle includes an embedded AI intelligence layer that runs after all 32+ data sources are collected and all 7 tiers are computed. It synthesises the full signal set across all 9 layers into a structured institutional briefing appended to every oracle response as an `intelligence` object.
+The Stability Oracle includes an embedded AI intelligence layer that runs after all 32+ data sources are collected and all 9 layers are computed. It synthesises the full signal set across all 9 layers into a structured institutional briefing appended to every oracle response as an `intelligence` object.
 
 **What it produces:**
 

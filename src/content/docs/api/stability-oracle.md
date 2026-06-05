@@ -1,13 +1,13 @@
 ---
 title: Stability Oracle API
-description: Complete endpoint reference for the DPX Stability Oracle v9.0 — 7-tier intelligence, USD structural health, and AI synthesis across 32+ sources.
+description: Complete endpoint reference for the DPX Stability Oracle v9.0 — 9-layer intelligence, USD structural health, and AI synthesis across 32+ sources.
 ---
 
 No authentication required. All responses are JSON. All prices in USD.
 
 **Base URL:** `https://stability.untitledfinancial.com`
 
-**Version:** v9.0 — 7-tier signal pipeline, USD structural health monitoring (12 independent signals, cross-validated against non-US sources), and AI synthesis on every response.
+**Version:** v9.0 — 9-layer signal pipeline, USD structural health monitoring (12 independent signals, cross-validated against non-US sources), and AI synthesis on every response.
 
 ---
 
@@ -23,11 +23,11 @@ curl https://stability.untitledfinancial.com/manifest
 
 | Field | Type | Description |
 |---|---|---|
-| `fees.coreBps` | number | Core fee in basis points (85) |
-| `fees.fxBps` | number | FX fee in basis points (40) |
-| `fees.licenseBps` | number | License fee in basis points (1) |
-| `fees.esgFormula` | string | `"(100 - esgScore) / 200"` |
-| `fees.typicalTotalBps` | number | Typical all-in (138.5) |
+| `fees.coreBps` | number | Core fee in basis points |
+| `fees.fxBps` | number | FX fee in basis points (cross-currency only) |
+| `fees.licenseBps` | number | License fee in basis points |
+| `fees.esgFormula` | string | ESG fee formula |
+| `fees.typicalTotalBps` | number | Typical all-in basis points |
 | `contracts.token` | string | DPX token address on Base |
 | `onboarding.humanRequired` | boolean | false |
 
@@ -64,16 +64,16 @@ curl "https://stability.untitledfinancial.com/quote?amountUsd=1000000&hasFx=true
 
 | Field | Example | Description |
 |---|---|---|
-| `fees.core.bps` | 85 | Core fee basis points |
-| `fees.core.usd` | 8500 | Core fee in USD |
-| `fees.fx.bps` | 40 | FX fee basis points (0 if same-currency) |
-| `fees.esg.bps` | 12.5 | ESG fee basis points |
-| `fees.esg.score` | 75 | ESG score used |
-| `fees.esg.tier` | "Good" | ESG tier label |
-| `fees.license.bps` | 1 | License fee basis points |
-| `fees.total.pct` | 1.385 | All-in percentage |
-| `fees.total.usd` | 13850 | All-in USD amount |
-| `settlement.netUsd` | 986150 | Amount received after fees |
+| `fees.core.bps` | number | Core fee basis points |
+| `fees.core.usd` | number | Core fee in USD |
+| `fees.fx.bps` | number | FX fee basis points (0 if same-currency) |
+| `fees.esg.bps` | number | ESG fee basis points |
+| `fees.esg.score` | number | ESG score used |
+| `fees.esg.tier` | string | ESG tier label |
+| `fees.license.bps` | number | License fee basis points |
+| `fees.total.pct` | number | All-in percentage |
+| `fees.total.usd` | number | All-in USD amount |
+| `settlement.netUsd` | number | Amount received after fees |
 | `quoteId` | "dpx-..." | Pass to settlement router |
 | `validForSeconds` | 300 | Quote validity window |
 

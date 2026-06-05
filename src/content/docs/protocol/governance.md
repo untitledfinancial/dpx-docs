@@ -13,8 +13,8 @@ All protocol parameters are controlled by `PolicyManager` (`0x741f3179786d9f72e1
 
 | Parameter | Current value | Contract |
 |---|---|---|
-| Core transfer fee | 0.85% (85 bps) | PolicyManager → StabilityFeeController |
-| FX conversion fee | 0.40% (40 bps) | PolicyManager → StabilityFeeController |
+| Core transfer fee | Published on-chain | PolicyManager → StabilityFeeController |
+| FX conversion fee | Published on-chain | PolicyManager → StabilityFeeController |
 | ESG redistribution allocations | Ocean 30% / Renewable 25% / Forest 20% / Climate 15% / Water 10% | PolicyManager → ESGRedistribution |
 | Basket currency weights | USD / EUR / GBP / JPY / CNY · based on IMF SDR pool recommendations | PolicyManager → BasketPegManager |
 | Oracle authorisation | ESG Oracle wallet address | PolicyManager → ESGCompliance |

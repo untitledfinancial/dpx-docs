@@ -15,7 +15,7 @@ Contract addresses are also returned by the `/manifest` endpoint and are always 
 
 | Contract | Address | Role |
 |---|---|---|
-| DPX Token (V3) | `0x7A62dEcF6936675480F0991A2EF4a0d6f1023891` | Upgradeable ERC-20 · 0.01% license fee on every transfer |
+| DPX Token (V3) | `0x7A62dEcF6936675480F0991A2EF4a0d6f1023891` | Upgradeable ERC-20 · protocol license fee on every transfer |
 | StabilityFeeController | `0xda8aA06cDa9D06001554d948dA473EBe5282Ea17` | PID-controlled stability mechanism |
 | BasketPegManager | `0xB5071fA48B92e3652701053eEd8826ab94014AaA` | Multi-currency basket · USD / EUR / GBP / JPY / CNY |
 | ESGOracle | `0x7717e89bC45cBD5199b44595f6E874ac62d79786` | On-chain ESG score storage · 6 providers · per-company scoring |
@@ -39,7 +39,7 @@ Contract addresses are also returned by the `/manifest` endpoint and are always 
 
 **Address:** `0x7A62dEcF6936675480F0991A2EF4a0d6f1023891`
 
-Upgradeable ERC-20 (`DOVPAXBRANCHUpgradeableV3`) with a protocol license fee enforced on every transfer. The license fee (1 bps / 0.01%) is immutable and cannot be disabled — it funds protocol development and is separate from settlement fees.
+Upgradeable ERC-20 (`DOVPAXBRANCHUpgradeableV3`) with a protocol license fee enforced on every transfer. The license fee is immutable and cannot be disabled — it funds protocol development and is separate from settlement fees.
 
 | Function | Description |
 |---|---|
@@ -61,13 +61,13 @@ PID (Proportional-Integral-Derivative) controlled stability mechanism. Monitors 
 
 ### Fee parameters (current)
 
-| Parameter | Value |
+| Parameter | Description |
 |---|---|
-| `coreFeeBps` | 85 |
-| `fxFeeBps` | 40 |
-| `esgDivisor` | 200 |
-| `ESG_MAX_BPS` | 50 |
-| License fee | 1 bps (enforced in DPX Token) |
+| `coreFeeBps` | Core settlement fee — published on-chain |
+| `fxFeeBps` | FX conversion fee — published on-chain |
+| `esgDivisor` | ESG fee denominator — formula: `(100 - score) / esgDivisor` |
+| `ESG_MAX_BPS` | Maximum ESG fee in basis points |
+| License fee | Immutable — enforced in DPX Token |
 
 ---
 
@@ -88,9 +88,9 @@ The single entry point for all DPX settlements. Enforces the full fee structure 
 ### Fee computation (on-chain)
 
 ```solidity
-uint256 coreFee = (grossAmount * coreFeeBps) / 10_000;   // 0.85%
-uint256 fxFee   = isCrossCurrency ? (grossAmount * fxFeeBps) / 10_000 : 0;  // 0.40%
-uint256 esgBps  = (100 - avgEsgScore) * ESG_MAX_BPS / 100;  // 0.00–0.50%
+uint256 coreFee = (grossAmount * coreFeeBps) / 10_000;
+uint256 fxFee   = isCrossCurrency ? (grossAmount * fxFeeBps) / 10_000 : 0;
+uint256 esgBps  = (100 - avgEsgScore) * ESG_MAX_BPS / 100;
 uint256 esgFee  = (grossAmount * esgBps) / 10_000;
 uint256 net     = grossAmount - coreFee - fxFee - esgFee;
 ```
@@ -194,7 +194,7 @@ The PolicyManager is the only contract authorised to update ESGRedistribution pr
 
 DPX uses a hybrid fee enforcement model:
 
-- **License fee (0.01%)** — enforced in the DPX Token contract on every transfer
+- **License fee** — enforced in the DPX Token contract on every transfer
 - **Core, FX, and ESG fees** — enforced in DPXSettlementRouter
 - **ESG scoring** — stored in ESGOracle, aggregated in ESGRedistribution
 - **Bad-actor redistribution** — enforced in ESGRedistribution (not discretionary)

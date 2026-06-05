@@ -85,7 +85,7 @@ To route a Mercury USD payment to a EUR settlement, add `destination_currency` t
 destination_currency = EUR
 ```
 
-DPX will apply FX fee (0.40%) and route through EURC on Base.
+DPX will apply the FX fee and route through EURC on Base.
 
 ## Polling (alternative to webhook)
 

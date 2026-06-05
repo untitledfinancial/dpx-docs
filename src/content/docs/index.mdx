@@ -7,7 +7,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## TL;DR
 
-DPX is the payment and settlement layer for the agentic internet. Any autonomous agent can call `/manifest` to discover DPX, `/quote` to get a binding fee, and `POST /settle` to execute — no onboarding, no API key, no human step. The fee payment IS the authorization: agents pay the gross settlement amount via x402 USDC and the settlement executes on-chain. A 10-layer Stability Oracle gates every settlement on real-world conditions — climate, macro, FX, geopolitical — and holds automatically when conditions are UNSTABLE. ESG scores are a congestion fee, not a gate: every counterparty can settle, higher-impact activity simply costs more, and 100% of ESG fees are redistributed to verified on-chain impact programs. MCP-native, x402-native, ISO 20022-compatible. Seven contracts live on Base mainnet.
+DPX is the payment and settlement layer for the agentic internet. Any autonomous agent can call `/manifest` to discover DPX, `/quote` to get a binding fee, and `POST /settle` to execute — no onboarding, no API key, no human step. The fee payment IS the authorization: agents pay the gross settlement amount via x402 USDC and the settlement executes on-chain. A 9-layer Stability Oracle gates every settlement on real-world conditions — climate, macro, FX, geopolitical — and holds automatically when conditions are UNSTABLE. ESG scores are a congestion fee, not a gate: every counterparty can settle, higher-impact activity simply costs more, and 100% of ESG fees are redistributed to verified on-chain impact programs. MCP-native, x402-native, ISO 20022-compatible. Contracts live on Base mainnet.
 
 ## What DPX does
 
@@ -24,16 +24,6 @@ We created a system that teaches itself. Every oracle run is scored against its 
 ## Key numbers
 
 <div class="stats-row">
-  <div class="stat-box">
-    <span class="stat-label">Typical all-in rate</span>
-    <span class="stat-value">~2.035%</span>
-    <span class="stat-sub">score 75, cross-border with FX</span>
-  </div>
-  <div class="stat-box">
-    <span class="stat-label">Best case</span>
-    <span class="stat-value">1.50%</span>
-    <span class="stat-sub">score 100, same-currency</span>
-  </div>
   <div class="stat-box">
     <span class="stat-label">Network</span>
     <span class="stat-value">Base</span>
@@ -102,10 +92,6 @@ We created a system that teaches itself. Every oracle run is scored against its 
   <Card title="MCP — Claude" icon="puzzle">
     13 tools for Claude Desktop and Cursor — quote, settle, check oracle, query ESG, verify fees.
     [Set up MCP →](/integrations/mcp)
-  </Card>
-  <Card title="Fee Structure" icon="information">
-    Core, FX, ESG congestion fee, and license breakdown with volume discount tiers.
-    [See fees →](/fees)
   </Card>
 </CardGrid>
 
@@ -176,7 +162,7 @@ We created a system that teaches itself. Every oracle run is scored against its 
 
 <CardGrid>
   <Card title="Stability Oracle" icon="star">
-    10-layer signal pipeline with 30–90 day early warning. Architecture and endpoints.
+    9-layer signal pipeline with 30–90 day early warning. Architecture and endpoints.
     [Read →](/protocol/stability-oracle)
   </Card>
   <Card title="ESG Oracle" icon="approve-check">
@@ -203,10 +189,6 @@ We created a system that teaches itself. Every oracle run is scored against its 
   <Card title="Multi-Tenant Setup" icon="setting">
     Run isolated DPX instances per entity — separate fee schedules, oracles, and audit trails.
     [Read →](/enterprise/multi-tenant)
-  </Card>
-  <Card title="Fee Model" icon="information">
-    Fee structure, unit economics, ESG redistribution mechanics, and licensing residual.
-    [Read →](/financial-model)
   </Card>
   <Card title="Beta Access" icon="rocket">
     Request access to the live protocol. Sandbox environment available immediately.

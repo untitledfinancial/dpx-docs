@@ -141,7 +141,7 @@ SWIFT gpi (Global Payments Innovation) adds end-to-end tracking and same-day set
 |---|---|---|
 | Settlement time | Same day (hours) | ~30 seconds |
 | Transparency | Full tracking | On-chain, public |
-| Cost | 2–5% all-in (corridor-dependent) | ~2.035% all-in |
+| Cost | 2–5% all-in (corridor-dependent) | See live quote |
 | Corridors | 200+ countries | USDC/EURC on Base |
 | Compliance | Bank-managed | On-chain, automated |
 | ESG reporting | Not native | Embedded per-transaction |

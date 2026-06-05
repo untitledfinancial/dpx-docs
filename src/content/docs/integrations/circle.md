@@ -57,7 +57,7 @@ Save the output as `CIRCLE_ENTITY_SECRET` in your `.env`. Then register it in th
 |------|------|-------|
 | Initialize | Circle SDK init | Provisions a developer-controlled EVM wallet on Base |
 | Discover | `GET /manifest` | Agent finds DPX cold — no config needed |
-| Oracle check | `GET /reliability` | Stability conditions across 10 signal layers |
+| Oracle check | `GET /reliability` | Stability conditions across 9 signal layers |
 | Quote | `GET /quote?amountUsd=N` | Binding fee breakdown, valid 300s |
 | Intelligence | `POST /intelligence/macro-stress` | x402 micropayment — requires `PRIVATE_KEY` |
 | Compliance | `POST /vop/verify` | GLEIF registry + FATF R16 screening |

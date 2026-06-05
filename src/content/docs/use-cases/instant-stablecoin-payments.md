@@ -101,16 +101,14 @@ DPX is the only cross-border settlement rail with a native MCP server and x402 a
 
 ## Pricing
 
-| Fee component | Rate | Notes |
-|---|---|---|
-| Core settlement | 1.50% | Applied to all settlements |
-| FX fee | +0.40% | Cross-currency only; zero for EURC-to-EURC |
-| ESG surcharge | 0.00–0.50% | Based on counterparty ESG score |
-| License fee | 0.01% | Embedded |
-| **Typical all-in** | **~2.035%** | Score 75, cross-border with FX |
-| **EUR-to-EUR (EURC)** | **~1.635%** | No FX fee |
+| Fee component | Notes |
+|---|---|
+| Core settlement | Applied to all settlements |
+| FX fee | Cross-currency only; zero for EURC-to-EURC |
+| ESG surcharge | Based on counterparty ESG score — 100% redistributed to verified impact |
+| License fee | Embedded in token contract |
 
-Volume discounts apply from $100K/month. See [Fee Structure](/fees).
+All rates are published on-chain and quoted before settlement. Volume discounts apply from $100K/month. See [Fee Structure](/fees) or [get a live quote](/demo).
 
 ---
 
@@ -119,7 +117,7 @@ Volume discounts apply from $100K/month. See [Fee Structure](/fees).
 | | DPX | Fipto (Kyriba) | SWIFT correspondent | Bank wire |
 |---|---|---|---|---|
 | Settlement time | ~30 seconds | ~10 minutes | 2–5 days | 1–3 days |
-| All-in cost | ~2.035% | Not disclosed | 2–5% | 2–5% |
+| All-in cost | See live quote | Not disclosed | 2–5% | 2–5% |
 | ESG reporting | ✅ SFDR PAI per transaction | ❌ | ❌ | ❌ |
 | On-chain audit trail | ✅ txHash, public | ❌ | ❌ | ❌ |
 | MiCA-compliant asset | ✅ EURC | Not specified | N/A | N/A |

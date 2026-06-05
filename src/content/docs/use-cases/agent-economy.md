@@ -95,7 +95,7 @@ The `/stream/open` endpoint is listed in `/.well-known/x402` alongside `/vop/ver
 
 Several layers work together to make DPX genuinely agent-native rather than just "has an API":
 
-**The Stability Oracle acts as the agent's risk manager.** Before executing a large settlement, an agent checks `/reliability`. The oracle returns a score (0–100) synthesised across 10 signal layers — climate, commodities, macro, FX, geopolitical, USD structural health — with plain-language reasoning and a confidence score. The agent applies the same logic a treasury desk would apply manually:
+**The Stability Oracle acts as the agent's risk manager.** Before executing a large settlement, an agent checks `/reliability`. The oracle returns a score (0–100) synthesised across 9 signal layers — climate, commodities, macro, FX, geopolitical, USD structural health — with plain-language reasoning and a confidence score. The agent applies the same logic a treasury desk would apply manually:
 
 | Oracle status | Score | Agent action |
 |---|---|---|

@@ -64,8 +64,6 @@ export default defineConfig({
           label: 'Live Data',
           items: [
             { label: '⚡ Fee Calculator',  slug: 'demo' },
-            { label: 'Fee Structure',      slug: 'fees' },
-            { label: 'Fee Model',          slug: 'financial-model' },
           ],
         },
         {
@@ -95,13 +93,6 @@ export default defineConfig({
             { label: 'Kyriba',            slug: 'integrations/kyriba' },
             { label: 'SAP TRM',           slug: 'integrations/sap-trm' },
             { label: 'Webhook Events',    slug: 'integrations/webhooks' },
-          ],
-        },
-        {
-          label: 'Fiat On-Ramps',
-          items: [
-            { label: 'Circle Mint',      slug: 'integrations/circle-mint' },
-            { label: 'Coinbase Prime',   slug: 'integrations/coinbase-prime' },
           ],
         },
         {

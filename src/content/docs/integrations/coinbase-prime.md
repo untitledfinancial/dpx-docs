@@ -107,9 +107,9 @@ const settlement = await fetch('https://integration.untitledfinancial.com/paymen
 
 For EUR-denominated flows, Coinbase Prime supports EURC on Base. The workflow is identical but uses EURC, eliminating FX exposure on the DPX settlement leg:
 
-- DPX all-in rate for EURC (EUR-to-EUR): **~1.635%** (no FX fee)
-- Versus USDC cross-currency: **~2.035%**
+- DPX all-in rate for EURC (EUR-to-EUR): lower, as no FX fee applies
 - Versus Fipto / correspondent banking: **2–5%**
+- Get a live quote at [/demo](/demo)
 
 ---
 

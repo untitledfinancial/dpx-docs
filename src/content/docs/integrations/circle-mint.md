@@ -81,7 +81,7 @@ curl -X POST https://integration.untitledfinancial.com/payments/initiate \
   }'
 ```
 
-EURC settlement avoids FX exposure — the 0.40% FX fee does not apply. All-in rate for EUR-to-EUR: ~1.635% (at ESG score 75).
+EURC settlement avoids FX exposure — the FX fee does not apply to same-currency EUR flows. Get a live quote for the current all-in rate.
 
 ---
 
