@@ -3,7 +3,7 @@ title: MCP — Connect Claude
 description: Connect Claude Desktop, Cursor, or any MCP-compatible host to DPX. Price settlements, check stability, execute cross-border and domestic settlements, check local rail health, and retrieve ESG scores natively in conversation.
 ---
 
-The DPX MCP server v2.4.1 gives Claude Desktop, Cursor, and any MCP-compatible host native access to the full DPX settlement lifecycle — from oracle checks to live settlement execution. Supports both **cross-border** and **domestic (intra-country)** settlements. No browser, no API calls, no copy-paste. Claude can price, evaluate conditions, check local payment rail health, and execute settlements directly in conversation.
+The DPX MCP server v2.5.0 gives Claude Desktop, Cursor, and any MCP-compatible host native access to the full DPX settlement lifecycle — from oracle checks to live settlement execution. 20 tools covering settlement, oracle queries, ESG scoring, Ramp card integration, compliance screening, and network topology intelligence. Supports both **cross-border** and **domestic (intra-country)** settlements. No browser, no API calls, no copy-paste. Claude can price, evaluate conditions, check local payment rail health, and execute settlements directly in conversation.
 
 **Also available on [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp)** — install with one click from the Smithery marketplace.
 

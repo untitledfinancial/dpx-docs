@@ -1,9 +1,9 @@
 ---
 title: Intelligence API
-description: Per-call macro, climate, geopolitical, and ESG intelligence — x402 micropayments and API key access on intelligence.untitledfinancial.com.
+description: Per-call macro, climate, geopolitical, ESG, and systemic risk intelligence — x402 micropayments and API key access on intelligence.untitledfinancial.com.
 ---
 
-Standalone per-call data product. Eight intelligence endpoints covering climate, planetary health, credit stress, supply chain, energy transition, entity ESG, financial shock cascades, and structural geopolitical instability.
+Standalone per-call data product. 13 intelligence endpoints covering climate, planetary health, credit stress, supply chain, energy transition, entity ESG, financial shock cascades, structural geopolitical instability, commodity markets, sovereign debt, physical water risk, and financial network topology.
 
 **Base URL:** `https://intelligence.untitledfinancial.com`
 
@@ -50,16 +50,21 @@ curl https://intelligence.untitledfinancial.com/v1/intelligence/instability \
 
 ## Pricing
 
-| Endpoint | Price | Cache |
-|---|---|---|
-| `/v1/intelligence/climate` | $0.25 | 24h |
-| `/v1/intelligence/earth-systems` | $0.50 | 48h |
-| `/v1/intelligence/macro-stress` | $0.15 | 1h |
-| `/v1/intelligence/supply-chain` | $0.25 | 6h |
-| `/v1/intelligence/energy-transition` | $0.25 | 24h |
-| `/v1/intelligence/esg/:address` | $0.25 | 6h |
-| `/v1/intelligence/cascade` | $0.75 | 2h |
-| `/v1/intelligence/instability` | $0.50 | 24h |
+| Endpoint | Price | Cache | Category |
+|---|---|---|---|
+| `/v1/intelligence/macro-stress` | $0.15 | 1h | Financial |
+| `/v1/intelligence/climate` | $0.25 | 24h | Climate |
+| `/v1/intelligence/climate-pulse` | $0.25 | 3h | Climate |
+| `/v1/intelligence/supply-chain` | $0.25 | 6h | Physical |
+| `/v1/intelligence/energy-transition` | $0.25 | 24h | Physical |
+| `/v1/intelligence/esg/:address` | $0.25 | 6h | Compliance |
+| `/v1/intelligence/commodity` | $0.25 | 6h | Financial |
+| `/v1/intelligence/sovereign-debt` | $0.25 | 12h | Financial |
+| `/v1/intelligence/water-risk` | $0.25 | 12h | Physical |
+| `/v1/intelligence/earth-systems` | $0.50 | 48h | Planetary |
+| `/v1/intelligence/instability` | $0.50 | 24h | Geopolitical |
+| `/v1/intelligence/mycelium` | $0.50 | 6h | Systemic |
+| `/v1/intelligence/cascade` | $0.75 | 2h | Financial |
 
 Oracle feeds are **free** — no payment required.
 
@@ -432,6 +437,231 @@ Tracks major economies operating in a regime-level instability-generation mode. 
     "TIC data for foreign UST holding drawdowns",
     "BRICS trade settlement in non-USD currencies"
   ]
+}
+```
+
+---
+
+## GET /v1/intelligence/climate-pulse — $0.25
+
+Near-real-time temperature anomaly and drought conditions across 8 US economic regions. Updated every 3 hours. Maps conditions to commodity supply, energy demand, and labor productivity impacts.
+
+**Regions:** Pacific Northwest · California · Southwest · Mountain West · Great Plains · Midwest · Southeast · Northeast
+
+**Response headers:** `X-DPX-Climate-Signal` · `X-DPX-Heat-Regions` · `X-DPX-Drought-Regions` · `X-DPX-Cache-Hit` · `X-DPX-Generated`
+
+```json
+{
+  "generatedAt": "2026-06-06T14:00:00Z",
+  "cacheHit": false,
+  "summary": {
+    "overallSignal": "WATCH",
+    "regionsWithHeatAnomaly": 3,
+    "regionsWithDrought": 2,
+    "commoditySignal": "BUILDING — grain and energy demand pressure",
+    "laborProductivityImpact": "MODERATE"
+  },
+  "regions": [
+    {
+      "name": "Southwest",
+      "tempAnomaly": 2.8,
+      "droughtSeverity": "EXTREME",
+      "commodityImpact": ["citrus", "almonds", "solar generation"],
+      "signal": "ALERT"
+    }
+  ]
+}
+```
+
+---
+
+## GET /v1/intelligence/commodity — $0.25
+
+Multi-commodity stress index covering energy, agricultural, and critical mineral markets. Returns regime classification, per-commodity analysis, cross-commodity correlation, and a forward inflation lead signal.
+
+**Commodities:** Oil (Brent/WTI) · Natural gas · Gold · Wheat · Corn · Copper
+
+**Regimes:** `CALM` · `MODERATE` · `STRESSED` · `CRISIS`
+
+**Response headers:** `X-DPX-Commodity-Stress` · `X-DPX-Commodity-Regime` · `X-DPX-Cache-Hit` · `X-DPX-Generated`
+
+```json
+{
+  "generatedAt": "2026-06-06T12:00:00Z",
+  "cacheHit": false,
+  "stressIndex": 58,
+  "regime": "STRESSED",
+  "commodities": {
+    "oil": { "value": 91.2, "signal": "ELEVATED", "monthlyChange": "+8.4%" },
+    "gold": { "value": 2340, "signal": "WATCH", "flightToSafety": true },
+    "wheat": { "value": 612, "signal": "STRESSED", "droughtExposure": "HIGH" },
+    "copper": { "value": 4.82, "signal": "NORMAL", "demandRegime": "MODERATE" }
+  },
+  "crossCommoditySignal": "Energy-agriculture correlation elevated — stagflation risk building",
+  "inflationLeadSignal": "ACTIVE — 4-6 week lag to CPI goods component",
+  "narrative": "Energy and agricultural complex under simultaneous stress. Gold flight-to-safety signal active."
+}
+```
+
+---
+
+## GET /v1/intelligence/sovereign-debt — $0.25
+
+Debt sustainability and default risk assessment for major sovereigns. Returns debt/GDP trajectories, fiscal deficit trends, yield dynamics, systemic contagion risk, and settlement corridor impact.
+
+**Sovereigns:** United States · European Union · United Kingdom · Japan
+
+**Response headers:** `X-DPX-Sovereign-Regime` · `X-DPX-Cache-Hit` · `X-DPX-Generated`
+
+```json
+{
+  "generatedAt": "2026-06-06T06:00:00Z",
+  "cacheHit": false,
+  "systemicSignals": {
+    "globalDebtRegime": "FISCAL_STRESS",
+    "contagionRisk": "MODERATE",
+    "settlementImpact": "USD and JPY corridors carry elevated sovereign risk premium"
+  },
+  "sovereigns": {
+    "US": {
+      "debtToGdp": 124.3,
+      "fiscalDeficitTrend": "DETERIORATING",
+      "yieldDynamic": "BEAR_STEEPENING",
+      "sustainabilityScore": 38,
+      "signal": "WATCH"
+    },
+    "Japan": {
+      "debtToGdp": 261.0,
+      "fiscalDeficitTrend": "STABLE",
+      "yieldDynamic": "YCC_PRESSURE",
+      "sustainabilityScore": 28,
+      "signal": "ELEVATED"
+    }
+  },
+  "narrative": "US and Japan present the largest sovereign debt risks. UK deficit consolidating. EU periphery spread stable but fragile."
+}
+```
+
+---
+
+## GET /v1/intelligence/water-risk — $0.25
+
+Physical water stress across 6 major economic regions. Drought severity, sector-level exposure mapping, TNFD-aligned physical risk rating, and forward supply chain impact signals.
+
+**Regions:** US Southwest · US Midwest · Western Europe · South Asia · East Asia · Sub-Saharan Africa
+
+**Sectors assessed:** Agriculture · Semiconductors · Beverages · Energy
+
+**Response headers:** `X-DPX-Water-Stress` · `X-DPX-TNFD-Rating` · `X-DPX-Cache-Hit` · `X-DPX-Generated`
+
+```json
+{
+  "generatedAt": "2026-06-06T06:00:00Z",
+  "cacheHit": false,
+  "globalStressIndex": 62,
+  "regions": {
+    "usSouthwest": {
+      "droughtSeverity": "EXTREME",
+      "stressScore": 84,
+      "sectors": {
+        "agriculture": "CRITICAL",
+        "semiconductors": "HIGH",
+        "beverages": "HIGH"
+      }
+    },
+    "southAsia": {
+      "droughtSeverity": "MODERATE",
+      "stressScore": 58,
+      "sectors": { "agriculture": "HIGH", "energy": "MODERATE" }
+    }
+  },
+  "tnfdAlignment": {
+    "physicalRiskRating": "HIGH",
+    "disclosureRecommendation": "Material physical risk — TNFD LEAP process recommended for water-dependent portfolios"
+  },
+  "narrative": "US Southwest and South Asia driving elevated global water stress. Semiconductor and agricultural supply chains most exposed."
+}
+```
+
+---
+
+## GET /v1/intelligence/mycelium — $0.50
+
+**Mycelium Network Oracle — financial system network topology**
+
+Models the global financial system as a living network and detects crisis formation from network topology before it surfaces in market data, typically 6–14 weeks ahead.
+
+**The biological model:** In nature, mycelium threads connect trees, transfer nutrients, propagate stress signals, and reroute around dead zones. The fruiting body (the visible mushroom) is the *last* thing to appear — the crisis you see is the end product of underground processes that began weeks earlier. This oracle maps that structure to financial markets.
+
+| Mycelium | Financial System |
+|---|---|
+| Nodes | Markets, economies, sectors, funding markets |
+| Threads | Capital flow channels, correspondent banking, trade finance |
+| Nutrient flow | Liquidity |
+| Stress signal | Spread widening, FX stress, credit tightening |
+| Dead zones | Sanctioned corridors, failed correspondent networks |
+| Fruiting body | The visible crisis — the last thing to surface |
+
+**What makes this distinct from Shock Cascade:** Cascade is reactive — what happens when a shock hits. Mycelium is structural — the health of the network before anything happens. It detects which threads are thinning, where dead zones are forming, and which nodes are under stress 6–14 weeks before the crisis surfaces in market data.
+
+**6 network nodes monitored:**
+- US Treasury / Interbank Funding
+- EM Dollar Funding
+- European Sovereign / Fiscal Nodes
+- Global Trade Finance
+- Crypto/DeFi Bridge to Traditional Finance
+- Asian Capital Flows
+
+**Network regimes:** `HEALTHY` · `THINNING` · `STRESSED_CONNECTIVITY` · `DEAD_ZONE_FORMING` · `FRUITING_BODY_IMMINENT`
+
+**Data sources:** FRED (funding markets, credit spreads, FX) · BIS SDMX API (credit-to-GDP gaps for US/EU/CN) · IMF DOTS (bilateral trade volumes for US/CN)
+
+**Response headers:** `X-DPX-Network-Health` · `X-DPX-Network-Regime` · `X-DPX-Fruiting-Body-Risk` · `X-DPX-Lead-Time-Weeks` · `X-DPX-Cache-Hit` · `X-DPX-Generated`
+
+```json
+{
+  "generatedAt": "2026-06-06T12:00:00Z",
+  "cacheHit": false,
+  "networkHealth": 61,
+  "regime": "STRESSED_CONNECTIVITY",
+  "nodes": {
+    "usTreasuryFunding": {
+      "name": "US Treasury / Interbank Funding",
+      "connectivity": 84,
+      "nutrientFlow": "ADEQUATE",
+      "stressSignal": "NORMAL",
+      "status": "ROBUST",
+      "context": "TED spread 0.28% — interbank funding healthy"
+    },
+    "emDollarFunding": {
+      "name": "EM Dollar Funding",
+      "connectivity": 42,
+      "nutrientFlow": "RESTRICTED",
+      "stressSignal": "ELEVATED",
+      "status": "THINNING",
+      "deadZones": ["RUSSIA_SWIFT_EXCLUSION", "IRAN_CORRESPONDENT_NETWORK"],
+      "context": "DXY at 107.2 — dollar elevated; EM funding threads thinning"
+    }
+  },
+  "threadHealth": {
+    "thinningThreads": [
+      "EM Dollar Funding → Global Trade Finance",
+      "DeFi Liquidity → TradFi Risk Markets"
+    ],
+    "deadZones": ["RUSSIA_SWIFT_EXCLUSION", "IRAN_CORRESPONDENT_NETWORK"],
+    "newConnections": [
+      "India UPI → Southeast Asia Payment Corridors",
+      "Stablecoin Corridors → Cross-Border Settlement (DPX, USDC)"
+    ]
+  },
+  "fruitingBodyRisk": {
+    "probability": 0.34,
+    "leadTimeWeeks": 10,
+    "mostLikelyType": "EM_CURRENCY_CRISIS",
+    "underground": "Dollar funding stress in EM corridors has been building for 8 weeks — visible only as modest FX volatility. Network topology suggests fruiting body forming.",
+    "historicalAnalog": "2013 Taper Tantrum — EM dollar funding stress preceded visible currency moves by 6–10 weeks"
+  },
+  "networkNarrative": "Financial mycelium showing thinning threads in EM dollar funding (connectivity 42/100) and stress in DeFi-TradFi bridge. US Treasury node robust. Pattern matches pre-stress network topology seen before 2013 Taper Tantrum."
 }
 ```
 
