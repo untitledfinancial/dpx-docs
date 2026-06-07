@@ -3,7 +3,7 @@ title: Intelligence API
 description: Per-call macro, climate, geopolitical, ESG, and systemic risk intelligence — x402 micropayments and API key access on intelligence.untitledfinancial.com.
 ---
 
-Standalone per-call data product. 13 intelligence endpoints covering climate, planetary health, credit stress, supply chain, energy transition, entity ESG, financial shock cascades, structural geopolitical instability, commodity markets, sovereign debt, physical water risk, and financial network topology.
+Standalone per-call data product. 15 intelligence endpoints covering climate, planetary health, credit stress, supply chain, energy transition, entity ESG, financial shock cascades, structural geopolitical instability, commodity markets, sovereign debt, physical water risk, financial network topology, G10/EM currency stress, and TNFD-aligned nature risk.
 
 **Base URL:** `https://intelligence.untitledfinancial.com`
 
@@ -64,6 +64,8 @@ curl https://intelligence.untitledfinancial.com/v1/intelligence/instability \
 | `/v1/intelligence/earth-systems` | $0.50 | 48h | Planetary |
 | `/v1/intelligence/instability` | $0.50 | 24h | Geopolitical |
 | `/v1/intelligence/mycelium` | $0.50 | 6h | Systemic |
+| `/v1/intelligence/currency-stress` | $0.25 | 3h | Financial |
+| `/v1/intelligence/biodiversity` | $0.25 | 24h | Compliance |
 | `/v1/intelligence/cascade` | $0.75 | 2h | Financial |
 
 Oracle feeds are **free** — no payment required.
@@ -662,6 +664,80 @@ Models the global financial system as a living network and detects crisis format
     "historicalAnalog": "2013 Taper Tantrum — EM dollar funding stress preceded visible currency moves by 6–10 weeks"
   },
   "networkNarrative": "Financial mycelium showing thinning threads in EM dollar funding (connectivity 42/100) and stress in DeFi-TradFi bridge. US Treasury node robust. Pattern matches pre-stress network topology seen before 2013 Taper Tantrum."
+}
+```
+
+---
+
+## GET /v1/intelligence/currency-stress — $0.25
+
+G10 and EM currency stress assessment. Returns a dollar regime classification, per-currency stress signals, capital flow direction by corridor, and settlement corridor impact for cross-border payments.
+
+**Currencies:** USD · EUR · GBP · JPY · CHF · CAD · AUD · NZD · SEK · NOK + 10 major EM pairs
+
+**Data sources:** FRED (DTWEXBGS, DEXUSEU, DEXJPUS, DEXCHUS, DEXUSUK) · Open-Meteo FX proxies · IMF/BIS capital flow indicators
+
+**Response headers:** `X-DPX-Dollar-Regime` · `X-DPX-Currency-Stress` · `X-DPX-Cache-Hit` · `X-DPX-Generated`
+
+```json
+{
+  "generatedAt": "2026-06-07T09:00:00Z",
+  "cacheHit": false,
+  "dollarRegime": "STRONG_USD",
+  "stressIndex": 61,
+  "g10": {
+    "EUR": { "signal": "WATCH", "30dChange": "-1.8%", "capitalFlowDirection": "OUTFLOW" },
+    "JPY": { "signal": "STRESSED", "30dChange": "-3.2%", "interventionRisk": "HIGH" },
+    "GBP": { "signal": "NORMAL", "30dChange": "-0.4%", "capitalFlowDirection": "STABLE" }
+  },
+  "emergingMarkets": {
+    "CNY": { "signal": "WATCH", "pbocPressure": "ELEVATED" },
+    "BRL": { "signal": "STRESSED", "carryRisk": "HIGH" }
+  },
+  "settlementCorridorImpact": {
+    "USD_EUR": "ELEVATED_FX_COST — strong dollar widening corridor spread",
+    "USD_JPY": "VOLATILE — intervention risk within 2-3 weeks",
+    "USD_EM": "HIGH — EM outflows creating settlement friction"
+  },
+  "narrative": "Dollar regime: STRONG_USD. JPY stress elevated with BOJ intervention risk. EM corridor friction highest since Q1 2025."
+}
+```
+
+---
+
+## GET /v1/intelligence/biodiversity — $0.25
+
+TNFD-aligned nature risk assessment. Returns IUCN Red List species threat signals by sector exposure, habitat integrity indices, and SFDR PAI 7 biodiversity-sensitive area data for portfolio compliance.
+
+**Data sources:** IUCN Red List API (open) · GBIF species occurrence (open) · NASA MODIS land cover · USGS land use change
+
+**Frameworks:** TNFD LEAP · SFDR PAI 7 · CSRD ESRS E4
+
+**Response headers:** `X-DPX-Biodiversity-Risk` · `X-DPX-TNFD-Rating` · `X-DPX-Cache-Hit` · `X-DPX-Generated`
+
+```json
+{
+  "generatedAt": "2026-06-07T00:00:00Z",
+  "cacheHit": false,
+  "globalBiodiversityIndex": 42,
+  "tnfdRating": "HIGH",
+  "iucnSignals": {
+    "criticallyEndangered": 847,
+    "endangered": 4218,
+    "trend": "DETERIORATING",
+    "hotspots": ["Amazon Basin", "Southeast Asia", "Sub-Saharan Africa"]
+  },
+  "sectorDependencyMatrix": {
+    "agriculture": { "dependencyScore": 91, "exposureLevel": "CRITICAL" },
+    "pharmaceuticals": { "dependencyScore": 78, "exposureLevel": "HIGH" },
+    "financialServices": { "dependencyScore": 34, "exposureLevel": "MODERATE" }
+  },
+  "sfdPai7": {
+    "biodiversitySensitiveAreaExposure": "ELEVATED",
+    "disclosureFlag": true,
+    "affectedRegions": ["Amazon", "Congo Basin", "Indo-Burma"]
+  },
+  "narrative": "Global biodiversity index at 42/100. Agriculture and pharma supply chains carry critical nature dependency risk. SFDR PAI 7 disclosure flag active for Amazon and Congo Basin exposure."
 }
 ```
 
