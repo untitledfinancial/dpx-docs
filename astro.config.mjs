@@ -69,11 +69,12 @@ export default defineConfig({
         {
           label: 'API Reference',
           items: [
-            { label: 'Integration API',   slug: 'api/integration-api' },
-            { label: 'Stability Oracle',  slug: 'api/stability-oracle' },
-            { label: 'Intelligence API',  slug: 'api/intelligence-api' },
-            { label: 'ESG Oracle',        slug: 'api/esg-oracle' },
-            { label: 'Compliance Oracle', slug: 'api/compliance-oracle' },
+            { label: 'Integration API',     slug: 'api/integration-api' },
+            { label: 'Stability Oracle',    slug: 'api/stability-oracle' },
+            { label: 'Intelligence API',    slug: 'api/intelligence-api' },
+            { label: 'Oracle Feeds — Free', slug: 'api/oracle-feeds' },
+            { label: 'ESG Oracle',          slug: 'api/esg-oracle' },
+            { label: 'Compliance Oracle',   slug: 'api/compliance-oracle' },
           ],
         },
         {
