@@ -1,0 +1,99 @@
+---
+title: Intelligence Widget
+description: Embed live macro signal cards from the DPX Intelligence API on any page with a single script tag.
+---
+
+The DPX Intelligence Widget renders live signal cards from the [Intelligence API](/api/intelligence-api) directly on any webpage — no API key, no build step, no backend.
+
+## Quickstart
+
+Add a `<div>` with a `data-dpx-widget` attribute and load the script:
+
+```html
+<div data-dpx-widget="macro-stress"></div>
+<script src="https://intelligence.untitledfinancial.com/widget" async></script>
+```
+
+The widget fetches the current signal, renders a card with a color-coded status dot, and shows the score and signal label. If the feed is unreachable it renders a quiet fallback — no broken layouts.
+
+## Available feeds
+
+All feeds below are free and require no authentication.
+
+| `data-dpx-widget` value | Label | Unit |
+|---|---|---|
+| `macro-stress` | Macro Stress | /100 |
+| `systemic-risk` | Systemic Risk | /100 |
+| `supply-chain-pressure` | Supply Chain | /100 |
+| `us-instability-score` | US Instability | /100 |
+| `fiscal-dominance-risk` | Fiscal Risk | /100 |
+| `stability-score` | Stability Score | /100 |
+| `co2-ppm` | CO₂ | ppm |
+| `earth-health-index` | Earth Health | /100 |
+| `temperature-anomaly` | Temp Anomaly | °C above baseline |
+| `arctic-sea-ice` | Arctic Sea Ice | Mkm² |
+| `renewable-share` | Renewables Share | % |
+
+## Dark theme
+
+Add `data-dpx-theme="dark"` to the container:
+
+```html
+<div data-dpx-widget="systemic-risk" data-dpx-theme="dark"></div>
+<script src="https://intelligence.untitledfinancial.com/widget" async></script>
+```
+
+## Multiple widgets
+
+One script tag handles all widgets on the page:
+
+```html
+<div data-dpx-widget="macro-stress"></div>
+<div data-dpx-widget="systemic-risk"></div>
+<div data-dpx-widget="supply-chain-pressure"></div>
+
+<script src="https://intelligence.untitledfinancial.com/widget" async></script>
+```
+
+Widgets added to the DOM after page load (e.g. via React or a CMS) are detected automatically via `MutationObserver`.
+
+## Preview
+
+To see a rendered card before embedding, open:
+
+```
+https://intelligence.untitledfinancial.com/widget/preview?feed=macro-stress&theme=light
+```
+
+Change `feed` to any value from the table above. Add `theme=dark` for the dark variant.
+
+## Signal color mapping
+
+| Signal | Color |
+|---|---|
+| CRITICAL / CRISIS / EXTREME | Red |
+| HIGH / STRESSED / ACUTE | Orange |
+| ELEVATED / MODERATE / CAUTION / WATCH | Yellow |
+| NORMAL / STABLE / HEALTHY / CALM | Green |
+
+## Advanced: direct API access
+
+The widget calls `/v1/oracle-feed/{feed}` — the same endpoint is available directly if you need the raw JSON:
+
+```bash
+curl https://intelligence.untitledfinancial.com/v1/oracle-feed/macro-stress
+```
+
+Response:
+
+```json
+{
+  "feed": "macro-stress",
+  "value": 7600,
+  "signal": "CAUTION",
+  "asOf": "2026-06-11T00:00:00Z",
+  "cached": true
+}
+```
+
+`value` is stored ×100 for integer precision. Divide by 100 to get the display value.
