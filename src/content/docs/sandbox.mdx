@@ -1,139 +1,16 @@
 ---
 title: Developer Sandbox
-description: Get a sandbox API key and run your first DPX settlement in under 10 minutes — real oracle data, real compliance preflight, no on-chain commitment.
+description: Run a full DPX settlement in under 10 minutes — real oracle data, real compliance preflight, no signup, no on-chain commitment.
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
-
-## Your first settlement in 10 minutes
-
-Get a sandbox key, run 5 calls in order, see a full cross-border settlement execute — real fee math, real compliance preflight, no funds moved.
-
-<div id="demo-form-container">
-  <form id="demo-form" style="max-width: 480px; margin: 2rem 0;">
-    <div style="margin-bottom: 1rem;">
-      <label for="demo-email" style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Work email</label>
-      <input type="email" id="demo-email" name="email" required placeholder="you@company.com"
-        style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--sl-color-gray-5); border-radius: 0.375rem; background: var(--sl-color-bg); color: var(--sl-color-text); font-size: 0.9375rem;" />
-    </div>
-    <div style="margin-bottom: 1.25rem;">
-      <label for="demo-company" style="display: block; margin-bottom: 0.25rem; font-weight: 500;">Company</label>
-      <input type="text" id="demo-company" name="company" required placeholder="Acme Corp"
-        style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--sl-color-gray-5); border-radius: 0.375rem; background: var(--sl-color-bg); color: var(--sl-color-text); font-size: 0.9375rem;" />
-    </div>
-    <button type="submit" id="demo-submit"
-      style="padding: 0.5rem 1.25rem; background: var(--sl-color-accent); color: white; border: none; border-radius: 0.375rem; font-weight: 600; cursor: pointer; font-size: 0.9375rem;">
-      Get sandbox key
-    </button>
-    <p id="demo-msg" style="margin-top: 0.75rem; font-size: 0.875rem; display: none;"></p>
-  </form>
-
-  <div id="demo-result" style="display: none; margin: 1.5rem 0; padding: 1.25rem; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); border-radius: 0.5rem; max-width: 560px;">
-    <p style="margin: 0 0 0.5rem; font-weight: 600;">Your sandbox key</p>
-    <code id="demo-key-display" style="display: block; word-break: break-all; font-size: 0.875rem; padding: 0.5rem; background: var(--sl-color-bg); border-radius: 0.25rem; margin-bottom: 0.75rem;"></code>
-    <p style="margin: 0; font-size: 0.8125rem; color: var(--sl-color-gray-2);">50 requests/day · 30-day TTL · Use the same email to retrieve your key again</p>
-    <p style="margin: 0.5rem 0 0; font-size: 0.8125rem;">
-      <a id="demo-postman-link" href="https://integration.untitledfinancial.com/demo/postman" download="DPX-Settlement-Demo.postman_collection.json">Download Postman collection →</a>
-    </p>
-  </div>
-</div>
-
-<script>{`
-  const form    = document.getElementById('demo-form');
-  const result  = document.getElementById('demo-result');
-  const keyEl   = document.getElementById('demo-key-display');
-  const msgEl   = document.getElementById('demo-msg');
-  const btn     = document.getElementById('demo-submit');
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    btn.disabled    = true;
-    btn.textContent = 'Requesting…';
-    msgEl.style.display = 'none';
-
-    const email   = document.getElementById('demo-email').value.trim();
-    const company = document.getElementById('demo-company').value.trim();
-
-    try {
-      const res  = await fetch('https://integration.untitledfinancial.com/demo/request', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ email, company }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        msgEl.textContent    = data.error || 'Something went wrong. Try again or email case@untitledfinancial.com.';
-        msgEl.style.color    = 'var(--sl-color-red)';
-        msgEl.style.display  = 'block';
-      } else {
-        keyEl.textContent        = data.key;
-        result.style.display     = 'block';
-        form.style.display       = 'none';
-      }
-    } catch (err) {
-      msgEl.textContent   = 'Network error. Try again or email case@untitledfinancial.com.';
-      msgEl.style.color   = 'var(--sl-color-red)';
-      msgEl.style.display = 'block';
-    } finally {
-      btn.disabled    = false;
-      btn.textContent = 'Get sandbox key';
-    }
-  });
-`}</script>
+No signup. No API key. Add `?sandbox=true` to any settlement call and the full stack runs — compliance preflight, fee math, oracle gating — without touching the chain.
 
 ---
 
-## The 5-call sequence
-
-Run these in order. Steps 1–3 require no auth — they're live oracle data available to any caller. Steps 4–5 use your sandbox key.
-
-### 1 · Protocol discovery
-
-```bash
-curl https://stability.untitledfinancial.com/manifest
-```
-
-Returns supported corridors, contract addresses, compliance posture, and tool capabilities. This is what MCP agents call on first connection.
-
----
-
-### 2 · Fee quote — $500K USD→EUR
-
-```bash
-curl "https://stability.untitledfinancial.com/quote?amountUsd=500000&hasFx=true&esgScore=75"
-```
-
-Returns a binding quote valid for 300 seconds: settlement fee, FX overlay, ESG fee, and a `quoteId`. Real oracle math — same calculation used in production.
-
----
-
-### 3 · Oracle stability check
-
-```bash
-curl https://stability.untitledfinancial.com/reliability
-```
-
-Current stability score, peg deviation, and `isHealthy` flag. The oracle gates settlement automatically — this gives you advance visibility. Look for `stabilityScore ≥ 90` before proceeding.
-
----
-
-### 4 · FX corridor intelligence
-
-```bash
-curl "https://intelligence.untitledfinancial.com/v1/intelligence/fx-settlement" \
-  -H "X-API-Key: YOUR_DEMO_KEY"
-```
-
-Live risk assessment across 10 FX corridors. Returns regime, settlement advice, DXY position, and the best/worst corridors at this moment. Backed by FRED spot rates updated hourly.
-
----
-
-### 5 · Initiate sandbox settlement
+## Run your first settlement
 
 ```bash
 curl -X POST "https://integration.untitledfinancial.com/payments/initiate?sandbox=true" \
-  -H "Authorization: Bearer YOUR_DEMO_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "amount": "500000",
@@ -147,12 +24,49 @@ curl -X POST "https://integration.untitledfinancial.com/payments/initiate?sandbo
       "name": "Acme Corp",
       "lei": "5493001KJTIIGC8Y1R12"
     },
-    "purpose": "Supplier payment Q2 2026",
-    "esgScore": 75
+    "purpose": "Supplier payment Q2 2026"
   }'
 ```
 
-Runs the full compliance preflight: Verification of Payee, AML behavioural screening, ESG scoring of the counterparty entity. Returns a settlement reference, compliance result, fee breakdown, and ESG redistribution plan. No on-chain transaction — response shape is identical to production.
+That's it. No token, no account. The response includes a settlement reference, full compliance result, fee breakdown, and ESG redistribution plan.
+
+---
+
+## What runs in sandbox mode
+
+Everything except the on-chain transaction.
+
+**Compliance preflight** — Verification of Payee confirms the creditor entity name. AML behavioural screening runs three layers: sanctions check, z-score anomaly detection, graph-based counterparty risk. Same logic as production, same latency.
+
+**Fee calculation** — Live oracle math. Core settlement fee, FX overlay if cross-currency, ESG fee based on counterparty score. The number you see is the number production would charge.
+
+**Oracle gating** — The Stability Oracle checks current conditions before every settlement. If the oracle is `UNSTABLE`, the sandbox call holds exactly as production would.
+
+**ESG scoring** — The counterparty business is scored against 6 institutional sources. Score feeds into the fee. 100% of the ESG fee component is redistributed on-chain in production.
+
+---
+
+## The full sequence
+
+If you want to see each layer individually before running settlement:
+
+```bash
+# 1. Protocol discovery — capabilities, contracts, corridors
+curl https://stability.untitledfinancial.com/manifest
+
+# 2. Binding fee quote — real oracle math, valid 300s
+curl "https://stability.untitledfinancial.com/quote?amountUsd=500000&hasFx=true&esgScore=75"
+
+# 3. Oracle stability check
+curl https://stability.untitledfinancial.com/reliability
+
+# 4. Sandbox settlement — full stack, no chain
+curl -X POST "https://integration.untitledfinancial.com/payments/initiate?sandbox=true" \
+  -H "Content-Type: application/json" \
+  -d '{ "amount": "500000", "currency": "USD", "creditor": { "name": "Acme Logistics GmbH", "walletAddress": "0xe333551E18ef0471A71d7e8e761212766aa5AD4f" }, "debtor": { "name": "Acme Corp" } }'
+```
+
+Steps 1–3 have always been open. Step 4 is new — no auth required in sandbox mode.
 
 ---
 
@@ -160,57 +74,28 @@ Runs the full compliance preflight: Verification of Payee, AML behavioural scree
 
 | | Sandbox | Production |
 |---|---|---|
-| Fee math | Live oracle data | Live oracle data |
-| Compliance preflight | Full — VoP + AML + ESG | Full — VoP + AML + ESG |
-| On-chain transaction | No | Yes — Base mainnet |
+| Auth required | No | Yes — institution key |
+| Fee math | Live oracle | Live oracle |
+| Compliance preflight | Full | Full |
+| Oracle gating | Full | Full |
+| On-chain transaction | No | Base mainnet |
 | Settlement reference | `sandbox_` prefixed UUID | On-chain tx hash |
-| Auth | Demo key (50 req/day) | Institution key |
 | ESG redistribution | Simulated | On-chain to impact pools |
 
 ---
 
-## What the compliance preflight checks
+## MCP — if you're running an agent
 
-Every sandbox settlement runs the same three-layer check as production:
-
-**Verification of Payee** — Confirms the creditor entity name matches the registered wallet owner. FATF R16 / MiCA Article 83 compliant.
-
-**AML Behavioural Screening** — Three-layer analysis: sanctions list check, z-score anomaly detection against historical transaction patterns, graph-based counterparty risk propagation. No external API calls at payment time — all inference is local.
-
-**ESG Entity Score** — Scores the counterparty business against 6 institutional ESG data sources. Score feeds directly into the fee calculation — higher-impact activity costs more, and 100% of the ESG fee component is redistributed on-chain to verified impact programs.
-
----
-
-## Using the Postman collection
-
-[Download the pre-built collection →](https://integration.untitledfinancial.com/demo/postman)
-
-1. Import into Postman
-2. Open **Variables** and paste your demo key into `dpx_demo_key`
-3. Run calls 1–6 in order — each response feeds into the next
-4. Call 6 polls settlement status by ID — copy the `id` from call 5 into the `settlement_id` variable
-
----
-
-## Settlement transaction lifecycle
-
-```
-QUOTED → VERIFYING → EXECUTING → CONFIRMED → REDISTRIBUTING → COMPLETE
-                                      ↓
-                                   FAILED → REFUNDED
+```bash
+npx @untitledfinancial/dpx-mcp
 ```
 
-In sandbox mode, the settlement moves through `QUOTED → VERIFYING → COMPLETE` without reaching `EXECUTING`. All states before `EXECUTING` are identical between sandbox and production.
+The MCP server exposes `settlement.execute` with a `sandbox` parameter. Any MCP-compatible host can call it directly — no USDC, no wallet setup required in sandbox mode.
+
+[MCP setup →](/integrations/mcp)
 
 ---
 
-## Ready to discuss production access?
+## Ready for production?
 
-Sandbox keys are rate-limited at 50 requests/day with a 30-day TTL. For production settlement volume, institutional key provisioning, and TMS integration support — [contact us](/beta).
-
-Current settlement partnerships are open for:
-
-- AI agent frameworks embedding DPX as a settlement primitive
-- Fintechs with cross-border payment volume
-- Asset managers requiring on-chain ESG audit trails (SFDR/CSRD)
-- Institutional treasuries evaluating programmable settlement rails
+Sandbox runs are unlimited. When you're ready to move real volume — institution key provisioning, TMS integration support, volume tier pricing — [contact us](/beta).
