@@ -1,0 +1,205 @@
+---
+title: Compliance Event Webhooks
+description: Subscribe to real-time notifications when counterparty risk scores change, payments are blocked, or stability thresholds are breached.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Compliance event webhooks deliver real-time notifications to your systems when risk conditions change — without polling. Every delivery is signed with HMAC-SHA256 so you can verify authenticity before acting.
+
+All webhook endpoints require an `Authorization: Bearer <key>` header.
+
+---
+
+## Event types
+
+| Event | When it fires |
+|---|---|
+| `counterparty.risk_score_changed` | A counterparty's AML/compliance risk score moves by ≥10 points |
+| `counterparty.flag_raised` | A new AML or sanctions flag is detected |
+| `counterparty.flag_cleared` | An existing flag is resolved |
+| `payment.compliance_blocked` | A payment is blocked at the compliance check |
+| `payment.compliance_approved` | A payment passes the compliance check |
+| `oracle.stability_alert` | The DPX stability score crosses a monitored threshold |
+| `*` | Subscribe to all event types |
+
+---
+
+## Register a subscription
+
+```bash
+curl -X POST https://integration.untitledfinancial.com/webhooks/subscribe \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://your-system.example.com/dpx-events",
+    "secret": "your-signing-secret-min-16-chars",
+    "events": ["counterparty.risk_score_changed", "payment.compliance_blocked"],
+    "description": "prod risk system"
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "id": "3f8a1b2c-...",
+  "url": "https://your-system.example.com/dpx-events",
+  "events": ["counterparty.risk_score_changed", "payment.compliance_blocked"],
+  "description": "prod risk system",
+  "active": true,
+  "createdAt": "2026-06-11T14:00:00Z",
+  "note": "Verification: each delivery includes X-DPX-Signature: sha256=<hmac> header. Compute HMAC-SHA256 of the raw body using your secret to verify."
+}
+```
+
+Save the `id` — you'll need it to manage or delete the subscription.
+
+---
+
+## List subscriptions
+
+```bash
+curl https://integration.untitledfinancial.com/webhooks/subscriptions \
+  -H "Authorization: Bearer <your-api-key>"
+```
+
+---
+
+## Delete a subscription
+
+```bash
+curl -X DELETE https://integration.untitledfinancial.com/webhooks/subscriptions/<id> \
+  -H "Authorization: Bearer <your-api-key>"
+```
+
+---
+
+## Send a test event
+
+```bash
+curl -X POST https://integration.untitledfinancial.com/webhooks/test/<id> \
+  -H "Authorization: Bearer <your-api-key>"
+```
+
+Sends a synthetic `counterparty.risk_score_changed` event to your endpoint immediately. Use this to verify your receiver before going live.
+
+---
+
+## Event payload format
+
+All events share the same envelope:
+
+```json
+{
+  "id": "evt_3f8a1b2c-...",
+  "type": "counterparty.risk_score_changed",
+  "createdAt": "2026-06-11T14:23:01Z",
+  "data": {
+    "entity": "Acme Corp",
+    "previousScore": 42,
+    "currentScore": 61,
+    "delta": 19,
+    "signal": "CAUTION"
+  }
+}
+```
+
+### payment.compliance_blocked
+
+```json
+{
+  "id": "evt_...",
+  "type": "payment.compliance_blocked",
+  "createdAt": "2026-06-11T14:23:01Z",
+  "data": {
+    "paymentId": "dpx_...",
+    "reason": "AML screen: high-risk jurisdiction",
+    "riskScore": 78
+  }
+}
+```
+
+### oracle.stability_alert
+
+```json
+{
+  "id": "evt_...",
+  "type": "oracle.stability_alert",
+  "createdAt": "2026-06-11T14:23:01Z",
+  "data": {
+    "stabilityScore": 48,
+    "label": "STRESSED",
+    "threshold": 50,
+    "breached": true
+  }
+}
+```
+
+---
+
+## Verifying signatures
+
+Every delivery includes an `X-DPX-Signature` header containing a SHA256 HMAC of the raw request body, signed with the secret you provided at subscription time.
+
+**Node.js:**
+
+```js
+import crypto from 'crypto';
+
+function verifyWebhook(rawBody, signature, secret) {
+  const expected = 'sha256=' + crypto
+    .createHmac('sha256', secret)
+    .update(rawBody)
+    .digest('hex');
+  return crypto.timingSafeEqual(
+    Buffer.from(signature),
+    Buffer.from(expected)
+  );
+}
+
+// In your Express handler:
+app.post('/dpx-events', express.raw({ type: '*/*' }), (req, res) => {
+  const sig = req.headers['x-dpx-signature'];
+  if (!verifyWebhook(req.body, sig, process.env.DPX_WEBHOOK_SECRET)) {
+    return res.status(401).send('Invalid signature');
+  }
+  const event = JSON.parse(req.body);
+  // handle event...
+  res.sendStatus(200);
+});
+```
+
+**Python:**
+
+```python
+import hmac, hashlib
+
+def verify_webhook(raw_body: bytes, signature: str, secret: str) -> bool:
+    expected = 'sha256=' + hmac.new(
+        secret.encode(), raw_body, hashlib.sha256
+    ).hexdigest()
+    return hmac.compare_digest(signature, expected)
+```
+
+<Aside type="caution">
+Always verify the signature before processing. Use the raw request body — not a re-serialized version — as the HMAC input.
+</Aside>
+
+---
+
+## Delivery behavior
+
+- **Timeout:** 10 seconds per delivery attempt
+- **Retry:** Subscriptions that fail 5 consecutive deliveries are automatically deactivated
+- **Headers sent:** `X-DPX-Signature`, `X-DPX-Event`, `X-DPX-Delivery`, `Content-Type: application/json`
+- **Your endpoint must return 2xx** — any other status code counts as a failure
+
+---
+
+## Endpoint requirements
+
+- Must use `https://`
+- Must respond within 10 seconds
+- Must return HTTP 2xx to acknowledge receipt
+- Process events asynchronously if your handler is slow — return 200 immediately and queue for processing
