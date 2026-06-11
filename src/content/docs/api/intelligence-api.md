@@ -3,7 +3,7 @@ title: Intelligence API
 description: Per-call macro, climate, geopolitical, ESG, and systemic risk intelligence — x402 micropayments and API key access on intelligence.untitledfinancial.com.
 ---
 
-Standalone per-call data product. 15 intelligence endpoints covering climate, planetary health, credit stress, supply chain, energy transition, entity ESG, financial shock cascades, structural geopolitical instability, commodity markets, sovereign debt, physical water risk, financial network topology, G10/EM currency stress, and TNFD-aligned nature risk.
+Standalone per-call data product. 23 intelligence endpoints covering climate, planetary health, credit stress, supply chain, energy transition, entity ESG, financial shock cascades, structural geopolitical instability, commodity markets, sovereign debt, physical water risk, financial network topology, G10/EM currency stress, TNFD-aligned nature risk, butterfly effect cascade, tectonic structural stress, aftershock secondary waves, contagion network simulation, resonance phase alignment detection, gender-economic risk and opportunity signals, shipping and logistics stress, and FX settlement corridor intelligence.
 
 **Base URL:** `https://intelligence.untitledfinancial.com`
 
@@ -67,6 +67,14 @@ curl https://intelligence.untitledfinancial.com/v1/intelligence/instability \
 | `/v1/intelligence/currency-stress` | $0.25 | 3h | Financial |
 | `/v1/intelligence/biodiversity` | $0.25 | 24h | Compliance |
 | `/v1/intelligence/cascade` | $0.75 | 2h | Financial |
+| `POST /v1/intelligence/butterfly` | $0.50 | no-cache | Macro |
+| `GET /v1/intelligence/tectonic` | $0.50 | 6h | Macro |
+| `POST /v1/intelligence/aftershock` | $0.50 | no-cache | Macro |
+| `POST /v1/intelligence/contagion` | $0.50 | no-cache | Macro |
+| `GET /v1/intelligence/resonance` | $0.50 | 3h | Macro |
+| `GET /v1/intelligence/gender-risk` | $0.50 | 12h | Structural |
+| `GET /v1/intelligence/shipping-stress` | $0.25 | 4h | Physical |
+| `GET /v1/intelligence/fx-settlement` | $0.25 | 1h | Financial |
 
 Oracle feeds are **free** — no payment required.
 
@@ -738,6 +746,540 @@ TNFD-aligned nature risk assessment. Returns IUCN Red List species threat signal
     "affectedRegions": ["Amazon", "Congo Basin", "Indo-Burma"]
   },
   "narrative": "Global biodiversity index at 42/100. Agriculture and pharma supply chains carry critical nature dependency risk. SFDR PAI 7 disclosure flag active for Amazon and Congo Basin exposure."
+}
+```
+
+---
+
+## POST /v1/intelligence/butterfly — $0.50
+
+**Butterfly Effect Cascade Intelligence**
+
+Models how an initial perturbation propagates through the interconnected web of climate, geopolitical, economic, and commodity systems. Pass an origin event and magnitude; receive a time-ordered cascade chain showing which downstream systems are hit, in what sequence, with what attenuated signal strength — plus an AI synthesis of the highest-impact transmission paths.
+
+**25 nodes across 4 domains:**
+
+| Domain | Nodes |
+|---|---|
+| Climate | drought, flood, carbon price shock, wildfire, coastal/sea-level stress, heatwave |
+| Geopolitical | sanctions regime, armed conflict, trade tariffs, regime change, election shock, port blockade |
+| Economic | central bank rate decision, inflation shock, sovereign debt stress, banking stress, currency crisis, recession |
+| Commodity | crude oil, natural gas, grain/food, rare earth/lithium, copper, water scarcity, fertilizer |
+
+**Node discovery:** `GET /v1/intelligence/butterfly` returns all valid node IDs and descriptions.
+
+**Request:**
+
+```bash
+# Discover valid origin nodes
+curl https://intelligence.untitledfinancial.com/v1/intelligence/butterfly \
+  -H "X-API-Key: your-key"
+
+# Run a cascade
+curl -X POST https://intelligence.untitledfinancial.com/v1/intelligence/butterfly \
+  -H "X-API-Key: your-key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "origin": "geo.conflict",
+    "eventType": "Middle East escalation — Strait of Hormuz threat",
+    "magnitude": 75,
+    "horizonHours": 168
+  }'
+```
+
+**Parameters:**
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `origin` | string | ✓ | Node ID (e.g. `geo.conflict`, `climate.drought`, `macro.rate_decision`) |
+| `eventType` | string | ✓ | Free-text description of the specific event |
+| `magnitude` | number | ✓ | Shock intensity 1–100. 100 = maximum plausible shock. 40–60 = significant but not extreme. |
+| `horizonHours` | number | — | Time horizon in hours (1–720). Default: 168 (1 week). |
+
+```json
+{
+  "origin": {
+    "id": "geo.conflict",
+    "label": "Armed Conflict Escalation",
+    "domain": "geopolitical",
+    "description": "Active conflict or significant military escalation in a resource region"
+  },
+  "eventType": "Middle East escalation — Strait of Hormuz threat",
+  "inputMagnitude": 75,
+  "horizonHours": 168,
+  "cascade": [
+    {
+      "node": { "id": "commodity.oil", "label": "Crude Oil Price Shock", "domain": "commodity" },
+      "magnitude": 67.5,
+      "arrivalHours": 1,
+      "via": ["geo.conflict"],
+      "mechanism": "Supply disruption in energy-producing region, risk premium spike"
+    },
+    {
+      "node": { "id": "commodity.gas", "label": "Natural Gas Supply Disruption", "domain": "commodity" },
+      "magnitude": 56.3,
+      "arrivalHours": 2,
+      "via": ["geo.conflict"],
+      "mechanism": "Pipeline infrastructure at risk, transit routes disrupted"
+    },
+    {
+      "node": { "id": "macro.inflation", "label": "Inflation Shock", "domain": "economic" },
+      "magnitude": 48.8,
+      "arrivalHours": 12,
+      "via": ["geo.conflict", "commodity.oil"],
+      "mechanism": "Energy cost pass-through to transport, manufacturing, food"
+    }
+  ],
+  "synthesis": "The armed conflict escalation transmits primarily through the energy complex...",
+  "computedAt": "2026-06-08T14:00:00.000Z"
+}
+```
+
+---
+
+## GET /v1/intelligence/tectonic — $0.50
+
+**Tectonic Stress Intelligence**
+
+Maps the slow-moving structural forces that are invisible until they rupture. Where butterfly traces an acute shock over hours, tectonic tracks latent pressure building over years and identifies how close each fault line is to its threshold.
+
+**22 fault lines across 5 domains:**
+
+| Domain | Fault Lines |
+|---|---|
+| Demographic | G7 population aging, structural labour shortage, EM urbanisation stress, pension system solvency |
+| Fiscal | Global debt supercycle, central bank credibility erosion, dollar reserve dominance erosion, wealth inequality ratchet |
+| Environmental | Desertification / land degradation, aquifer / groundwater depletion, permafrost thaw / methane release, biodiversity / ecosystem collapse |
+| Infrastructure | Physical infrastructure decay, electrical grid fragility, digital infrastructure concentration, water / sanitation infrastructure failure |
+| Geopolitical (structural) | Western alliance fragmentation, institutional legitimacy erosion, nuclear proliferation risk, resource nationalism / weaponisation, global demographic power imbalance |
+
+**Request:**
+
+```bash
+curl https://intelligence.untitledfinancial.com/v1/intelligence/tectonic \
+  -H "X-API-Key: your-key"
+```
+
+**Response (abbreviated):**
+
+```json
+{
+  "summary": {
+    "byStatus": { "RUPTURED": 0, "CRITICAL": 3, "ELEVATED": 8, "BUILDING": 9, "STABLE": 2 },
+    "avgStress": 57,
+    "mostUrgent": ["Pension System Solvency", "Global Debt Supercycle", "G7 Population Aging"],
+    "regime": "ELEVATED_STRESS"
+  },
+  "faultLines": [
+    {
+      "node": {
+        "id": "fiscal.debt_supercycle",
+        "label": "Global Debt Supercycle",
+        "domain": "fiscal",
+        "baselineStress": 71,
+        "accumulationRate": 2.2,
+        "threshold": 88
+      },
+      "currentStress": 78.4,
+      "yearsToRupture": 4.4,
+      "status": "ELEVATED",
+      "transferredFrom": ["demo.aging_g7"]
+    }
+  ],
+  "ruptureSequence": [
+    { "nodeId": "demo.pension_solvency", "label": "Pension System Solvency", "domain": "demographic", "yearsToRupture": 2.7 },
+    { "nodeId": "fiscal.debt_supercycle", "label": "Global Debt Supercycle", "domain": "fiscal", "yearsToRupture": 4.4 }
+  ],
+  "synthesis": "The most advanced fault lines are concentrated in the fiscal-demographic nexus...",
+  "generatedAt": "2026-06-11T00:00:00.000Z"
+}
+```
+
+**Regime classifications:** `CASCADING_RUPTURE` (≥3 ruptured) → `PRE_RUPTURE` (≥4 critical) → `ELEVATED_STRESS` (avg ≥65) → `BUILDING` (avg ≥50) → `STABLE`
+
+---
+
+## POST /v1/intelligence/aftershock — $0.50
+
+**Aftershock Intelligence**
+
+Models the secondary waves that follow a primary cascade event. The 2008 financial crisis caused an immediate cascade; the sovereign debt crisis of 2010–12 was its aftershock. COVID supply shock of 2021 was the aftershock of 2020 stimulus. This endpoint maps that secondary structure.
+
+**Three-wave model:**
+
+| Wave | Horizon | Characterisation |
+|---|---|---|
+| Wave 1 | 0–72h | Immediate secondary effects — panic buying, capital controls, retaliatory sanctions, displacement |
+| Wave 2 | 1–4 weeks | Policy response distortions — reserve releases that create rebounds, stimulus that overshoots, austerity that triggers unrest |
+| Wave 3 | 1–6 months | Structural realignments permanently locked in — supply chain reconfiguration, energy transition acceleration, alliance restructuring, reserve currency shifts |
+
+**Request:**
+
+```bash
+curl -X POST https://intelligence.untitledfinancial.com/v1/intelligence/aftershock \
+  -H "X-API-Key: your-key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "origin": "geo.conflict",
+    "eventType": "Middle East escalation — Strait of Hormuz disruption",
+    "magnitude": 75,
+    "elapsedHours": 48,
+    "horizonHours": 4320
+  }'
+```
+
+**Parameters:**
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `origin` | string | ✓ | Node ID of the primary event — same IDs as butterfly endpoint |
+| `eventType` | string | ✓ | Description of the original event |
+| `magnitude` | number | ✓ | Original shock intensity 1–100 |
+| `elapsedHours` | number | — | Hours elapsed since the primary event. Default: 24 |
+| `horizonHours` | number | — | Forward analysis horizon in hours. Default: 4320 (6 months) |
+
+**Response (abbreviated):**
+
+```json
+{
+  "primaryEvent": {
+    "origin": "geo.conflict",
+    "eventType": "Middle East escalation — Strait of Hormuz disruption",
+    "inputMagnitude": 75,
+    "elapsedHours": 48
+  },
+  "summary": {
+    "totalAftershocks": 9,
+    "amplified": 4,
+    "rebounds": 2,
+    "structural": 3
+  },
+  "waves": {
+    "wave1": {
+      "label": "Immediate (0–72h)",
+      "count": 2,
+      "events": [
+        {
+          "node": { "id": "social.hoarding", "label": "Panic Buying / Hoarding Behaviour" },
+          "magnitude": 52.5,
+          "offsetHours": 6,
+          "type": "amplified",
+          "mechanism": "Consumer panic buying amplifies commodity shortages beyond supply disruption"
+        }
+      ]
+    },
+    "wave2": { "label": "Policy response (1–4 weeks)", "count": 4, "events": [ "..." ] },
+    "wave3": { "label": "Structural realignment (1–6 months)", "count": 3, "events": [ "..." ] }
+  },
+  "synthesis": "The conflict's secondary wave structure is now dominated by the policy response layer...",
+  "computedAt": "2026-06-11T00:00:00.000Z"
+}
+```
+
+**Event types:** `amplified` = continued or intensified pressure; `rebound` = stabilisation driven by policy or market correction; `structural` = permanent change regardless of near-term stabilisation.
+
+---
+
+## POST /v1/intelligence/contagion — $0.50
+
+**Contagion Intelligence**
+
+Epidemiological R-value model for macro-financial shock network propagation. Where butterfly maps the path of a shock, contagion models whether that shock self-amplifies or is contained — using the same mechanics as epidemiology: exposure density, resilience (immunity), viral load, and transmission rates between nodes.
+
+**30 nodes across 6 domains:**
+
+| Domain | Nodes |
+|---|---|
+| Financial | US banking, EU banking, EM banking, shadow banking / non-bank finance, sovereign bond markets, FX markets, crypto / DeFi |
+| Real Economy | US economy, China economy, EU economy, EM economies, global trade / supply chains |
+| Commodity | Energy markets, food / agricultural markets, critical minerals, shipping lanes |
+| Policy | US Federal Reserve, ECB, IMF / World Bank, G20 coordination |
+| Social | Political stability, consumer confidence, labour markets, social cohesion |
+| Infrastructure | Digital / financial infrastructure, energy grid, transport / logistics, water / sanitation |
+
+**GET** `/v1/intelligence/contagion` — free node discovery  
+**POST** `/v1/intelligence/contagion` — paid simulation ($0.50)
+
+**Request:**
+
+```bash
+# Node discovery (free)
+curl https://intelligence.untitledfinancial.com/v1/intelligence/contagion \
+  -H "X-API-Key: your-key"
+
+# Run simulation
+curl -X POST https://intelligence.untitledfinancial.com/v1/intelligence/contagion \
+  -H "X-API-Key: your-key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "origin": "fin.us_banking",
+    "magnitude": 70,
+    "epochs": 8,
+    "interventionStrength": 0
+  }'
+```
+
+**Parameters:**
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `origin` | string | ✓ | Origin node ID — GET endpoint for valid values |
+| `magnitude` | number | ✓ | Initial shock intensity 1–100 |
+| `epochs` | number | — | Weeks to simulate (1–12). Default: 8 |
+| `interventionStrength` | number | — | Policy intervention effectiveness 0–1 (0 = none, 0.5 = moderate, 1.0 = maximum). Default: 0 |
+
+**Response (abbreviated):**
+
+```json
+{
+  "origin": { "id": "fin.us_banking", "label": "US Banking System", "domain": "financial" },
+  "regime": "SPREADING",
+  "summary": {
+    "peakSystemR": 1.42,
+    "peakAtWeek": 3,
+    "finalSystemR": 0.78,
+    "finalActive": 4,
+    "finalRecovered": 11,
+    "contained": true
+  },
+  "superspreaders": [
+    { "id": "fin.fx_markets", "label": "FX / Currency Markets", "outboundPotential": 8.9 },
+    { "id": "com.energy_markets", "label": "Global Energy Markets", "outboundPotential": 8.4 }
+  ],
+  "epochs": [
+    { "epoch": 1, "systemR": 1.42, "activeInfections": 5, "newInfections": 4, "recovered": 0 }
+  ],
+  "synthesis": "The US banking shock peaked at R=1.42 in week 3, crossing the epidemic threshold...",
+  "computedAt": "2026-06-11T00:00:00.000Z"
+}
+```
+
+**Regime classifications:** `PANDEMIC` (peak R ≥ 2.5) → `EPIDEMIC` (≥ 1.5) → `SPREADING` (≥ 1.0) → `CONTAINED` (≥ 0.5) → `SUPPRESSED` (< 0.5)
+
+---
+
+## GET /v1/intelligence/resonance — $0.50
+
+**Resonance Intelligence**
+
+Detects when multiple independent cycles are oscillating in phase — amplifying each other rather than cancelling. A 40mph wind that oscillates at the Tacoma Narrows Bridge's natural frequency was enough to collapse it. Macro systems have natural frequencies too: the credit cycle, the dollar cycle, ENSO, the commodity supercycle, the conflict cycle. When these align, ordinary-magnitude forces combine into non-linear outcomes.
+
+**28 oscillating signals across 5 domains:**
+
+| Domain | Signals |
+|---|---|
+| Financial | Credit cycle, dollar cycle, volatility regime, EM capital flow cycle, leverage cycle, real estate / property cycle, dollar doom loop |
+| Economic | Business cycle, inflation cycle, fiscal impulse, productivity wave, labour vs capital share cycle, debt-deflation spiral risk |
+| Geopolitical | Hegemonic power transition, conflict cycle, nationalism / globalisation pendulum, sanctions cycle, institutional legitimacy cycle |
+| Climate | ENSO (El Niño / La Niña), Atlantic Multidecadal Oscillation, Arctic amplification trend, South Asian monsoon variability, global drought cycle |
+| Commodity | Commodity supercycle, oil price cycle, food price cycle, industrial metals / green transition cycle |
+
+**Request:**
+
+```bash
+curl https://intelligence.untitledfinancial.com/v1/intelligence/resonance \
+  -H "X-API-Key: your-key"
+```
+
+**Response (abbreviated):**
+
+```json
+{
+  "summary": {
+    "systemResonanceScore": 62,
+    "regime": "HIGH_RESONANCE",
+    "resonantPairs": 14,
+    "clusters": 3,
+    "criticalClusters": 1,
+    "approachingAlignment": 5
+  },
+  "clusters": [
+    {
+      "id": "cluster_1",
+      "signals": ["fin.credit_cycle", "fin.leverage_cycle", "econ.business_cycle"],
+      "labels": ["Global Credit Cycle", "Financial Leverage Cycle", "Global Business Cycle"],
+      "domains": ["financial", "economic"],
+      "avgPhaseDiff": 18.4,
+      "combinedAmplitude": 65,
+      "amplificationFactor": 2.3,
+      "historicalAnalogs": ["2008 Global Financial Crisis", "2020 COVID crash"],
+      "dangerLevel": "HIGH"
+    }
+  ],
+  "approachingAlignment": [
+    {
+      "signalA": "cli.enso", "signalB": "com.food_price_cycle",
+      "currentDiff": 48.2, "quartersToAlignment": 3,
+      "mechanism": "ENSO disruption is the primary driver of food price spikes — in-phase = food crisis"
+    }
+  ],
+  "synthesis": "The current resonance configuration is dominated by a fiscal-financial cluster...",
+  "generatedAt": "2026-06-11T00:00:00.000Z"
+}
+```
+
+**Regime classifications:** `RESONANCE_CASCADE` (score ≥ 80) → `HIGH_RESONANCE` (≥ 60) → `ELEVATED_RESONANCE` (≥ 40) → `MODERATE_RESONANCE` (≥ 20) → `LOW_RESONANCE`
+
+---
+
+## GET /v1/intelligence/gender-risk — $0.50
+
+**Gender Risk & Opportunity Intelligence**
+
+Maps the structural relationship between gender-based violence, legal discrimination against women, and economic/financial outcomes — across 18 countries and 6 regions. The signal runs in two directions, and both are returned.
+
+**Risk signal:** High GBV prevalence suppresses female labour force participation → productivity loss → GDP drag (modelled at 1.3–3.7% of GDP). Economic stress (unemployment, savings collapse) feeds back into elevated domestic violence rates — a measurable, markets-relevant loop. Countries with Women Business and Law Index below 70 show an average 1.2pp higher sovereign spread vs peers at the same income level.
+
+**Opportunity signal:** Countries improving on GBV indicators, closing LFPR gender gaps, and strengthening women's legal rights generate investable growth signals. Rising female LFPR precedes GDP growth; improving Law Index correlates with FDI inflows; financial inclusion of women expands consumer credit markets. The largest untapped labour reserve in the global economy is women not yet in the workforce.
+
+**Data sources:**
+- WHO GHO `SDGIPV12M` — SDG 5.2.1 intimate partner violence prevalence (past 12 months, 2023)
+- World Bank WDI — Female and Male LFPR (`SL.TLF.CACT.FE/MA.ZS`)
+- World Bank WDI — Women Business and the Law Index (`SG.LAW.INDX`, 0–100)
+- World Bank WDI — Women in Parliament % (`SG.GEN.PARL.ZS`)
+- World Bank WDI — GDP per capita (`NY.GDP.PCAP.CD`), Gini coefficient (`SI.POV.GINI`)
+- FRED — US female LFPR, unemployment rate, CPI, consumer sentiment (economic stress feedback)
+
+**Countries covered:** India, Bangladesh, Pakistan, Nigeria, Ethiopia, Kenya, DRC, Tanzania, Brazil, Mexico, Colombia, Philippines, Indonesia, South Africa, USA, UK, Germany, Australia
+
+**Request:**
+
+```bash
+curl https://intelligence.untitledfinancial.com/v1/intelligence/gender-risk \
+  -H "X-API-Key: your-key"
+```
+
+**Response (abbreviated):**
+
+```json
+{
+  "globalSummary": {
+    "avgGBVRiskScore": 58,
+    "avgOpportunityScore": 44,
+    "countriesAtCritical": 4,
+    "countriesWithStrongOpportunity": 3,
+    "gdpDragEstimateGlobal": "2.4% of GDP (1.9–3.2% range)",
+    "economicStressFeedbackRisk": "ELEVATED",
+    "regime": "HIGH_RISK"
+  },
+  "countryProfiles": [
+    {
+      "iso3": "ETH",
+      "name": "Ethiopia",
+      "region": "Sub-Saharan Africa",
+      "incomeGroup": "low",
+      "ipvPrevalence": 37.0,
+      "womenLawIndex": 51,
+      "femaleLFPR": 72.4,
+      "maleLFPR": 88.1,
+      "lfprGenderGap": 15.7,
+      "gbvRiskScore": 78.2,
+      "opportunityScore": 31.4,
+      "riskStatus": "CRITICAL",
+      "opportunityStatus": "LIMITED",
+      "estimatedGDPDragPct": 3.1,
+      "primaryTransmissions": ["productivity_loss", "healthcare_fiscal_drag", "legal_discrimination"],
+      "opportunityDrivers": ["emerging_market_growth_leverage", "reform_upside_potential"]
+    }
+  ],
+  "financialCorrelations": {
+    "labourSuppression": {
+      "score": 62,
+      "mechanism": "Gender-based violence suppresses female labour force participation...",
+      "gdpImpactPct": "1.6% estimated output gap from LFPR suppression"
+    },
+    "gdpDrag": {
+      "globalEstimatePct": 2.4,
+      "rangeMin": 1.3,
+      "rangeMax": 3.7,
+      "methodology": "UN Women / World Bank methodology: direct costs + indirect productivity effects"
+    },
+    "economicStressFeedback": {
+      "usUnemploymentRate": 4.3,
+      "usConsumerSentiment": 49.8,
+      "feedbackRisk": "ELEVATED",
+      "feedbackNarrative": "Current economic conditions elevate stress-driven domestic violence risk..."
+    }
+  },
+  "opportunitySignals": {
+    "topOpportunityCountries": [
+      { "iso3": "DEU", "name": "Germany", "opportunityScore": 78.3, "drivers": ["strong_legal_framework", "high_female_labour_participation", "political_representation"] }
+    ],
+    "marketThesis": "Countries moving from CONSTRAINED to EMERGING opportunity status represent the highest-beta growth signal in gender economics..."
+  },
+  "synthesis": "Four-paragraph intelligence briefing...",
+  "generatedAt": "2026-06-11T00:00:00.000Z"
+}
+```
+
+**Risk score thresholds:** `CRITICAL` (≥ 75) → `HIGH` (≥ 60) → `ELEVATED` (≥ 45) → `BUILDING` (≥ 30) → `LOW`
+
+**Opportunity score thresholds:** `STRONG` (≥ 75) → `EMERGING` (≥ 60) → `MODERATE` (≥ 45) → `LIMITED` (≥ 30) → `CONSTRAINED`
+
+**Cache:** 12h — underlying data updates annually; US economic stress feeds are live.
+
+---
+
+## GET /v1/intelligence/shipping-stress — $0.25
+
+Composite view of global freight market conditions across ocean, air, truck, and rail. Tracks energy-driven shipping costs and 8 key global trade routes with disruption status. Includes a `settlementRelevance` section mapping logistics conditions to cross-border payment corridor risk — invoice delay risk, trade finance stress, and affected corridors.
+
+**Data sources:** FRED (Brent crude: DCOILBRENTEU) · EIA (US diesel: PET.EMD_EPD2D_PTE_NUS_DPG.W)
+
+**Cache:** 4h
+
+```json
+{
+  "generatedAt": "2026-06-11T12:00:00Z",
+  "compositeScore": 58,
+  "regime": "MODERATELY_STRESSED",
+  "energyCost": { "brentUsd": 82.4, "dieselUsdPerGallon": 3.91, "signal": "ELEVATED" },
+  "keyRoutes": [
+    { "route": "Trans-Pacific (Asia→US West Coast)", "status": "DISRUPTED", "disruption": "Port congestion + labor action risk" },
+    { "route": "Transatlantic (Europe→US East Coast)", "status": "NORMAL" }
+  ],
+  "freightModes": {
+    "ocean": { "score": 62, "signal": "ELEVATED" },
+    "air":   { "score": 44, "signal": "NORMAL" },
+    "truck": { "score": 71, "signal": "STRESSED" }
+  },
+  "settlementRelevance": {
+    "invoiceDelayRisk": "MODERATE",
+    "tradeFinanceStress": "BUILDING",
+    "affectedCorridors": ["USD/CNY", "USD/KRW", "EUR/USD goods-backed"]
+  }
+}
+```
+
+---
+
+## GET /v1/intelligence/fx-settlement — $0.25
+
+Live FX corridor risk assessment across 10 currency pairs with per-pair settlement advice, volatility proxy, and liquidity depth classification. Returns regional block rollup (G4, Americas, Asia-Pacific), overall risk regime, DXY position, and recommended actions for treasury teams.
+
+**Data sources:** FRED spot rate series (10 pairs) · DTWEXBGS (DXY trade-weighted USD index)
+
+**Cache:** 1h
+
+```json
+{
+  "generatedAt": "2026-06-11T14:00:00Z",
+  "overallRisk": "MODERATE",
+  "dxy": { "value": 104.2, "signal": "STRONG_USD", "30dChange": "+1.8%" },
+  "corridors": {
+    "USD/EUR": { "spotRate": 0.924, "risk": "MODERATE", "advice": "Execute — within normal range", "volatilityProxy": "LOW" },
+    "USD/JPY": { "spotRate": 157.4, "risk": "HIGH", "advice": "Delay if possible — intervention risk", "volatilityProxy": "ELEVATED" }
+  },
+  "bestCorridors": ["USD/CHF", "USD/EUR", "USD/GBP"],
+  "worstCorridors": ["USD/JPY", "USD/BRL", "USD/CNY"],
+  "regionalBlocks": {
+    "G4": { "risk": "MODERATE", "summary": "EUR stable, JPY stressed, GBP normal, CHF strong" },
+    "AsiaPacific": { "risk": "HIGH", "summary": "JPY intervention risk, CNY PBOC pressure" }
+  },
+  "recommendedActions": [
+    "Prioritise EUR and CHF corridors this week",
+    "Delay JPY settlements >$500K pending BOJ intervention signal"
+  ]
 }
 ```
 
