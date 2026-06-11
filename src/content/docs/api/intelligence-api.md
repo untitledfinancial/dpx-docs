@@ -61,18 +61,18 @@ curl https://intelligence.untitledfinancial.com/v1/intelligence/instability \
 | `/v1/intelligence/commodity` | $0.25 | 6h | Financial |
 | `/v1/intelligence/sovereign-debt` | $0.25 | 12h | Financial |
 | `/v1/intelligence/water-risk` | $0.25 | 12h | Physical |
-| `/v1/intelligence/earth-systems` | $0.50 | 48h | Planetary |
-| `/v1/intelligence/instability` | $0.50 | 24h | Geopolitical |
-| `/v1/intelligence/mycelium` | $0.50 | 6h | Systemic |
+| `/v1/intelligence/earth-systems` | $0.75 | 48h | Planetary |
+| `/v1/intelligence/instability` | $0.75 | 24h | Geopolitical |
+| `/v1/intelligence/mycelium` | $0.75 | 6h | Systemic |
 | `/v1/intelligence/currency-stress` | $0.25 | 3h | Financial |
 | `/v1/intelligence/biodiversity` | $0.25 | 24h | Compliance |
 | `/v1/intelligence/cascade` | $0.75 | 2h | Financial |
-| `POST /v1/intelligence/butterfly` | $0.50 | no-cache | Macro |
-| `GET /v1/intelligence/tectonic` | $0.50 | 6h | Macro |
-| `POST /v1/intelligence/aftershock` | $0.50 | no-cache | Macro |
-| `POST /v1/intelligence/contagion` | $0.50 | no-cache | Macro |
-| `GET /v1/intelligence/resonance` | $0.50 | 3h | Macro |
-| `GET /v1/intelligence/gender-risk` | $0.50 | 12h | Structural |
+| `POST /v1/intelligence/butterfly` | $0.75 | no-cache | Macro |
+| `GET /v1/intelligence/tectonic` | $0.75 | 6h | Macro |
+| `POST /v1/intelligence/aftershock` | $0.75 | no-cache | Macro |
+| `POST /v1/intelligence/contagion` | $0.75 | no-cache | Macro |
+| `GET /v1/intelligence/resonance` | $0.75 | 3h | Macro |
+| `GET /v1/intelligence/gender-risk` | $0.75 | 12h | Structural |
 | `GET /v1/intelligence/shipping-stress` | $0.25 | 4h | Physical |
 | `GET /v1/intelligence/fx-settlement` | $0.25 | 1h | Financial |
 
@@ -117,7 +117,7 @@ Oracle feeds are **free** — no payment required.
 
 ---
 
-## GET /v1/intelligence/earth-systems — $0.50
+## GET /v1/intelligence/earth-systems — $0.75
 
 Planetary health dashboard with 50–100 year historical context. Earth Health Index (0–100) and proximity assessment for 9 known climate tipping points.
 
@@ -316,7 +316,7 @@ Models how exogenous shocks move through the global financial system across 7 in
 
 ---
 
-## GET /v1/intelligence/instability — $0.50
+## GET /v1/intelligence/instability — $0.75
 
 **Instability Origins — persistent structural instability intelligence**
 
@@ -595,7 +595,7 @@ Physical water stress across 6 major economic regions. Drought severity, sector-
 
 ---
 
-## GET /v1/intelligence/mycelium — $0.50
+## GET /v1/intelligence/mycelium — $0.75
 
 **Mycelium Network Oracle — financial system network topology**
 
@@ -751,7 +751,7 @@ TNFD-aligned nature risk assessment. Returns IUCN Red List species threat signal
 
 ---
 
-## POST /v1/intelligence/butterfly — $0.50
+## POST /v1/intelligence/butterfly — $0.75
 
 **Butterfly Effect Cascade Intelligence**
 
@@ -837,7 +837,7 @@ curl -X POST https://intelligence.untitledfinancial.com/v1/intelligence/butterfl
 
 ---
 
-## GET /v1/intelligence/tectonic — $0.50
+## GET /v1/intelligence/tectonic — $0.75
 
 **Tectonic Stress Intelligence**
 
@@ -899,7 +899,7 @@ curl https://intelligence.untitledfinancial.com/v1/intelligence/tectonic \
 
 ---
 
-## POST /v1/intelligence/aftershock — $0.50
+## POST /v1/intelligence/aftershock — $0.75
 
 **Aftershock Intelligence**
 
@@ -980,7 +980,7 @@ curl -X POST https://intelligence.untitledfinancial.com/v1/intelligence/aftersho
 
 ---
 
-## POST /v1/intelligence/contagion — $0.50
+## POST /v1/intelligence/contagion — $0.75
 
 **Contagion Intelligence**
 
@@ -998,7 +998,7 @@ Epidemiological R-value model for macro-financial shock network propagation. Whe
 | Infrastructure | Digital / financial infrastructure, energy grid, transport / logistics, water / sanitation |
 
 **GET** `/v1/intelligence/contagion` — free node discovery  
-**POST** `/v1/intelligence/contagion` — paid simulation ($0.50)
+**POST** `/v1/intelligence/contagion` — paid simulation ($0.75)
 
 **Request:**
 
@@ -1058,7 +1058,7 @@ curl -X POST https://intelligence.untitledfinancial.com/v1/intelligence/contagio
 
 ---
 
-## GET /v1/intelligence/resonance — $0.50
+## GET /v1/intelligence/resonance — $0.75
 
 **Resonance Intelligence**
 
@@ -1122,7 +1122,7 @@ curl https://intelligence.untitledfinancial.com/v1/intelligence/resonance \
 
 ---
 
-## GET /v1/intelligence/gender-risk — $0.50
+## GET /v1/intelligence/gender-risk — $0.75
 
 **Gender Risk & Opportunity Intelligence**
 
