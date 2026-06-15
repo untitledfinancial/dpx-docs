@@ -1,9 +1,9 @@
 ---
 title: Intelligence API
-description: Per-call macro, climate, geopolitical, ESG, and systemic risk intelligence — x402 micropayments and API key access on intelligence.untitledfinancial.com.
+description: Per-call macro, climate, geopolitical, ESG, systemic risk, and predictive intelligence — x402 micropayments and API key access on intelligence.untitledfinancial.com.
 ---
 
-Standalone per-call data product. 23 intelligence endpoints covering climate, planetary health, credit stress, supply chain, energy transition, entity ESG, financial shock cascades, structural geopolitical instability, commodity markets, sovereign debt, physical water risk, financial network topology, G10/EM currency stress, TNFD-aligned nature risk, butterfly effect cascade, tectonic structural stress, aftershock secondary waves, contagion network simulation, resonance phase alignment detection, gender-economic risk and opportunity signals, shipping and logistics stress, and FX settlement corridor intelligence.
+Standalone per-call data product. 26 intelligence endpoints covering climate, planetary health, credit stress, supply chain, energy transition, entity ESG, financial shock cascades, structural geopolitical instability, commodity markets, sovereign debt, physical water risk, financial network topology, G10/EM currency stress, TNFD-aligned nature risk, butterfly effect cascade, tectonic structural stress, aftershock secondary waves, contagion network simulation, resonance phase alignment detection, gender-economic risk and opportunity signals, shipping and logistics stress, FX settlement corridor intelligence, regime transition probabilities, prediction ledger, and causal signal graph.
 
 **Base URL:** `https://intelligence.untitledfinancial.com`
 
@@ -75,6 +75,9 @@ curl https://intelligence.untitledfinancial.com/v1/intelligence/instability \
 | `GET /v1/intelligence/gender-risk` | $0.75 | 12h | Structural |
 | `GET /v1/intelligence/shipping-stress` | $0.25 | 4h | Physical |
 | `GET /v1/intelligence/fx-settlement` | $0.25 | 1h | Financial |
+| `GET /v1/intelligence/transition-risk` | $0.75 | 1h | Predictive |
+| `GET /v1/intelligence/ledger` | $0.25 | no-cache | Predictive |
+| `GET /v1/intelligence/causal-graph` | $0.50 | 5min | Predictive |
 
 Oracle feeds are **free** — no payment required.
 
@@ -1282,6 +1285,185 @@ Live FX corridor risk assessment across 10 currency pairs with per-pair settleme
   ]
 }
 ```
+
+---
+
+## GET /v1/intelligence/transition-risk — $0.75
+
+**Regime Transition Probabilities**
+
+Synthesises seven lead signals into a current composite stress index and forward probability distributions over five regimes at 30, 60, and 90-day horizons. Each fresh call stores three predictions in the D1 prediction ledger and upserts the signal vector to Vectorize scenario memory. Returns the five most similar historical signal configurations from the Vectorize index.
+
+**Lead signals:** climate · tectonic · water-risk · gender-risk · earth-systems · resonance · mycelium
+
+**Five regimes:** `STABLE` · `ELEVATED` · `STRESSED` · `CRITICAL` · `CRISIS`
+
+**Cache:** 1h
+
+```json
+{
+  "generatedAt": "2026-06-13T14:00:00Z",
+  "cacheHit": false,
+  "currentScore": 55,
+  "currentRegime": "STRESSED",
+  "transitionSignal": "DETERIORATING",
+  "amplification": 1.12,
+  "signals": [
+    { "name": "climate",      "score": 62, "weight": 0.18, "tier": "lead" },
+    { "name": "tectonic",     "score": 100, "weight": 0.18, "tier": "lead" },
+    { "name": "water-risk",   "score": 45, "weight": 0.15, "tier": "lead" },
+    { "name": "gender-risk",  "score": 60, "weight": 0.12, "tier": "amplifier" },
+    { "name": "earth-systems","score": 39, "weight": 0.14, "tier": "amplifier" },
+    { "name": "resonance",    "score": 62, "weight": 0.12, "tier": "coincident" },
+    { "name": "mycelium",     "score": 61, "weight": 0.11, "tier": "coincident" }
+  ],
+  "horizons": {
+    "h30": {
+      "stressIndex": 58,
+      "mostLikely": "STRESSED",
+      "confidence": 0.72,
+      "probabilities": {
+        "STABLE": 0.03,
+        "ELEVATED": 0.11,
+        "STRESSED": 0.49,
+        "CRITICAL": 0.28,
+        "CRISIS": 0.09
+      }
+    },
+    "h60": { "stressIndex": 61, "mostLikely": "STRESSED", "confidence": 0.61, "probabilities": { "..." } },
+    "h90": { "stressIndex": 63, "mostLikely": "CRITICAL", "confidence": 0.54, "probabilities": { "..." } }
+  },
+  "scenarioMemory": {
+    "similarScenarios": [
+      {
+        "id": "scenario-1749823847123-a4b2c",
+        "date": "2026-06-12",
+        "similarity": 0.994,
+        "regime": "STRESSED",
+        "score": 53,
+        "daysAgo": 1
+      }
+    ],
+    "patternNote": "2 similar configurations found (avg similarity 97%). Most common precedent regime: STRESSED (2/2 cases).",
+    "totalStored": 7,
+    "precedentRegimes": { "STRESSED": 2 }
+  }
+}
+```
+
+See [Predictive Intelligence Layer](/protocol/predictive-intelligence) for methodology.
+
+---
+
+## GET /v1/intelligence/ledger — $0.25
+
+**Prediction Ledger**
+
+Returns the current state of the self-scoring prediction ledger: total predictions stored, resolved vs pending, accuracy scores by horizon, regime accuracy, and recent prediction rows. Every fresh transition-risk call stores three predictions (h30 / h60 / h90); a nightly cron at 02:00 UTC resolves expired predictions against actual conditions and recalibrates probability outputs.
+
+**Cache:** no-cache
+
+```json
+{
+  "summary": {
+    "totalPredictions": 24,
+    "resolved": 6,
+    "pending": 18,
+    "avgBrierScore": 0.18,
+    "byHorizon": {
+      "h30": { "predictions": 8, "resolved": 2, "avgBrier": 0.14, "regimeAccuracy": 1.0 },
+      "h60": { "predictions": 8, "resolved": 2, "avgBrier": 0.19, "regimeAccuracy": 0.5 },
+      "h90": { "predictions": 8, "resolved": 2, "avgBrier": 0.21, "regimeAccuracy": 0.5 }
+    }
+  },
+  "recent": [
+    {
+      "id": "pred-1749823847-h30",
+      "source": "transition-risk",
+      "horizon_days": 30,
+      "predicted_regime": "STRESSED",
+      "predicted_prob": 0.49,
+      "current_regime": "STRESSED",
+      "current_score": 55,
+      "brier_score": null,
+      "resolved": false,
+      "created_at": "2026-06-13T14:00:00Z",
+      "resolves_at": "2026-07-13T14:00:00Z"
+    }
+  ]
+}
+```
+
+Lower accuracy scores indicate better calibration. Scores by horizon are returned in `byHorizon` — useful for understanding which time horizon the model is most confident about.
+
+---
+
+## GET /v1/intelligence/causal-graph — $0.50
+
+**Causal Signal Graph**
+
+Directed weighted graph of signal influence across 17 nodes and 4 tiers. Edge weights start from economic literature priors and calibrate toward empirically observed signal relationships as daily observations accumulate. Returns nodes, edges, dominant causal path, topology classification, and calibration phase.
+
+**17 nodes across 4 tiers:**
+
+| Tier | Nodes |
+|---|---|
+| Lead | `climate` · `water-risk` · `tectonic-structural` · `gender-risk` |
+| Amplifier | `earth-systems` · `resonance` · `biodiversity` · `sovereign-debt` |
+| Coincident | `mycelium` · `macro-stress` · `currency-stress` · `supply-chain` · `commodity` |
+| Lagging | `energy-transition` · `instability` · `cascade` · `shipping-stress` |
+
+**Cache:** 5 minutes
+
+```json
+{
+  "nodes": [
+    { "id": "climate", "tier": "lead", "label": "Climate & Environmental Stress" },
+    { "id": "macro-stress", "tier": "coincident", "label": "Macro Credit Stress" }
+  ],
+  "edges": [
+    {
+      "from": "climate",
+      "to": "water-risk",
+      "weight": 0.85,
+      "lagDays": 14,
+      "observations": 7,
+      "calibrationPhase": "PRIOR",
+      "theoreticalWeight": 0.85,
+      "empiricalCorrelation": null
+    },
+    {
+      "from": "macro-stress",
+      "to": "currency-stress",
+      "weight": 0.80,
+      "lagDays": 7,
+      "observations": 7,
+      "calibrationPhase": "PRIOR",
+      "theoreticalWeight": 0.80,
+      "empiricalCorrelation": null
+    }
+  ],
+  "topology": {
+    "phase": "PRIOR",
+    "observations": 7,
+    "dominantCausalPath": ["climate", "water-risk", "instability", "macro-stress", "currency-stress"],
+    "dominantPathLength": 5,
+    "mostInfluential": "climate",
+    "highestWeightEdge": { "from": "tectonic-structural", "to": "instability", "weight": 0.90 },
+    "description": "DISTRIBUTED — risk is distributed; no single node dominates"
+  },
+  "calibration": {
+    "phase": "PRIOR",
+    "observationCount": 7,
+    "nextPhase": "BLENDING",
+    "observationsToNextPhase": 3
+  }
+}
+```
+
+**Calibration phases:** `PRIOR` (< 10 observations) → `BLENDING` (10–50) → `EMPIRICAL` (50+)
+
+See [Predictive Intelligence Layer](/protocol/predictive-intelligence) for full methodology.
 
 ---
 

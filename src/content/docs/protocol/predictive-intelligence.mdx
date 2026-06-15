@@ -1,0 +1,286 @@
+---
+title: Predictive Intelligence Layer
+description: Regime transition probabilities at 30/60/90-day horizons, self-improving prediction ledger, scenario memory pattern matching, and a causal signal graph — all running live inside the DPX Intelligence API.
+---
+
+> **Proprietary technology.** The predictive intelligence architecture, signal weighting model, regime estimation methodology, probability recalibration approach, scenario memory encoding, and causal graph methodology are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc.
+
+The DPX Predictive Intelligence Layer is a set of four interconnected systems that give the Stability Oracle a forward-looking dimension: it does not just describe current conditions, it estimates where conditions are going, tracks whether those estimates were right, learns from every call, and maps the causal structure driving regime changes.
+
+---
+
+## Overview
+
+| System | Endpoint | What it does |
+|---|---|---|
+| Regime transition probabilities | `/v1/intelligence/transition-risk` | 30/60/90-day forward probability distributions over 5 regimes |
+| Prediction ledger | `/v1/intelligence/ledger` | Stores every forecast at call time, scores it when the horizon arrives |
+| Scenario memory | (internal — returned in transition-risk response) | Vectorize index of every signal configuration; matches current conditions against historical precedents |
+| Causal graph | `/v1/intelligence/causal-graph` | Directed weighted graph of signal influence; calibrates against live observation history |
+
+All four systems are live. They share a single data plane: the transition-risk call seeds the ledger and the scenario memory; the nightly cron resolves predictions and updates causal edge weights; the causal graph is updated daily from real signal observations.
+
+---
+
+## Regime Transition Probabilities
+
+**Endpoint:** `GET /v1/intelligence/transition-risk`
+
+Synthesises seven lead signals — climate, tectonic, water-risk, gender-risk, earth-systems, resonance, mycelium — into a current composite stress index and forward probability distributions over five regimes at 30, 60, and 90-day horizons.
+
+**Five regimes:**
+
+| Regime | Composite score band |
+|---|---|
+| `STABLE` | 0–20 |
+| `ELEVATED` | 20–40 |
+| `STRESSED` | 40–60 |
+| `CRITICAL` | 60–80 |
+| `CRISIS` | 80–100 |
+
+**How horizon probabilities are calculated:**
+
+Each horizon uses Gaussian kernel density estimation over the composite stress index, centred on the current value but with a widening standard deviation that reflects uncertainty at longer look-ahead distances. An amplification factor (derived from the breadth of divergence across signals) shifts the distribution toward higher-stress regimes when signals disagree. A transition signal (`DETERIORATING` / `STABLE` / `STABILIZING`) derived from the short-term vs long-term stress trajectory applies a directional bias.
+
+Lead signal weights are horizon-adjusted using a decay function: signals with longer natural lead times (climate, tectonic, water-risk) are weighted more heavily at the 90-day horizon; signals with shorter lead times (resonance, mycelium) are weighted more heavily at 30 days. This means the 90-day forecast is climate-dominated; the 30-day forecast is financial-system-dominated.
+
+**Response shape:**
+
+```json
+{
+  "generatedAt": "2026-06-13T14:00:00Z",
+  "cacheHit": false,
+  "currentScore": 55,
+  "currentRegime": "STRESSED",
+  "transitionSignal": "DETERIORATING",
+  "amplification": 1.12,
+  "signals": [
+    { "name": "climate",      "score": 62, "weight": 0.18, "tier": "lead" },
+    { "name": "tectonic",     "score": 100, "weight": 0.18, "tier": "lead" },
+    { "name": "water-risk",   "score": 45, "weight": 0.15, "tier": "lead" },
+    { "name": "gender-risk",  "score": 60, "weight": 0.12, "tier": "amplifier" },
+    { "name": "earth-systems","score": 39, "weight": 0.14, "tier": "amplifier" },
+    { "name": "resonance",    "score": 62, "weight": 0.12, "tier": "coincident" },
+    { "name": "mycelium",     "score": 61, "weight": 0.11, "tier": "coincident" }
+  ],
+  "horizons": {
+    "h30": {
+      "stressIndex": 58,
+      "mostLikely": "STRESSED",
+      "confidence": 0.72,
+      "probabilities": {
+        "STABLE": 0.03,
+        "ELEVATED": 0.11,
+        "STRESSED": 0.49,
+        "CRITICAL": 0.28,
+        "CRISIS": 0.09
+      }
+    },
+    "h60": { "stressIndex": 61, "mostLikely": "STRESSED", "confidence": 0.61, "probabilities": { "..." } },
+    "h90": { "stressIndex": 63, "mostLikely": "CRITICAL", "confidence": 0.54, "probabilities": { "..." } }
+  },
+  "scenarioMemory": {
+    "similarScenarios": [
+      {
+        "id": "scenario-1749823847123-a4b2c",
+        "date": "2026-06-12",
+        "similarity": 0.994,
+        "regime": "STRESSED",
+        "score": 53,
+        "daysAgo": 1
+      }
+    ],
+    "patternNote": "2 similar configurations found (avg similarity 97%). Most common precedent regime: STRESSED (2/2 cases).",
+    "totalStored": 7,
+    "precedentRegimes": { "STRESSED": 2 }
+  }
+}
+```
+
+**Cache:** 1h. On a cache miss, seven intelligence endpoints are fetched in parallel (20s timeout each), predictions are stored in the ledger, and the signal vector is written to Vectorize.
+
+---
+
+## Prediction Ledger
+
+**Endpoint:** `GET /v1/intelligence/ledger`
+
+Every fresh (non-cache-hit) transition-risk call stores three predictions in the D1 prediction ledger — one for each horizon (30, 60, 90 days). Each row captures:
+
+- The predicted regime and its probability at call time
+- Full probability distribution over all five regimes
+- Current composite score and regime at time of prediction
+- Per-signal scores
+
+At 02:00 UTC daily, a cron job resolves predictions whose horizons have arrived. It reads the current actual state and scores each resolved prediction using a proper probabilistic scoring rule. Scores accumulate in a calibration table per horizon (30d / 60d / 90d) and feed a weekly recalibration pass that corrects systematic over- or under-confidence in the raw probability outputs.
+
+**Ledger response:**
+
+```json
+{
+  "summary": {
+    "totalPredictions": 24,
+    "resolved": 6,
+    "pending": 18,
+    "avgBrierScore": 0.18,
+    "byHorizon": {
+      "h30": { "predictions": 8, "resolved": 2, "avgBrier": 0.14, "regimeAccuracy": 1.0 },
+      "h60": { "predictions": 8, "resolved": 2, "avgBrier": 0.19, "regimeAccuracy": 0.5 },
+      "h90": { "predictions": 8, "resolved": 2, "avgBrier": 0.21, "regimeAccuracy": 0.5 }
+    }
+  },
+  "recent": [
+    {
+      "id": "pred-1749823847-h30",
+      "source": "transition-risk",
+      "horizon_days": 30,
+      "predicted_regime": "STRESSED",
+      "predicted_prob": 0.49,
+      "current_regime": "STRESSED",
+      "current_score": 55,
+      "resolved": false,
+      "created_at": "2026-06-13T14:00:00Z"
+    }
+  ]
+}
+```
+
+The ledger is the mechanism that makes DPX self-improving. As predictions resolve, accuracy scores accumulate, calibration drift is detected, and probability outputs are recalibrated on a weekly cycle. The longer the system runs, the more precisely it understands which signal configurations matter — and the more accurately it prices them.
+
+---
+
+## Scenario Memory
+
+Scenario memory runs inside every fresh transition-risk call. It is not a separate endpoint — it surfaces as the `scenarioMemory` field in the transition-risk response.
+
+**How it works:**
+
+Each transition-risk call builds a 32-dimensional vector encoding the full signal configuration, horizon probabilities, amplification, and regime distribution. This vector is stored in Cloudflare Vectorize under a timestamped ID with metadata (date, regime, score, per-signal scores, prediction IDs).
+
+On the next call, the current signal vector is queried against all stored vectors using cosine similarity. The five closest historical configurations are returned with their similarity scores, stored regimes, and (once resolved) what regime they actually transitioned to.
+
+Each vector encodes the full signal configuration: the seven lead signal scores, current regime state, horizon probability distributions at 30/60/90 days, amplification and transition signal, tail risk metrics, and derived signal statistics. The specific encoding is proprietary.
+
+Similarity above 0.95 indicates the current configuration has occurred before at near-identical levels. The `patternNote` field translates the match into plain language: most common precedent regime, average similarity, and count.
+
+As the index grows, this gives the oracle a genuine pattern library — the ability to say "this configuration appeared 3 times before; in 2 of 3 cases conditions deteriorated to CRITICAL within 60 days."
+
+---
+
+## Causal Graph
+
+**Endpoint:** `GET /v1/intelligence/causal-graph`
+
+A directed weighted graph of signal influence. 17 nodes across four tiers. Edge weights start from theoretical economic priors, then calibrate toward empirically observed signal relationships as daily observations accumulate.
+
+**17 nodes:**
+
+| Tier | Nodes |
+|---|---|
+| Lead (long lag) | `climate`, `water-risk`, `tectonic-structural`, `gender-risk` |
+| Amplifier | `earth-systems`, `resonance`, `biodiversity`, `sovereign-debt` |
+| Coincident | `mycelium`, `macro-stress`, `currency-stress`, `supply-chain`, `commodity` |
+| Lagging | `energy-transition`, `instability`, `cascade`, `shipping-stress` |
+
+**How edges calibrate:**
+
+At 02:00 UTC daily, the cron reads the last 90 days of signal observations and computes empirical signal correlations at the natural lag for each edge pair. These are blended with the theoretical prior weights using a calibration factor that increases as more observations accumulate — starting from pure theory, transitioning toward empirical data as observations grow.
+
+With fewer than 10 observations, the graph is in `PRIOR` phase — edges reflect economic theory only. At 10–50 observations, it is in `BLENDING` phase — empirical data begins to take over. Above 50 observations, it reaches `EMPIRICAL` phase — the graph is predominantly data-driven.
+
+**Prior edges seeded from economic literature:**
+
+Directional relationships between nodes are initialised from established macroeconomic and financial theory — for example, climate stress leading water risk and supply chain pressure at longer lags, macro stress leading currency stress at shorter lags. The full edge set and weights are proprietary.
+
+**Graph response:**
+
+```json
+{
+  "nodes": [
+    { "id": "climate", "tier": "lead", "label": "Climate & Environmental Stress" },
+    { "id": "macro-stress", "tier": "coincident", "label": "Macro Credit Stress" }
+  ],
+  "edges": [
+    {
+      "from": "climate",
+      "to": "water-risk",
+      "weight": 0.85,
+      "lagDays": 14,
+      "observations": 7,
+      "calibrationPhase": "PRIOR",
+      "theoreticalWeight": 0.85,
+      "empiricalCorrelation": null
+    }
+  ],
+  "topology": {
+    "phase": "PRIOR",
+    "observations": 7,
+    "dominantCausalPath": ["climate", "water-risk", "instability", "macro-stress", "currency-stress"],
+    "dominantPathLength": 5,
+    "mostInfluential": "climate",
+    "highestWeightEdge": { "from": "tectonic-structural", "to": "instability", "weight": 0.90 },
+    "description": "DISTRIBUTED — risk is distributed; no single node dominates"
+  },
+  "calibration": {
+    "phase": "PRIOR",
+    "observationCount": 7,
+    "nextPhase": "BLENDING",
+    "observationsToNextPhase": 3
+  }
+}
+```
+
+The dominant causal path is the longest chain of high-weight edges from any source node. It represents the most structurally significant transmission route through the signal network at current calibration.
+
+---
+
+## How the four systems work together
+
+```
+Every fresh call to /transition-risk:
+  1. Fetches 7 signal scores in parallel (20s timeout each)
+  2. Computes composite index + horizon probability distributions
+  3. Stores 3 predictions in D1 prediction ledger (h30 / h60 / h90)
+  4. Builds 32-dim vector → upserts to Vectorize
+  5. Queries Vectorize for 5 most similar historical configurations
+  6. Returns transition-risk result with scenarioMemory attached
+
+Every day at 02:00 UTC:
+  1. Reads current actual state from KV cache (transition-risk)
+  2. Resolves any predictions whose horizons have arrived
+  3. Scores resolved predictions, updates calibration table
+  4. Reads 90d signal observation history from D1
+  5. Recomputes empirical signal correlations per edge
+  6. Updates causal edge weights (blend theory + empirical)
+```
+
+The result is a system that improves with time in three distinct ways: probabilistic calibration improves as forecast accuracy accumulates and probability outputs are recalibrated; pattern matching improves as the scenario memory index grows; and causal understanding improves as empirically observed signal relationships gradually displace theoretical prior weights.
+
+---
+
+## Calibration phases
+
+| Phase | Observations | Behaviour |
+|---|---|---|
+| `PRIOR` | < 10 | All edge weights from economic literature. Predictions uncalibrated. |
+| `BLENDING` | 10–50 | Empirical data takes increasing share of edge weights. Probability recalibration begins with limited sample. |
+| `EMPIRICAL` | 50+ | Edge weights predominantly empirical. Probability recalibration operating on meaningful sample size. |
+
+The system enters BLENDING phase after approximately 10 daily cron cycles (~10 days of live operation). It reaches full EMPIRICAL calibration after approximately 50 daily cycles.
+
+---
+
+## Auth and pricing
+
+| Endpoint | Price | Cache |
+|---|---|---|
+| `GET /v1/intelligence/transition-risk` | $0.75 | 1h |
+| `GET /v1/intelligence/ledger` | $0.25 | no-cache |
+| `GET /v1/intelligence/causal-graph` | $0.50 | 5min |
+
+Auth: x402 USDC on Base, or `X-API-Key` header. Base URL: `https://intelligence.untitledfinancial.com`
+
+```bash
+curl https://intelligence.untitledfinancial.com/v1/intelligence/transition-risk \
+  -H "X-API-Key: your-key"
+```

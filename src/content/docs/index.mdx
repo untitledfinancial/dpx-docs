@@ -19,7 +19,7 @@ DPX is also explicitly designed around the Triple Bottom Line — people, planet
 
 This same infrastructure also makes DPX native to the emerging agentic economy. Autonomous AI systems can interact directly with the protocol: discovering liquidity, requesting binding fee quotes, verifying terms on-chain, and executing settlement end-to-end without human intervention. Smart contracts are designed to be agent-executable, APIs are machine-readable by default, and every layer used by human treasury teams is equally accessible to software agents making real-time financial decisions. In this structure, DPX becomes not just a payments rail, but a programmable settlement layer for both institutions and autonomous economic actors.
 
-We created a system that teaches itself. Every oracle run is scored against its own predictions. Every outcome is logged, measured, and fed back into the model. Signal weights adjust on a weekly cycle. Confidence calibrates over time. The longer DPX runs, the more precisely it understands which conditions matter most — and the more accurately it prices them. There is no fixed version of DPX. There is only the version running now, which is always more informed than the one before it.
+DPX runs a live prediction ledger. Every forecast — regime transition probabilities at 30, 60, and 90-day horizons — is stored at the time it is made and scored against the realised outcome when the horizon arrives. Accuracy scores accumulate over time, feeding back into signal weights via weekly recalibration. The longer DPX runs, the more precisely it understands which conditions matter most — and the more accurately it prices them. There is no fixed version of DPX. There is only the version running now, which is always more informed than the one before it.
 
 ## Key numbers
 
@@ -90,7 +90,7 @@ We created a system that teaches itself. Every oracle run is scored against its 
     [Read →](/use-cases/agent-economy)
   </Card>
   <Card title="MCP — Claude" icon="puzzle">
-    21 tools for Claude Desktop and Cursor — quote, settle, oracle, ESG, compliance screening, network topology, butterfly effect cascade, tectonic stress, aftershock analysis.
+    23 tools for Claude Desktop and Cursor — quote, settle, oracle, ESG, analytics, Ramp integration, network topology, butterfly effect cascade, shipping stress, FX corridor intelligence.
     [Set up MCP →](/integrations/mcp)
   </Card>
 </CardGrid>
@@ -113,6 +113,10 @@ We created a system that teaches itself. Every oracle run is scored against its 
   <Card title="n8n Workflows" icon="setting">
     No-code automation — trigger settlements from any webhook, schedule, or external system.
     [Configure →](/integrations/n8n)
+  </Card>
+  <Card title="ElevenLabs Voice Agents" icon="microphone">
+    Voice agents that call DPX tools mid-conversation — counterparty verification, ESG scoring, settlement execution. MCP or webhook, no code required.
+    [Configure →](/integrations/elevenlabs)
   </Card>
 </CardGrid>
 
@@ -164,6 +168,10 @@ We created a system that teaches itself. Every oracle run is scored against its 
   <Card title="Stability Oracle" icon="star">
     9-layer signal pipeline with 30–90 day early warning. Architecture and endpoints.
     [Read →](/protocol/stability-oracle)
+  </Card>
+  <Card title="Predictive Intelligence Layer" icon="star">
+    Regime transition probabilities at 30/60/90-day horizons. Composite index across 19 signal endpoints. Prediction ledger with tracked accuracy. Oracle synthesis using only DPX signals — no external prediction markets.
+    [Read →](/protocol/predictive-intelligence)
   </Card>
   <Card title="ESG Oracle" icon="approve-check">
     ESG scoring engine across 8 institutional sources. Fee discount logic and impact pool redistribution.

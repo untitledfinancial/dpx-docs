@@ -274,5 +274,17 @@ DPX has been validated as a drop-in settlement rail with the following agent fra
 | Coinbase AgentKit | CDP managed MPC or Viem private key | [docs](https://docs.untitledfinancial.com/integrations/coinbase-agentkit) |
 | Circle Developer Wallets | Circle programmable EVM wallet | [docs](https://docs.untitledfinancial.com/integrations/circle) |
 | LangChain | Any EVM wallet | [docs](https://docs.untitledfinancial.com/integrations/langchain) |
+| ElevenLabs Conversational AI | Voice — no wallet required | [docs](https://docs.untitledfinancial.com/integrations/elevenlabs) |
 
 All integrations use the same discovery-first pattern: `GET /manifest` → oracle check → quote → settle. No prior configuration required.
+
+## Voice agent integration (ElevenLabs)
+
+DPX tools are callable mid-conversation from ElevenLabs voice agents. Two paths:
+
+- **MCP path** (all 23 tools, no code): Point the agent at `https://mcp.untitledfinancial.com/mcp` with SSE transport
+- **Webhook path** (4 core tools, granular): Define `check_stability`, `get_esg_score`, `get_quote`, `check_rails` as individual webhook tools
+
+The DPX Treasury Intelligence reference agent ships with guardrails (Focus + Manipulation/Prompt Injection) and a passing test suite covering all four tool call types.
+
+Reference: https://docs.untitledfinancial.com/integrations/elevenlabs

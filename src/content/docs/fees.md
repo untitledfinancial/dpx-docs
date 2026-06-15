@@ -26,33 +26,12 @@ The scoring methodology, weighting model, and calculation logic are proprietary 
 
 Volume discounts apply to the **core fee only**. FX and ESG fees are not discounted.
 
-| Tier | Monthly Notional | Core Fee | FX Fee | All-In (cross-border, ESG 75) |
-|---|---|---|---|---|
-| Standard | < $500K | 1.50% | 0.40% | ~2.035% |
-| Growth | $500K – $5M | 1.00% | 0.30% | ~1.525% |
-| Institutional | $5M – $25M | 0.60% | 0.20% | ~0.975% |
-| Enterprise | $25M – $100M | 0.30% | 0.15% | ~0.625% |
-| Sovereign | $100M+ | Negotiated | — | ~10–25 bps |
-
-Volume is tracked per API key against a rolling 30-day window. Tier upgrades apply automatically on the next quote after a threshold is crossed. Tier downgrades apply at the start of the following billing period.
-
-### Committed volume agreements
-
-Clients who pre-commit to a monthly notional floor receive the corresponding tier rate immediately, regardless of current volume. Committed volume agreements are available at Growth tier and above — contact [case@untitledfinancial.com](mailto:case@untitledfinancial.com).
-
-### Batch settlement discount
-
-Platforms routing multiple B2B payments can batch settlements into a single on-chain transaction. Gas costs are consolidated and the savings passed back as a flat per-batch reduction. Relevant for platforms with high transaction frequency and lower average notional per payment.
-
-### ESG fee reduction path
-
-The ESG fee (0–0.50%) already scales with counterparty score. Clients with consistently high-scoring counterparty networks — verified supply chains, institutional counterparties with published ESG reporting — can negotiate a capped ESG fee floor independent of individual transaction scores.
-
-## Fee floor at scale
-
-DPX's marginal cost per transaction is near zero: gas on Base mainnet costs $0.01–0.05, Cloudflare Workers cost fractions of a cent, and oracle and compliance infrastructure is fixed regardless of volume. Unlike correspondent banking — where per-hop fees are structurally unavoidable — DPX has genuine pricing flexibility at scale.
-
-The practical fee floor, covering gas, oracle data, and compliance infrastructure, is approximately **10–15 basis points** on any notional amount.
+| Tier | Monthly Volume |
+|---|---|
+| Standard | < $100K |
+| Growth | $100K – $1M |
+| Institutional | $1M – $10M |
+| Sovereign | $10M+ |
 
 ## ESG Impact Redistribution
 

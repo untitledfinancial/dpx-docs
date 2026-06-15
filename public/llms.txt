@@ -65,7 +65,8 @@ GET /manifest — capability discovery
 
 ## Agent integrations
 
-- [MCP — Claude Desktop](https://docs.untitledfinancial.com/integrations/mcp): Native Claude integration via Model Context Protocol
+- [MCP — Claude Desktop](https://docs.untitledfinancial.com/integrations/mcp): Native Claude integration via Model Context Protocol. Also compatible with ElevenLabs Conversational AI, Cursor, Windsurf, and any SSE MCP host.
+- [ElevenLabs Conversational AI](https://docs.untitledfinancial.com/integrations/elevenlabs): Voice agents that call DPX tools mid-conversation — counterparty verification, ESG scoring, settlement execution. Webhook and MCP paths. Guardrails and test suite included.
 - [GPT Actions](https://docs.untitledfinancial.com/integrations/gpt-actions): Custom GPT calling DPX directly
 - [LangChain](https://docs.untitledfinancial.com/integrations/langchain): Python tool wrappers
 - [Coinbase AgentKit](https://docs.untitledfinancial.com/integrations/coinbase-agentkit): CDP-managed MPC wallet or Viem private key — full settlement loop validated on Base

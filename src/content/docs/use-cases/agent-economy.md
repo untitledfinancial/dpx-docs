@@ -27,7 +27,7 @@ No authentication required for pricing and discovery. No API key setup. An agent
 
 ## Micropayments: agents paying for intelligence
 
-The Intelligence API demonstrates the micropayment model at the smallest scale. Eight endpoints covering macro stress, climate, supply chain, energy transition, geopolitical instability, ESG, and financial shock cascades — payable in USDC via x402 with no account and no signup.
+The Intelligence API demonstrates the micropayment model at the smallest scale. 26 endpoints covering macro stress, climate, supply chain, energy transition, geopolitical instability, ESG, financial shock cascades, tectonic structural stress, resonance phase alignment, contagion simulation, gender-economic risk, shipping stress, FX settlement corridors, regime transition probabilities, prediction ledger, and causal signal graph — payable in USDC via x402 with no account and no signup.
 
 ```bash
 # An agent pays for macro stress data
