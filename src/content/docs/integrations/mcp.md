@@ -3,9 +3,11 @@ title: MCP — Connect Claude
 description: Connect Claude Desktop, Cursor, or any MCP-compatible host to DPX. Price settlements, check stability, execute cross-border and domestic settlements, check local rail health, and retrieve ESG scores natively in conversation.
 ---
 
-The DPX MCP server v2.5.0 gives Claude Desktop, Cursor, and any MCP-compatible host native access to the full DPX settlement lifecycle — from oracle checks to live settlement execution. 21 tools covering settlement, oracle queries, ESG scoring, Ramp card integration, compliance screening, network topology intelligence, and butterfly effect cascade analysis. Supports both **cross-border** and **domestic (intra-country)** settlements. No browser, no API calls, no copy-paste. Claude can price, evaluate conditions, check local payment rail health, and execute settlements directly in conversation.
+The DPX MCP server v2.5.0 gives Claude Desktop, Cursor, and any MCP-compatible host native access to the full DPX settlement lifecycle — from oracle checks to live settlement execution. 23 tools covering settlement, oracle queries, ESG scoring, analytics, Ramp card integration, compliance screening, network topology intelligence, butterfly effect cascade analysis, shipping stress, FX corridor intelligence, and macro intelligence briefings. Supports both **cross-border** and **domestic (intra-country)** settlements. No browser, no API calls, no copy-paste. Claude can price, evaluate conditions, check local payment rail health, and execute settlements directly in conversation.
 
 **Also available on [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp)** — install with one click from the Smithery marketplace.
+
+**Also compatible with [ElevenLabs Conversational AI](/integrations/elevenlabs)** — point any ElevenLabs voice agent at `https://mcp.untitledfinancial.com/mcp` with SSE transport to access all 23 tools mid-conversation.
 
 ## Prerequisites
 
@@ -40,7 +42,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 }
 ```
 
-Restart Claude Desktop — **DPX** appears in the MCP toolbar with 13 tools.
+Restart Claude Desktop — **DPX** appears in the MCP toolbar with 23 tools.
 
 :::note[Sandbox mode]
 `SANDBOX_MODE: "true"` means `settle` runs real calculations with no on-chain execution. Set to `"false"` only when you are ready for live settlements with real USDC.
@@ -64,23 +66,55 @@ Restart Claude Desktop — **DPX** appears in the MCP toolbar with 13 tools.
 }
 ```
 
-## Available tools (13)
+## Available tools (23)
+
+### Settlement & Oracle
 
 | Tool | What it does |
 |---|---|
-| `get_manifest` | DPX capabilities, supported assets, contract addresses |
-| `get_quote` | Binding fee quote — core, FX, ESG, license, net amount (300s TTL) |
-| `get_esg_score` | Live E/S/G scores for a wallet address |
-| `get_reliability` | Oracle stability status — STABLE / CAUTION / UNSTABLE (cross-border and domestic) |
-| `get_oracle_status` | Full 9-layer Stability Oracle v9.0 signal — ESG Oracle is separate |
-| `get_fee_schedule` | Complete fee table with volume tiers |
-| `verify_fees` | Confirm off-chain quote matches on-chain router |
-| `compare_to_competitors` | DPX vs Stripe, Wise, SWIFT, bank wire |
-| `get_rail_status` | **Live health of local payment rails** — PIX, SEPA, FedACH, CHAPS, UPI, PromptPay |
-| `settle` | **Execute a settlement** — cross-border or domestic — oracle + rail check → on-chain |
-| `get_settlement_status` | Look up any settlement by ID |
-| `get_investment_context` | Structured investment memo for AI due diligence agents |
-| `get_intelligence` | MPP-gated macro intelligence briefing — 0.001 USDC/call on Base mainnet |
+| `protocol.manifest` | DPX capabilities, supported assets, contract addresses |
+| `settlement.quote` | Binding fee quote — core, FX, ESG, license, net amount (300s TTL) |
+| `settlement.execute` | **Execute a settlement** — cross-border or domestic — oracle + rail check → on-chain |
+| `settlement.status` | Look up any settlement by ID |
+| `oracle.stability` | Oracle stability status — STABLE / CAUTION / UNSTABLE (cross-border and domestic) |
+| `oracle.status` | Full 9-layer Stability Oracle v9.0 signal — ESG Oracle is separate |
+| `oracle.rails` | **Live health of local payment rails** — PIX, SEPA, FedACH, CHAPS, UPI, PromptPay |
+| `oracle.intelligence` | MPP-gated macro intelligence briefing — 0.001 USDC/call on Base mainnet |
+| `oracle.mycelium` | **Mycelium Network Oracle** — financial system network topology, crisis detection 6–14 weeks ahead |
+
+### Fees & Analytics
+
+| Tool | What it does |
+|---|---|
+| `fees.schedule` | Complete fee table with volume tiers |
+| `fees.verify` | Confirm off-chain quote matches on-chain router |
+| `fees.compare` | DPX vs bank wire, SWIFT, and other rails |
+| `analytics.overview` | Protocol-level analytics overview |
+| `dpx.metrics` | Live DPX protocol metrics |
+| `protocol.investment_context` | Structured investment memo for AI due diligence agents |
+
+### ESG
+
+| Tool | What it does |
+|---|---|
+| `esg.score` | Live E/S/G scores for a wallet address |
+
+### Ramp Integration
+
+| Tool | What it does |
+|---|---|
+| `ramp.connect` | Connect a Ramp corporate card account |
+| `ramp.spend_analysis` | Analyse Ramp card spend patterns |
+| `ramp.agent_card` | Issue or configure a Ramp agent card |
+| `ramp.settle` | Settle a Ramp card transaction via DPX |
+
+### Market Intelligence
+
+| Tool | What it does |
+|---|---|
+| `market.cascade` | **Butterfly Effect Cascade** — model how a macro shock propagates through 24 interconnected nodes across climate, geopolitical, economic, and commodity domains |
+| `market.shipping` | **Shipping & Logistics Stress** — freight conditions, trade route disruptions, invoice delay risk, and corridor impact |
+| `market.fx` | **FX Settlement Corridor Intelligence** — per-pair execution risk for 10 major USD corridors with settlement advice |
 
 ## Example prompts
 
@@ -99,6 +133,12 @@ Restart Claude Desktop — **DPX** appears in the MCP toolbar with 13 tools.
 - *"Is PIX operational before I send this Brazil payment?"*
 - *"Check SEPA and FedACH health — I have settlements going to both today"*
 - *"What's the status of all payment rails in Asia right now?"*
+
+**Market intelligence:**
+- *"Model a Strait of Hormuz disruption at magnitude 70 — what cascades and when?"*
+- *"What's the Mycelium network health score and is there a fruiting body risk forming?"*
+- *"Check FX corridor risk for USD/JPY and USD/BRL before I execute these settlements"*
+- *"Are there any freight disruptions that could create invoice delay risk on my Asia-Pacific corridor?"*
 
 **Settlement execution (sandbox):**
 - *"Get a quote and execute a $100,000 intercompany settlement to 0x1E05... in sandbox mode"*

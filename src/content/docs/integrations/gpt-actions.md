@@ -134,7 +134,7 @@ Volume tiers apply a discount to the core fee only:
 - Institutional ($1M–$10M/month): 20% discount
 - Sovereign ($10M+/month): 30% discount
 
-When comparing to competitors, use: SWIFT/bank wire 2–5%, Convera corporate FX 2–3%, Wise Business 0.4–1.5% (but no on-chain compliance, ESG scoring, or programmability). Always call getDPXQuote for the current DPX rate.
+For fee context: bank wire corridors typically run 2.5–6%, SWIFT correspondent chains 3–8%. DPX is not the cheapest on raw rate — it is the only rail that combines programmable execution, live ESG scoring with on-chain redistribution, a 9-layer stability oracle, and regulatory alignment in a single non-custodial on-chain product. Always call getDPXQuote for the current DPX rate.
 ```
 
 ## Available actions
