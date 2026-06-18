@@ -7,7 +7,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## TL;DR
 
-DPX is the payment and settlement layer for the agentic internet. Any autonomous agent can call `/manifest` to discover DPX, `/quote` to get a binding fee, and `POST /settle` to execute — no onboarding, no API key, no human step. The fee payment IS the authorization: agents pay the gross settlement amount via x402 USDC and the settlement executes on-chain. A 9-layer Stability Oracle gates every settlement on real-world conditions — climate, macro, FX, geopolitical — and holds automatically when conditions are UNSTABLE. ESG scores are a congestion fee, not a gate: every counterparty can settle, higher-impact activity simply costs more, and 100% of ESG fees are redistributed to verified on-chain impact programs. MCP-native, x402-native, ISO 20022-compatible. Contracts live on Base mainnet.
+DPX is the payment and settlement layer for the agentic internet. Any autonomous agent can call `/manifest` to discover DPX, `/flow-estimate` to preview a full settlement response before committing, `/quote` to get a binding fee, and `POST /settle` to authorize on-chain execution — no onboarding, no API key, no human step. The x402 intelligence fee payment authorizes the oracle signal and quoteId. Settlement execution is sender-funded: DPX returns execution parameters and the caller calls `router.settle()` on-chain, paying their own gas. A 9-layer Stability Oracle gates every settlement on real-world conditions — climate, macro, FX, geopolitical — and holds automatically when conditions are UNSTABLE. ESG scores are a congestion fee, not a gate: every counterparty can settle, higher-impact activity simply costs more, and 100% of ESG fees are redistributed to verified on-chain impact programs. MCP-native, x402-native, ISO 20022-compatible. Contracts live on Base mainnet.
 
 ## What DPX does
 
@@ -90,7 +90,7 @@ DPX runs a live prediction ledger. Every forecast — regime transition probabil
     [Read →](/use-cases/agent-economy)
   </Card>
   <Card title="MCP — Claude" icon="puzzle">
-    23 tools for Claude Desktop and Cursor — quote, settle, oracle, ESG, analytics, Ramp integration, network topology, butterfly effect cascade, shipping stress, FX corridor intelligence.
+    26 tools for Claude Desktop and Cursor — quote, settle, oracle, ESG, analytics, Ramp integration, network topology, butterfly effect cascade, shipping stress, FX corridor intelligence, Mercury banking.
     [Set up MCP →](/integrations/mcp)
   </Card>
 </CardGrid>

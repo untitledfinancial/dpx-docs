@@ -95,11 +95,29 @@ The Settlement Agent applies this logic automatically when you call `/settle`. F
 
 ---
 
-### Step 4 — Execute via the Settlement Agent (x402)
+### Step 4 — Execute via the Settlement Agent (sender-funded model)
 
-Live settlements use the x402 payment standard — no API key, no account. The fee payment IS the authorization.
+DPX is a **sender-funded** settlement rail. The Settlement Agent returns oracle authorization, a `quoteId`, and on-chain execution parameters — then you execute on-chain yourself. DPX never holds USDC or pays gas on your behalf.
 
-**First call — receive a quote and payment requirements:**
+**Pre-payment: estimate the full settlement without touching x402**
+
+```bash
+# Free. No auth. Returns accurate fees, FX rate, and execution steps.
+GET https://agent.untitledfinancial.com/flow-estimate?amount=1000000&from=USD&to=USD&recipient=0xYourAddress
+```
+
+The response includes exact `grossAmountRaw` in USDC micro-units, the router address, and step-by-step contract calls. Use this to build your internal approval workflow or show your team what the integration produces before going live.
+
+**Non-USD source currencies are supported.** Pass `from=BRL` (or any ECB-listed currency) and the settlement agent fetches a live FX rate, converts to USD-equivalent for oracle scoring, and returns the conversion in the response.
+
+```bash
+GET https://agent.untitledfinancial.com/flow-estimate?amount=50000&from=BRL&to=USD
+# Returns: grossAmount in USD, fxConversion.rate, fxConversion.source, execution steps
+```
+
+**Live settlements use x402** — no API key, no account. The intelligence fee payment IS the authorization for the oracle signal and `quoteId`.
+
+**First call to `/settle` — returns a 402 with a value preview:**
 
 ```bash
 curl -X POST https://agent.untitledfinancial.com/settle \
@@ -109,12 +127,11 @@ curl -X POST https://agent.untitledfinancial.com/settle \
     "sourceCurrency": "USD",
     "destinationCurrency": "USD",
     "recipientAddress": "0xRecipientWalletAddress",
-    "purpose": "intercompany",
     "referenceId": "INV-2026-001"
   }'
 ```
 
-**Response — 402 Payment Required:**
+**Response — 402 with intelligence preview:**
 
 ```json
 {
@@ -122,25 +139,31 @@ curl -X POST https://agent.untitledfinancial.com/settle \
   "accepts": [{
     "scheme": "exact",
     "network": "base-mainnet",
-    "maxAmountRequired": "1013850000000",
+    "maxAmountRequired": "500000",
     "resource": "https://agent.untitledfinancial.com/settle",
-    "description": "DPX Settlement — 1013850.00 USDC gross. Net to recipient: 1000000.00 USDC. Fees: 139 bps (13850.00 USDC).",
-    "payTo": "0xExecutorWalletAddress",
+    "payTo": "0xFeeCollectorAddress",
     "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
   }],
-  "settlementNonce": "a1b2c3d4-...",
-  "preview": {
-    "grossUsd": 1013850,
-    "netAmountUsd": 1000000,
-    "feesTotalUsd": 13850,
-    "feeBps": 139,
-    "oracleStatus": "STABLE",
-    "esgScore": 75
+  "intelligencePreview": {
+    "whatYouGet": [
+      "Oracle stability score (0–100) for your settlement corridor",
+      "AI-synthesized risk reasoning with ESG overlay",
+      "Binding quoteId (300s TTL) authorizing on-chain router.settle()",
+      "Execution params: routerAddress, grossAmountRaw, quoteIdBytes32"
+    ],
+    "fee": {
+      "amountUsdc": "$0.5000",
+      "basisPoints": "0.05 bps",
+      "pricingNote": "0.5 bps of settlement amount, floor $0.001, cap $5.00"
+    },
+    "sandboxOption": "Add \"sandbox\": true to request body to test without payment."
   }
 }
 ```
 
-**Retry with payment — attach X-PAYMENT header and settlementNonce:**
+The `intelligencePreview` shows exactly what you get on payment before you commit. The 402 is a preview, not a wall.
+
+**Retry with X-PAYMENT header:**
 
 ```typescript
 import { withPaymentInterceptor } from 'x402-fetch';
@@ -160,52 +183,59 @@ const result = await fetchWithPayment(
       sourceCurrency: 'USD',
       destinationCurrency: 'USD',
       recipientAddress: '0xRecipientWalletAddress',
-      purpose: 'intercompany',
       referenceId: 'INV-2026-001',
-      settlementNonce: 'a1b2c3d4-...',   // from the 402 response
     }),
   }
 );
 ```
 
-**Response (executed):**
+**Response — oracle authorization + execution params:**
 
 ```json
 {
   "settlementId": "dpx_7f8a9b2c...",
-  "status": "executed",
-  "txHash": "0xabc123...",
-  "netAmount": 1000000,
-  "grossAmount": 1013850,
-  "feesTotal": 13850,
-  "token": "USDC",
-  "recipient": "0xRecipientWalletAddress",
+  "status": "authorized",
+  "execution": {
+    "routerAddress": "0xe333551E18ef0471A71d7e8e761212766aa5AD4f",
+    "tokenAddress":  "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "grossAmountRaw": "1000000000000",
+    "recipient": "0xRecipientWalletAddress",
+    "isCrossCurrency": false,
+    "quoteIdBytes32": "0xabc123...",
+    "quoteExpiresAt": 1718400300000,
+    "abi": ["function settle(address,uint256,bool,bytes32,address) external returns (uint256)"]
+  },
+  "netAmount": 985000,
+  "grossAmount": 1000000,
+  "feesTotal": 15000,
   "oracleStatus": "STABLE",
   "oracleScore": 91,
   "esgScore": 75,
-  "reasoning": "Oracle conditions are stable. Yield curve normal, FX stress low. Executing immediately. [x402 payment verified]",
-  "timestamp": "2026-04-23T14:32:00Z",
+  "reasoning": "Conditions stable. Executing immediately.",
   "sandboxMode": false
 }
 ```
 
-**Response (held — UNSTABLE oracle):**
+**You then execute on-chain yourself:**
 
-The Settlement Agent returns `202` before asking for payment if oracle conditions are `UNSTABLE`. No payment is requested until conditions improve.
+```typescript
+// 1. Approve the router to spend USDC
+await usdc.approve(execution.routerAddress, BigInt(execution.grossAmountRaw));
 
-```json
-{
-  "status": "held",
-  "oracleStatus": "UNSTABLE",
-  "oracleScore": 44,
-  "reasoning": "Peg deviation 62 bps exceeds 50 bps threshold — holding until peg stabilises.",
-  "hint": "Oracle conditions UNSTABLE. Retry when oracle returns CAUTION or STABLE.",
-  "timestamp": "2026-04-23T14:32:00Z"
-}
+// 2. Call router.settle() — you pay gas
+await router.settle(
+  execution.recipient,
+  BigInt(execution.grossAmountRaw),
+  execution.isCrossCurrency,
+  execution.quoteIdBytes32,
+  execution.tokenAddress
+);
 ```
 
+The `quoteId` is valid for 300 seconds. If it expires before on-chain execution, call `/settle` again.
+
 :::note[Sandbox mode]
-Set `"sandbox": true` in the request body to skip x402 entirely. Real oracle checks, real fee calculations, no on-chain execution, no payment required. Use this to test the full loop without USDC.
+Set `"sandbox": true` in the request body to skip x402 entirely. Full oracle checks, accurate fee calculations, execution params returned — no on-chain execution, no payment required.
 :::
 
 ---
@@ -226,6 +256,45 @@ cast call 0x<ROUTER_V2_ADDRESS> \
 ```
 
 The on-chain `Settlement` event includes: sender, recipient, token, gross amount, all fee components, net amount, ESG score, and the `quoteId` — a permanent immutable audit trail.
+
+---
+
+## Intelligence endpoints — free, no auth
+
+These endpoints return meaningful data before any payment is required. Use them during evaluation, internal review, or integration scoping.
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /flow-estimate` | Full synthetic settlement preview with accurate fees, FX rate, and on-chain execution steps. No payment. |
+| `GET /corridor-intel?from=BRL&to=USD` | Live FX rate (ECB via Frankfurter) + DPX-observed corridor signal + regulatory context for the corridor. |
+| `GET /corridor-compare?corridors=BRL-USD,EUR-USD,GBP-USD` | Side-by-side multi-corridor comparison with live FX rates. |
+| `GET /session` | Your own call sequence for today, keyed by anonymized IP hash. Useful for debugging integration order. |
+| `GET /quote` | Binding fee quote with oracle signal — 300s TTL. |
+| `GET /health` | Worker liveness. |
+| `GET /manifest` | Full protocol capabilities, contract addresses, oracle endpoints. |
+
+**Corridor intelligence example — BRL→USD:**
+
+```bash
+GET https://agent.untitledfinancial.com/corridor-intel?from=BRL&to=USD
+```
+
+```json
+{
+  "corridor": "BRL-USD",
+  "fxRate": {
+    "rate": 0.19669,
+    "pair": "BRL/USD",
+    "source": "Frankfurter / ECB",
+    "amountExample": { "send": "1 BRL", "receive": "0.1967 USD" }
+  },
+  "marketContext": {
+    "settlementMethods": ["PIX (domestic BRL leg)", "SWIFT (international USD leg)"],
+    "pixNote": "PIX handles the domestic BRL disbursement leg. DPX provides the USD settlement authorization rail.",
+    "regulatoryEnv": "BCB-regulated. IOF tax applies (0.38% on FX operations)."
+  }
+}
+```
 
 ---
 
