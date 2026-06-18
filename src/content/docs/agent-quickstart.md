@@ -292,6 +292,15 @@ GET https://agent.untitledfinancial.com/corridor-intel?from=BRL&to=USD
     "settlementMethods": ["PIX (domestic BRL leg)", "SWIFT (international USD leg)"],
     "pixNote": "PIX handles the domestic BRL disbursement leg. DPX provides the USD settlement authorization rail.",
     "regulatoryEnv": "BCB-regulated. IOF tax applies (0.38% on FX operations)."
+  },
+  "regulatoryDisclosure": {
+    "jurisdiction": "Brazil",
+    "summary": "DPX is US-incorporated and not licensed by the Banco Central do Brasil (BCB). Brazilian users are responsible for BCB, COAF, and RFB compliance. BCB Resolution 561 restricts stablecoin use by eFX operators from October 1, 2026.",
+    "detailsUrl": "https://docs.untitledfinancial.com/legal/brazil-regulatory-notice",
+    "keyDeadlines": [
+      "2026-10-01 — BCB Res. 561: eFX operators may not use stablecoins for cross-border settlement without SPSAV authorization",
+      "2026-10-30 — BCB Res. 520: authorized Brazilian VASPs prohibited from transacting with non-authorized foreign providers"
+    ]
   }
 }
 ```

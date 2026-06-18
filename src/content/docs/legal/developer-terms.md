@@ -94,6 +94,37 @@ You must screen all End Users and transaction counterparties against applicable 
 ### 5.5 Record Keeping
 Retain records of all Settlement Transactions for a minimum of five (5) years.
 
+### 5.6 Brazil — Specific Regulatory Notice
+
+<Aside type="caution" title="Brazilian Users — Read Before Production Deployment">
+Untitled_ LuxPerpetua Technologies, Inc. is incorporated in the United States and is **not** licensed, authorized, or registered with the Banco Central do Brasil (BCB), the Comissão de Valores Mobiliários (CVM), the Conselho de Controle de Atividades Financeiras (COAF), or any other Brazilian regulatory authority.
+</Aside>
+
+If you are a Brazilian resident or legal entity, or if your Application serves Brazilian End Users, you are solely responsible for compliance with Brazilian law, including:
+
+**BCB licensing (BCB Resolutions 519, 520, 521 — effective February 2, 2026):**
+Brazil requires that entities habitually providing virtual asset services (including intermediation, brokerage, or custody of virtual assets) hold authorization as an SPSAV (Sociedade Prestadora de Serviços de Ativos Virtuais). If your use of the DPX API constitutes a regulated virtual asset service under Law 14.478/2022, you must hold or partner with a BCB-authorized SPSAV before operating commercially. Entities providing commercial cross-border payment services without BCB authorization may be subject to enforcement action under Law 12.865/2013.
+
+**Stablecoin restrictions for eFX operators (BCB Resolution 561 — effective October 1, 2026):**
+Brazilian payment institutions and banks operating under the eFX regulatory framework are prohibited from using stablecoins (including USDC) to settle the international leg of cross-border payments unless they also hold SPSAV authorization. If your institution is an eFX participant without SPSAV authorization, use of the DPX settlement API for cross-border flows may not be permissible after October 1, 2026.
+
+**Counterparty restriction (BCB Resolution 520, Art. 23 — effective October 30, 2026):**
+BCB-authorized SPSAVs are prohibited from transacting with non-authorized virtual asset service providers after October 30, 2026. If you are a Brazilian SPSAV, or if your End Users are Brazilian SPSAVs, you are responsible for confirming that use of the DPX API satisfies this counterparty requirement under applicable BCB guidance.
+
+**IOF (Imposto sobre Operações Financeiras):**
+Cross-border remittances by Brazilian residents are subject to IOF at applicable rates (currently 0.38% for different-owner transfers). The IOF obligation attaches to the Brazilian party at the point of the BRL foreign exchange conversion. Untitled_ does not collect or remit IOF. You are responsible for ensuring IOF is properly collected and remitted on your users' transactions.
+
+**Stablecoin treatment as foreign exchange (BCB Resolution 521 — effective February 2026):**
+BCB Resolution 521 treats purchases, sales, and exchanges of stablecoins by Brazilian residents as foreign exchange operations subject to BCB reporting requirements. Brazilian-licensed institutions are required to report stablecoin transactions monthly. If your application enables Brazilian users to acquire, transfer, or hold USDC, applicable reporting obligations under Resolution 521 and BCB Circular 3.978/2020 attach to you and your users.
+
+**Crypto transaction reporting (IN RFB 1.888/2019; IN RFB 2.291/2025 — DeCripto):**
+Brazilian individuals and legal entities transacting in virtual assets with a total monthly value exceeding **R$30,000** (approximately USD 5,900) are required to report those transactions to the Receita Federal do Brasil (RFB). Reportable information includes transaction type, asset type and quantity, counterparty identity (including the name and country of foreign counterparties such as Untitled_), and transaction value in BRL. Brazil participates in the OECD Crypto-Asset Reporting Framework (CARF), under which this data may be shared with foreign tax authorities including the U.S. Internal Revenue Service.
+
+**AML and COAF:**
+Brazilian payment institutions and licensed virtual asset service providers are subject to AML obligations under Law 9.613/1998 and BCB Circular 3.978/2020, including customer due diligence, transaction monitoring, and reporting to COAF. These obligations attach to the Brazilian-licensed institution, not to Untitled_. You represent that your Application is operated in full compliance with applicable Brazilian AML law.
+
+By accessing the DPX API from Brazil or using it to serve Brazilian End Users, you represent that you have obtained independent Brazilian legal advice and hold all required authorizations, and you indemnify Untitled_ against any claims, penalties, or regulatory actions arising from your use of the API in Brazil.
+
 ---
 
 ## 6. ESG Data — Specific Terms
