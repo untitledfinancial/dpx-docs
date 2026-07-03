@@ -111,6 +111,64 @@ DPX returns a pacs.002 with an extended `SplmtryData` block carrying the on-chai
 
 ---
 
+## Direct pain.001 intake
+
+For systems that generate pain.001 XML, DPX accepts the document directly without format translation:
+
+```bash
+POST https://agent.untitledfinancial.com/iso20022
+Content-Type: application/xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
+  <CstmrCdtTrfInitn>
+    <GrpHdr>
+      <MsgId>MSG-2026-07-001</MsgId>
+      <CreDtTm>2026-07-02T14:30:00</CreDtTm>
+      <NbOfTxs>1</NbOfTxs>
+    </GrpHdr>
+    <PmtInf>
+      <CdtTrfTxInf>
+        <PmtId><EndToEndId>E2E-SUPPLIER-001</EndToEndId></PmtId>
+        <Amt><InstdAmt Ccy="EUR">47500.00</InstdAmt></Amt>
+        <CdtrAgt><FinInstnId><BIC>DEUTDEDB</BIC></FinInstnId></CdtrAgt>
+        <Cdtr><Nm>Berlin Supplier GmbH</Nm></Cdtr>
+        <CdtrAcct><Id><IBAN>DE89370400440532013000</IBAN></Id></CdtrAcct>
+      </CdtTrfTxInf>
+    </PmtInf>
+  </CstmrCdtTrfInitn>
+</Document>
+```
+
+DPX extracts the settlement fields (amount, currency, BIC, IBAN, end-to-end reference), determines the destination currency from the creditor BIC country code, runs stablecoin routing (EURC for EUR destinations), and returns:
+
+```json
+{
+  "parsed": {
+    "endToEndId": "E2E-SUPPLIER-001",
+    "amount": 47500,
+    "sourceCurrency": "EUR",
+    "destinationCurrency": "EUR",
+    "cdtrBic": "DEUTDEDB",
+    "cdtrIban": "DE89370400440532013000",
+    "cdtrName": "Berlin Supplier GmbH"
+  },
+  "settleBody": {
+    "amount": 47500,
+    "sourceCurrency": "EUR",
+    "destinationCurrency": "EUR",
+    "token": "EURC",
+    "reference": "E2E-SUPPLIER-001"
+  },
+  "settleEndpoint": "https://agent.untitledfinancial.com/settle",
+  "standard": "ISO 20022 pain.001.001.03"
+}
+```
+
+Pass the returned `settleBody` directly to `POST /settle`. No format translation required — the pain.001 that goes to SWIFT can go to DPX unchanged.
+
+---
+
 ## Where DPX fits in SWIFT infrastructure
 
 ### For corporates with SWIFT connectivity

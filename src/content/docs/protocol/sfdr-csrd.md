@@ -157,6 +157,90 @@ Because ESG scores are recorded at settlement time and the `txHash` is on-chain,
 
 ---
 
+## Full PAI report — all 18 Annex I indicators
+
+Generate a complete SFDR Annex I Principal Adverse Impact report for a portfolio of up to 50 entities (by LEI). Returns all 18 mandatory PAI indicators with status, thresholds, and data notes.
+
+```bash
+POST https://compliance.untitledfinancial.com/sfdr/pai-report
+Content-Type: application/json
+
+{
+  "leis": ["529900ODI3047E2LIV03", "7LTWFZYICNSX8D621K86"],
+  "portfolioName": "Q2 2026 EU Fund",
+  "reportingPeriod": "2026-Q2",
+  "currency": "EUR"
+}
+```
+
+Returns all 18 Annex I indicators across climate/environment (1–14) and social (15–18):
+
+| Indicators | Category | Examples |
+|---|---|---|
+| 1–6 | GHG & Carbon | GHG intensity, carbon footprint, fossil fuel exposure |
+| 7–9 | Biodiversity & Resources | Biodiversity-sensitive areas, water, hazardous waste |
+| 10–11 | Social — Business | UNGC violations, controversial weapons |
+| 12–14 | Social — Workforce | Board gender diversity, pay gap, OSHA safety |
+| 15–18 | Additional mandatory | Country-level violations, sovereign bond ESG |
+
+Each indicator returns a `status` field: `WITHIN_THRESHOLD`, `REVIEW`, `ELEVATED_RISK`, `DATA_REQUIRED`, or `NOT_APPLICABLE`. The summary includes an `overallStatus` and a count of elevated risk flags.
+
+```json
+{
+  "portfolioName": "Q2 2026 EU Fund",
+  "reportingPeriod": "2026-Q2",
+  "generatedAt": "2026-07-02T10:00:00Z",
+  "summary": {
+    "totalIndicators": 18,
+    "computed": 14,
+    "requiresAdditionalData": 3,
+    "elevatedRiskFlags": 1,
+    "overallStatus": "REVIEW"
+  },
+  "indicators": [
+    {
+      "id": 1,
+      "name": "GHG Emissions",
+      "annex": "Annex I, Table 1, Indicator 1",
+      "status": "WITHIN_THRESHOLD",
+      "value": "42.3 tCO2e/M€ invested"
+    }
+  ]
+}
+```
+
+No auth or API key required for the report endpoint. Supports up to 50 LEIs per call.
+
+## Free SFDR PAI pre-assessment
+
+Before committing to a full SFDR screen, retrieve a free partial PAI pre-assessment for any counterparty:
+
+```bash
+GET https://compliance.untitledfinancial.com/sfdr/report?lei=529900ODI3047E2LIV03
+```
+
+Returns ESG-derivable indicators immediately — GHG, carbon footprint, biodiversity, water, waste, board gender diversity. Sanctions, AML, and UNGC compliance are marked `REQUIRES_FULL_SCREEN`.
+
+```json
+{
+  "lei":    "529900ODI3047E2LIV03",
+  "report": "partial",
+  "paiIndicators": {
+    "ghgEmissions":         "BELOW_THRESHOLD",
+    "carbonFootprint":      "MODERATE",
+    "biodiversityRisk":     "LOW",
+    "boardGenderDiversity": "COMPLIANT",
+    "sanctionsCheck":       "REQUIRES_FULL_SCREEN",
+    "ungcCompliance":       "REQUIRES_FULL_SCREEN"
+  },
+  "upgrade": "POST /sfdr/screen ($10 x402) — full Annex I with screeningId for regulatory documentation"
+}
+```
+
+No auth or API key required. The full screen (`POST /sfdr/screen`, $10 via x402) returns complete Annex I with a `screeningId` suitable for regulatory documentation and external audit.
+
+---
+
 ## Integration for European institutions
 
 To integrate DPX ESG data into your SFDR/CSRD reporting workflow:

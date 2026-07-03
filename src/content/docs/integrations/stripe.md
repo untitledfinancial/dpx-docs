@@ -12,6 +12,23 @@ Consumer payment, card charge, subscription, invoice, refund → Stripe
 B2B cross-border, cross-currency, or large notional (>$10K)  → DPX
 ```
 
+## Stripe App (recommended)
+
+Install the **DPX B2B Settlement** app from the [Stripe App Marketplace](https://marketplace.stripe.com/apps/dpx-b2b-settlement). It adds a live settlement intelligence panel directly to your Stripe Dashboard — no code required.
+
+**What the app does:**
+- Detects B2B cross-border payments in PaymentIntent and Invoice views
+- Runs a live oracle stability check — PROCEED / CAUTION / HOLD — on every eligible payment
+- Scores counterparties for ESG risk (SFDR PAI indicators)
+- Surfaces settlement quotes with full fee breakdown
+- Home panel shows live rail status and FX stress conditions across key corridors
+
+**Permissions:** read-only on PaymentIntents, Invoices, Customers, Treasury accounts, and Transfers. No write access from the UI — settlement execution stays in your control.
+
+**Post-install:** the app redirects to this page. Set `metadata.dpx_route=true` on any payment you want routed (see Pattern 2 below).
+
+---
+
 ## Three integration patterns
 
 ### Pattern 1 — Combined agent (Stripe Agent Toolkit + DPX)
@@ -65,13 +82,13 @@ DPX_TOOLS = [
 all_tools = stripe_toolkit.get_tools() + DPX_TOOLS
 ```
 
-Full agent script: [github.com/untitledfinancial/dpx-integrations/blob/main/stripe/agent-toolkit.py](https://github.com/untitledfinancial/dpx-integrations/blob/main/stripe/agent-toolkit.py)
-
 ---
 
 ### Pattern 2 — Stripe webhook → DPX settlement
 
-Stripe fires `payment_intent.succeeded` → a Cloudflare Worker catches it → runs a DPX oracle check → queues the cross-border disbursement.
+Stripe fires events → the DPX Settlement Bridge Worker catches them → runs an oracle check → fetches execution params and logs to KV.
+
+**Deployed endpoint:** `https://webhook.untitledfinancial.com/stripe/webhook`
 
 Flag payments for DPX routing when creating the payment intent:
 
@@ -88,9 +105,37 @@ stripe.PaymentIntent.create(
 )
 ```
 
-The Worker verifies the Stripe signature, checks the DPX oracle, gets a quote, and queues settlement. Deploy to Cloudflare Workers, then set in Stripe Dashboard → Developers → Webhooks.
+The Worker verifies the Stripe signature (HMAC-SHA256, 5-minute replay window), checks the DPX oracle, calls `/flow-estimate`, writes execution params back to Stripe metadata, and logs the event to KV.
 
-Full Worker: [github.com/untitledfinancial/dpx-integrations/blob/main/stripe/webhook-bridge.js](https://github.com/untitledfinancial/dpx-integrations/blob/main/stripe/webhook-bridge.js)
+**Webhook configuration (Stripe Dashboard → Developers → Webhooks):**
+- Scope: **Your account** (not Connected accounts)
+- URL: `https://webhook.untitledfinancial.com/stripe/webhook`
+- Events: `payment_intent.created`, `payment_intent.succeeded`, `invoice.finalized`, `invoice.paid`, `payout.created`
+
+**KV audit log:** every routed event is stored for 30 days. Retrieve with:
+
+```bash
+GET https://webhook.untitledfinancial.com/stripe/events/<stripe_event_id>
+```
+
+**Health check:**
+```bash
+GET https://webhook.untitledfinancial.com/stripe/health
+```
+
+On `payment_intent.succeeded` with `dpx_route=true`, DPX writes back to Stripe PI metadata:
+
+```json
+{
+  "dpx_status":         "authorized",
+  "dpx_oracle_status":  "PROCEED",
+  "dpx_router_address": "0xe333551E18ef0471A71d7e8e761212766aa5AD4f",
+  "dpx_quote_expires":  "1750000000",
+  "dpx_net_amount":     "499500"
+}
+```
+
+The next step is always caller-executed: call `approve()` + `router.settle()` on Base mainnet using the returned execution params. DPX does not move funds.
 
 ---
 
@@ -111,8 +156,6 @@ quote  = requests.get("https://stability.untitledfinancial.com/quote",
                       params={"amountUsd": disbursement_usd, "hasFx": True}).json()
 ```
 
-Full script: [github.com/untitledfinancial/dpx-integrations/blob/main/stripe/connect-payout.py](https://github.com/untitledfinancial/dpx-integrations/blob/main/stripe/connect-payout.py)
-
 ---
 
 ## Endpoints
@@ -122,5 +165,6 @@ Full script: [github.com/untitledfinancial/dpx-integrations/blob/main/stripe/con
 | Oracle stability | `https://stability.untitledfinancial.com/reliability` |
 | Fee quote | `https://stability.untitledfinancial.com/quote` |
 | ESG score | `https://esg.untitledfinancial.com/esg-score` |
+| Webhook bridge | `https://webhook.untitledfinancial.com/stripe/webhook` |
 
 No API key required for oracle and pricing endpoints. Settlement execution requires a DPX integration key — contact [case@untitledfinancial.com](mailto:case@untitledfinancial.com).

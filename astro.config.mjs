@@ -126,6 +126,14 @@ export default defineConfig({
           ],
         },
         {
+          label: 'Products',
+          items: [
+            { label: 'Oracle Data API',         slug: 'products/oracle-data' },
+            { label: 'Compliance Screening API', slug: 'products/compliance-api' },
+            { label: 'MCP Subscriptions',        slug: 'products/mcp-subscriptions' },
+          ],
+        },
+        {
           label: 'Enterprise',
           items: [
             { label: 'Multi-Tenant Setup',   slug: 'enterprise/multi-tenant' },

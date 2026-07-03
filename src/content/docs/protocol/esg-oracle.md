@@ -172,6 +172,151 @@ Returns current E/S/G adaptive weights, prediction count, and circuit breaker st
 
 ---
 
+## Entity-Level Scoring
+
+In addition to the global protocol oracle, the ESG Oracle provides entity-level scoring for individual counterparties, portfolios, and supply chains using GLEIF, SEC EDGAR, BLS, OSHA, and World Bank sources.
+
+**Base URL:** `https://esg.untitledfinancial.com`
+
+---
+
+### GET /esg/lookup
+
+Resolve a company name or LEI to a full entity-level ESG score. GLEIF-resolved, cached 4 hours.
+
+```bash
+curl "https://esg.untitledfinancial.com/esg/lookup?q=Deutsche+Bank&country=DE"
+```
+
+| Parameter | Description |
+|---|---|
+| `q` | Company name or LEI (20-char alphanumeric) |
+| `country` | ISO-2 country code to narrow GLEIF resolution (optional) |
+
+---
+
+### POST /esg/batch
+
+Score up to 50 entities in one call (synchronous) or up to 500 via async job. Results ranked by composite score descending.
+
+```bash
+curl -X POST https://esg.untitledfinancial.com/esg/batch \
+  -H "Content-Type: application/json" \
+  -d '{ "leis": ["7LTWFZYICNSX8D621K86"], "names": ["Siemens AG"], "since": "2026-01-01" }'
+```
+
+| Field | Description |
+|---|---|
+| `leis` | Array of 20-char GLEIF LEIs |
+| `names` | Array of company names (GLEIF-resolved) |
+| `since` | ISO date — each result includes `delta` vs score at that date |
+| `webhookUrl` | Provide to trigger async processing (>50 entities automatically async) |
+
+Each result carries `confidence` (HIGH/MEDIUM/LOW based on data source coverage), `cacheAgeHours`, and `failureReason` (GLEIF_NOT_FOUND / SCORING_ERROR / LOW_COVERAGE) on failures.
+
+**Async batches (>50 entities or `webhookUrl` provided):**
+- Returns `{ jobId, pollUrl, estimatedSeconds }` with HTTP 202
+- Poll `GET /esg/job/:id` for status and results
+- Webhook fires on completion with full results payload
+
+---
+
+### POST /esg/portfolio
+
+Score an entire counterparty portfolio (up to 200 entities). Returns portfolio composite, tier distribution, MiCA Article 72 status, SFDR PAI flags, worst offenders, and top performers.
+
+```bash
+curl -X POST https://esg.untitledfinancial.com/esg/portfolio \
+  -H "Content-Type: application/json" \
+  -d '{ "leis": ["...", "..."], "label": "Q2 2026 Counterparties" }'
+```
+
+---
+
+### GET /esg/velocity/:lei
+
+Predictive ESG deterioration signal. Fits a linear regression on the last 90 days of score history and projects when the entity will cross the next tier boundary.
+
+```bash
+curl "https://esg.untitledfinancial.com/esg/velocity/7LTWFZYICNSX8D621K86?days=90"
+```
+
+**Response includes:** trajectory (IMPROVING / STABLE / DETERIORATING), slope in pts/month, residual standard error, confidence (HIGH/MEDIUM/LOW), and projected tier-crossing dates within 365 days.
+
+---
+
+### POST /esg/supply-chain
+
+ESG exposure across a company's direct subsidiaries via GLEIF relationship records. Scores all linked entities and returns an exposure map with SFDR PAI-2 flag.
+
+```bash
+curl -X POST https://esg.untitledfinancial.com/esg/supply-chain \
+  -H "Content-Type: application/json" \
+  -d '{ "lei": "7LTWFZYICNSX8D621K86", "maxEntities": 50 }'
+```
+
+**Response includes:** exposureComposite, highRiskPct, SFDR PAI-2 flag, tier distribution, worst offenders, and per-subsidiary scores.
+
+---
+
+### GET /esg/sector-benchmark
+
+Peer distribution (p25 / median / p75) for a sector and country, built from all entities scored through the oracle. Grows with each batch — returns a 503 with guidance if insufficient data exists for a sector.
+
+```bash
+curl "https://esg.untitledfinancial.com/esg/sector-benchmark?sector=financial_services&country=DE&days=90"
+```
+
+**Sectors:** `financial_services`, `energy`, `technology`, `healthcare`, `manufacturing`, `real_estate`, `consumer`, `logistics`, `diversified`
+
+---
+
+### GET /esg/controversy/:lei
+
+30-day adverse media scan via GDELT. Returns article count, severity (LOW / MODERATE / HIGH / CRITICAL), category breakdown (REGULATORY / ENVIRONMENTAL / LABOR / GOVERNANCE / FINANCIAL), and estimated ESG score impact (0 to −15 points).
+
+```bash
+curl "https://esg.untitledfinancial.com/esg/controversy/7LTWFZYICNSX8D621K86?days=30"
+```
+
+---
+
+### GET /esg/trend/:lei
+
+Historical composite trend for a LEI. Returns direction, delta, and full score history.
+
+```bash
+curl "https://esg.untitledfinancial.com/esg/trend/7LTWFZYICNSX8D621K86?days=90"
+```
+
+---
+
+### POST /esg/watch
+
+Register an entity for ongoing monitoring. Fires a webhook when score shifts by ≥ N points.
+
+```bash
+curl -X POST https://esg.untitledfinancial.com/esg/watch \
+  -H "Content-Type: application/json" \
+  -d '{ "lei": "7LTWFZYICNSX8D621K86", "webhookUrl": "https://...", "thresholdPoints": 5 }'
+```
+
+Manage via `GET /esg/watch/:id` and `DELETE /esg/watch/:id`.
+
+---
+
+### GET /entity/:lei/profile
+
+Single-call unified counterparty profile. Aggregates ESG score + governance score + GLEIF entity details + compliance and controversy pointers into one response. Reduces agent round-trips from 5 calls to 1.
+
+```bash
+curl "https://esg.untitledfinancial.com/entity/7LTWFZYICNSX8D621K86/profile"
+```
+
+**Response includes:** overallRisk (composite of ESG 60% + governance 40%), per-pillar ESG breakdown, governance tier and MiCA flag, GLEIF entity details, and links to compliance screen and controversy check endpoints.
+
+---
+
 ## Live Endpoint
 
 ```bash

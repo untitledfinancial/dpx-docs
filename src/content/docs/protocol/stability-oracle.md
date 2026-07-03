@@ -277,6 +277,171 @@ Returns current adaptive weights, prediction ledger count, and circuit breaker s
 
 ---
 
+## FX Intelligence
+
+The Stability Oracle exposes three FX endpoints that combine real-time rate data with corridor risk signals from the full 9-layer oracle.
+
+### Chaos Score
+
+A single real-time number (0–100) summarising global settlement conditions derived from the full oracle signal set. Useful as a dashboard widget or a pre-settlement condition check.
+
+```bash
+GET https://stability.untitledfinancial.com/chaos-score
+```
+
+```json
+{
+  "chaosScore": 34,
+  "label": "ELEVATED",
+  "stabilityScore": 66,
+  "minTierScore": 41,
+  "breakdown": { "tier0": 72, "tier1": 68, "tier3": 74, ... }
+}
+```
+
+Labels: `CALM` (< 20) · `ELEVATED` (20–39) · `VOLATILE` (40–64) · `HIGH` (65–79) · `CRITICAL` (≥ 80)
+
+An embeddable badge version is available at `GET /chaos-score/widget` — returns a transparent HTML widget suitable for embedding in dashboards or reports.
+
+---
+
+### FX rate
+
+Live mid/bid/ask for any currency pair, derived from central bank rates via KV-cached snapshot (updated hourly). Includes daily volatility percentage and corridor risk flags from the oracle.
+
+```bash
+GET https://stability.untitledfinancial.com/fx/rate?from=USD&to=EUR
+```
+
+```json
+{
+  "from": "USD", "to": "EUR",
+  "mid": 0.9234,
+  "bid": 0.9211,
+  "ask": 0.9257,
+  "spreadPct": 0.25,
+  "dailyVolatilityPct": 0.40,
+  "corridorFlags": ["HIGH_LIQUIDITY"],
+  "ratesUpdatedAt": "2026-07-02T08:00:00Z"
+}
+```
+
+No API key required. 160+ currencies supported.
+
+---
+
+### FX cost certainty
+
+CFO-grade cross-border cost quote — live rate, full rail fee breakdown, and 48-hour cost variance (±$) so treasury teams can plan without FX surprises. Includes best execution window analysis across 12 × 4-hour slots.
+
+```bash
+GET https://stability.untitledfinancial.com/fx/cost-certainty?from=USD&to=EUR&amount=500000
+```
+
+```json
+{
+  "from": "USD", "to": "EUR",
+  "amount": 500000,
+  "midRate": 0.9234,
+  "fees": {
+    "core": 4250,
+    "fx": 2000,
+    "esg": 375,
+    "license": 50,
+    "totalUsd": 6675
+  },
+  "netReceived": 456787.45,
+  "variance48hUsd": 2828,
+  "bestExecutionWindow": "2026-07-03T08:00Z",
+  "corridorRisk": "LOW",
+  "regulatoryFlags": []
+}
+```
+
+The `variance48hUsd` field is the ±$ cost range over 48 hours based on observed daily volatility for the corridor. Use it to set CFO-level budget bounds on cross-border payments.
+
+---
+
+### FX corridors
+
+Full corridor risk matrix across 60+ currency pairs: liquidity scores, daily volatility, regulatory flags, and settlement risk notes. Sorted best-first. Use for route selection or corridor risk reporting.
+
+```bash
+GET https://stability.untitledfinancial.com/fx/corridors
+```
+
+Returns an array of corridors with `liquidityScore` (0–100), `dailyVolatilityPct`, `regulatoryFlags` (e.g. `CAPITAL_CONTROLS`, `SANCTIONS_RISK`), and risk notes. Higher liquidity score = more favourable settlement conditions.
+
+---
+
+## Commodity Forecast
+
+The Commodity Forecast service (`forecast.untitledfinancial.com`) publishes climate-driven signals for 11 symbols: WTI, NG, CORN, WHEAT, SOYB, COFFEE, COCOA, SUGAR, COPPER, LUMBER, and GOLD. Signals run at 30/60/90-day horizons and are backed by Tier 0 climate data (NOAA, USDA FAS, OpenMeteo) plus real-time stressors.
+
+### Signal dashboard (heat check)
+
+```bash
+GET https://forecast.untitledfinancial.com/forecast/heat-check
+```
+
+Returns a RED / YELLOW / GREEN rating for all 11 commodities with the dominant direction (BULLISH/BEARISH/NEUTRAL) and a confidence score.
+
+### 48-Hour Call
+
+Pre-event early warning: cross-references active seasonal windows against current signal directions and returns urgency-ranked alerts.
+
+```bash
+GET https://forecast.untitledfinancial.com/forecast/48h-call
+```
+
+```json
+{
+  "callWindow": "48h",
+  "overallStatus": "CRITICAL",
+  "summary": { "critical": 5, "high": 7, "watch": 0, "total": 12 },
+  "activeSeasonalWindows": [
+    { "event": "US Gulf Hurricane Season", "commodities": ["WTI", "NG"], "severity": "HIGH" },
+    { "event": "US Corn Belt pollination window", "commodities": ["CORN"], "severity": "HIGH" }
+  ],
+  "calls": [
+    {
+      "urgency": "CRITICAL",
+      "commodity": "WTI",
+      "trigger": "US Gulf Hurricane Season",
+      "detail": "STRONGLY_BULLISH signal (84% confidence). Active seasonal window: US Gulf Hurricane Season.",
+      "action": "Immediate position review recommended"
+    }
+  ],
+  "generatedAt": "2026-07-02T21:26:41Z"
+}
+```
+
+**Urgency levels:**
+- `CRITICAL` — RED signal during a HIGH-severity seasonal window. Immediate action recommended.
+- `HIGH` — RED signal without seasonal match, or YELLOW signal during HIGH-severity window.
+- `WATCH` — YELLOW signal with a seasonal match. Elevated monitoring.
+
+### Commodity alert webhooks
+
+Subscribe to signal change events and receive HMAC-signed delivery within seconds of a signal shift:
+
+```bash
+POST https://forecast.untitledfinancial.com/forecast/subscribe
+Content-Type: application/json
+
+{
+  "url": "https://your-system.com/webhooks/commodity",
+  "symbols": ["WTI", "CORN", "WHEAT"],
+  "signals": ["signal_change", "heat_check_red"]
+}
+```
+
+Response includes a `webhookSecret` (returned once — store it). Each delivery is signed with `X-DPX-Signature: sha256=<hmac>` over the raw JSON body.
+
+**Event types:** `commodity.signal_changed` · `commodity.heat_check_red` · `commodity.heat_check_changed`
+
+---
+
 ## Data Sources (32+)
 
 | Tier | Sources |

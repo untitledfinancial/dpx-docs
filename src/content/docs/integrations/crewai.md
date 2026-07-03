@@ -1,112 +1,86 @@
 ---
 title: CrewAI
-description: Use DPX settlement tools inside CrewAI agents and multi-agent crews.
+description: Autonomous invoice settlement using a two-agent CrewAI crew — compliance screen, ESG score, stablecoin routing, and execution.
 ---
 
-Connect CrewAI agents to DPX oracle and settlement endpoints. Install the published package or define tools directly using the `@tool` decorator.
+Connect CrewAI agents to DPX for autonomous settlement workflows. The reference implementation uses a two-agent crew: a Compliance Officer screens the counterparty and scores ESG standing, then a Settlement Agent selects the optimal stablecoin route and executes.
 
-## Installation
+## Reference agent
+
+The complete reference implementation is in the DPX Python SDK:
 
 ```bash
-pip install dpx-crewai
-# or install CrewAI and define tools manually:
-pip install crewai crewai-tools httpx
+git clone https://github.com/untitledfinancial/dpx-protocol
+cd dpx-protocol/dpx-python-sdk
+pip install crewai httpx
+python examples/crewai_settlement_agent.py
 ```
 
-## Using dpx-crewai (PyPI package)
+The agent runs the full lifecycle against a sample invoice (USD → EUR, $85K):
 
-```python
-from dpx_crewai import get_dpx_tools
-from crewai import Agent, Task, Crew
+1. **Compliance Agent** — screens the counterparty via `POST /compliance/screen`, fetches ESG score from `GET /esg/score`. Halts if BLOCKED.
+2. **Settlement Agent** — calls `GET /route` to select the optimal stablecoin (EURC for EUR destinations), then executes via `POST /settle`.
 
-tools = get_dpx_tools()
+Set `SANDBOX=false` to execute on Base mainnet. DPX returns execution parameters — the caller's wallet calls `approve()` + `router.settle()` on-chain.
 
-treasury_agent = Agent(
-    role="Treasury Intelligence Specialist",
-    goal="Evaluate settlement conditions and provide fee-accurate routing recommendations.",
-    backstory="You monitor macro stability, ESG standing, and fee structure for cross-border B2B settlements.",
-    tools=tools,
-    verbose=True
-)
-
-task = Task(
-    description="Check oracle stability, get the ESG score for wallet 0xABC, and quote a $1.5M cross-border settlement.",
-    expected_output="Oracle status, ESG score, full fee breakdown, and net recipient amount.",
-    agent=treasury_agent
-)
-
-crew = Crew(agents=[treasury_agent], tasks=[task], verbose=True)
-result = crew.kickoff()
-print(result)
-```
-
-## Manual tool definition
-
-```python
-import httpx
-from crewai.tools import tool
-
-STABILITY_URL = "https://stability.untitledfinancial.com"
-ESG_URL       = "https://esg.untitledfinancial.com"
-
-@tool("DPX Oracle Stability Check")
-def dpx_oracle_check() -> dict:
-    """Check current macro stability. Returns STABLE, CAUTION, or UNSTABLE with score and reasoning. Call before any settlement."""
-    return httpx.get(f"{STABILITY_URL}/reliability").json()
-
-@tool("DPX Settlement Quote")
-def dpx_settlement_quote(amount_usd: float, has_fx: bool = False, esg_score: int = 75) -> dict:
-    """Get a binding fee quote for a DPX settlement. Returns core, FX, ESG fees, all-in rate, and net amount. Valid 300 seconds."""
-    return httpx.get(f"{STABILITY_URL}/quote", params={
-        "amountUsd": amount_usd,
-        "hasFx": str(has_fx).lower(),
-        "esgScore": esg_score
-    }).json()
-
-@tool("DPX ESG Score")
-def dpx_esg_score(address: str) -> dict:
-    """Get live ESG score for a counterparty wallet address. Score 0-100 — higher is lower compliance fee."""
-    return httpx.get(f"{ESG_URL}/esg-score", params={"address": address}).json()
-```
-
-## Multi-agent crew example
+## Crew structure
 
 ```python
 from crewai import Agent, Task, Crew, Process
 
 compliance_agent = Agent(
-    role="Compliance Analyst",
-    goal="Screen counterparty ESG standing and flag any AML concerns.",
-    tools=[dpx_esg_score],
+    role="Compliance Officer",
+    goal="Screen the counterparty for AML, sanctions, and FATF risk. Fetch ESG score. Block if BLOCKED.",
+    tools=[ScreenCounterpartyTool(), GetEsgScoreTool()],
 )
 
-treasury_agent = Agent(
-    role="Treasury Operator",
-    goal="Price and route cross-border settlements efficiently.",
-    tools=[dpx_oracle_check, dpx_settlement_quote],
+settlement_agent = Agent(
+    role="Settlement Execution Agent",
+    goal="Select the optimal stablecoin route and execute the settlement.",
+    tools=[GetRoutingTool(), ExecuteSettlementTool()],
 )
 
 crew = Crew(
-    agents=[compliance_agent, treasury_agent],
+    agents=[compliance_agent, settlement_agent],
     tasks=[compliance_task, settlement_task],
-    process=Process.sequential
+    process=Process.sequential,
 )
+result = crew.kickoff()
 ```
 
-## Available tools
+## Tools
 
-| Tool | Endpoint |
-|---|---|
-| Oracle stability | `stability.untitledfinancial.com/reliability` |
-| Settlement quote | `stability.untitledfinancial.com/quote` |
-| ESG score | `esg.untitledfinancial.com/esg-score` |
-| Rail health | `stability.untitledfinancial.com/rail-status` |
-| Protocol manifest | `stability.untitledfinancial.com/manifest` |
+| Tool | Endpoint | Auth |
+|---|---|---|
+| `screen_counterparty` | `compliance.untitledfinancial.com/compliance/screen` | None |
+| `get_esg_score` | `stability.untitledfinancial.com/esg/score` | None |
+| `get_stablecoin_route` | `agent.untitledfinancial.com/route` | None |
+| `execute_settlement` | `agent.untitledfinancial.com/settle` | x402 (sandbox: none) |
+
+No API key required for compliance, ESG, and routing endpoints. Settlement in live mode requires an x402 payment (USDC on Base mainnet).
+
+## Routing logic
+
+`GET /route` returns all three stablecoin options ranked:
+
+- **EURC** is recommended when destination currency is EUR — eliminates cross-currency conversion and the associated FX fee
+- **USDC** is ranked #2 for highest on-chain liquidity
+- **USDT** is ranked #3 as an alternative when USDC liquidity is constrained
+
+The response includes a `settleBody` ready to POST directly to `/settle`.
+
+## Environment variables
+
+```bash
+SANDBOX=true    # set to false for live execution on Base mainnet
+```
+
+No `ANTHROPIC_API_KEY` or other credentials required for oracle/pricing/compliance endpoints.
 
 ## PyPI
 
 ```
-https://pypi.org/project/dpx-crewai/
+pip install dpx-sdk
 ```
 
-No API key required for oracle and pricing endpoints.
+The `dpx_sdk.DPX` client wraps all endpoints synchronously. See [LangChain](/integrations/langchain) for LangGraph-based orchestration.

@@ -262,7 +262,7 @@ The human reviews analytics. The agent executes payments.
 | Pay for intelligence via x402 micropayment | Yes — USDC on Base, per-call pricing |
 | Receive settlement results via webhook | Yes — HMAC-SHA256 signed callbacks |
 | Verify on-chain | Yes — Base Blockscout or `cast call` |
-| Connect via MCP | Yes — 13 tools, `npx @untitledfinancial/dpx-mcp` |
+| Connect via MCP | Yes — 64 tools, `npx @untitledfinancial/dpx-mcp` |
 | Network proximity risk screening | Yes — propagated signals from flagged neighbours surface in AML layer |
 | Fast-path routing for trusted pairs | Yes — earned by bilateral history; computed nightly, applied at settlement |
 | Open a streaming micropayment session | Yes — `POST /stream/open` with x402 payment; AML runs once at open |
@@ -272,6 +272,11 @@ The human reviews analytics. The agent executes payments.
 | Agent discovery — x402 crawl | Yes — nightly crawl of known AI/agent domains for x402 endpoints |
 | Agent discovery — MCP registry watch | Yes — nightly GitHub search for new payment/finance MCP tools |
 | Agent discovery — mycelium graph | Yes — surfaces high-value wallets already in the network graph |
+| FX cost certainty (48h variance) | Yes — `GET /fx/cost-certainty` — live rate, fees, ±$ variance, best execution window |
+| FX corridor intelligence | Yes — `GET /fx/corridors` — 60+ pairs, liquidity scores, regulatory flags, sorted best-first |
+| Chaos Score — global settlement conditions | Yes — `GET /chaos-score` · embeddable widget at `/chaos-score/widget` |
+| SFDR PAI report (all 18 Annex I indicators) | Yes — `POST /sfdr/pai-report` — up to 50 LEIs, Article 8/9 compatible |
+| Discover agent via A2A card | Yes — `GET agent.untitledfinancial.com/.well-known/agent.json` — Google A2A / ADK standard |
 
 ---
 

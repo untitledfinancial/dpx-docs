@@ -206,6 +206,119 @@ When the adaptive layer is active, `weights` will gradually drift from the defau
 
 ---
 
+## Corridor Intelligence
+
+### POST /stability/corridor
+
+Corridor-specific stability score for any currency pair. Combines the global oracle score with per-corridor regulatory penalties, FX session liquidity, weekend penalty, and cascade adjustment to produce an actionable settlement recommendation.
+
+```bash
+curl -X POST https://stability.untitledfinancial.com/stability/corridor \
+  -H "Content-Type: application/json" \
+  -d '{
+    "from": "USD",
+    "to": "BRL",
+    "amount": 5000000
+  }'
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `from` | string | Source currency (ISO-4217) |
+| `to` | string | Destination currency (ISO-4217) |
+| `amount` | number | Settlement amount in `from` currency (optional — triggers large-amount flag ≥ $5M) |
+
+**Response fields:**
+
+| Field | Description |
+|---|---|
+| `recommendation` | `SETTLE_NOW` / `DELAY_24H` / `DELAY_48H` |
+| `corridorScore` | 0–100 composite (global oracle + corridor adj + liquidity + cascade penalty) |
+| `corridorAdjustment` | Static pair adjustment (−30 to +10) for regulatory environment |
+| `liquidityScore` | 90 / 65 / 30 based on active FX trading session at time of call |
+| `cascadePenalty` | −15 / −8 / −3 / 0 based on current cascade alert level |
+| `weekendPenalty` | −8 if UTC day is Saturday or Sunday |
+| `regulatoryFlags` | Jurisdiction-specific flags (e.g., BCB Resolution 561 / IOF, CBN capital controls) |
+| `reasoning` | Plain-language explanation of the corridor score drivers |
+
+**Coverage:** 28 currency pairs across 14 currencies — BRL, TRY, ARS, NGN, PKR, EGP, EUR, GBP, SGD, JPY, HKD, CNH, INR, MXN, ZAR. Unlisted pairs return the global oracle score without corridor adjustment.
+
+---
+
+### POST /stability/settlement-window
+
+Optimal 4-hour execution windows over the next 72 hours, ranked by composite settlement score. Factors in oracle outlook, cascade decay/growth trajectory, FX session liquidity, and (optionally) counterparty ESG tier.
+
+```bash
+curl -X POST https://stability.untitledfinancial.com/stability/settlement-window \
+  -H "Content-Type: application/json" \
+  -d '{
+    "from": "USD",
+    "to": "EUR",
+    "amount": 8000000,
+    "lei": "7LTWFZYICNSX8D621K86"
+  }'
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `from` | string | Source currency |
+| `to` | string | Destination currency |
+| `amount` | number | Settlement amount (optional) |
+| `lei` | string | Counterparty LEI — pulls ESG score to adjust window scoring (optional) |
+
+**Response fields:**
+
+| Field | Description |
+|---|---|
+| `windows` | Array of 18 × 4h slots — each with UTC timestamp, compositeScore, liquidityScore, cascadeFactor, recommendation |
+| `optimalWindow` | Highest-scored window with full details |
+| `esgTier` | Counterparty ESG tier if LEI provided (affects fee but not window ranking) |
+| `largeAmountNote` | Warning if amount ≥ $5M — recommends coordination with treasury desk |
+
+The scoring model decays cascade risk over time on IMPROVING outlooks (risk clears faster) and grows it on DETERIORATING outlooks (risk accumulates). Weekend slots apply a −8 liquidity penalty.
+
+---
+
+## Settlement Agent endpoints
+
+Settlement execution, routing, and ISO 20022 intake live on the Settlement Agent (`agent.untitledfinancial.com`).
+
+### GET /route — Multi-stablecoin routing
+
+Rank USDC, EURC, and USDT for any amount and currency pair. Returns the recommended token and a ready-to-use `/settle` body.
+
+```bash
+GET https://agent.untitledfinancial.com/route?amount=85000&from=USD&to=EUR
+```
+
+```json
+{
+  "routingAdvice": {
+    "recommendation": "EURC",
+    "rationale": "EURC eliminates FX conversion for EUR destination — no cross-currency fee applied"
+  },
+  "options": [
+    { "rank": 1, "token": "EURC", "isCrossCurrency": false },
+    { "rank": 2, "token": "USDC", "isCrossCurrency": true },
+    { "rank": 3, "token": "USDT", "isCrossCurrency": true }
+  ],
+  "settleEndpoint": "https://agent.untitledfinancial.com/settle"
+}
+```
+
+No auth required. Response is valid for `ttlSeconds` (300s).
+
+### POST /iso20022 — ISO 20022 pain.001 intake
+
+See [SWIFT Compatibility](/integrations/swift#direct-pain001-intake) for the full reference.
+
+### GET /widgets/{type} — Embeddable HTML widgets
+
+See [Compliance Oracle API](/api/compliance-oracle#embeddable-widgets) for the full reference. Types: `sanctions`, `esg`, `corridor`.
+
+---
+
 ## Machine Discovery
 
 | URL | Format |

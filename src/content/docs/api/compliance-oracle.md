@@ -431,3 +431,343 @@ curl "https://compliance.untitledfinancial.com/esg/score/wallet/0xabc...?narrate
 ```
 
 Returns `404` if the wallet is not registered or has no LEI.
+
+---
+
+## Beneficial Ownership & PEP Screening
+
+### POST /compliance/ubo-chain
+
+Traverse the GLEIF beneficial ownership chain up to 3 levels (subject → direct parent → ultimate parent), with optional intermediates, and screen every node against the OpenSanctions global sanctions database. Returns FATF R.16 UBO attestation.
+
+```bash
+curl -X POST https://compliance.untitledfinancial.com/compliance/ubo-chain \
+  -H "Content-Type: application/json" \
+  -d '{
+    "lei": "7LTWFZYICNSX8D621K86",
+    "deep": true
+  }'
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `lei` | string | 20-char GLEIF LEI of the subject entity |
+| `deep` | boolean | Include intermediate ownership nodes (default false) |
+
+**Response fields:**
+
+| Field | Description |
+|---|---|
+| `result` | `CLEAR` / `REVIEW_REQUIRED` / `BLOCKED` |
+| `chain` | Array of ownership nodes — each with LEI, name, role, jurisdiction, and sanctions screen result |
+| `sanctionsMatches` | Matches at OpenSanctions score ≥ 0.70 |
+| `fatfAttestation` | FATF R.16 UBO attestation — beneficial owners identified, sanctions status, jurisdiction risk |
+| `cachedAt` | KV cache timestamp (24h TTL) |
+
+Results are KV-cached per LEI for 24 hours. Requires re-run after ownership structure changes.
+
+:::note[OpenSanctions licensing]
+The OpenSanctions PEP and sanctions datasets require a commercial license for production use. DPX Compliance Oracle includes access under the DPX platform agreement for approved beta partners.
+:::
+
+---
+
+### POST /compliance/pep-screen
+
+Screen an individual against the OpenSanctions PEP (Politically Exposed Person) dataset. Required for FATF R.12/13 Enhanced Due Diligence triggers.
+
+```bash
+curl -X POST https://compliance.untitledfinancial.com/compliance/pep-screen \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Mario Draghi",
+    "country": "IT",
+    "position": "Former ECB President"
+  }'
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `name` | string | Full name of the individual |
+| `country` | string | ISO-2 country code (optional — narrows results) |
+| `position` | string | Known title or role (optional — used for match confidence) |
+
+**Response fields:**
+
+| Field | Description |
+|---|---|
+| `riskLevel` | `HIGH` / `MEDIUM` / `LOW` / `NONE` |
+| `pepMatches` | Matches at OpenSanctions score ≥ 0.60, with position, country, and match confidence |
+| `eddRequired` | true if FATF R.12/13 EDD is triggered |
+| `fatfR12` | FATF R.12 attestation |
+| `cachedAt` | KV cache timestamp (6h TTL) |
+
+---
+
+## Regulatory Calendar
+
+### GET /compliance/regulatory-calendar
+
+Upcoming and in-effect regulatory obligations across MiCA, SFDR, CSRD, GENIUS Act, and FATF. Static reference updated with each DPX release.
+
+```bash
+curl https://compliance.untitledfinancial.com/compliance/regulatory-calendar
+```
+
+Returns 16 events with: framework, event name, effective date, jurisdictions, summary, and `dpxAlignment` — the specific DPX feature addressing each obligation.
+
+**Frameworks covered:**
+
+| Framework | Coverage |
+|---|---|
+| MiCA | Article 45 whitepaper, Article 72 ESG, Article 109 authorisation |
+| SFDR | Article 8/9 fund classification, PAI indicators |
+| CSRD | Audit trail, double materiality, value chain |
+| GENIUS Act | Stablecoin reserve, monthly attestation, VASP registration |
+
+---
+
+## KYA — Know Your Agent
+
+Agent identity layer for the DPX settlement network. KYA maps AI agent actions back to a verifiable legal entity, satisfying FATF R.16 (Travel Rule originator identification) without document collection or manual review queues.
+
+### Compliance model
+
+FATF R.16 requires identifying the *originator* — the human or legal entity instructing a payment. An AI agent is a payment initiation mechanism, not the originator (same as a payment terminal or automated cash management system). The owner entity registered with KYA is the originator. Three registration tiers scale compliance burden with settlement risk:
+
+| Tier | Requirements | Daily cap | Verification |
+|---|---|---|---|
+| ANONYMOUS | Agent name only | $1K | None — instant |
+| REGISTERED | Name + email (self-attested) | $25K | None — instant |
+| VERIFIED | Active GLEIF LEI | No platform cap | Automatic GLEIF API lookup — no documents |
+
+**Legal basis:**
+- **FATF R.16** — owner entity registration satisfies originator identification requirement
+- **MiCA Art. 45 / 72** — LEI explicitly accepted as entity identification
+- **GENIUS Act** — business entity attestation + payment stablecoin framework compliance satisfied at REGISTERED+
+
+### POST /agent/register
+
+Register an agent. The tier is determined automatically from the fields provided.
+
+```bash
+# ANONYMOUS — instant, no fields required beyond name
+curl -X POST https://compliance.untitledfinancial.com/agent/register \
+  -H "Content-Type: application/json" \
+  -d '{ "name": "procurement-agent-v1", "framework": "custom" }'
+
+# REGISTERED — add ownerEntity + ownerEmail
+curl -X POST https://compliance.untitledfinancial.com/agent/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "treasury-agent",
+    "ownerEntity": "Acme Corp",
+    "ownerEmail": "treasury@acme.com",
+    "framework": "custom",
+    "protocols": ["x402", "ap2"]
+  }'
+
+# VERIFIED — add a GLEIF LEI. DPX calls the public GLEIF API and confirms ACTIVE status.
+# No documents. No manual review. LEI issuers (LOUs) have already done identity verification.
+curl -X POST https://compliance.untitledfinancial.com/agent/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "treasury-agent",
+    "ownerEntity": "Acme Corp",
+    "ownerEmail": "treasury@acme.com",
+    "ownerLei": "7LTWFZYICNSX8D621K86",
+    "framework": "custom",
+    "protocols": ["x402", "ap2"],
+    "mandate": {
+      "maxNotionalUsd": 5000000,
+      "dailyCapUsd": 10000000,
+      "currencyPairs": ["USD|EUR", "USD|GBP"],
+      "esgFloor": 50
+    }
+  }'
+```
+
+**Response (VERIFIED):**
+```json
+{
+  "agentId": "agt_Xy9...",
+  "kyaLevel": "VERIFIED",
+  "kyaScore": 85,
+  "status": "ACTIVE",
+  "tierCaps": { "maxNotionalUsd": 5000000, "dailyCapUsd": 10000000 },
+  "leiVerified": true,
+  "leiEntityName": "Acme Corporation",
+  "tierNote": "LEI 7LTWFZYICNSX8D621K86 confirmed ACTIVE via GLEIF. Owner identity verified. No documents required. Institutional caps apply — mandate governs.",
+  "mandate": { "mandateId": "mnd_...", "ap2Compatible": true, ... }
+}
+```
+
+### POST /agent/:id/verify
+
+Returns a signed 1-hour credential with effective spend caps and FATF attestation. Attach as `X-Agent-Credential` header on `/settle` requests.
+
+```bash
+curl -X POST https://compliance.untitledfinancial.com/agent/agt_Xy9.../verify
+```
+
+```json
+{
+  "verified": true,
+  "kyaLevel": "VERIFIED",
+  "kyaScore": 85,
+  "credential": {
+    "agentId": "agt_Xy9...",
+    "issuedAt": 1751299200000,
+    "expiresAt": 1751302800000,
+    "mandateId": "mnd_...",
+    "attestation": {
+      "kyaLevel": "VERIFIED",
+      "ownerVerified": true,
+      "mandateActive": true,
+      "fatfCompliant": true,
+      "dailyCapUsd": 10000000,
+      "maxNotionalUsd": 5000000
+    },
+    "signature": "HMAC-SHA256 signed, 1h TTL"
+  }
+}
+```
+
+### POST /agent/mandate
+
+Create or update a spend mandate for a REGISTERED or VERIFIED agent. ANONYMOUS agents must upgrade first. REGISTERED agent caps are clamped to the $25K tier limit; VERIFIED agents set their own with no platform ceiling.
+
+```bash
+curl -X POST https://compliance.untitledfinancial.com/agent/mandate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "agentId": "agt_Xy9...",
+    "maxNotionalUsd": 500000,
+    "dailyCapUsd": 2000000,
+    "counterpartyWhitelist": ["7LTWFZYICNSX8D621K86"],
+    "esgFloor": 45,
+    "ap2Compatible": true
+  }'
+```
+
+### GET /agent/:id
+
+Retrieve agent record, current KYA level, score, and mandate.
+
+```bash
+curl https://compliance.untitledfinancial.com/agent/agt_Xy9...
+```
+
+### DELETE /agent/:id
+
+Revoke an agent. Credential verification will return `REVOKED` immediately.
+
+```bash
+curl -X DELETE https://compliance.untitledfinancial.com/agent/agt_Xy9...
+```
+
+### Upgrading tiers
+
+Tiers upgrade at registration time by providing additional fields. To upgrade an existing agent, re-register — a new `agentId` is issued. The registration response includes a `_next` field explaining the upgrade path when the agent is below VERIFIED.
+
+To obtain a GLEIF LEI for your organization: [gleif.org](https://www.gleif.org/en/lei/search) — LEIs are issued by Local Operating Units (LOUs), typically within 1–3 business days. Many financial institutions can also obtain an LEI on behalf of a client.
+
+---
+
+## POST /vendor-risk — Composite vendor risk score
+
+Single call that runs compliance screening and ESG scoring in parallel and returns a composite 0–100 risk score. Replaces separate calls to `/compliance/screen` and `/esg/score` for vendor onboarding or pre-payment diligence workflows.
+
+```bash
+curl -X POST https://compliance.untitledfinancial.com/vendor-risk \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name":    "Berlin Supplier GmbH",
+    "lei":     "549300TRUWO2CD2G5692",
+    "wallet":  "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    "country": "DE",
+    "amount":  85000
+  }'
+```
+
+**Request fields:**
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `name` | string | Yes | Vendor or entity name |
+| `lei` | string | No | Legal Entity Identifier (improves accuracy) |
+| `wallet` | string | No | On-chain wallet address |
+| `country` | string | No | ISO 3166-1 alpha-2 country code |
+| `amount` | number | No | Transaction amount in USD (used for context in scoring) |
+
+**Response:**
+
+```json
+{
+  "vendorRiskScore": 82,
+  "riskTier": "LOW",
+  "recommendation": "Proceed — low risk. Standard monitoring applies.",
+  "entity": { "name": "Berlin Supplier GmbH", "lei": "549300TRUWO2CD2G5692" },
+  "breakdown": {
+    "complianceScore": 100,
+    "esgScore": 74,
+    "complianceWeight": 0.65,
+    "esgWeight": 0.35
+  },
+  "compliance": {
+    "verdict": "APPROVED",
+    "signals": [],
+    "sanctions": false,
+    "pep": false,
+    "fatfBlacklist": false
+  },
+  "esg": {
+    "score": 74,
+    "tier": "MODERATE",
+    "source": "esg.untitledfinancial.com"
+  },
+  "generatedAt": "2026-07-02T21:30:00Z",
+  "refreshAt": "2026-07-03T21:30:00Z"
+}
+```
+
+**Risk tiers:**
+
+| Score | Tier | Recommendation |
+|---|---|---|
+| ≥ 80 | `LOW` | Proceed — standard monitoring |
+| 60–79 | `MODERATE` | Proceed with enhanced monitoring |
+| 35–59 | `ELEVATED` | Manual review recommended |
+| < 35 | `HIGH` | Block or escalate |
+
+**Scoring formula:** `vendorRiskScore = (complianceScore × 0.65) + (esgScore × 0.35)`
+
+Compliance scores: BLOCKED = 0, FLAGGED = 35, APPROVED = 100. Deductions applied for sanctions exposure, PEP linkage, and FATF grey/blacklist status. ESG defaults to 50 (neutral) when no wallet or LEI is supplied.
+
+No API key required. No x402 payment required.
+
+---
+
+## Embeddable widgets
+
+Three self-contained HTML widgets for checkout and onboarding flows. No API key, no backend — paste into any page.
+
+| Widget | URL | What it does |
+|---|---|---|
+| Sanctions check | `GET /widgets/sanctions` | Paste a wallet address or entity name — returns APPROVED/FLAGGED/BLOCKED with risk signals |
+| ESG score badge | `GET /widgets/esg` | Paste a wallet address or LEI — returns score 0–100 with E/S/G breakdown |
+| Corridor stability | `GET /widgets/corridor` | Enter from/to currency — returns SETTLE_NOW/DELAY_24H/DELAY_48H with stability score |
+
+```html
+<!-- Paste this into any checkout page -->
+<script>
+  fetch('https://agent.untitledfinancial.com/widgets/sanctions')
+    .then(r => r.text())
+    .then(html => document.getElementById('dpx-widget').innerHTML = html);
+</script>
+<div id="dpx-widget"></div>
+```
+
+Or open `https://agent.untitledfinancial.com/widgets/sanctions` directly to copy the standalone HTML.
+
+| FATF | R.15 (VASP), R.16 (VoP), R.12/13 (PEP/EDD) |

@@ -55,11 +55,23 @@ curl -X GET https://integration.untitledfinancial.com/bank-connectivity/payment-
 2. Run sandbox payment flows — see [Kyriba Integration](/integrations/kyriba)
 3. Request Kyriba marketplace certification — contact DPX for the process
 
-### Option B — SAP TRM
+### Option B — TIS (Treasury Intelligence Solutions)
+
+For corporates using TIS as their payment factory — common in Germany, Netherlands, and Switzerland — DPX connects as an H2H bank endpoint. No ERP or TMS change required; your treasury team routes payments to DPX from within TIS as they would to any bank.
+
+See [TIS Integration](/integrations/tis) for setup.
+
+### Option C — Finastra (Fusion Treasury)
+
+For banks running Finastra Fusion Treasury, DPX integrates via the FusionFabric.cloud open banking marketplace. The bank's treasury team installs the DPX app and selects DPX as the settlement channel for eligible cross-border payments — no core system change required.
+
+See [Finastra Integration](/integrations/finastra) for setup.
+
+### Option D — SAP TRM
 
 For institutions running SAP Treasury & Risk Management, DPX connects via SAP Integration Suite or direct ABAP. See [SAP TRM Integration](/integrations/sap-trm).
 
-### Option C — Direct REST API (pain.001)
+### Option E — Direct REST API (pain.001)
 
 For any TMS or in-house system already generating ISO 20022:
 
@@ -84,7 +96,7 @@ curl -X POST https://integration.untitledfinancial.com/payments/initiate \
   }'
 ```
 
-### Option D — MCP (AI-assisted treasury)
+### Option F — MCP (AI-assisted treasury)
 
 For teams using Claude or other MCP-compatible AI assistants:
 
@@ -106,17 +118,26 @@ Then in Claude: *"Get a fee quote for EUR 250,000 cross-border settlement with L
 
 ## Step 3 — ESG preflight for SFDR compliance
 
-Before settlement, retrieve the counterparty's ESG profile for SFDR PAI indicator disclosure:
+**Free PAI pre-assessment (no auth required):**
+
+```bash
+GET https://compliance.untitledfinancial.com/sfdr/report?lei=529900ODI3047E2LIV03
+```
+
+Returns partial PAI indicators immediately — GHG, carbon footprint, biodiversity, water, waste, gender diversity. Sanctions and AML checks require the full screen.
+
+**Full ESG score + settlement params:**
 
 ```bash
 GET https://esg.untitledfinancial.com/esg-score?lei=529900ODI3047E2LIV03
 ```
 
-Response includes:
+Full response includes:
 - Composite E/S/G scores
-- SFDR PAI indicators (GHG emissions, carbon footprint, social violations, gender diversity)
+- Complete SFDR PAI indicators (GHG emissions, carbon footprint, social violations, gender diversity)
 - Article 8/9 compatibility flags
 - Settlement surcharge rate
+- `_settlement` block — live fee rate, estimated saving vs SWIFT, link to execute
 
 Store the `sfdr` block as a source record for your SFDR product-level PAI disclosure. See [SFDR & CSRD Compliance](/protocol/sfdr-csrd) for full field mapping.
 
@@ -187,7 +208,7 @@ All endpoints are available in sandbox mode — no USDC/EURC required. Settlemen
 ```bash
 # Sandbox flag is set server-side — no config required
 # ESG, compliance, and oracle calls are always live
-# Settlement execution is simulated until executor wallet is funded
+# Settlement execution is simulated — in production, callers execute on-chain themselves (sender-funded model)
 ```
 
 ---
@@ -207,5 +228,7 @@ To receive an institution API key and begin integration testing:
 - [EURC Settlement](/integrations/eurc)
 - [SWIFT Compatibility](/integrations/swift)
 - [Kyriba Integration](/integrations/kyriba)
+- [TIS Integration](/integrations/tis)
+- [Finastra Integration](/integrations/finastra)
 - [SAP TRM Integration](/integrations/sap-trm)
 - [Regulatory Positioning](/protocol/regulatory)

@@ -208,15 +208,53 @@ destination_currency = EUR
 
 DPX applies the FX fee and routes through EURC on Base.
 
+## ACH compliance pre-screening
+
+Before executing an ACH payment, run it through the DPX compliance oracle:
+
+```bash
+POST https://agent.untitledfinancial.com/mercury/ach-authorize
+{
+  "recipientId":   "mercury-recipient-uuid",
+  "amount":        15000.00,
+  "accountName":   "Acme Corp",
+  "routingNumber": "021000021",
+  "accountNumber": "123456789",
+  "memo":          "Q2 vendor payment"
+}
+```
+
+Response:
+
+```json
+{
+  "decision":       "APPROVED",
+  "requiresReview": false,
+  "autoExecute":    true,
+  "compliance": {
+    "sanctionsClean":   true,
+    "anomalyScore":     0.12,
+    "riskTier":         "LOW"
+  }
+}
+```
+
+| Decision | HTTP | Meaning |
+|---|---|---|
+| `APPROVED` + `autoExecute: true` | 200 | ACH fires immediately |
+| `FLAGGED` + `requiresReview: true` | 200 | Queued for manual review |
+| `BLOCKED` | 403 | Hard stop — do not proceed |
+
 ## MCP tools
 
-Three Mercury tools are available in the MCP server:
+Four Mercury tools are available in the MCP server:
 
 | Tool | What it does |
 |---|---|
 | `mercury.accounts` | List all Mercury accounts with live balances |
 | `mercury.transactions` | List recent transactions for an account |
 | `mercury.send` | Initiate a payment — ACH, wire, or international wire — with optional DPX routing |
+| `mercury.ach_authorize` | Compliance pre-screening via DPX AML oracle before ACH execution |
 
 When `mercury.send` is called with `dpxRoute: true`, the payment is tagged for DPX settlement. The Settlement Agent picks it up via webhook, runs oracle verification, and returns execution params for on-chain settlement.
 
