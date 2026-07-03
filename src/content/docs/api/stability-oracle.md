@@ -261,6 +261,33 @@ Any corridor involving BRL returns a top-level `regulatoryWarning` object:
 
 Severity escalates to `CRITICAL` within 30 days of the deadline. The same warning appears in `/flow-check` responses for BRL pairs.
 
+**Last-mile partners (`lastMilePartners`):**
+
+For non-USD/EUR destination currencies, the response includes a `lastMilePartners` array of licensed PSPs that handle the fiat conversion leg. DPX settles the cross-border stablecoin leg; these partners handle local disbursement. Example for `to=NGN`:
+
+```json
+{
+  "lastMilePartners": [
+    {
+      "name": "Grey Finance",
+      "type": "FINTECH",
+      "licensor": "CBN",
+      "note": "CBN-licensed — USD/USDC → NGN with virtual accounts",
+      "url": "https://grey.co"
+    },
+    {
+      "name": "Flutterwave",
+      "type": "PSP",
+      "licensor": "CBN",
+      "note": "Pan-African PSP with NGN disbursement",
+      "url": "https://flutterwave.com"
+    }
+  ]
+}
+```
+
+Partners are provided for: BRL, NGN, PHP, INR, KES, GHS, TRY, MXN, ZAR, EGP, PKR, IDR, THB, VND, BDT, LKR, TZS, UGX, MAD, CLP, COP, PEN, ETB. USD, EUR, GBP, AED, SAR, QAR, SGD, HKD, JPY settle natively — no last-mile conversion needed.
+
 **Coverage:** BRL, TRY, ARS, NGN, PKR, EGP, EUR, GBP, SGD, JPY, HKD, CNH, INR, MXN, ZAR, CLP, COP, PEN, BOB, UYU, KES, GHS, TZS, UGX, ETB, MAD, BDT, LKR, VND, PHP, IDR, THB, MYR, AED, SAR, QAR, ILS, PLN, CZK, RON, UAH. Unlisted pairs return the global oracle score without corridor adjustment.
 
 ---
