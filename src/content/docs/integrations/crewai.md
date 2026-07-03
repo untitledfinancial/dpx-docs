@@ -1,9 +1,9 @@
 ---
 title: CrewAI
-description: Autonomous invoice settlement using a two-agent CrewAI crew — compliance screen, ESG score, stablecoin routing, and execution.
+description: Autonomous invoice settlement using a two-agent CrewAI crew — single flow-check pre-flight, then execution.
 ---
 
-Connect CrewAI agents to DPX for autonomous settlement workflows. The reference implementation uses a two-agent crew: a Compliance Officer screens the counterparty and scores ESG standing, then a Settlement Agent selects the optimal stablecoin route and executes.
+Connect CrewAI agents to DPX for autonomous settlement workflows. The reference implementation uses a two-agent crew: a Flow Check Agent runs a single pre-flight call that covers AML screening, ESG scoring, oracle stability, and stablecoin routing in parallel — then a Settlement Agent executes using the result.
 
 ## Reference agent
 
@@ -18,8 +18,8 @@ python examples/crewai_settlement_agent.py
 
 The agent runs the full lifecycle against a sample invoice (USD → EUR, $85K):
 
-1. **Compliance Agent** — screens the counterparty via `POST /compliance/screen`, fetches ESG score from `GET /esg/score`. Halts if BLOCKED.
-2. **Settlement Agent** — calls `GET /route` to select the optimal stablecoin (EURC for EUR destinations), then executes via `POST /settle`.
+1. **Flow Check Agent** — calls `GET /flow-check` once. Returns `PROCEED`, `HOLD`, or `BLOCKED`. On HOLD or BLOCKED, halts with reason. On PROCEED, outputs the recommended token and a ready-to-use settle body.
+2. **Settlement Agent** — executes via `POST /settle` using the token and settle body from flow-check.
 
 Set `SANDBOX=false` to execute on Base mainnet. DPX returns execution parameters — the caller's wallet calls `approve()` + `router.settle()` on-chain.
 
@@ -28,21 +28,21 @@ Set `SANDBOX=false` to execute on Base mainnet. DPX returns execution parameters
 ```python
 from crewai import Agent, Task, Crew, Process
 
-compliance_agent = Agent(
-    role="Compliance Officer",
-    goal="Screen the counterparty for AML, sanctions, and FATF risk. Fetch ESG score. Block if BLOCKED.",
-    tools=[ScreenCounterpartyTool(), GetEsgScoreTool()],
+flow_check_agent = Agent(
+    role="Pre-Settlement Compliance & Routing Officer",
+    goal="Run /flow-check. BLOCKED or HOLD = stop. PROCEED = pass token and settle body to settlement agent.",
+    tools=[FlowCheckTool()],
 )
 
 settlement_agent = Agent(
     role="Settlement Execution Agent",
-    goal="Select the optimal stablecoin route and execute the settlement.",
-    tools=[GetRoutingTool(), ExecuteSettlementTool()],
+    goal="Execute settlement using the token and settle body from flow-check.",
+    tools=[ExecuteSettlementTool()],
 )
 
 crew = Crew(
-    agents=[compliance_agent, settlement_agent],
-    tasks=[compliance_task, settlement_task],
+    agents=[flow_check_agent, settlement_agent],
+    tasks=[flow_check_task, settlement_task],
     process=Process.sequential,
 )
 result = crew.kickoff()
@@ -52,12 +52,30 @@ result = crew.kickoff()
 
 | Tool | Endpoint | Auth |
 |---|---|---|
-| `screen_counterparty` | `compliance.untitledfinancial.com/compliance/screen` | None |
-| `get_esg_score` | `stability.untitledfinancial.com/esg/score` | None |
-| `get_stablecoin_route` | `agent.untitledfinancial.com/route` | None |
+| `flow_check` | `agent.untitledfinancial.com/flow-check` | None |
 | `execute_settlement` | `agent.untitledfinancial.com/settle` | x402 (sandbox: none) |
 
-No API key required for compliance, ESG, and routing endpoints. Settlement in live mode requires an x402 payment (USDC on Base mainnet).
+`/flow-check` runs AML screening, ESG scoring, oracle stability, and stablecoin routing in a single parallel call — replacing what was previously 3 separate API calls. No API key required. Settlement in live mode requires an x402 USDC payment on Base mainnet.
+
+## flow-check response
+
+```json
+{
+  "decision": "PROCEED",
+  "ready": true,
+  "token": "EURC",
+  "tokenRationale": "EURC eliminates FX conversion for EUR destination",
+  "estimatedNetUsd": 84820.50,
+  "settleBody": {
+    "amount": 85000,
+    "sourceCurrency": "USD",
+    "destinationCurrency": "EUR",
+    "token": "EURC"
+  }
+}
+```
+
+On `BLOCKED`: includes `blockReason`. On `HOLD`: includes `holdReason` and oracle status. Any BRL corridor also includes a `regulatoryWarning` with the BCB Resolution 561 deadline.
 
 ## Routing logic
 

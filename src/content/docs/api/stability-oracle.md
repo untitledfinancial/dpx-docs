@@ -232,16 +232,36 @@ curl -X POST https://stability.untitledfinancial.com/stability/corridor \
 
 | Field | Description |
 |---|---|
-| `recommendation` | `SETTLE_NOW` / `DELAY_24H` / `DELAY_48H` |
-| `corridorScore` | 0–100 composite (global oracle + corridor adj + liquidity + cascade penalty) |
-| `corridorAdjustment` | Static pair adjustment (−30 to +10) for regulatory environment |
-| `liquidityScore` | 90 / 65 / 30 based on active FX trading session at time of call |
-| `cascadePenalty` | −15 / −8 / −3 / 0 based on current cascade alert level |
-| `weekendPenalty` | −8 if UTC day is Saturday or Sunday |
-| `regulatoryFlags` | Jurisdiction-specific flags (e.g., BCB Resolution 561 / IOF, CBN capital controls) |
-| `reasoning` | Plain-language explanation of the corridor score drivers |
+| `corridor.recommendation` | `SETTLE_NOW` / `DELAY_24H` / `DELAY_48H` |
+| `corridor.score` | 0–100 composite (global oracle + corridor adj + liquidity + cascade penalty) |
+| `corridor.tier` | `OPTIMAL` / `FAVORABLE` / `CAUTION` / `ELEVATED_RISK` / `ADVERSE` |
+| `corridor.regulatoryFlags` | Jurisdiction-specific flags (e.g., `BCB_RESOLUTION_561`, `CBN_CONTROLS`) |
+| `components.corridorAdjustment` | Static pair adjustment (−30 to +10) |
+| `components.cascadePenalty` | −15 / −8 / −3 / 0 based on current cascade level |
+| `components.weekendPenalty` | −8 if UTC day is Saturday or Sunday |
+| `regulatoryWarning` | Present for BRL corridors only — see below |
 
-**Coverage:** 28 currency pairs across 14 currencies — BRL, TRY, ARS, NGN, PKR, EGP, EUR, GBP, SGD, JPY, HKD, CNH, INR, MXN, ZAR. Unlisted pairs return the global oracle score without corridor adjustment.
+**BRL regulatory warning (`regulatoryWarning`):**
+
+Any corridor involving BRL returns a top-level `regulatoryWarning` object:
+
+```json
+{
+  "regulatoryWarning": {
+    "flag": "BCB_RESOLUTION_561",
+    "severity": "HIGH",
+    "deadline": "2026-10-01",
+    "daysRemaining": 90,
+    "summary": "BCB Resolution 561 prohibits stablecoin eFX transactions in Brazil effective 2026-10-01.",
+    "action": "Migrate BRL flows to a compliant structure before the deadline...",
+    "source": "Banco Central do Brasil — Resolução BCB nº 561"
+  }
+}
+```
+
+Severity escalates to `CRITICAL` within 30 days of the deadline. The same warning appears in `/flow-check` responses for BRL pairs.
+
+**Coverage:** BRL, TRY, ARS, NGN, PKR, EGP, EUR, GBP, SGD, JPY, HKD, CNH, INR, MXN, ZAR, CLP, COP, PEN, BOB, UYU, KES, GHS, TZS, UGX, ETB, MAD, BDT, LKR, VND, PHP, IDR, THB, MYR, AED, SAR, QAR, ILS, PLN, CZK, RON, UAH. Unlisted pairs return the global oracle score without corridor adjustment.
 
 ---
 

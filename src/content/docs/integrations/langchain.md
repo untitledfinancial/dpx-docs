@@ -123,28 +123,28 @@ pip install langgraph langchain-anthropic httpx
 python examples/langgraph_settlement_agent.py
 ```
 
-The graph runs: `screen → [BLOCKED → end] → esg_score → route → settle → done`
+The graph runs: `flow_check → [PROCEED → settle → done] | [HOLD/BLOCKED → blocked → done]`
+
+A single `flow_check` node replaces what was previously three nodes (screen → esg_score → route), running all three checks in parallel on the server and returning a ready-to-use settle body on PROCEED.
 
 ```python
 from langgraph.graph import StateGraph, END
 
 builder = StateGraph(SettlementState)
-builder.add_node("screen",    node_screen)
-builder.add_node("esg_score", node_esg_score)
-builder.add_node("route",     node_route)
-builder.add_node("settle",    node_settle)
-builder.add_node("blocked",   node_blocked)
+builder.add_node("flow_check", node_flow_check)
+builder.add_node("settle",     node_settle)
+builder.add_node("blocked",    node_blocked)
 
-builder.set_entry_point("screen")
-builder.add_conditional_edges("screen", route_after_screen,
-    {"blocked": "blocked", "esg_score": "esg_score"})
-builder.add_edge("esg_score", "route")
-builder.add_edge("route",     "settle")
-builder.add_edge("settle",    END)
-builder.add_edge("blocked",   END)
+builder.set_entry_point("flow_check")
+builder.add_conditional_edges("flow_check", route_after_flow_check,
+    {"settle": "settle", "blocked": "blocked"})
+builder.add_edge("settle",  END)
+builder.add_edge("blocked", END)
 ```
 
-No API key required for compliance, ESG, or routing nodes. Settlement node requires x402 payment in live mode (`SANDBOX=false`).
+`flow_check` calls `GET /flow-check` — one request covering AML screening, ESG score, oracle stability, and stablecoin routing. Returns `PROCEED`, `HOLD`, or `BLOCKED`. On PROCEED, state includes `settle_body` with the recommended token and a ready-to-POST payload. Any BRL corridor also includes a `regulatoryWarning` with the BCB Resolution 561 deadline.
+
+No API key required. Settlement node requires x402 payment in live mode (`SANDBOX=false`).
 
 ## Available tools
 
@@ -155,6 +155,7 @@ No API key required for compliance, ESG, or routing nodes. Settlement node requi
 | `dpx_get_esg_score` | `stability.untitledfinancial.com/esg/score` | None |
 | `dpx_get_manifest` | `stability.untitledfinancial.com/manifest` | None |
 | `dpx_verify_fees` | `stability.untitledfinancial.com/verify-fees` | None |
+| `dpx_flow_check` | `agent.untitledfinancial.com/flow-check` | None |
 | `dpx_route` | `agent.untitledfinancial.com/route` | None |
 | `dpx_screen_counterparty` | `compliance.untitledfinancial.com/compliance/screen` | None |
 | `dpx_vendor_risk` | `compliance.untitledfinancial.com/vendor-risk` | None |
