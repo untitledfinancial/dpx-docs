@@ -3,11 +3,11 @@ title: MCP — Connect Claude
 description: Connect Claude Desktop, Cursor, or any MCP-compatible host to DPX. Price settlements, check stability, execute cross-border and domestic settlements, check local rail health, retrieve ESG scores, run spend analysis, and route Mercury payments natively in conversation.
 ---
 
-The DPX MCP server gives Claude Desktop, Cursor, and any MCP-compatible host native access to the full DPX settlement lifecycle — from oracle checks to live settlement execution. 65 tools covering settlement, oracle queries, ESG scoring, analytics, Ramp card integration, Mercury banking, compliance screening, network topology intelligence, butterfly effect cascade analysis, shipping stress, FX corridor intelligence, macro intelligence briefings, multi-stablecoin routing, AP2-compatible agent mandate management, and KYA (Know Your Agent) identity. Supports both **cross-border** and **domestic (intra-country)** settlements. No browser, no API calls, no copy-paste.
+The DPX MCP server gives Claude Desktop, Cursor, and any MCP-compatible host native access to the full DPX settlement lifecycle — from oracle checks to live settlement execution. 71 tools covering settlement, oracle queries, ESG scoring, analytics, Ramp card integration, Mercury banking, compliance screening, network topology intelligence, butterfly effect cascade analysis, shipping stress, FX corridor intelligence, macro intelligence briefings, multi-stablecoin routing, AP2-compatible agent mandate management, and KYA (Know Your Agent) identity. Supports both **cross-border** and **domestic (intra-country)** settlements. No browser, no API calls, no copy-paste.
 
 **Also available on [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp)** — install with one click from the Smithery marketplace.
 
-**Also compatible with [ElevenLabs Conversational AI](/integrations/elevenlabs)** — point any ElevenLabs voice agent at `https://mcp.untitledfinancial.com/mcp` with SSE transport to access all 65 tools mid-conversation.
+**Also compatible with [ElevenLabs Conversational AI](/integrations/elevenlabs)** — point any ElevenLabs voice agent at `https://mcp.untitledfinancial.com/mcp` with SSE transport to access all 71 tools mid-conversation.
 
 ## Prerequisites
 
@@ -42,7 +42,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 }
 ```
 
-Restart Claude Desktop — **DPX** appears in the MCP toolbar with 65 tools.
+Restart Claude Desktop — **DPX** appears in the MCP toolbar with 71 tools.
 
 :::note[Sandbox mode]
 `SANDBOX_MODE: "true"` means `settle` runs real calculations with no on-chain execution. Set to `"false"` only when you are ready for live settlements with real USDC.
@@ -278,6 +278,17 @@ stdio (JSON-RPC 2.0). All tool logging goes to stderr; stdout is reserved for th
 | Tool | Description |
 |---|---|
 | `route` | Ranks USDC, EURC, and USDT for any amount + currency pair. EURC is recommended for EUR destinations — eliminates cross-currency conversion. Returns all three options with rationale and a ready-to-use `/settle` body for the top-ranked token. Free. |
+
+### Agentic Operations (6 tools)
+
+| Tool | Description |
+|---|---|
+| `flow_check` | **Single pre-flight call** — runs oracle check, compliance screen, and stablecoin routing in parallel. Returns `decision` (PROCEED/HOLD/BLOCKED), recommended token, estimated net received, and a ready-to-use `settleBody`. Replaces the 3-step agent loop. |
+| `batch_settle` | Submit up to 50 settlements in one call. Runs concurrently — one failure does not block others. Returns `summary` (total/succeeded/failed) and per-item results. |
+| `invoice.create` | Create an agent-to-agent invoice. Returns an `invoiceId` and `payUrl`. Agent B calls `invoice.pay` to settle. Expires after configurable TTL (default 24h). Free. |
+| `invoice.get` | Retrieve an invoice by ID — check status (OPEN/PAID/EXPIRED), amount, and expiry before paying. Free. |
+| `invoice.pay` | Pay an invoice by ID. Retrieves the invoice, executes settlement, and marks it PAID. In sandbox mode returns a simulated receipt; live mode returns on-chain execution parameters. |
+| `settle.subscribe` | Register a webhook callback for `settlement.completed` events. Delivers HMAC-signed POSTs with 3× retry. Returns `webhookSecret` once — store immediately. Free. |
 
 ### FX Intelligence (3 tools)
 
