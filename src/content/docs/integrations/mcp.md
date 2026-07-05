@@ -66,7 +66,7 @@ Restart Claude Desktop — **DPX** appears in the MCP toolbar with 71 tools.
 }
 ```
 
-## Available tools (64)
+## Available tools (71)
 
 ### Settlement & Oracle
 
