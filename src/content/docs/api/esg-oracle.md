@@ -138,6 +138,17 @@ curl https://esg.untitledfinancial.com/health
 
 ---
 
+## GET /widget/esg — Embeddable ESG lookup widget
+
+Returns server-rendered HTML with a form for entering a company name or LEI and displaying E/S/G scores as a bar chart. No API key required.
+
+```html
+<iframe src="https://esg.untitledfinancial.com/widget/esg"
+  width="100%" height="360" style="border:none;border-radius:8px"></iframe>
+```
+
+---
+
 ## Machine Discovery
 
 | URL | Format |

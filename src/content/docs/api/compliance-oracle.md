@@ -754,20 +754,24 @@ Three self-contained HTML widgets for checkout and onboarding flows. No API key,
 
 | Widget | URL | What it does |
 |---|---|---|
-| Sanctions check | `GET /widgets/sanctions` | Paste a wallet address or entity name — returns APPROVED/FLAGGED/BLOCKED with risk signals |
-| ESG score badge | `GET /widgets/esg` | Paste a wallet address or LEI — returns score 0–100 with E/S/G breakdown |
-| Corridor stability | `GET /widgets/corridor` | Enter from/to currency — returns SETTLE_NOW/DELAY_24H/DELAY_48H with stability score |
+| Sanctions check | `GET /widget/sanctions` | Input a wallet address or entity name — returns APPROVED/FLAGGED/BLOCKED with risk signals |
+| ESG score badge | `GET /widget/esg` | Input a company name or LEI — returns score 0–100 with E/S/G breakdown |
+| Corridor stability | `GET /widget/corridors` | Displays live OPTIMAL/CAUTION/ADVERSE badges for all USD corridors |
 
 ```html
-<!-- Paste this into any checkout page -->
-<script>
-  fetch('https://agent.untitledfinancial.com/widgets/sanctions')
-    .then(r => r.text())
-    .then(html => document.getElementById('dpx-widget').innerHTML = html);
-</script>
-<div id="dpx-widget"></div>
+<!-- Sanctions check widget -->
+<iframe src="https://compliance.untitledfinancial.com/widget/sanctions"
+  width="100%" height="320" style="border:none;border-radius:8px"></iframe>
+
+<!-- Corridor health widget -->
+<iframe src="https://stability.untitledfinancial.com/widget/corridors"
+  width="100%" height="320" style="border:none;border-radius:8px"></iframe>
+
+<!-- ESG lookup widget -->
+<iframe src="https://esg.untitledfinancial.com/widget/esg"
+  width="100%" height="360" style="border:none;border-radius:8px"></iframe>
 ```
 
-Or open `https://agent.untitledfinancial.com/widgets/sanctions` directly to copy the standalone HTML.
+Or open each URL directly to preview the standalone HTML before embedding.
 
 | FATF | R.15 (VASP), R.16 (VoP), R.12/13 (PEP/EDD) |

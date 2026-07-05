@@ -232,6 +232,7 @@ curl -X POST https://stability.untitledfinancial.com/stability/corridor \
 
 | Field | Description |
 |---|---|
+| `synthesis` | Plain-language settlement assessment for this corridor — always present |
 | `corridor.recommendation` | `SETTLE_NOW` / `DELAY_24H` / `DELAY_48H` |
 | `corridor.score` | 0–100 composite (global oracle + corridor adj + liquidity + cascade penalty) |
 | `corridor.tier` | `OPTIMAL` / `FAVORABLE` / `CAUTION` / `ELEVATED_RISK` / `ADVERSE` |
@@ -240,6 +241,17 @@ curl -X POST https://stability.untitledfinancial.com/stability/corridor \
 | `components.cascadePenalty` | −15 / −8 / −3 / 0 based on current cascade level |
 | `components.weekendPenalty` | −8 if UTC day is Saturday or Sunday |
 | `regulatoryWarning` | Present for BRL corridors only — see below |
+| `lastMilePartners` | Present when destination requires local PSP conversion (e.g. BRL, NGN, PHP) |
+
+The `synthesis` field is a deterministic institutional-grade summary generated from the structured corridor data — score, tier, recommendation, regulatory flags, last-mile requirements, and global outlook. It is always present and does not require a payment or API key.
+
+Example for `USD→BRL`:
+```
+USD→BRL corridor scores 42/100 (ELEVATED_RISK): adverse conditions recommend a 48-hour minimum deferral.
+Active regulatory flags: BCB_RESOLUTION_561, IOF_APPLIED. Last-mile conversion required via a licensed
+fintech (e.g. Wise). BCB Resolution 561 stablecoin eFX ban applies — verify compliant structure before
+execution. Global macro outlook: UNCERTAIN.
+```
 
 **BRL regulatory warning (`regulatoryWarning`):**
 
@@ -360,9 +372,16 @@ No auth required. Response is valid for `ttlSeconds` (300s).
 
 See [SWIFT Compatibility](/integrations/swift#direct-pain001-intake) for the full reference.
 
-### GET /widgets/{type} — Embeddable HTML widgets
+### GET /widget/corridors — Embeddable corridor health widget
 
-See [Compliance Oracle API](/api/compliance-oracle#embeddable-widgets) for the full reference. Types: `sanctions`, `esg`, `corridor`.
+Returns server-rendered HTML showing OPTIMAL / CAUTION / ADVERSE badges for all USD corridors. No API key required. Embed as an iframe.
+
+```html
+<iframe src="https://stability.untitledfinancial.com/widget/corridors"
+  width="100%" height="320" style="border:none;border-radius:8px"></iframe>
+```
+
+See [Compliance Oracle API](/api/compliance-oracle#embeddable-widgets) for the full embeddable widget reference.
 
 ---
 

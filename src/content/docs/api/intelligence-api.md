@@ -78,6 +78,7 @@ curl https://intelligence.untitledfinancial.com/v1/intelligence/instability \
 | `GET /v1/intelligence/transition-risk` | $0.75 | 1h | Predictive |
 | `GET /v1/intelligence/ledger` | $0.25 | no-cache | Predictive |
 | `GET /v1/intelligence/causal-graph` | $0.50 | 5min | Predictive |
+| `GET /intelligence/48h-call` | $0.50 | 4h | Predictive |
 
 Oracle feeds are **free** — no payment required.
 
@@ -1464,6 +1465,57 @@ Directed weighted graph of signal influence across 17 nodes and 4 tiers. Edge we
 **Calibration phases:** `PRIOR` (< 10 observations) → `BLENDING` (10–50) → `EMPIRICAL` (50+)
 
 See [Predictive Intelligence Layer](/protocol/predictive-intelligence) for full methodology.
+
+---
+
+## GET /intelligence/48h-call — $0.50
+
+Structured 48-hour macro forward view. Returns a regime assessment, top risks ranked by severity and timeframe, per-corridor settlement guidance, and a settlement recommendation (PROCEED / PROCEED_WITH_CAUTION / DELAY_24H / DELAY_48H). Synthesized from chaos-score, FX corridors, commodity heat-check, and transition-risk signals. Cached 4 hours.
+
+```bash
+curl -H "X-PAYMENT: $PAYMENT_TOKEN" \
+  https://intelligence.untitledfinancial.com/intelligence/48h-call
+```
+
+```json
+{
+  "regime": {
+    "current": "STRESS",
+    "score": 72,
+    "chaosIndex": 0.68,
+    "chaosLabel": "HIGH",
+    "transitionSignal": "WATCH"
+  },
+  "topRisks": [
+    {
+      "category": "FX",
+      "label": "USD/BRL corridor adverse",
+      "severity": "HIGH",
+      "timeframe": "24h",
+      "detail": "BRL at 52-week low vs USD; corridor marked ADVERSE"
+    }
+  ],
+  "corridorGuidance": {
+    "favored": ["USD→EUR", "USD→SGD"],
+    "caution": ["USD→MXN"],
+    "avoid": ["USD→BRL", "USD→TRY"]
+  },
+  "settlementAdvice": "PROCEED_WITH_CAUTION",
+  "settlementRationale": "Elevated chaos index with two ADVERSE corridors. Favored corridors remain liquid.",
+  "narrative": "Global macro is in a stress regime driven by EM currency pressure and commodity volatility...",
+  "dataQuality": "HIGH",
+  "sources": ["chaos-score", "fx-corridors", "heat-check", "transition-risk"],
+  "cacheHit": false,
+  "cachedAt": "2026-07-05T14:00:00Z",
+  "ttlSeconds": 14400
+}
+```
+
+**Settlement advice values:**
+- `PROCEED` — regime stable, all key corridors optimal
+- `PROCEED_WITH_CAUTION` — elevated risk or some corridors degraded; check `corridorGuidance`
+- `DELAY_24H` — significant stress; recheck in 24 hours
+- `DELAY_48H` — severe regime or systemic signal active
 
 ---
 
