@@ -197,6 +197,10 @@ DPX runs a live prediction ledger. Every forecast — regime transition probabil
     Verification of Payee for every payment. FATF R16, MiCA, GENIUS Act. No human queues.
     [Read →](/api/compliance-oracle)
   </Card>
+  <Card title="Commodity Forecast" icon="information">
+    Climate-driven outlook across 11 commodity markets. Heat-check, portfolio stress test, scenario analysis, and TCFD physical risk reports.
+    [Read →](/api/commodity-forecast)
+  </Card>
   <Card title="Regulatory Positioning" icon="information">
     MiCA, SFDR, CSRD, FCA, Basel III Group 1b, and OCC coverage across EU, UK, and US.
     [Read →](/protocol/regulatory)
@@ -221,11 +225,19 @@ DPX runs a live prediction ledger. Every forecast — regime transition probabil
 Agents and LLMs find DPX at these standard locations:
 
 ```
-GET /llms.txt                       LLM navigation index (llmstxt.org standard)
-GET /llms-full.txt                  Complete docs compiled for LLM context
-GET /openapi.json                   OpenAPI 3.0 schema for all endpoints
-GET /.well-known/ai-plugin.json     Agent framework plugin manifest
-GET /manifest                       Live DPX protocol manifest with fee config
+GET /llms.txt                          LLM navigation index (llmstxt.org standard)
+GET /llms-full.txt                     Complete docs compiled for LLM context
+GET /openapi.json                      OpenAPI 3.0 schema for all endpoints
+GET /.well-known/agent.json            A2A Agent Card (Google A2A / ADK spec)
+GET /.well-known/ai-plugin.json        Agent framework plugin manifest
+GET /manifest                          Live DPX protocol manifest with fee config
+GET /feedback-signal                   30-day corridor history — hold rate, confidence, volume
 ```
+
+**A2A Agent Card** — `/.well-known/agent.json` on `agent.untitledfinancial.com` is a protocol-compliant [Google A2A](https://google.github.io/A2A/) discovery document. Orchestrating agents (Vertex AI ADK, CrewAI, LangGraph) poll this at runtime to discover DPX capabilities, JSON input schemas, and x402 payment requirements without prior knowledge of the protocol.
+
+**Reports:** [reports.untitledfinancial.com](https://reports.untitledfinancial.com) — AI-synthesized institutional reports (climate, macro, ESG, compliance, treasury) gated via x402. Pay per report in USDC on Base mainnet. Agent card at `/.well-known/agent.json`.
+
+**Status:** [status.untitledfinancial.com](https://status.untitledfinancial.com) — live health checks across all 10 services with D1-backed analytics.
 
 **MCP registries:** [Anthropic official](https://github.com/modelcontextprotocol/servers) · [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp) · [mcp.so](https://mcp.so) · [npm](https://www.npmjs.com/package/@untitledfinancial/dpx-mcp)
