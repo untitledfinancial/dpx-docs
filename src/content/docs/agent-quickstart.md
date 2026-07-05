@@ -610,6 +610,194 @@ console.log(receipt.hash);
 
 ---
 
+## AI origination modes
+
+The settlement agent supports four modes where AI drives the payment decision and optionally the execution — no human step required per transaction.
+
+### `execute: true` — agent-initiated Mercury payment
+
+Pass `execute: true` with Mercury credentials on any `POST /settle` or `POST /nl` call. If the AI approves, the agent initiates the Mercury ACH or wire immediately and returns the Mercury payment ID alongside the settlement receipt. The client's Mercury account is debited — DPX never holds funds.
+
+```bash
+curl -X POST https://agent.untitledfinancial.com/settle \
+  -H "X-PAYMENT: $PAYMENT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 25000,
+    "sourceCurrency": "USD",
+    "destinationCurrency": "USD",
+    "recipientAddress": "0xABC...",
+    "execute": true,
+    "mercuryAccountId": "your-mercury-account-id",
+    "mercuryRecipientId": "saved-mercury-recipient-id",
+    "mercuryPaymentMethod": "ach"
+  }'
+```
+
+```json
+{
+  "status": "authorized",
+  "originationStatus": "initiated",
+  "mercuryExecution": {
+    "paymentId": "mercury-pay-abc123",
+    "status": "pending"
+  },
+  "settlementId": "dpx-settle-xyz",
+  "aiDecision": "EXECUTE",
+  "aiConfidence": 0.91
+}
+```
+
+Works the same on `POST /nl` — parse intent, approve, execute, done:
+
+```bash
+curl -X POST https://agent.untitledfinancial.com/nl \
+  -H "X-PAYMENT: $PAYMENT_TOKEN" \
+  -d '{
+    "text": "Pay $10,000 to 0xABC... for Q2 vendor invoice",
+    "execute": true,
+    "mercuryAccountId": "your-account-id",
+    "mercuryRecipientId": "your-recipient-id"
+  }'
+```
+
+---
+
+### `aiRoute: true` — AI-selected corridor
+
+Pass `aiRoute: true` and an optional `acceptedDestinationCurrencies` list. The agent fetches live corridor health from the Stability Oracle, ranks accepted currencies by OPTIMAL > CAUTION > ADVERSE, and substitutes the best into the settlement before the oracle call. The AI selects the path — not the caller.
+
+```bash
+curl -X POST https://agent.untitledfinancial.com/settle \
+  -H "X-PAYMENT: $PAYMENT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 500000,
+    "sourceCurrency": "USD",
+    "destinationCurrency": "EUR",
+    "recipientAddress": "0xABC...",
+    "aiRoute": true,
+    "acceptedDestinationCurrencies": ["EUR", "SGD", "GBP"]
+  }'
+```
+
+```json
+{
+  "status": "authorized",
+  "destinationCurrency": "SGD",
+  "aiRouteSelection": {
+    "selectedCurrency": "SGD",
+    "corridorStatus": "OPTIMAL",
+    "rationale": "AI selected SGD (OPTIMAL, stability 87/100) from 3 accepted currencies",
+    "alternatives": ["EUR (CAUTION, 61/100)", "GBP (ADVERSE, 38/100)"]
+  }
+}
+```
+
+If only one currency is accepted, the selection still runs and returns corridor health for that pair.
+
+---
+
+### `POST /sweep-rules` — condition-gated scheduled sweeps
+
+Register a rule with payment conditions and Mercury execution details. The agent evaluates all rules hourly and fires Mercury when conditions are met. Cooldown guard prevents double-firing.
+
+```bash
+# Register a sweep rule
+curl -X POST https://agent.untitledfinancial.com/sweep-rules \
+  -H "Content-Type: application/json" \
+  -d '{
+    "description": "Weekly EUR sweep when conditions are stable",
+    "conditions": {
+      "maxChaosIndex": 0.5,
+      "minCorridorStatus": "OPTIMAL",
+      "maxAmountUsd": 100000
+    },
+    "mercury": {
+      "accountId": "your-mercury-account-id",
+      "recipientId": "your-recipient-id",
+      "amount": 50000,
+      "paymentMethod": "ach",
+      "currency": "EUR"
+    },
+    "cooldownHours": 24
+  }'
+```
+
+```json
+{
+  "ruleId": "a1b2c3d4-...",
+  "rule": {
+    "conditions": { "maxChaosIndex": 0.5, "minCorridorStatus": "OPTIMAL", "maxAmountUsd": 100000 },
+    "mercury": { "amount": 50000, "currency": "EUR" },
+    "cooldownHours": 24,
+    "createdAt": "2026-07-05T22:00:00Z"
+  }
+}
+```
+
+| Endpoint | Description |
+|---|---|
+| `POST /sweep-rules` | Register a new sweep rule |
+| `GET /sweep-rules` | List all active rules |
+| `DELETE /sweep-rules/:id` | Remove a rule |
+
+**Conditions:**
+- `maxChaosIndex` — only sweep when live chaos index is at or below this (0–1, default 0.6)
+- `minCorridorStatus` — `OPTIMAL` or `CAUTION` — corridor must be at least this healthy
+- `maxAmountUsd` — hard cap per trigger regardless of `mercury.amount`
+
+---
+
+### `POST /hedge-rules` — cascade-triggered hedges
+
+Register a hedge instruction that fires automatically when the Butterfly cascade signal is active. The intelligence worker signals the settlement agent when magnitude ≥ 60; the agent evaluates all hedge rules against the cascade score and corridor list, then fires Mercury for matching rules.
+
+```bash
+# Register a hedge rule
+curl -X POST https://agent.untitledfinancial.com/hedge-rules \
+  -H "Content-Type: application/json" \
+  -d '{
+    "description": "Reduce EM exposure when cascade fires on economic nodes",
+    "conditions": {
+      "minCascadeScore": 75,
+      "corridors": ["USD-BRL", "USD-TRY", "USD-ZAR"]
+    },
+    "mercury": {
+      "accountId": "your-mercury-account-id",
+      "recipientId": "safe-haven-recipient-id",
+      "amount": 200000,
+      "paymentMethod": "domesticWire",
+      "purpose": "TransferToMyExternalAccount"
+    },
+    "cooldownHours": 6
+  }'
+```
+
+```json
+{
+  "ruleId": "e5f6g7h8-...",
+  "rule": {
+    "conditions": { "minCascadeScore": 75, "corridors": ["USD-BRL", "USD-TRY", "USD-ZAR"] },
+    "cooldownHours": 6
+  }
+}
+```
+
+| Endpoint | Description |
+|---|---|
+| `POST /hedge-rules` | Register a new hedge rule |
+| `GET /hedge-rules` | List all active rules |
+| `DELETE /hedge-rules/:id` | Remove a rule |
+
+**Conditions:**
+- `minCascadeScore` — cascade magnitude threshold to trigger (1–100, default 70)
+- `corridors` — list of corridor strings (e.g. `"USD-BRL"`) to scope the trigger; omit to trigger on any cascade
+
+**Note:** hedge rule execution is currently Mercury only. Webhook and on-chain execution paths are in progress.
+
+---
+
 ## Integration guides
 
 - [MCP — Any MCP-compatible host](/integrations/mcp)
