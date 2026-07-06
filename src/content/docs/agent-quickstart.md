@@ -751,19 +751,22 @@ curl -X POST https://agent.untitledfinancial.com/sweep-rules \
 
 ### `POST /hedge-rules` — cascade-triggered hedges
 
-Register a hedge instruction that fires automatically when the Butterfly cascade signal is active. The intelligence worker signals the settlement agent when magnitude ≥ 60; the agent evaluates all hedge rules against the cascade score and corridor list, then fires Mercury for matching rules.
+Register a hedge instruction that fires automatically when the Butterfly cascade signal is active. The intelligence worker signals the settlement agent when magnitude ≥ 60; the agent evaluates all hedge rules against the cascade score and corridor list, then executes via the registered execution type.
+
+**Multi-tenant:** each rule returns a `managementKey` on creation (shown once). Pass it as `X-Management-Key` to list or delete your rules — you can only see your own.
+
+Three execution types:
+
+#### `mercury` — direct ACH/wire
 
 ```bash
-# Register a hedge rule
 curl -X POST https://agent.untitledfinancial.com/hedge-rules \
   -H "Content-Type: application/json" \
   -d '{
-    "description": "Reduce EM exposure when cascade fires on economic nodes",
-    "conditions": {
-      "minCascadeScore": 75,
-      "corridors": ["USD-BRL", "USD-TRY", "USD-ZAR"]
-    },
-    "mercury": {
+    "description": "Reduce EM exposure on cascade",
+    "conditions": { "minCascadeScore": 75, "corridors": ["USD-BRL", "USD-TRY"] },
+    "execution": {
+      "type": "mercury",
       "accountId": "your-mercury-account-id",
       "recipientId": "safe-haven-recipient-id",
       "amount": 200000,
@@ -774,27 +777,88 @@ curl -X POST https://agent.untitledfinancial.com/hedge-rules \
   }'
 ```
 
+#### `webhook` — any TMS, Kyriba, Ramp, n8n, or custom system
+
+The agent POSTs a signed cascade event to your URL. You execute however your system handles it — no DPX account required on your end.
+
+```bash
+curl -X POST https://agent.untitledfinancial.com/hedge-rules \
+  -H "Content-Type: application/json" \
+  -d '{
+    "description": "Notify Kyriba when cascade fires",
+    "conditions": { "minCascadeScore": 70 },
+    "execution": {
+      "type": "webhook",
+      "url": "https://your-tms.example.com/dpx-cascade-hook",
+      "secret": "your-signing-secret",
+      "amount": 500000
+    },
+    "cooldownHours": 4
+  }'
+```
+
+Payload sent to your URL:
+
 ```json
 {
+  "event": "cascade.hedge_triggered",
+  "settlementId": "hedge-...",
   "ruleId": "e5f6g7h8-...",
-  "rule": {
-    "conditions": { "minCascadeScore": 75, "corridors": ["USD-BRL", "USD-TRY", "USD-ZAR"] },
-    "cooldownHours": 6
-  }
+  "clientId": "your-client-id",
+  "cascadeScore": 82,
+  "corridors": ["USD-BRL"],
+  "amount": 500000,
+  "triggeredAt": "2026-07-06T09:00:00Z"
 }
 ```
 
-| Endpoint | Description |
-|---|---|
-| `POST /hedge-rules` | Register a new hedge rule |
-| `GET /hedge-rules` | List all active rules |
-| `DELETE /hedge-rules/:id` | Remove a rule |
+If `secret` is set, the payload is HMAC-SHA256 signed and sent in `X-DPX-Signature`.
+
+#### `onchain` — execution params delivered to your on-chain executor
+
+The agent posts DPX router execution params (routerAddress, tokenAddress, grossAmountRaw, quoteIdBytes32) to your callback. Your automated system calls `approve()` + `router.settle()` on-chain.
+
+```bash
+curl -X POST https://agent.untitledfinancial.com/hedge-rules \
+  -H "Content-Type: application/json" \
+  -d '{
+    "description": "On-chain hedge via Base mainnet router",
+    "conditions": { "minCascadeScore": 80, "corridors": ["USD-TRY", "USD-ZAR"] },
+    "execution": {
+      "type": "onchain",
+      "callbackUrl": "https://your-executor.example.com/dpx-settle",
+      "secret": "your-signing-secret",
+      "amount": 100000,
+      "recipient": "0xYourRecipientAddress",
+      "currency": "USDC"
+    },
+    "cooldownHours": 6
+  }'
+```
+
+---
+
+**Management — scoped to your `managementKey`:**
+
+```bash
+# List your rules
+curl https://agent.untitledfinancial.com/hedge-rules \
+  -H "X-Management-Key: your-management-key"
+
+# Delete a rule
+curl -X DELETE https://agent.untitledfinancial.com/hedge-rules/e5f6g7h8-... \
+  -H "X-Management-Key: your-management-key"
+```
+
+| Endpoint | Auth | Description |
+|---|---|---|
+| `POST /hedge-rules` | None | Register a rule — returns `managementKey` once |
+| `GET /hedge-rules` | `X-Management-Key` | List your rules only |
+| `DELETE /hedge-rules/:id` | `X-Management-Key` | Delete a rule (forbidden if key doesn't match) |
 
 **Conditions:**
-- `minCascadeScore` — cascade magnitude threshold to trigger (1–100, default 70)
-- `corridors` — list of corridor strings (e.g. `"USD-BRL"`) to scope the trigger; omit to trigger on any cascade
-
-**Note:** hedge rule execution is currently Mercury only. Webhook and on-chain execution paths are in progress.
+- `minCascadeScore` — cascade magnitude 1–100 to trigger (default 70)
+- `corridors` — e.g. `["USD-BRL", "USD-TRY"]`; omit to trigger on any cascade
 
 ---
 
