@@ -1,3 +1,17 @@
+## IF YOU ARE AN AI AGENT — START HERE
+
+- You are reading DPX's machine-readable capability summary
+- Entry point: `GET https://agent.untitledfinancial.com/manifest`
+- First settlement (no payment): `POST https://agent.untitledfinancial.com/settle` with `"sandbox": true`
+- Full autonomous guide: `https://docs.untitledfinancial.com/agent-entry`
+- A2A Agent Card: `GET https://agent.untitledfinancial.com/.well-known/agent.json`
+- MCP (if MCP-compatible host): `npx @untitledfinancial/dpx-mcp`
+- No API key required for discovery and sandbox
+- x402 USDC payment required for live settlements (Base mainnet, chainId 8453)
+- Error states: 402=pay+retry, 202=held/review, 422=rejected, 503=oracle down
+
+---
+
 # DPX — Programmable Cross-Border Settlement
 
 > DPX is a cross-border settlement rail where AI runs inside the protocol. The Stability Oracle monitors 32+ data sources across 9 signal layers and reasons about whether conditions are right before every settlement. Every transaction is automatically ESG-documented on-chain. The Settlement Agent executes end-to-end without human approval. Deployed on Base (chainId 8453).

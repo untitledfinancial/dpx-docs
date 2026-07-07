@@ -93,7 +93,7 @@ The contract maps each company to an industry. When redistribution is triggered,
 
 ### Impact wallet
 
-All redistributed fees consolidate to a single on-chain impact wallet (`0x5b26325d3f6f3A2B5FAdEbe54c780A8C3dAFd6Ba`) — a multi-signature Safe wallet on Base mainnet. Destination addresses can only be updated via `setFundingAreas` — callable by the contract owner only.
+All redistributed fees consolidate to a single on-chain impact wallet — a multi-signature Safe wallet on Base mainnet. Destination addresses can only be updated via `setFundingAreas` — callable by the contract owner only.
 
 ### Impact at scale
 
@@ -104,6 +104,82 @@ All redistributed fees consolidate to a single on-chain impact wallet (`0x5b2632
 | $5B | ~$10M | 100% to impact wallet |
 
 Every redistribution is verifiable on-chain. Any agent, auditor, or regulator can independently confirm funds reached the impact wallet via Base Blockscout.
+
+---
+
+## The Redistribution Loop — Settlement to Impact
+
+Every DPX settlement carries an ESG score for its counterparty. That score determines the ESG fee component applied to the transaction. Once collected, **100% of ESG fee revenue is redistributed to verified on-chain impact programs** — enforced by the `ESGRedistribution` contract and verifiable by any party on Base mainnet.
+
+This is not a donation mechanism or a discretionary offset program. The redistribution is structural: it is encoded in the settlement contract, executed automatically at the time of settlement, and cannot be redirected by any administrative action short of a governance vote.
+
+### The flow
+
+```
+Counterparty ESG score
+        ↓
+ESG fee component calculated (0.00% – 0.50%)
+        ↓
+Fee collected at settlement execution
+        ↓
+ESGRedistribution contract routes 100% to impact wallet
+        ↓
+Funds allocated to impact programs by category
+```
+
+The scoring, fee calculation, and redistribution all occur within the same settlement lifecycle. There is no batch reconciliation, no off-chain step, and no delay between fee collection and impact allocation.
+
+### Impact pool allocation
+
+ESG fee revenue distributes across five verified impact categories:
+
+| Category | Allocation | What it funds |
+|---|---|---|
+| Ocean Conservation | 30% | Marine ecosystem restoration, coral reef protection, plastic removal programs |
+| Renewable Energy | 25% | Clean energy infrastructure in emerging markets, grid transition financing |
+| Forest Preservation | 20% | REDD+ programs, indigenous land protection, reforestation |
+| Climate Action | 15% | Policy-aligned climate programs, resilience infrastructure |
+| Clean Water | 10% | Freshwater access, watershed protection, sanitation infrastructure |
+
+These allocations are set via `setFundingAreas` on the `ESGRedistribution` contract. Updates require owner-level governance and emit an on-chain event.
+
+### Industry-specific routing
+
+The redistribution mechanism maps each counterparty to an industry and uses that context to tag redistributed funds for reporting. The mapping creates a traceable link between the economic activity generating the fee and the environmental or social programs it funds:
+
+| Industry | Primary impact alignment |
+|---|---|
+| Fossil Fuels | Ocean Conservation + Renewable Energy — transition finance logic |
+| Manufacturing | Climate Action + Clean Water — industrial footprint mitigation |
+| Agriculture | Forest Preservation + Clean Water — land and water system integrity |
+| Consumer / Fashion | Ocean Conservation + Forest Preservation — materials supply chain |
+| Technology | Renewable Energy + Clean Water — data centre transition and cooling footprint |
+| Transportation | Ocean Conservation + Climate Action — shipping and aviation corridors |
+| Finance | Climate Action — systemic exposure to physical and transition risk |
+| Healthcare | Clean Water + Climate Action — climate-health nexus |
+| Real Estate | Forest Preservation + Climate Action — land use and embodied carbon |
+| Energy | Renewable Energy — reinvestment into clean energy buildout |
+
+This mapping does not change the fee amount or the settlement outcome. It determines how redistributed funds are tagged in the impact wallet for downstream reporting, SFDR PAI attribution, and CSRD disclosure.
+
+### Verification
+
+Every redistribution emits a `RedistributionExecuted` event on Base mainnet:
+
+```
+event RedistributionExecuted(
+  address indexed company,
+  address indexed token,
+  uint256 amount,
+  uint8   industry
+)
+```
+
+Any counterparty, regulator, or auditor can verify on-chain that funds reached the impact wallet at `0x4F3741252847E4F07730c4CEC3018b201Ac6ce87` via [Base Blockscout](https://base.blockscout.com/address/0x4F3741252847E4F07730c4CEC3018b201Ac6ce87).
+
+### Scale
+
+ESG fee redistribution is enforced on-chain via the ESGRedistribution contract. Fees route to impact programs tagged by industry: Ocean Conservation (30%), Renewable Energy (25%), Forest Preservation (20%), Climate Action (15%), Clean Water (10%). Every redistribution event is verifiable on Base Blockscout.
 
 ---
 

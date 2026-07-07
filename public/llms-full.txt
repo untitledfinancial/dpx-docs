@@ -76,13 +76,7 @@ All fees enforced on-chain via DPXSettlementRouter on Base mainnet.
 
 **ESG redistribution (100% of ESG fees, on-chain enforced):**
 
-| Program | Share | Annual at $5B volume |
-|---|---|---|
-| Ocean Conservation | 30% | $1.875M |
-| Renewable Energy | 25% | $1.563M |
-| Forest Preservation | 20% | $1.25M |
-| Climate Action | 15% | $937K |
-| Clean Water | 10% | $625K |
+ESG fee redistribution is enforced on-chain via the ESGRedistribution contract. Programs: Ocean Conservation (30%), Renewable Energy (25%), Forest Preservation (20%), Climate Action (15%), Clean Water (10%).
 
 ---
 

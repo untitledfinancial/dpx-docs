@@ -129,8 +129,7 @@ alerts, outlook) and autonomous adaptive weight calibration.
 - Ocean Conservation (30%), Renewable Energy (25%), Forest Preservation (20%),
   Climate Action (15%), Clean Water (10%)
 
-At $5B annual volume (Sovereign tier): **$6.25M/year** in verifiable on-chain impact.
-Every redistribution is auditable on Base Blockscout — not self-reported, not a sustainability pledge.
+ESG fee redistribution is enforced on-chain via the ESGRedistribution contract — auditable on Base Blockscout, not self-reported, not a sustainability pledge.
 
 ### DPX Token + License Fee
 License fee (0.01%) is hardcoded into the DPX token contract itself — enforced
@@ -181,7 +180,7 @@ Market momentum:
 - $10B revenue requires ~$722B in protocol volume at 1.385% typical rate
 
 **ESG revenue (separate stream):**
-- At $5B annual volume: ~$6.25M/year to on-chain impact programs
+- ESG fee redistribution is enforced on-chain via the ESGRedistribution contract
 - Creates institutional LP alignment and impact reporting capability for allocators
 
 ---

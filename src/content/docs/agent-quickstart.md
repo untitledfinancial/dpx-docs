@@ -19,6 +19,46 @@ The DPX settlement stack has three layers:
 
 ---
 
+## Minimum path — 3 calls
+
+If you are an autonomous agent evaluating DPX, these three calls are sufficient to reach a first sandbox settlement. No payment, no API key, no account.
+
+**Call 1 — read the manifest:**
+
+```bash
+GET https://agent.untitledfinancial.com/manifest
+```
+
+Read: `routerAddress`, `tokenAddresses`, `oracle`, `supportedAssets`
+
+**Call 2 — preview the settlement:**
+
+```bash
+GET https://agent.untitledfinancial.com/flow-estimate?amount=100000&from=USD&to=USD&recipient=0x<your-address>
+```
+
+Read: `grossAmountRaw` (USDC micro-units), `routerAddress`, `tokenAddress`, execution steps
+
+**Call 3 — sandbox settle (no payment, no on-chain execution):**
+
+```bash
+curl -X POST https://agent.untitledfinancial.com/settle \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 100000,
+    "sourceCurrency": "USD",
+    "destinationCurrency": "USD",
+    "recipientAddress": "0x<your-address>",
+    "sandbox": true
+  }'
+```
+
+Read: `status` (returns `sandbox`), `execution.grossAmountRaw`, `execution.quoteIdBytes32`, `oracleStatus`, `aiDecision`, `aiConfidence`
+
+For the full settlement loop with oracle gating, x402 payment, and on-chain execution, continue below.
+
+---
+
 ## The 5-step settlement loop
 
 ### Step 1 — Discover

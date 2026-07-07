@@ -128,7 +128,7 @@ Combined with DPX's on-chain compliance stack (VoP, AML oracle, FATF R16), the f
 
 ## Auto-sweep: USDC fee collector
 
-DPX collects settlement fees in USDC at `0x160e920012fb4BAe2E465c1eD8815c5FD51B5Ce0`. If you are running high-volume settlements, configure a Coinbase Prime sweep to automatically repatriate accumulated USDC back to fiat:
+DPX collects settlement fees in USDC at the configured fee collector address. If you are running high-volume settlements, configure a Coinbase Prime sweep to automatically repatriate accumulated USDC back to fiat:
 
 ```javascript
 // Cron: sweep fee collector balance back to Prime daily

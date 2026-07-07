@@ -75,6 +75,7 @@ export default defineConfig({
             // { label: 'Oracle Feeds — Free', slug: 'api/oracle-feeds' },
             { label: 'ESG Oracle',          slug: 'api/esg-oracle' },
             { label: 'Compliance Oracle',   slug: 'api/compliance-oracle' },
+            { label: 'Commodity Forecast',  slug: 'api/commodity-forecast' },
           ],
         },
         {

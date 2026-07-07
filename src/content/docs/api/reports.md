@@ -63,7 +63,7 @@ Without an `X-PAYMENT` header, every endpoint returns HTTP 402 with the payment 
     "maxAmountRequired": "2000000",
     "resource": "https://reports.untitledfinancial.com/report/climate",
     "description": "DPX Climate Report — AI-synthesized institutional analysis. Fee: $2.00 USDC.",
-    "payTo": "0x160e920012fb4BAe2E465c1eD8815c5FD51B5Ce0",
+    "payTo": "0x<fee-collector-address>",
     "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
   }],
   "reportPreview": {

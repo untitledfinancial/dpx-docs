@@ -221,7 +221,7 @@ Restart Claude Desktop — **DPX** appears in the MCP toolbar with 71 tools.
 ### Cross-border
 ```
 You: "Check oracle conditions and execute a $100,000 intercompany settlement 
-to 0x1E05306A20A738917EFa010f5BE3fb5EE7290dD8 in sandbox mode"
+to 0x<recipient-address> in sandbox mode"
 
 Claude calls:
   1. oracle.stability → STABLE (88/100), IMPROVING

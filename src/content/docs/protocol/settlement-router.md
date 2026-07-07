@@ -68,10 +68,10 @@ Read-only fee preview. Returns the full fee breakdown for a prospective settleme
 
 | Fee | Applies to | Destination |
 |---|---|---|
-| Core | Every settlement | feeCollector (`0x160e920012fb4bae2e465c1ed8815c5fd51b5ce0`) |
+| Core | Every settlement | feeCollector |
 | FX | Cross-currency only | feeCollector |
 | ESG | Every settlement — dynamic, oracle-based | ESGRedistribution |
-| License | Every settlement — fixed, in token contract | licensingWallet (`0x0259a1735BAEDeD02e4784A9E28eCCe85c5a99ef`) |
+| License | Every settlement — fixed, in token contract | licensingWallet |
 
 The ESG fee is computed from the company's weighted aggregate score across all active ESGOracle providers. A score of 100 produces a zero ESG fee; a score of 0 produces the maximum ESG fee.
 
@@ -83,9 +83,9 @@ The ESG fee is computed from the company's weighted aggregate score across all a
 |---|---|
 | `_dpxToken` | `0x7A62dEcF6936675480F0991A2EF4a0d6f1023891` |
 | `_esgScoring` | `0x4F3741252847E4F07730c4CEC3018b201Ac6ce87` |
-| `_feeCollector` | `0x160e920012fb4bae2e465c1ed8815c5fd51b5ce0` |
+| `_feeCollector` | configured via env |
 | `_esgRedistribution` | `0x4F3741252847E4F07730c4CEC3018b201Ac6ce87` |
-| `_licensingWallet` | `0x0259a1735BAEDeD02e4784A9E28eCCe85c5a99ef` |
+| `_licensingWallet` | configured via env |
 
 ---
 
@@ -127,7 +127,7 @@ The DPXSettlementRouter is accessible via REST API at `https://stability.untitle
 Returns the on-chain ESG score for a company address.
 
 ```
-GET /esg-score?address=0x1E05306A20A738917EFa010f5BE3fb5EE7290dD8
+GET /esg-score?address=0x<recipient-address>
 ```
 
 Returns: weighted aggregate score (0–100), ESG fee in bps, fee impact.

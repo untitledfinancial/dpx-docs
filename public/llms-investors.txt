@@ -160,7 +160,7 @@ strategic acquisition angle.
 - Break-even volume:  ~$340M/year
 - Gross margin:       ~92% at $5B/year
 - 10-yr cumulative NOI: $459.5M (at $12B annual volume)
-- ESG redistribution: $6.25M/year at $5B volume
+- ESG redistribution: enforced on-chain via the ESGRedistribution contract
 - Payback year:       Year 4 at modeled volume curve
 - Permanent license:  0.01% per settlement enforced in token contract —
                       survives any acquisition or white-labeling
