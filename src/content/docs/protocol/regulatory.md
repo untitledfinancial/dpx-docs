@@ -87,7 +87,7 @@ The proposed requirement for systemic stablecoin issuers to hold ≥40% of backi
 | Aspect | Current position |
 |---|---|
 | UK institutional settlement | DPX is non-custodial — ownership caps apply to stablecoin *holders*, not to settlement infrastructure |
-| USDC issuer health | Relaxed reserve requirements improve Circle's UK economics, reducing issuer stress signals in the Stability Oracle |
+| USDC issuer health | Relaxed reserve requirements reduce GBP stablecoin issuer reserve costs. The DPX Stability Oracle tracks this via the UK 3-month interbank rate (IR3TIB01GBM156N) — BoE rule softening lowers this signal, improving the macro-stress composite for GBP corridors. |
 | Enterprise treasury clients | Softening of ownership caps directly expands the addressable UK corporate treasury market |
 
 The BofE consultation remains open. This page will be updated as the revised framework is published. Institutional clients should engage their FCA compliance team for firm-specific guidance during this transitional period.
@@ -127,6 +127,22 @@ Your risk team can reference PRA CP16/22 and PRA PS17/22 for the full capital tr
 The OCC issued Interpretive Letter #1179 in January 2021, confirming that **US national banks and federal savings associations may hold reserve assets for stablecoin issuers** and use stablecoins to facilitate payment transactions.
 
 US national banks are already legally authorised to engage with DPX. No additional regulatory clearance is required at the federal level for OCC-regulated institutions. DPX's protocol architecture is built toward MiCA Article 36 alignment — providing a clear EU-equivalent compliance pathway for internationally-active US institutions as the protocol reaches full deployment.
+
+---
+
+### Circle National Trust — OCC Trust Bank Charter (July 2026)
+
+On July 10, 2026, Circle received final OCC approval to establish Circle National Trust, a national trust bank providing federally-regulated custody for digital assets. The charter is custody-focused — it does not permit deposit-taking or lending — and is designed to eventually bring management of the USDC Reserve under direct OCC oversight.
+
+This does not change USDC's token contract, redemption mechanics, or the Circle Mint on-ramp DPX settles through today.
+
+**What this means for DPX:**
+
+| Aspect | Current position |
+|---|---|
+| USDC reserve custody | Moving toward direct federal (OCC) oversight — reduces counterparty/custody risk on DPX's primary settlement asset |
+| DPX settlement mechanics | Unchanged — same USDC/EURC contracts, same Circle Mint on-ramp |
+| Institutional risk assessment | Strengthens the counterparty-risk case for institutions evaluating DPX's USDC-denominated settlement rail |
 
 ---
 
