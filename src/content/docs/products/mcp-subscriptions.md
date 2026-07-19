@@ -11,7 +11,7 @@ The DPX MCP server gives Claude Desktop, Cursor, and any MCP-compatible AI host 
 
 | Category | Tools |
 |---|---|
-| Settlement & Oracle | `settlement.quote`, `settlement.execute`, `settlement.status`, `oracle.stability`, `oracle.status`, `oracle.rails`, `oracle.intelligence`, `oracle.mycelium` |
+| Settlement & Oracle | `settlement.quote`, `settlement.execute`, `settlement.status`, `oracle.stability`, `oracle.status`, `oracle.rails`, `oracle.mycelium` |
 | Compliance | `compliance.ubo_chain`, `compliance.pep_screen`, `compliance.regulatory_calendar` |
 | ESG | `esg.score`, `esg.lookup`, `esg.batch`, `esg.portfolio`, `esg.watch`, `esg.trend`, `oracle.governance` |
 | Corridor & Routing | `stability.corridor`, `stability.settlement_window`, `stability.stablecoin_route` |

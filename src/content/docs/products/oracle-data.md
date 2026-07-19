@@ -145,7 +145,6 @@ All oracle data is also available via the [DPX MCP server](/integrations/mcp) �
 ```
 oracle.stability       — composite score + status
 oracle.status          — full 9-layer signal breakdown
-oracle.intelligence    — x402-gated macro briefing
 oracle.rails           — local payment rail health
 oracle.mycelium        — network topology + crisis detection
 esg.score              — entity ESG score by LEI

@@ -157,7 +157,7 @@ If the agent is running in a host that supports Model Context Protocol (MCP-comp
 npx @untitledfinancial/dpx-mcp
 ```
 
-71 tools. No API key. No configuration.
+70 tools. No API key. No configuration.
 
 Most useful tools for autonomous settlement:
 
