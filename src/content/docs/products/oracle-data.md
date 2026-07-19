@@ -34,7 +34,7 @@ curl https://stability.untitledfinancial.com/api/status
 ```bash
 curl https://stability.untitledfinancial.com/intelligence
 # Returns: 402 Payment Required with USDC payment instructions
-# Cost: 0.001 USDC per call on Base mainnet
+# Cost: 0.10 USDC per call on Base mainnet
 ```
 
 ---
@@ -102,7 +102,7 @@ curl -X POST https://stability.untitledfinancial.com/stability/corridor \
 
 ### Per-call (x402)
 
-Intelligence briefing: 0.001 USDC/call. All other endpoints: free at the protocol layer, or metered at the MCP layer. No API key required for protocol endpoints.
+Intelligence briefing: 0.10 USDC/call. All other endpoints: free at the protocol layer, or metered at the MCP layer. No API key required for protocol endpoints.
 
 ### Subscription API key
 
