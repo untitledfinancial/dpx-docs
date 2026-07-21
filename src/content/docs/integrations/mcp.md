@@ -3,11 +3,11 @@ title: MCP — Connect Claude
 description: Connect Claude Desktop, Cursor, or any MCP-compatible host to DPX. Price settlements, check stability, execute cross-border and domestic settlements, check local rail health, retrieve ESG scores, run spend analysis, and route Mercury payments natively in conversation.
 ---
 
-The DPX MCP server gives Claude Desktop, Cursor, and any MCP-compatible host native access to the full DPX settlement lifecycle — from oracle checks to live settlement execution. 70 tools covering settlement, oracle queries, ESG scoring, analytics, Ramp card integration, Mercury banking, compliance screening, network topology intelligence, butterfly effect cascade analysis, shipping stress, FX corridor intelligence, macro intelligence briefings, multi-stablecoin routing, AP2-compatible agent mandate management, and KYA (Know Your Agent) identity. Supports both **cross-border** and **domestic (intra-country)** settlements. No browser, no API calls, no copy-paste.
+The DPX MCP server gives Claude Desktop, Cursor, and any MCP-compatible host native access to the full DPX settlement lifecycle — from oracle checks to live settlement execution. 71 tools covering settlement, oracle queries, ESG scoring, analytics, Ramp card integration, Mercury banking, compliance screening, network topology intelligence, butterfly effect cascade analysis, shipping stress, FX corridor intelligence, macro intelligence briefings, multi-stablecoin routing, AP2-compatible agent mandate management, and KYA (Know Your Agent) identity. Supports both **cross-border** and **domestic (intra-country)** settlements. No browser, no API calls, no copy-paste.
 
 **Also available on [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp)** — install with one click from the Smithery marketplace.
 
-**Also compatible with [ElevenLabs Conversational AI](/integrations/elevenlabs)** — point any ElevenLabs voice agent at `https://mcp.untitledfinancial.com/mcp` with SSE transport to access all 70 tools mid-conversation.
+**Also compatible with [ElevenLabs Conversational AI](/integrations/elevenlabs)** — point any ElevenLabs voice agent at `https://mcp.untitledfinancial.com/mcp` with SSE transport to access all 71 tools mid-conversation.
 
 ## Prerequisites
 
@@ -42,7 +42,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 }
 ```
 
-Restart Claude Desktop — **DPX** appears in the MCP toolbar with 70 tools.
+Restart Claude Desktop — **DPX** appears in the MCP toolbar with 71 tools.
 
 :::note[Sandbox mode]
 `SANDBOX_MODE: "true"` means `settle` runs real calculations with no on-chain execution. Set to `"false"` only when you are ready for live settlements with real USDC.
@@ -66,7 +66,7 @@ Restart Claude Desktop — **DPX** appears in the MCP toolbar with 70 tools.
 }
 ```
 
-## Available tools (70)
+## Available tools (72)
 
 ### Settlement & Oracle
 
@@ -276,6 +276,7 @@ stdio (JSON-RPC 2.0). All tool logging goes to stderr; stdout is reserved for th
 
 | Tool | Description |
 |---|---|
+| `search_docs` | Search DPX documentation by keyword — returns structured doc sections (quickstart, fees, oracle, compliance, integrations, contracts, regulatory) with source URLs. Call mid-task when you need protocol details without relying on context alone. Free. |
 | `route` | Ranks USDC, EURC, and USDT for any amount + currency pair. EURC is recommended for EUR destinations — eliminates cross-currency conversion. Returns all three options with rationale and a ready-to-use `/settle` body for the top-ranked token. Free. |
 
 ### Agentic Operations (6 tools)
