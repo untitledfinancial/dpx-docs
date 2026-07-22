@@ -49,6 +49,15 @@ export default defineConfig({
           ],
         },
         {
+          label: 'Guides',
+          items: [
+            { label: 'Add payments to your agent', slug: 'guides/agent-payments' },
+            { label: 'Compliance for agents',      slug: 'guides/compliance-for-agents' },
+            { label: 'Error handling',             slug: 'guides/error-handling' },
+            { label: 'x402 — agent payments',      slug: 'integrations/x402' },
+          ],
+        },
+        {
           label: 'European Institutions',
           items: [
             { label: 'Quickstart',          slug: 'guides/european-institutions' },
