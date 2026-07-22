@@ -45,8 +45,7 @@ export default defineConfig({
         {
           label: 'Use Cases',
           items: [
-            { label: 'Instant Stablecoin Payments', slug: 'use-cases/instant-stablecoin-payments' },
-            { label: 'Agent-to-Agent Payments',     slug: 'use-cases/agent-economy' },
+            { label: 'Agent-to-Agent Payments', slug: 'use-cases/agent-economy' },
           ],
         },
         {
