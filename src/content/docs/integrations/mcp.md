@@ -1,9 +1,9 @@
 ---
 title: MCP — Connect Claude
-description: Connect Claude Desktop, Cursor, or any MCP-compatible host to DPX. Price settlements, check stability, execute cross-border and domestic settlements, check local rail health, retrieve ESG scores, run spend analysis, and route Mercury payments natively in conversation.
+description: 71 tools for Claude Desktop and Cursor — add payments, AML screening, compliance verification, oracle-gated settlement, and live macro intelligence to any AI agent in minutes.
 ---
 
-The DPX MCP server gives Claude Desktop, Cursor, and any MCP-compatible host native access to the full DPX settlement lifecycle — from oracle checks to live settlement execution. 71 tools covering settlement, oracle queries, ESG scoring, analytics, Ramp card integration, Mercury banking, compliance screening, network topology intelligence, butterfly effect cascade analysis, shipping stress, FX corridor intelligence, macro intelligence briefings, multi-stablecoin routing, AP2-compatible agent mandate management, and KYA (Know Your Agent) identity. Supports both **cross-border** and **domestic (intra-country)** settlements. No browser, no API calls, no copy-paste.
+The DPX MCP server gives any AI agent native access to payments, compliance, and intelligence infrastructure — without writing HTTP calls or managing auth. 71 tools covering: agent-to-agent payments, AML and sanctions screening, FATF R16 counterparty verification, oracle-gated settlement, ESG scoring, x402 intelligence endpoints, multi-stablecoin routing, Mercury banking, Ramp card integration, FX corridor intelligence, macro intelligence briefings, network topology, butterfly effect cascade analysis, AP2-compatible agent mandate management, and KYA (Know Your Agent) identity. Works with Claude Desktop, Cursor, and any MCP-compatible host. No API key. No browser. No copy-paste.
 
 **Also available on [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp)** — install with one click from the Smithery marketplace.
 
