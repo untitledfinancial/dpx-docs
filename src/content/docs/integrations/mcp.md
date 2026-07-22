@@ -1,13 +1,13 @@
 ---
 title: MCP — Connect Claude
-description: 71 tools for Claude Desktop and Cursor — add payments, AML screening, compliance verification, oracle-gated settlement, and live macro intelligence to any AI agent in minutes.
+description: 76 tools for Claude Desktop and Cursor — add payments, AML screening, compliance verification, oracle-gated settlement, and live macro intelligence to any AI agent in minutes.
 ---
 
-The DPX MCP server gives any AI agent native access to payments, compliance, and intelligence infrastructure — without writing HTTP calls or managing auth. 71 tools covering: agent-to-agent payments, AML and sanctions screening, FATF R16 counterparty verification, oracle-gated settlement, ESG scoring, x402 intelligence endpoints, multi-stablecoin routing, Mercury banking, Ramp card integration, FX corridor intelligence, macro intelligence briefings, network topology, butterfly effect cascade analysis, AP2-compatible agent mandate management, and KYA (Know Your Agent) identity. Works with Claude Desktop, Cursor, and any MCP-compatible host. No API key. No browser. No copy-paste.
+The DPX MCP server gives any AI agent native access to payments, compliance, and intelligence infrastructure — without writing HTTP calls or managing auth. 76 tools covering: agent-to-agent payments, AML and sanctions screening, FATF R16 counterparty verification, oracle-gated settlement, ESG scoring, x402 intelligence endpoints, multi-stablecoin routing, Mercury banking, Ramp card integration, FX corridor intelligence, macro intelligence briefings, network topology, butterfly effect cascade analysis, AP2-compatible agent mandate management, and KYA (Know Your Agent) identity. Works with Claude Desktop, Cursor, and any MCP-compatible host. No API key. No browser. No copy-paste.
 
 **Also available on [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp)** — install with one click from the Smithery marketplace.
 
-**Also compatible with [ElevenLabs Conversational AI](/integrations/elevenlabs)** — point any ElevenLabs voice agent at `https://mcp.untitledfinancial.com/mcp` with SSE transport to access all 71 tools mid-conversation.
+**Also compatible with [ElevenLabs Conversational AI](/integrations/elevenlabs)** — point any ElevenLabs voice agent at `https://mcp.untitledfinancial.com/mcp` with SSE transport to access all 76 tools mid-conversation.
 
 ## Prerequisites
 
@@ -42,7 +42,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 }
 ```
 
-Restart Claude Desktop — **DPX** appears in the MCP toolbar with 71 tools.
+Restart Claude Desktop — **DPX** appears in the MCP toolbar with 76 tools.
 
 :::note[Sandbox mode]
 `SANDBOX_MODE: "true"` means `settle` runs real calculations with no on-chain execution. Set to `"false"` only when you are ready for live settlements with real USDC.
@@ -66,7 +66,7 @@ Restart Claude Desktop — **DPX** appears in the MCP toolbar with 71 tools.
 }
 ```
 
-## Available tools (72)
+## Available tools (76)
 
 ### Settlement & Oracle
 
@@ -278,6 +278,16 @@ stdio (JSON-RPC 2.0). All tool logging goes to stderr; stdout is reserved for th
 |---|---|
 | `search_docs` | Search DPX documentation by keyword — returns structured doc sections (quickstart, fees, oracle, compliance, integrations, contracts, regulatory) with source URLs. Call mid-task when you need protocol details without relying on context alone. Free. |
 | `route` | Ranks USDC, EURC, and USDT for any amount + currency pair. EURC is recommended for EUR destinations — eliminates cross-currency conversion. Returns all three options with rationale and a ready-to-use `/settle` body for the top-ranked token. Free. |
+
+### Agent Policy Engine (5 tools)
+
+| Tool | Description |
+|---|---|
+| `policy.create` | Create a spending policy for an AI agent — per-transaction ceiling, daily limit, hold threshold, blocked counterparties, allowed purposes, oracle stability gate. Set once; enforced on every payment. Free. |
+| `policy.check` | Check a proposed payment against the agent's active policy before executing. Returns `ALLOW`, `HOLD`, or `BLOCK` with a reason. Run before every `settle` call. Free. |
+| `policy.delegate` | Delegate payment authority from a parent agent to a sub-agent with explicit limits (`max_per_tx`, `max_total`, expiry). Sub-agent can only spend within the delegated ceiling. Revocable. Free. |
+| `receipt.create` | Record a tamper-evident HMAC-signed receipt for every agent financial action. Returns a receipt ID and signature — cryptographic proof the record is unaltered. Free. |
+| `ledger.session` | Get the aggregated payment graph for a multi-agent session — total USD moved, tx count, and chronological payment list. For cost accounting and audit. Free. |
 
 ### Agentic Operations (6 tools)
 
