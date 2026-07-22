@@ -75,6 +75,16 @@ You must not:
 
 You are responsible for the security of your Credentials. Notify Untitled_ immediately upon actual or suspected compromise via the contact form at [untitledfinancial.com](https://untitledfinancial.com).
 
+### Autonomous Systems
+
+**Operators are responsible for all actions taken by autonomous systems — including AI agents, automated scripts, and orchestration frameworks — operating under their Credentials.** An action taken by an agent under your API key is an action taken by you. This responsibility is unconditional and is not diminished by the degree of autonomy, the complexity of the agent system, or the absence of human review on any individual transaction.
+
+You must ensure that:
+- Any autonomous system operating under your Credentials complies with these terms in full
+- Appropriate circuit-breaker controls, spending limits, and oversight mechanisms are in place
+- You can suspend or revoke agent access promptly in the event of compromise or unexpected behaviour
+- The scope of permissions granted to any agent is limited to what is necessary for its intended function
+
 ---
 
 ## 5. Compliance Obligations

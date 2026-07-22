@@ -7,7 +7,7 @@ description: DPX Stability Oracle v9.0 — 9-layer architecture, USD structural 
 
 The DPX Stability Oracle v9.0 is a 9-layer signal pipeline that aggregates 32+ real-world data sources into a single actionable confidence score — with an AI intelligence layer that synthesises every signal into a plain-language briefing for treasury and risk teams. It runs 7 primary signal tiers (Tiers 0–6), a cross-body integration synthesis pass, and a USD structural health module (v9.0) that cross-validates US official data against independent and non-US sources — all feeding into a full recommendation engine with active war mitigation protocols and 30–90 day early warning signals.
 
-**New in v9.0:** USD structural health monitoring (12 signals), independent inflation cross-validation, stablecoin market health, DeFi systemic risk signal, ECB cross-validation, gold price debasement signal, seismic supply-chain impact — all feeding a `usdHealth` confidence score blended into the composite stability score.
+**New in v9.0:** USD structural health monitoring (12 signals), independent inflation cross-validation, [stablecoin](https://alternativeassetliteracy.com/glossary.html#stablecoin) market health, [DeFi](https://alternativeassetliteracy.com/glossary.html#defi-decentralized-finance) systemic risk signal, ECB cross-validation, gold price debasement signal, seismic supply-chain impact — all feeding a `usdHealth` confidence score blended into the composite stability score.
 
 ---
 

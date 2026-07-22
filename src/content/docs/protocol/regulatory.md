@@ -11,7 +11,7 @@ DPX was designed to meet institutional regulatory requirements across all three 
 
 ### MiCA — Markets in Crypto-Assets Regulation
 
-MiCA Title III entered full application in June 2024. It establishes the authorisation and operating requirements for stablecoin issuers in the EU.
+[MiCA](https://alternativeassetliteracy.com/glossary.html#mica-markets-in-crypto-assets) Title III entered full application in June 2024. It establishes the authorisation and operating requirements for stablecoin issuers in the EU.
 
 DPX's protocol architecture is **designed with MiCA Article 36 compliance as a foundational requirement**. The key Article 36 obligations — and DPX's current position on each — are:
 

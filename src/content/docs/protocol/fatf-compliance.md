@@ -3,7 +3,7 @@ title: FATF & Travel Rule Compliance
 description: How DPX aligns with FATF Recommendations 15 and 16 (Travel Rule), Virtual Asset Service Provider requirements, and what this means for institutional counterparties.
 ---
 
-The Financial Action Task Force (FATF) sets the global standard for anti-money laundering (AML) and counter-terrorism financing (CFT). Every institutional counterparty operating in a FATF member jurisdiction — all G20 countries, the EU, UK, and 200+ others — is required to comply with FATF Recommendations.
+The Financial Action Task Force (FATF) sets the global standard for [anti-money laundering (AML)](https://alternativeassetliteracy.com/glossary.html#anti-money-laundering-amlcft) and counter-terrorism financing (CFT). Every institutional counterparty operating in a FATF member jurisdiction — all G20 countries, the EU, UK, and 200+ others — is required to comply with FATF Recommendations.
 
 **This page explains DPX's position on the two FATF requirements institutional clients ask about first.**
 
@@ -20,7 +20,7 @@ DPX is a **settlement protocol**, not a custodial VASP. It does not hold custome
 - Settled directly to the beneficiary address on Base mainnet
 - Fully traceable on-chain with block explorer verification
 
-DPX's institutional clients and integration partners are responsible for their own VASP registration and AML/KYC obligations in their respective jurisdictions. DPX does not replace or bypass those obligations — it operates as the settlement execution layer beneath them.
+DPX's institutional clients and integration partners are responsible for their own VASP registration and AML/[KYC](https://alternativeassetliteracy.com/glossary.html#know-your-customer-kyc) obligations in their respective jurisdictions. DPX does not replace or bypass those obligations — it operates as the settlement execution layer beneath them.
 
 ## FATF Recommendation 16 — The Travel Rule
 

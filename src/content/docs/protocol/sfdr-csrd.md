@@ -3,7 +3,7 @@ title: SFDR & CSRD Compliance
 description: How DPX supports EU Sustainable Finance Disclosure Regulation (SFDR) and Corporate Sustainability Reporting Directive (CSRD) requirements — ESG output formats, per-transaction sustainability data, and audit trail.
 ---
 
-The EU Sustainable Finance Disclosure Regulation (SFDR) and Corporate Sustainability Reporting Directive (CSRD) create mandatory reporting requirements for fund managers and corporates operating in Europe. DPX produces transaction-level ESG data in formats that map directly to these obligations — making every DPX settlement a source record for sustainability reporting.
+The EU Sustainable Finance Disclosure Regulation ([SFDR](https://alternativeassetliteracy.com/glossary.html#sfdr)) and Corporate Sustainability Reporting Directive (CSRD) create mandatory reporting requirements for fund managers and corporates operating in Europe. DPX produces transaction-level ESG data in formats that map directly to these obligations — making every DPX settlement a source record for sustainability reporting.
 
 ---
 

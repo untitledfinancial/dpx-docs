@@ -3,7 +3,7 @@ title: Instant Stablecoin Payments
 description: Cross-border settlement in seconds using USDC or EURC on Base mainnet — how DPX delivers instant stablecoin payments for corporate treasuries and financial institutions.
 ---
 
-Stablecoin payments are becoming standard infrastructure for corporate treasury. Kyriba, the world's leading treasury management platform, has launched a dedicated **Global Payments, FX & Stablecoin** category in its marketplace. DPX is the settlement rail purpose-built for this use case.
+[Stablecoin](https://alternativeassetliteracy.com/glossary.html#stablecoin) payments are becoming standard infrastructure for corporate treasury. Kyriba, the world's leading treasury management platform, has launched a dedicated **Global Payments, FX & Stablecoin** category in its marketplace. DPX is the settlement rail purpose-built for this use case.
 
 ---
 

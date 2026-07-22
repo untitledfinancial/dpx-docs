@@ -5,7 +5,7 @@ description: How the DPX ESG Oracle scores counterparties across Environmental, 
 
 > **Proprietary technology.** The ESG Oracle scoring methodology, weighting model, redistribution logic, and source code are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. API access is available to approved beta partners. Self-hosting requires a separate license agreement — apply via the [beta access page](/beta).
 
-The DPX ESG Oracle produces live E, S, G scores from 8 real-world institutional data sources. Those scores flow directly into settlement fees: a higher score means a lower fee. 100% of ESG fee revenue is redistributed to verified on-chain impact programs — making every DPX settlement a direct contributor to measurable environmental and social outcomes.
+The DPX [ESG](https://alternativeassetliteracy.com/glossary.html#esg) Oracle produces live E, S, G scores from 8 real-world institutional data sources. Those scores flow directly into settlement fees: a higher score means a lower fee. 100% of ESG fee revenue is redistributed to verified on-chain impact programs — making every DPX settlement a direct contributor to measurable environmental and social outcomes.
 
 The Social (S) dimension includes **human rights metrics** (child labour, labour rights enforcement, safety from violence) and a **gender equity sub-score** (women in management, earnings parity, gender-responsive institutions) — making DPX the first stablecoin settlement rail with human rights and gender equity embedded directly in its fee structure.
 

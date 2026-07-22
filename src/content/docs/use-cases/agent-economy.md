@@ -5,7 +5,7 @@ description: DPX as the payment and compliance infrastructure for the autonomous
 
 The agent economy has a payments problem. When an AI agent needs to pay for data, pay another agent, or settle a task-completion fee, there is no standard programmable rail for it. API keys are not payments. Crypto wallets require human key management. Bank wires require humans at every step.
 
-DPX is already built as that primitive. Every capability an autonomous agent needs — discovery, pricing, compliance, ESG-informed routing, execution, on-chain verification — is available without a human in the loop.
+DPX is already built as that primitive. Every capability an autonomous agent needs — discovery, pricing, compliance, [ESG](https://alternativeassetliteracy.com/glossary.html#esg)-informed routing, execution, on-chain verification — is available without a human in the loop.
 
 ---
 
