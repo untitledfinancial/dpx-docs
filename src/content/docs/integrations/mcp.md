@@ -111,9 +111,9 @@ Restart Claude Desktop — **DPX** appears in the MCP toolbar with 71 tools.
 | `intelligence.subscription.get` | Check subscription status and last signal score |
 | `intelligence.subscription.delete` | Cancel an intelligence subscription |
 | `esg.trend` | Historical ESG composite trend for a LEI — direction, delta, and score history |
-| `compliance.ubo_chain` | GLEIF beneficial ownership chain (up to 3 levels) + sanctions screen at each node — FATF R.16 UBO attestation |
-| `compliance.pep_screen` | Screen an individual against the OpenSanctions PEP dataset — FATF R.12/13 EDD trigger |
-| `compliance.regulatory_calendar` | Upcoming and in-effect compliance obligations: MiCA, SFDR, CSRD, GENIUS Act, FATF |
+| `compliance.ubo_chain` | **AML / FATF R.16** — Trace beneficial ownership up to 3 levels and run sanctions screening at each node. Returns a FATF R.16 UBO attestation. Use before any settlement where the counterparty is a legal entity — required for FATF travel rule compliance above threshold. |
+| `compliance.pep_screen` | **PEP screening** — Check an individual against the politically exposed persons dataset. Returns `isPep`, risk level (LOW / MEDIUM / HIGH), and whether enhanced due diligence is triggered per FATF R.12/13. |
+| `compliance.regulatory_calendar` | Upcoming and in-effect compliance obligations by jurisdiction: MiCA, SFDR, CSRD, GENIUS Act, FATF. Use to check if a corridor or counterparty type has a pending deadline. |
 | `stability.corridor` | Corridor-specific stability score for any currency pair — regulatory flags + FX session liquidity + cascade penalty. Returns SETTLE_NOW / DELAY_24H / DELAY_48H |
 | `stability.settlement_window` | Optimal 4-hour execution windows over 72h horizon — ranked by corridor stability, liquidity, cascade decay, counterparty ESG tier (if LEI provided) |
 | `stability.stablecoin_route` | Multi-stablecoin routing — recommends optimal stablecoin path (USDC, EURC, BRLA, MXNC, NGNC, AEDX, PYUSD…) for any currency pair. Flags blocked routes (e.g. USDT under MiCA, BRLA before Oct 2026 deadline) |
