@@ -104,7 +104,7 @@
 
 </div>
 
-<script is:inline>
+<script>
 const AGENT_URL      = 'https://agent.untitledfinancial.com';
 const STABILITY_URL  = 'https://stability.untitledfinancial.com';
 
@@ -147,8 +147,8 @@ function fmtPct(v) {
   return v.toFixed(4) + '%';
 }
 
-function setLoading(btnId, loading, label) {
-  const btn = document.getElementById(btnId);
+function setLoading(btnId: string, loading: boolean, label: string) {
+  const btn = document.getElementById(btnId) as HTMLButtonElement | null;
   if (!btn) return;
   btn.disabled = loading;
   btn.textContent = loading ? 'Running…' : label;
@@ -156,7 +156,7 @@ function setLoading(btnId, loading, label) {
 
 // ── Shared state ──────────────────────────────────────────────────────────────
 
-let quoteId = null;
+let quoteId: string | null = null;
 let compliancePassed = false;
 
 // ── Step 1: Oracle ────────────────────────────────────────────────────────────
