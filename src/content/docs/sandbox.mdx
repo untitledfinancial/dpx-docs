@@ -1,101 +1,67 @@
 ---
-title: Developer Sandbox
-description: Run a full DPX settlement in under 10 minutes — real oracle data, real compliance preflight, no signup, no on-chain commitment.
+title: Live Sandbox
+description: Run a full DPX settlement in four steps — real oracle data, real compliance preflight, no signup, no API key, no on-chain commitment.
 ---
 
-No signup. No API key. Add `?sandbox=true` to any settlement call and the full stack runs — compliance preflight, fee math, oracle gating — without touching the chain.
+import LiveDemo from '../../components/LiveDemo.astro';
+
+No signup. No API key. No wallet. Every step below hits the live DPX endpoints — the oracle checks real macro conditions, the compliance preflight runs actual AML/sanctions logic, and the settlement executes the full stack without touching the chain.
+
+<LiveDemo />
 
 ---
 
-## Run your first settlement
+## What just ran
 
-```bash
-curl -X POST "https://integration.untitledfinancial.com/payments/initiate?sandbox=true" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "amount": "500000",
-    "currency": "USD",
-    "creditor": {
-      "name": "Acme Logistics GmbH",
-      "lei": "529900T8BM49AURSDO55",
-      "walletAddress": "0xe333551E18ef0471A71d7e8e761212766aa5AD4f"
-    },
-    "debtor": {
-      "name": "Acme Corp",
-      "lei": "5493001KJTIIGC8Y1R12"
-    },
-    "purpose": "Supplier payment Q2 2026"
-  }'
+**Step 1 — Oracle gate.** Before any payment can execute, the 9-layer Stability Oracle checks current macro conditions. An `UNSTABLE` result halts settlement automatically — the same gate that runs in production.
+
+**Step 2 — Quote.** A binding fee quote is calculated against live oracle data. The number you saw is what production would charge.
+
+**Step 3 — Compliance preflight.** A single `/flow-check` call runs AML screening, sanctions checks, FATF R16 compliance, ESG scoring, and stablecoin routing in parallel. `PROCEED` means all checks passed. `HOLD` or `BLOCKED` halts the pipeline with a reason.
+
+**Step 4 — Settlement.** The full settlement stack executed — compliance-gated, oracle-priced — without an on-chain transaction. The settlement ID returned would be an on-chain tx hash in production.
+
+---
+
+## Run it in code
+
+The same flow as a TypeScript agent:
+
+```typescript
+import { DPXAgent } from '@untitledfinancial/dpx-mcp';
+
+// 1 — Oracle gate
+const oracle = await fetch('https://stability.untitledfinancial.com/reliability').then(r => r.json());
+if (oracle.status === 'UNSTABLE') throw new Error('Holding — oracle UNSTABLE');
+
+// 2 — Compliance preflight
+const check = await fetch(`https://agent.untitledfinancial.com/flow-check?amount=50000&from=USD&to=USD&recipientAddress=0x...`).then(r => r.json());
+if (check.decision !== 'PROCEED') throw new Error(`Blocked: ${check.blockReason}`);
+
+// 3 — Settle
+const result = await fetch('https://agent.untitledfinancial.com/settle', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    amount: 50000,
+    sourceCurrency: 'USD',
+    destinationCurrency: 'USD',
+    recipientAddress: '0x...',
+    sandbox: true,   // remove for production
+  }),
+}).then(r => r.json());
 ```
 
-That's it. No token, no account. The response includes a settlement reference, full compliance result, fee breakdown, and ESG redistribution plan.
+Remove `sandbox: true` and supply a funded wallet address to go live on Base mainnet.
 
 ---
 
-## What runs in sandbox mode
-
-Everything except the on-chain transaction.
-
-**Compliance preflight** — Verification of Payee confirms the creditor entity name. AML behavioural screening runs three layers: sanctions check, z-score anomaly detection, graph-based counterparty risk. Same logic as production, same latency.
-
-**Fee calculation** — Live oracle math. Core settlement fee, FX overlay if cross-currency, ESG fee based on counterparty score. The number you see is the number production would charge.
-
-**Oracle gating** — The Stability Oracle checks current conditions before every settlement. If the oracle is `UNSTABLE`, the sandbox call holds exactly as production would.
-
-**ESG scoring** — The counterparty business is scored against 6 institutional sources. Score feeds into the fee. 100% of the ESG fee component is redistributed on-chain in production.
-
----
-
-## The full sequence
-
-If you want to see each layer individually before running settlement:
-
-```bash
-# 1. Protocol discovery — capabilities, contracts, corridors
-curl https://stability.untitledfinancial.com/manifest
-
-# 2. Binding fee quote — real oracle math, valid 300s
-curl "https://stability.untitledfinancial.com/quote?amountUsd=500000&hasFx=true&esgScore=75"
-
-# 3. Oracle stability check
-curl https://stability.untitledfinancial.com/reliability
-
-# 4. Sandbox settlement — full stack, no chain
-curl -X POST "https://integration.untitledfinancial.com/payments/initiate?sandbox=true" \
-  -H "Content-Type: application/json" \
-  -d '{ "amount": "500000", "currency": "USD", "creditor": { "name": "Acme Logistics GmbH", "walletAddress": "0xe333551E18ef0471A71d7e8e761212766aa5AD4f" }, "debtor": { "name": "Acme Corp" } }'
-```
-
-Steps 1–3 have always been open. Step 4 is new — no auth required in sandbox mode.
-
----
-
-## Sandbox vs production
-
-| | Sandbox | Production |
-|---|---|---|
-| Auth required | No | Yes — institution key |
-| Fee math | Live oracle | Live oracle |
-| Compliance preflight | Full | Full |
-| Oracle gating | Full | Full |
-| On-chain transaction | No | Base mainnet |
-| Settlement reference | `sandbox_` prefixed UUID | On-chain tx hash |
-| ESG redistribution | Simulated | On-chain to impact pools |
-
----
-
-## MCP — if you're running an agent
+## MCP — skip the HTTP calls entirely
 
 ```bash
 npx @untitledfinancial/dpx-mcp
 ```
 
-The MCP server exposes `settlement.execute` with a `sandbox` parameter. Any MCP-compatible host can call it directly — no USDC, no wallet setup required in sandbox mode.
+The MCP server exposes 72 tools covering oracle status, compliance, quoting, and settlement. Any MCP-compatible host (Claude Desktop, Cursor) can call them directly.
 
-[MCP setup →](/integrations/mcp)
-
----
-
-## Ready for production?
-
-Sandbox runs are unlimited. When you're ready to move real volume — institution key provisioning, TMS integration support, volume tier pricing — [contact us](/beta).
+[MCP setup →](/integrations/mcp) · [Add payments to your agent →](/guides/agent-payments)
