@@ -151,7 +151,7 @@ All free, no authentication required:
 
 ## MCP PATH
 
-If the agent is running in a host that supports Model Context Protocol (MCP-compatible: compatible AI coding tools, Cursor, Windsurf, ElevenLabs Conversational AI, or any SSE MCP host):
+If the agent is running in a host that supports Model Context Protocol (MCP-compatible: compatible AI coding tools, Cursor, Windsurf, or any SSE MCP host):
 
 ```
 npx @untitledfinancial/dpx-mcp

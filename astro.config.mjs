@@ -90,7 +90,6 @@ export default defineConfig({
           label: 'Agent Integrations & SDKs',
           items: [
             { label: 'MCP — Claude',            slug: 'integrations/mcp' },
-            { label: 'ElevenLabs Voice Agents',  slug: 'integrations/elevenlabs' },
             { label: 'GPT Actions',             slug: 'integrations/gpt-actions' },
             { label: 'LangChain',               slug: 'integrations/langchain' },
             { label: 'CrewAI',                  slug: 'integrations/crewai' },
