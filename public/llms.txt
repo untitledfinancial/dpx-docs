@@ -12,9 +12,15 @@
 
 ---
 
-# DPX — Financial Action Layer for AI Agents
+# DPX — An AI agent can move money with this
 
-> DPX is the financial action layer for AI agents — settlement infrastructure where any autonomous agent can discover, price, comply, and execute a cross-border payment end-to-end without human intervention. The Stability Oracle monitors 32+ data sources across 9 signal layers and gates every settlement on real-world conditions. Every transaction is automatically ESG-documented on-chain. Deployed on Base (chainId 8453).
+> Any autonomous agent can call four endpoints and execute a compliant cross-border payment end-to-end — no human in the loop, no API key, no onboarding:
+> 1. `GET /reliability` — check whether global conditions are safe to settle (free)
+> 2. `GET /quote` — get a binding fee quote with ESG-adjusted pricing (free)
+> 3. `POST /flow-check` — run AML, sanctions, and FATF R16 counterparty verification (free)
+> 4. `POST /settle` — execute. Funds move. Receipt recorded on Base mainnet.
+>
+> DPX is the only settlement rail with a native MCP server (76 tools), x402 micropayment support, an A2A agent card, and live compliance oracles — all callable by an agent with no prior setup.
 
 ## Builder
 
