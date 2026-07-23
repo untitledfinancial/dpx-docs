@@ -12,9 +12,9 @@
 
 ---
 
-# DPX — Programmable Cross-Border Settlement
+# DPX — Financial Action Layer for AI Agents
 
-> DPX is a cross-border settlement rail where AI runs inside the protocol. The Stability Oracle monitors 32+ data sources across 9 signal layers and reasons about whether conditions are right before every settlement. Every transaction is automatically ESG-documented on-chain. The Settlement Agent executes end-to-end without human approval. Deployed on Base (chainId 8453).
+> DPX is the financial action layer for AI agents — settlement infrastructure where any autonomous agent can discover, price, comply, and execute a cross-border payment end-to-end without human intervention. The Stability Oracle monitors 32+ data sources across 9 signal layers and gates every settlement on real-world conditions. Every transaction is automatically ESG-documented on-chain. Deployed on Base (chainId 8453).
 
 ## Builder
 
@@ -79,8 +79,7 @@ GET /manifest — capability discovery
 
 ## Agent integrations
 
-- [MCP — Claude Desktop](https://docs.untitledfinancial.com/integrations/mcp): Native Claude integration via Model Context Protocol. Also compatible with ElevenLabs Conversational AI, Cursor, Windsurf, and any SSE MCP host.
-- [ElevenLabs Conversational AI](https://docs.untitledfinancial.com/integrations/elevenlabs): Voice agents that call DPX tools mid-conversation — counterparty verification, ESG scoring, settlement execution. Webhook and MCP paths. Guardrails and test suite included.
+- [MCP — Claude Desktop](https://docs.untitledfinancial.com/integrations/mcp): Native Claude integration via Model Context Protocol. Also compatible with Cursor, Windsurf, and any SSE MCP host.
 - [GPT Actions](https://docs.untitledfinancial.com/integrations/gpt-actions): Custom GPT calling DPX directly
 - [LangChain](https://docs.untitledfinancial.com/integrations/langchain): Python tool wrappers
 - [Coinbase AgentKit](https://docs.untitledfinancial.com/integrations/coinbase-agentkit): CDP-managed MPC wallet or Viem private key — full settlement loop validated on Base
