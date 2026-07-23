@@ -110,7 +110,6 @@ Point any MCP-compatible host directly at the remote server — no `npx`, no loc
 }
 ```
 
-Also compatible with **ElevenLabs Conversational AI** — point any voice agent at `https://mcp.untitledfinancial.com/mcp` with SSE transport and your subscription key.
 
 ## Use cases by team
 

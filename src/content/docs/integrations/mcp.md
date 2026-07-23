@@ -7,7 +7,6 @@ The DPX MCP server gives any AI agent native access to payments, compliance, and
 
 **Also available on [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp)** — install with one click from the Smithery marketplace.
 
-**Also compatible with [ElevenLabs Conversational AI](/integrations/elevenlabs)** — point any ElevenLabs voice agent at `https://mcp.untitledfinancial.com/mcp` with SSE transport to access all 76 tools mid-conversation.
 
 ## Prerequisites
 
