@@ -168,8 +168,8 @@ async function loadOracle() {
   try {
     const res  = await fetch(`${STABILITY_URL}/reliability`);
     const data = await res.json();
-    const status = data.status ?? 'UNKNOWN';
-    const score  = data.score ?? data.stabilityScore ?? 0;
+    const status = data.stability?.latestStatus ?? data.status ?? 'UNKNOWN';
+    const score  = data.stability?.currentScore ?? data.score ?? data.stabilityScore ?? 0;
     const type = status === 'STABLE' ? 'ok' : status === 'CAUTION' ? 'warn' : 'block';
     setBadge('oracle-badge', status, type);
 
