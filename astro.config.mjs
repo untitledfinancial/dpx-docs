@@ -54,6 +54,7 @@ export default defineConfig({
             { label: 'For AI builders',            slug: 'guides/for-ai-builders' },
             { label: 'Add payments to your agent', slug: 'guides/agent-payments' },
             { label: 'Multi-agent payments',       slug: 'guides/multi-agent-payments' },
+            { label: 'Compute procurement',        slug: 'guides/compute-procurement' },
             { label: 'Compliance for agents',      slug: 'guides/compliance-for-agents' },
             { label: 'Error handling',             slug: 'guides/error-handling' },
             { label: 'x402 — agent payments',      slug: 'integrations/x402' },
