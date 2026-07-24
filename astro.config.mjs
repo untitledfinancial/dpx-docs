@@ -52,6 +52,7 @@ export default defineConfig({
           label: 'Guides',
           items: [
             { label: 'For AI builders',            slug: 'guides/for-ai-builders' },
+            { label: 'Agent frameworks',           slug: 'guides/agent-frameworks' },
             { label: 'Add payments to your agent', slug: 'guides/agent-payments' },
             { label: 'Multi-agent payments',       slug: 'guides/multi-agent-payments' },
             { label: 'Compute procurement',        slug: 'guides/compute-procurement' },
