@@ -62,6 +62,7 @@ export default defineConfig({
             { label: 'Compliance for agents',      slug: 'guides/compliance-for-agents' },
             { label: 'Error handling',             slug: 'guides/error-handling' },
             { label: 'x402 — agent payments',      slug: 'integrations/x402' },
+            { label: 'x402 intelligence signals',  slug: 'guides/x402-intelligence' },
           ],
         },
         {
