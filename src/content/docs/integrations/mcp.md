@@ -1,12 +1,11 @@
 ---
 title: MCP — Connect Claude
-description: 76 tools for Claude Desktop and Cursor — add payments, AML screening, compliance verification, oracle-gated settlement, and live macro intelligence to any AI agent in minutes.
+description: 78 tools for Claude Desktop and Cursor — add payments, AML screening, compliance verification, oracle-gated settlement, and live macro intelligence to any AI agent in minutes.
 ---
 
-The DPX MCP server gives any AI agent native access to payments, compliance, and intelligence infrastructure — without writing HTTP calls or managing auth. 76 tools covering: agent-to-agent payments, AML and sanctions screening, FATF R16 counterparty verification, oracle-gated settlement, ESG scoring, x402 intelligence endpoints, multi-stablecoin routing, Mercury banking, Ramp card integration, FX corridor intelligence, macro intelligence briefings, network topology, butterfly effect cascade analysis, AP2-compatible agent mandate management, and KYA (Know Your Agent) identity. Works with Claude Desktop, Cursor, and any MCP-compatible host. No API key. No browser. No copy-paste.
+The DPX MCP server gives any AI agent native access to payments, compliance, and intelligence infrastructure — without writing HTTP calls or managing auth. 78 tools covering: agent-to-agent payments, AML and sanctions screening, FATF R.16 counterparty verification, oracle-gated settlement, ESG scoring, x402 intelligence endpoints, multi-stablecoin routing, Mercury banking, Ramp card integration, FX corridor intelligence, macro intelligence briefings, network topology, butterfly effect cascade analysis, AP2-compatible agent mandate management, and KYA (Know Your Agent) identity. Works with Claude Desktop, Cursor, and any MCP-compatible host. No API key. No browser. No copy-paste.
 
 **Also available on [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp)** — install with one click from the Smithery marketplace.
-
 
 ## Prerequisites
 
@@ -41,7 +40,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 }
 ```
 
-Restart Claude Desktop — **DPX** appears in the MCP toolbar with 76 tools.
+Restart Claude Desktop — **DPX** appears in the MCP toolbar with 78 tools.
 
 :::note[Sandbox mode]
 `SANDBOX_MODE: "true"` means `settle` runs real calculations with no on-chain execution. Set to `"false"` only when you are ready for live settlements with real USDC.
@@ -74,7 +73,9 @@ Restart Claude Desktop — **DPX** appears in the MCP toolbar with 76 tools.
 | `protocol.manifest` | DPX capabilities, supported assets, contract addresses |
 | `settlement.quote` | Binding fee quote — core, FX, ESG, license, net amount (300s TTL) |
 | `settlement.execute` | **Execute a settlement** — cross-border or domestic — oracle + rail check → on-chain |
+| `settlement.nl` | **Natural language settlement** — plain-English instruction → full 4-step flow → receipt. No structured params needed. |
 | `settlement.status` | Look up any settlement by ID |
+| `computer_use.pay` | **Computer use payment interception** — describe what's on screen, DPX settles it. Closes the payment gap in Claude computer use sessions. |
 | `oracle.stability` | Oracle stability status — STABLE / CAUTION / UNSTABLE (cross-border and domestic) |
 | `oracle.status` | Full 9-layer Stability Oracle v9.0 signal — ESG Oracle is separate |
 | `oracle.rails` | **Live health of local payment rails** — PIX, SEPA, FedACH, CHAPS, UPI, PromptPay |
@@ -209,6 +210,15 @@ Restart Claude Desktop — **DPX** appears in the MCP toolbar with 76 tools.
 - *"Get a quote and execute a $100,000 intercompany settlement to 0x1E05... in sandbox mode"*
 - *"Check oracle and rail conditions, then settle $500K USD domestic to 0x... with reference INV-2026-001"*
 - *"Execute the full settlement flow for our Q2 intercompany transfer — $2M, USD→USD, sandbox"*
+- *"Pay Acme GmbH $25,000 for invoice #INV-2026-0042"* ← natural language, no structured params needed
+
+**Computer use:**
+- *"I can see a payment approval screen for Acme GmbH, $25,000, wallet 0xd8dA... — complete this payment"*
+- *"The vendor portal is asking for payment of $12,500 to Nova Trade SA — handle it"*
+
+**AP automation:**
+- *"Process these three invoices and report what was paid, escalated, and blocked"*
+- *"Run the weekly AP batch — check oracle first, skip anything flagged HOLD"*
 
 **Status and audit:**
 - *"Look up settlement dpx_a1b2c3... and show me the full receipt"*
@@ -271,7 +281,7 @@ stdio (JSON-RPC 2.0). All tool logging goes to stderr; stdout is reserved for th
 | `forecast.production_regions` | All ~40 global production regions ranked by current climate risk score with affected commodity list |
 | `forecast.calendar` | Seasonal climate event calendar — 12 critical annual windows (hurricane season, corn pollination, frost risk, ENSO influence periods) sorted by urgency |
 
-### Multi-stablecoin Routing (1 tool)
+### Multi-stablecoin Routing (2 tools)
 
 | Tool | Description |
 |---|---|

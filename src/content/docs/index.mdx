@@ -15,7 +15,7 @@ For fully autonomous operation, the settlement agent supports four AI originatio
 
 DPX is the financial action layer for AI agents — settlement infrastructure where any autonomous agent can discover, price, comply, and execute a cross-border payment end-to-end without human intervention. An agent calls `/manifest` to discover capabilities, `/quote` for a binding fee, `/flow-check` for compliance preflight, and `POST /settle` to execute. No API key. No account. No onboarding.
 
-Smart contracts are designed to be agent-executable. APIs are machine-readable by default. Every layer used by human treasury teams is equally accessible to software agents making real-time financial decisions. DPX speaks MCP natively (76 tools), implements x402 for machine-native micropayments, publishes an A2A agent card so orchestrators can discover it at runtime, and is ISO 20022-compatible for any existing treasury system that needs to connect.
+Smart contracts are designed to be agent-executable. APIs are machine-readable by default. Every layer used by human treasury teams is equally accessible to software agents making real-time financial decisions. DPX speaks MCP natively (78 tools), implements x402 for machine-native micropayments, publishes an A2A agent card so orchestrators can discover it at runtime, and is ISO 20022-compatible for any existing treasury system that needs to connect.
 
 The Stability Oracle gates every settlement on real-world conditions — continuously recalibrating across climate, macro, FX, and geopolitical signal layers. If conditions are UNSTABLE, a hold is automatic; when they clear, execution resumes. Every API response includes structured reasoning, a confidence score, and a forward-looking outlook. Treasury teams and AI agents receive the same signal — there is no separate "human" and "machine" interface.
 
@@ -75,7 +75,7 @@ DPX runs a live prediction ledger. Every forecast — regime transition probabil
     [Read →](/guides/compliance-for-agents)
   </Card>
   <Card title="MCP — Claude Desktop & Cursor" icon="puzzle">
-    76 tools for Claude Desktop and Cursor — payments, compliance, oracle, ESG, analytics, x402 intelligence, and more.
+    78 tools for Claude Desktop and Cursor — payments, compliance, oracle, ESG, analytics, x402 intelligence, and more.
     [Set up MCP →](/integrations/mcp)
   </Card>
 </CardGrid>
@@ -87,13 +87,25 @@ DPX runs a live prediction ledger. Every forecast — regime transition probabil
     The complete autonomous settlement loop — discover, quote, gate on oracle, pay via x402, execute on-chain.
     [Get started →](/agent-quickstart)
   </Card>
+  <Card title="Agent-to-agent payments" icon="star">
+    Agent A creates an invoice. Agent B pays it. No human, no shared credentials, no out-of-band coordination.
+    [Read →](/guides/agent-to-agent-payments)
+  </Card>
+  <Card title="AP automation agent" icon="setting">
+    Drop-in Claude Project config for autonomous accounts payable — oracle-gated, compliance-screened, fully auditable.
+    [Read →](/guides/ap-automation)
+  </Card>
+  <Card title="Computer use payments" icon="puzzle">
+    When Claude's computer use session hits a payment form — route it through DPX instead of stopping for human input.
+    [Read →](/guides/computer-use-payments)
+  </Card>
+  <Card title="Natural language settlement" icon="information">
+    Call `settlement.nl` with a plain-English instruction. DPX parses it, screens it, and settles it.
+    [Read →](/guides/for-ai-builders)
+  </Card>
   <Card title="x402 — payments for agents" icon="information">
     How the HTTP 402 payment protocol works, why it matters for autonomous agents, and how DPX implements it.
     [Read →](/integrations/x402)
-  </Card>
-  <Card title="Agent-to-Agent Payments" icon="star">
-    DPX is native to AI agents — the settlement layer for the agentic internet. Use cases, x402 flow, ESG pricing.
-    [Read →](/use-cases/agent-economy)
   </Card>
 </CardGrid>
 
