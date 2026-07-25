@@ -53,6 +53,8 @@ export default defineConfig({
           items: [
             { label: 'For AI builders',            slug: 'guides/for-ai-builders' },
             { label: 'Agent-to-agent payments',    slug: 'guides/agent-to-agent-payments' },
+            { label: 'AP automation agent',        slug: 'guides/ap-automation' },
+            { label: 'Computer use payments',      slug: 'guides/computer-use-payments' },
             { label: 'Agent frameworks',           slug: 'guides/agent-frameworks' },
             { label: 'Add payments to your agent', slug: 'guides/agent-payments' },
             { label: 'Multi-agent payments',       slug: 'guides/multi-agent-payments' },
