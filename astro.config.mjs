@@ -107,6 +107,7 @@ export default defineConfig({
             { label: 'Coinbase AgentKit',        slug: 'integrations/coinbase-agentkit' },
             { label: 'Circle Wallets',           slug: 'integrations/circle' },
             { label: 'REST API',                slug: 'integrations/rest-api' },
+            { label: 'dpx-x402 middleware',     slug: 'integrations/dpx-x402' },
           ],
         },
         {
