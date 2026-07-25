@@ -1,23 +1,25 @@
 ---
 title: DPX Intelligence — Agent Use Cases and Signal Guide
-description: Why autonomous agents pull DPX Intelligence signals, which endpoints answer which decisions, and how to pay for them via x402 on Base mainnet.
+description: What enterprise agents use DPX Intelligence signals for, which endpoints answer which autonomous decisions, and how agents pay for them via x402 on Base mainnet.
 ---
 
-DPX Intelligence is a signal API for autonomous agents. Agents pay micropayments via x402 to access structured intelligence on macro conditions, climate systems, FX corridors, cascade risk, supply chain stress, sovereign debt, and more — then act on the response without human involvement.
+DPX Intelligence is a signal API built for autonomous agents embedded in enterprise products. The caller is always software — a treasury automation agent, a procurement system, an AP pipeline, a risk platform — making decisions in production without a human in the loop.
 
-No account, no API key, no subscription. Each signal purchase is a discrete USDC payment on Base mainnet, made and verified entirely by the agent.
+Agents pay micropayments via x402 to access structured intelligence on macro conditions, climate systems, FX corridors, cascade risk, supply chain stress, sovereign debt, and more. The entire flow — 402 response, EIP-3009 signature, payment verification, signal delivery — is machine-to-machine. No human reviews the payment. No human interprets the response. The agent acts on it directly.
 
-**DPX Intelligence is a separate product from DPX Settlement.** Signals can be used for any agent decision — payment routing, procurement, risk assessment, portfolio analysis, vendor evaluation, or research. An agent does not need to use DPX Settlement to use DPX Intelligence.
+No account, no API key, no subscription. Each signal purchase is a discrete USDC payment on Base mainnet, initiated and completed by the agent.
+
+**DPX Intelligence is a separate product from DPX Settlement.** Signals can be embedded in any enterprise agent product — payment routing, procurement automation, vendor risk assessment, portfolio monitoring, ESG reporting pipelines. The agent does not need to use DPX Settlement to use DPX Intelligence.
 
 ---
 
-## Why agents pull these signals
+## What enterprise agents use these signals for
 
-Autonomous agents make decisions that previously required a human analyst: should we pay this counterparty now or wait? Is this corridor safe for a large transfer? What's the cascade risk if this payment fails? Does this vendor operate in a high-risk jurisdiction?
+Enterprise agents are embedded in systems that execute consequential decisions at scale: releasing vendor payments, routing cross-border transfers, approving procurement, flagging counterparty risk, generating ESG disclosures. These decisions used to require a risk analyst. With DPX Intelligence, the agent handles them autonomously.
 
-DPX Intelligence gives agents the same structured, machine-readable context that a risk analyst would assemble — delivered as a 402-gated API call, paid in USDC, returned as structured JSON the agent can reason about directly.
+The agent's product logic calls a signal endpoint, receives structured JSON, and branches based on the response — hold the payment, proceed, reduce notional, escalate to a human queue, or update a client-facing report. No human is involved in that loop unless the agent's own policy routes to one.
 
-Each signal addresses a specific class of agent decision.
+DPX Intelligence gives enterprise agents the machine-readable equivalent of what a risk desk would assemble: macro regime, corridor stability, counterparty jurisdiction risk, cascade simulation, supply chain pressure, climate exposure. Each signal is purpose-built to answer a specific class of autonomous decision.
 
 ---
 
@@ -27,7 +29,7 @@ Each signal addresses a specific class of agent decision.
 
 **Endpoint:** `macro-stress` ($0.15)
 
-An agent executing a large payment needs to know whether the current macro environment is safe for large cash movements. A STABLE regime means normal conditions — proceed. ELEVATED_RISK means widening credit spreads, elevated VIX, TED spread stress — the agent may hold, reduce notional, or escalate for review. CRISIS means the agent should halt and wait.
+Your agent is running in an AP automation or treasury product. Before it releases a large payment, it needs to know whether the current macro environment makes that safe. A STABLE regime means normal conditions — the agent proceeds. ELEVATED_RISK (widening HY spreads, elevated VIX, TED spread stress) means the agent holds, reduces notional, or routes to a human approval queue per its policy. CRISIS means the agent halts all non-critical payments and waits for regime change.
 
 ```json
 → { "regime": "ELEVATED_RISK", "score": 72,
@@ -35,7 +37,7 @@ An agent executing a large payment needs to know whether the current macro envir
     "recommendation": "Proceed with caution — monitor credit spreads" }
 ```
 
-**When to call:** before any payment above a threshold the agent's policy defines. Typically the first signal an agent buys — cheapest, broadest signal, highest coverage.
+**When to call:** at the start of every payment evaluation above a threshold defined in your agent's policy. Typically the first signal your agent buys — cheapest, broadest coverage, answers the go/no-go question before buying anything else.
 
 ---
 
@@ -43,7 +45,7 @@ An agent executing a large payment needs to know whether the current macro envir
 
 **Endpoint:** `fx-settlement` ($0.25)
 
-An agent routing a cross-border payment needs to know whether the FX corridor is stable, liquid, and executing at expected cost. High volatility or low liquidity means the agent gets less certainty on the net received amount. The signal includes 24h volatility, corridor stability classification, execution risk, and the best execution window.
+Your agent is routing a cross-border payment in a treasury or FX product. It needs to know whether the corridor is stable, liquid, and executing at expected cost — before committing. High volatility or thin liquidity means the net received amount is uncertain; the agent may delay, split the payment, or choose an alternate corridor. The signal returns 24h volatility, corridor stability classification, execution risk, and the optimal execution window.
 
 ```json
 → { "corridor": "USD/EUR", "stability": "CAUTION",
@@ -51,7 +53,7 @@ An agent routing a cross-border payment needs to know whether the FX corridor is
     "recommendation": "Execute before NY close — liquidity thins after 4pm ET" }
 ```
 
-**When to call:** any time an agent is routing a cross-border payment or comparing corridor options. Combine with `sovereign-debt` for EM destinations.
+**When to call:** before every cross-border payment your agent routes. Combine with `sovereign-debt` for EM destinations.
 
 ---
 
@@ -59,7 +61,7 @@ An agent routing a cross-border payment needs to know whether the FX corridor is
 
 **Endpoint:** `sovereign-debt` ($0.25)
 
-An agent paying a counterparty in an emerging market needs to know the sovereign risk profile of that jurisdiction — rollover stress, DSA flags, fiscal trajectory. High sovereign risk means the counterparty itself faces funding pressure, increasing the probability of delayed delivery or disputes.
+Your agent is processing a payment to an emerging market counterparty in a procurement or vendor management product. Before releasing funds, it needs the sovereign risk profile of that jurisdiction — rollover stress, DSA flags, fiscal trajectory. High sovereign risk means the counterparty faces funding pressure that increases the probability of delayed delivery or disputed terms. Your agent uses this to shorten payment terms, require escrow, or flag the payment for review.
 
 ```json
 → { "riskTier": "HIGH", "score": 81,
@@ -67,7 +69,7 @@ An agent paying a counterparty in an emerging market needs to know the sovereign
     "recommendation": "EM counterparty under sovereign pressure — shorten payment terms" }
 ```
 
-**When to call:** before paying an EM counterparty, before extending Net 30/60/90 terms, or before any payment where the counterparty's jurisdiction matters to delivery risk.
+**When to call:** before paying any EM counterparty, before your agent extends Net 30/60/90 terms, or when the counterparty's jurisdiction is material to delivery risk.
 
 ---
 
@@ -75,7 +77,7 @@ An agent paying a counterparty in an emerging market needs to know the sovereign
 
 **Endpoint:** `cascade` ($0.75)
 
-An agent executing a strategically important payment — large notional, critical vendor, first payment in a settlement chain — needs to know what happens downstream if it fails. The cascade simulation models failure propagation across the counterparty network: how many counterparties are affected, at what depth, and with what probability.
+Your agent is executing a strategically important payment in a treasury or settlement product — large notional, critical vendor, or the first payment in a chain where downstream counterparties are waiting. Before releasing, your agent needs to know the blast radius if it fails. The cascade simulation models failure propagation: how many counterparties are affected, at what depth, and with what probability. Your agent uses this to decide whether to proceed, require escrow, stagger the payment, or hold pending confirmation.
 
 ```json
 → { "cascadeRisk": "MODERATE", "failureProbability": 0.12,
@@ -83,7 +85,7 @@ An agent executing a strategically important payment — large notional, critica
     "recommendation": "Proceed but hold escrow — moderate downstream exposure" }
 ```
 
-**When to call:** before payments the agent classifies as strategic or high-dependency. Most expensive signal — agents should call it selectively.
+**When to call:** when your agent classifies a payment as strategic or high-dependency. Most expensive signal — wire it into the payment policy for payments above a defined notional threshold, not every payment.
 
 ---
 
@@ -91,7 +93,7 @@ An agent executing a strategically important payment — large notional, critica
 
 **Endpoint:** `supply-chain` ($0.25)
 
-An agent approving a vendor payment needs to know whether current supply chain conditions make timely delivery probable. Elevated supply chain pressure — semiconductor shortages, port congestion, logistics backlogs — increases the risk that a paid vendor cannot perform.
+Your agent is running inside a procurement or vendor management product. Before it approves a vendor payment, it needs to know whether current supply chain conditions make timely delivery probable. Elevated pressure — semiconductor shortages, logistics backlogs, port congestion — increases the risk that a paid vendor cannot perform on schedule. Your agent uses this to adjust payment terms, require delivery milestones before releasing funds, or flag the vendor for manual review.
 
 ```json
 → { "pressureIndex": 68, "regime": "ELEVATED",
@@ -99,7 +101,7 @@ An agent approving a vendor payment needs to know whether current supply chain c
     "recommendation": "Tech vendor payment acceptable — build in delivery buffer" }
 ```
 
-**When to call:** before paying a tech, manufacturing, or goods vendor. Pair with `shipping-stress` when the goods have to physically move.
+**When to call:** before your agent approves any payment to a tech, manufacturing, or goods vendor. Pair with `shipping-stress` when the goods have to physically move.
 
 ---
 
@@ -107,7 +109,7 @@ An agent approving a vendor payment needs to know whether current supply chain c
 
 **Endpoint:** `shipping-stress` ($0.25)
 
-An agent processing an invoice tied to physical goods delivery needs to know whether the goods are actually moving. Elevated shipping stress — route disruptions, port congestion, rerouting — means the agent should verify delivery status before releasing payment or factor delay risk into payment terms.
+Your agent is processing invoices in an AP automation product. When an invoice is tied to physical goods, your agent needs to know whether those goods are actually in transit before releasing payment. Elevated shipping stress — route disruptions, port congestion, rerouting — means the goods may not arrive on the expected schedule. Your agent uses this to hold payment pending delivery confirmation, extend terms, or trigger a delivery status check before proceeding.
 
 ```json
 → { "globalStress": "HIGH", "score": 74,
@@ -115,7 +117,7 @@ An agent processing an invoice tied to physical goods delivery needs to know whe
     "invoiceDelayRisk": "ELEVATED — verify delivery before payment release" }
 ```
 
-**When to call:** before releasing payment on goods-linked invoices, or when an agent is evaluating whether to extend payment terms because of delivery uncertainty.
+**When to call:** before your agent releases payment on any goods-linked invoice, or when evaluating whether to extend payment terms due to delivery uncertainty.
 
 ---
 
@@ -123,7 +125,7 @@ An agent processing an invoice tied to physical goods delivery needs to know whe
 
 **Endpoint:** `instability` ($0.35)
 
-An agent operating in a volatile environment needs to understand the root cause of stress — not just that conditions are elevated, but whether the driver is monetary policy, geopolitical escalation, credit stress, or commodity shock. Different drivers call for different agent responses.
+Your agent already knows conditions are elevated from `macro-stress`. Now it needs to understand the cause — because different drivers call for different product responses. A monetary policy driver means your agent should shorten payment durations. A geopolitical driver means your agent should flag EM counterparties in affected corridors. A commodity shock means your agent should reassess goods-linked invoices. The driver determines which part of your agent's policy tree executes.
 
 ```json
 → { "primaryDriver": "MONETARY_POLICY", "confidence": 0.83,
@@ -131,15 +133,15 @@ An agent operating in a volatile environment needs to understand the root cause 
     "recommendation": "Shorten duration exposure — policy path remains unclear" }
 ```
 
-**When to call:** when `macro-stress` returns ELEVATED_RISK or CRISIS and the agent needs to reason about the cause rather than just the level.
+**When to call:** when `macro-stress` returns ELEVATED_RISK or CRISIS and your agent's policy tree branches differently based on the cause.
 
 ---
 
-### "Are normally-unrelated signals moving together?"
+### "Are these elevated signals independent or correlated?"
 
 **Endpoint:** `resonance` ($0.50)
 
-An agent observing multiple elevated signals needs to know whether they're independent or synchronized. When macro stress, FX volatility, and sovereign pressure all move together, that correlation is itself a signal — it suggests a systemic event rather than idiosyncratic noise. Resonance detection tells the agent whether the current environment warrants heightened caution.
+Your agent has purchased multiple signals and several are elevated. Before it applies additive risk logic — treating each signal as an independent risk — it needs to know whether they're actually moving together. When macro stress, FX volatility, and sovereign pressure are phase-aligned, the environment warrants heightened caution: this is systemic, not idiosyncratic. Your agent uses resonance to decide whether to compound its policy responses or treat them independently.
 
 ```json
 → { "phaseAlignment": "HIGH", "alignedSignals": ["macro-stress", "fx-settlement", "sovereign-debt"],
@@ -147,7 +149,7 @@ An agent observing multiple elevated signals needs to know whether they're indep
     "recommendation": "Treat concurrent signals as amplified, not independent" }
 ```
 
-**When to call:** when multiple paid signals are simultaneously elevated and the agent needs to assess whether to treat them as additive risk.
+**When to call:** when your agent has purchased multiple signals and two or more are simultaneously elevated. Determines whether your agent's policy compounds the responses or treats each signal in isolation.
 
 ---
 
@@ -155,7 +157,7 @@ An agent observing multiple elevated signals needs to know whether they're indep
 
 **Endpoint:** `butterfly` (POST, $0.50)
 
-An agent running a daily or weekly risk review needs to identify the single event with the highest cascade potential in the current window — the one that, if it triggers, has the widest downstream effects. The butterfly signal does this synthesis across all monitored signal layers.
+Your agent runs a scheduled risk review — daily, weekly — for a treasury or risk management product. It needs to identify the single event with the highest cascade potential in the current window: the one that, if it triggers, will have the widest downstream effect on your client's payment exposure. Your agent uses this to reschedule batch payments, reduce large-notional exposure ahead of the event, or generate a risk brief for the client's dashboard.
 
 ```json
 → { "event": "Fed FOMC decision", "cascadePotential": "HIGH",
@@ -163,7 +165,7 @@ An agent running a daily or weekly risk review needs to identify the single even
     "recommendation": "Reduce large payment exposure before Thursday 2pm ET" }
 ```
 
-**When to call:** periodic risk reviews, before scheduling large batch payments, or when an agent needs to prioritize which risk to act on.
+**When to call:** on your agent's scheduled risk review cycle, before it releases a batch of large payments, or when it needs to prioritize which risk to act on across a client portfolio.
 
 ---
 
@@ -171,7 +173,7 @@ An agent running a daily or weekly risk review needs to identify the single even
 
 **Endpoint:** `climate` ($0.15) · `climate-pulse` ($0.25) · `earth-systems` ($0.25)
 
-An agent making payments linked to agriculture, energy, real estate, or physical infrastructure needs to understand current climate conditions. Climate stress affects commodity prices, insurance availability, and counterparty operational continuity. Earth-systems provides the deeper structural picture — ENSO phase, ocean heat, arctic conditions — that drives longer-horizon climate signal direction.
+Your agent is embedded in a product serving clients with physical-world exposure — agricultural procurement, energy sector payments, real estate, or any supply chain tied to climate-sensitive geographies. Before releasing payment to a counterparty in an affected region, your agent needs to know whether current climate conditions create delivery risk or operational disruption. `earth-systems` provides the structural picture — ENSO phase, ocean heat content, arctic conditions — that your agent uses for longer-horizon decisions. `climate-pulse` provides the 30-day event density your agent uses for near-term scheduling.
 
 ```json
 → { "temperatureAnomaly": "+1.6°C", "droughtIndex": "SEVERE",
@@ -179,7 +181,7 @@ An agent making payments linked to agriculture, energy, real estate, or physical
     "recommendation": "Agricultural counterparties in affected regions: elevated delivery risk" }
 ```
 
-**When to call:** before payments to agricultural, energy, or real estate sector counterparties; for any agent doing SFDR/CSRD ESG-linked payment analysis.
+**When to call:** before your agent pays any agricultural, energy, or real estate sector counterparty; or when your agent is generating SFDR/CSRD ESG-linked transaction data for a client.
 
 ---
 
@@ -187,7 +189,7 @@ An agent making payments linked to agriculture, energy, real estate, or physical
 
 **Endpoint:** `biodiversity` ($0.25)
 
-An agent required to assess TNFD or SFDR PAI 7 compliance for a counterparty needs structured nature-risk data. The biodiversity signal maps ecosystem stress, deforestation exposure, and nature-dependency risk by sector and geography.
+Your agent is running inside an ESG reporting or compliance product for an institutional client with SFDR Article 8/9 obligations. Before it records a payment, it needs to assess TNFD and SFDR PAI 7 exposure for the counterparty. Your agent uses this to populate the client's mandatory sustainability disclosure, flag counterparties that require enhanced due diligence, or apply the appropriate ESG fee tier.
 
 ```json
 → { "tnfdRisk": "MODERATE", "paiScore": 42,
@@ -195,15 +197,15 @@ An agent required to assess TNFD or SFDR PAI 7 compliance for a counterparty nee
     "recommendation": "Disclose PAI 7 flag — SFDR Article 8/9 reporting required" }
 ```
 
-**When to call:** for ESG-aware agents, before any payment where SFDR/CSRD counterparty disclosure is required.
+**When to call:** before your agent records any payment for a client with SFDR/CSRD obligations, or when counterparty nature-risk disclosure is required by the client's mandate.
 
 ---
 
-### "Is this jurisdiction safe for a female-founded or gender-sensitive business?"
+### "Does this counterparty's jurisdiction require a gender risk disclosure?"
 
 **Endpoint:** `gender-risk` ($0.50)
 
-An agent routing payments to a counterparty in a jurisdiction with elevated gender-based risk — GBV prevalence, suppressed female labor force participation, legal barriers — needs to flag this for ESG-aware clients. The signal returns both a suppression risk score and an opportunity score for reform upside, across 18 countries.
+Your agent is processing a payment for a client whose ESG mandate requires gender risk assessment by counterparty jurisdiction. Before recording the transaction, your agent needs GBV prevalence, female labor force participation gaps, and legal barrier data for the destination jurisdiction — structured for disclosure. The signal returns a suppression risk score and an opportunity score for reform upside, across 18 countries.
 
 ```json
 → { "gbvRiskScore": 71, "opportunityScore": 38,
@@ -212,7 +214,7 @@ An agent routing payments to a counterparty in a jurisdiction with elevated gend
     "recommendation": "Elevated gender risk — flag for ESG reporting and client disclosure" }
 ```
 
-**When to call:** for agents serving ESG-mandated clients, or any agent making payments to jurisdictions where gender risk is a disclosure or assessment requirement.
+**When to call:** when your agent is processing payments for clients with gender-lens ESG mandates, or when the destination jurisdiction is in scope for gender risk disclosure under your client's reporting requirements.
 
 ---
 
@@ -233,26 +235,31 @@ An agent routing payments to a counterparty in a jurisdiction with elevated gend
 
 ## x402 payment flow
 
+The entire flow is machine-to-machine. Your agent's product code executes every step — no human approves the payment, no human is in the loop between the signal request and the response.
+
 ```
-1. Agent calls endpoint
+1. Your agent calls the endpoint
    GET /v1/intelligence/macro-stress
 
 2. Server: 402 Payment Required
    { "x402Version": 2, "accepts": [{
      "amount": "150000",       ← $0.15 USDC (6 decimals)
-     "asset": "0x8335...",     ← USDC on Base
+     "asset": "0x8335...",     ← USDC on Base mainnet
      "payTo": "0x160e...",     ← DPX fee collector
      "network": "eip155:8453"
    }]}
 
-3. Agent signs EIP-3009 TransferWithAuthorization
+3. Your agent signs EIP-3009 TransferWithAuthorization
+   using its funded wallet private key (set once at deploy)
    → X-Payment: <signed token>
 
-4. Agent retries with X-Payment header
+4. Your agent retries with X-Payment header
    → 200: { regime: "ELEVATED_RISK", score: 72, ... }
+
+5. Your agent acts on the response — no human involved
 ```
 
-No human approves the payment. No human manages credentials at transaction time. The agent's funded wallet, private key, and signing logic handle every step autonomously.
+The private key is a one-time deployment configuration. After that, your agent handles all payments autonomously — including during off-hours, high-volume batch runs, and scheduled risk reviews.
 
 ## Buying a signal — Python
 
@@ -371,9 +378,11 @@ POST /intelligence/subscribe
 
 HMAC-signed delivery with 3× retry. Available for: `butterfly`, `aftershock`, regime change.
 
-## Wallet requirements
+## Wallet setup
 
-The agent wallet must hold USDC on Base mainnet (chainId 8453) and a small ETH balance for gas. No registration, KYC, or whitelisting. Any funded Base wallet works. Set the private key once at deploy time — the agent handles all payments autonomously from there.
+Your agent's wallet must hold USDC on Base mainnet (chainId 8453) and a small ETH balance for gas. No registration, no KYC, no whitelisting. Any funded Base wallet works.
+
+Set `AGENT_PRIVATE_KEY` once as a deployment secret — your agent reads it at startup and uses it for all x402 payments autonomously. For enterprise deployments, use a dedicated agent wallet funded via automated top-up rather than a shared hot wallet.
 
 ## Related
 
