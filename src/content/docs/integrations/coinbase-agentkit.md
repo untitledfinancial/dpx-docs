@@ -21,7 +21,7 @@ Clone the reference integration and run it:
 
 ```bash
 git clone https://github.com/untitledfinancial/dpx-agent-public
-cd dpx-agent
+cd dpx-agent-public
 npm install
 cp .env.example .env
 # add credentials (see below)

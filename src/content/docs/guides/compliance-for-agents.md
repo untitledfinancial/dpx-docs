@@ -209,4 +209,4 @@ DPX provides programmatic access to screening data and generates attestations ba
 
 - [Add payments to your agent](/guides/agent-payments) — full settlement loop with VoP built in
 - [x402 reference](/integrations/x402) — how micropayment-gated compliance calls work
-- [MCP tools](/integrations/mcp) — all 71 tools including full compliance suite
+- [MCP tools](/integrations/mcp) — all 76 tools including full compliance suite

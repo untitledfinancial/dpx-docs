@@ -44,7 +44,7 @@ Every DPX settlement produces a compliance record that includes:
   "esg": {
     "score": 74,
     "tier": "GOOD",
-    "settlementSurcharge": "0.10%",
+    "settlementSurcharge": "0.13%",
     "components": {
       "environmental": 71,
       "social": 76,

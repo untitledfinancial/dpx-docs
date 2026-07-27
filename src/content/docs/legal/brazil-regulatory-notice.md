@@ -96,4 +96,4 @@ Full terms: [Developer API Agreement →](/legal/developer-terms)
 
 ---
 
-*This page reflects the regulatory environment as of June 2026. Brazilian fintech regulation is evolving rapidly. Confirm current requirements with Brazilian counsel before deployment.*
+*This page reflects the regulatory environment as of July 2026. Brazilian fintech regulation is evolving rapidly, and the October 1, 2026 and October 30, 2026 deadlines above are approaching. Confirm current requirements with Brazilian counsel before deployment.*

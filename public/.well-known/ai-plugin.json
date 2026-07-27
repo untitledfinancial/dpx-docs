@@ -9,9 +9,9 @@
   },
   "api": {
     "type": "openapi",
-    "url": "http://localhost:3000/openapi.json"
+    "url": "https://docs.untitledfinancial.com/openapi.json"
   },
-  "logo_url": "http://localhost:3000/logo.png",
+  "logo_url": "https://docs.untitledfinancial.com/favicon.png",
   "contact_email": "victoria@dpx.finance",
-  "legal_info_url": "https://docs.untitledfinancial.com/legal"
+  "legal_info_url": "https://docs.untitledfinancial.com/legal/developer-terms"
 }

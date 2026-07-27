@@ -141,7 +141,7 @@ Response:
     "network":      "base-mainnet",
     "amount":       "15000.00",
     "exchangeRate": "1.0842",
-    "fee":          "30.53",
+    "fee":          "305.25",
     "settlementAsset": "EURC"
   },
   "agentCard": {

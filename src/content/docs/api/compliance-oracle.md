@@ -318,16 +318,16 @@ If `recommendation` is `ESCALATE_TO_BLOCK`, `action` is overridden to `BLOCK` in
 
 **Signal weights — autonomous cohort calibration**
 
-Signals are scored using per-cohort weights that calibrate independently based on observed payment data:
+Signals are scored using per-cohort weights that calibrate independently based on observed payment data, so a first-time counterparty and an established, high-volume one are screened differently:
 
 | Cohort | Calibration behaviour |
 |---|---|
-| `UNKNOWN` | +15% across most signals — no prior history |
-| `NEW` | +25% across most signals — early caution |
+| `UNKNOWN` | Elevated caution — no prior history |
+| `NEW` | Elevated caution — limited history |
 | `DEVELOPING` | Global baseline weights |
-| `ESTABLISHED` | −25% velocity, −40% new counterparty, −20% amount anomaly |
+| `ESTABLISHED` | Reduced caution on signals with a strong track record |
 
-Weekly cron adjusts weights via triple-check gate: sample size ≥ 100 global / 25 per cohort, ≥ 20% relative drift, sanctions-correlated signals protected from reduction. Full calibration history in `aml_calibration_log` and `aml_cohort_calibration_log`.
+Weights recalibrate periodically against a minimum sample size and drift-safety check. Sanctions-correlated signals are never reduced by calibration, regardless of cohort. Exact weight values, thresholds, and calibration cadence are proprietary.
 
 ---
 
@@ -399,7 +399,7 @@ curl "https://compliance.untitledfinancial.com/esg/score/7LTWFZYICNSX8D621K86?na
   "social":        68,
   "governance":    85,
   "feeTier":       "GOOD",
-  "feeSurcharge":  0.001,
+  "feeSurcharge":  0.0013,
   "coverage":      "FULL",
   "computedAt":    1748123456,
   "expiresAt":     1748728256,
@@ -773,5 +773,3 @@ Three self-contained HTML widgets for checkout and onboarding flows. No API key,
 ```
 
 Or open each URL directly to preview the standalone HTML before embedding.
-
-| FATF | R.15 (VASP), R.16 (VoP), R.12/13 (PEP/EDD) |

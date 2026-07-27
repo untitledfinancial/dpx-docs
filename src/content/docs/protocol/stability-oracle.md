@@ -228,36 +228,25 @@ The Stability Oracle includes an embedded AI intelligence layer that runs after 
 
 ## Adaptive Layer
 
-> **Proprietary technology.** The adaptive learning architecture, weight regression model, calibration methodology, and policy execution logic are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc.
+> **Proprietary technology.** The adaptive learning architecture, weight regression model, calibration methodology, and policy execution logic are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. This section describes what the layer does and the safety guarantees around it — not the underlying algorithms or thresholds.
 
 The Stability Oracle includes a fully autonomous adaptive layer that continuously improves signal weighting, calibrates confidence, and executes on-chain policy adjustments — running entirely on Cloudflare native infrastructure with no external compute dependencies.
 
-**Architecture overview:**
+**What it does:**
 
-| Component | Technology | Role |
-|---|---|---|
-| Prediction ledger | Cloudflare D1 | Logs every oracle run; resolves predictions against actuals; scores accuracy per tier |
-| Weight regression | Cloudflare Workflows (WLSQ) | Damped Weighted Least Squares regression over 30-day accuracy history — adjusts tier weights weekly |
-| Confidence calibration | Cloudflare Workflows (Platt scaling) | Fits sigmoid A/B parameters against historical prediction outcomes weekly |
-| Semantic memory | Cloudflare Vectorize | Signal fingerprints stored as embeddings; recalls top-3 similar historical scenarios and injects them into the AI synthesis prompt |
-| Async event pipeline | Cloudflare Queues | Non-blocking bridge — oracle response is never delayed by adaptive writes |
-| Policy execution | Cloudflare Workflows | 5-gate safety check before any on-chain call to `BasketPegManager` or `StabilityFeeController` |
+- Logs every oracle run and resolves predictions against actuals to score accuracy per tier
+- Periodically re-weights signal tiers based on which have been most predictive
+- Calibrates confidence scores against historical prediction outcomes
+- Recalls similar historical scenarios to inform the AI synthesis layer
+- Executes on-chain policy adjustments only after passing a multi-gate safety check
 
-**The 5 policy execution gates:**
+**Policy execution safety gates:**
 
-1. **Calibrated confidence** — Platt-scaled confidence must exceed `ADAPTIVE_CONFIDENCE_THRESHOLD` (defaults to `0.99`, effectively unreachable; lowered to `0.80` after testnet validation)
-2. **Circuit breakers** — D1-backed breakers (3 consecutive failures → open; auto-reset 24h)
-3. **Cooling period** — 23 hours must elapse since last confirmed on-chain execution
-4. **Safety bounds** — immutable TypeScript `const` — max ±5% per-currency shift, blocked regimes (`CATASTROPHE`, `NUCLEAR_EXTREME_ESCALATION`), max $10M policy notional
-5. **Missing credentials** — `EXECUTOR_PRIVATE_KEY` and contract addresses must be present
+Before any on-chain call to `BasketPegManager` or `StabilityFeeController`, the adaptive layer must clear several independent safety gates: a calibrated-confidence minimum, circuit breakers that halt execution after repeated failures, a mandatory cooling period between on-chain executions, hard-coded bounds on the maximum size and direction of any adjustment, and blocked regimes (e.g. active catastrophe or nuclear-escalation scenarios) during which no automated adjustment is permitted at all. The exact thresholds and bound values are proprietary and intentionally not published.
 
 **Adaptive weight bounds:**
 
-The learning system cannot shift any tier weight by more than 2% per week, and cannot push any tier below a 5% floor — enforced by the frozen `SAFETY_BOUNDS` object, which cannot be overridden at runtime.
-
-**Semantic memory:**
-
-Each oracle run is fingerprinted as a normalised 7-vector (one value per tier). Vectorize finds the 3 most similar historical runs (cosine similarity > 0.85) and injects them as an "Institutional Memory" block into the AI synthesis prompt — allowing the AI layer to reason about what happened last time conditions looked like this.
+Tier weights can only drift gradually and cannot be pushed below a hard floor — both enforced by an immutable, non-overridable bounds object. The learning system cannot destabilize the oracle by over-weighting any single tier.
 
 **Adaptive status endpoint:**
 
@@ -267,178 +256,15 @@ GET /api/adaptive/status
 
 Returns current adaptive weights, prediction ledger count, and circuit breaker state.
 
-**Cron schedule:**
-
-| Cron | Job |
-|---|---|
-| `* * * * *` (every minute) | Hourly oracle update |
-| `0 3 * * 0` (Sunday 03:00 UTC) | Weight regression workflow |
-| `0 4 * * 0` (Sunday 04:00 UTC) | Calibration workflow |
-
 ---
 
-## FX Intelligence
+## FX and commodity intelligence products
 
-The Stability Oracle exposes three FX endpoints that combine real-time rate data with corridor risk signals from the full 9-layer oracle.
+Corridor risk, FX cost-certainty, chaos/regime scoring, and climate-driven commodity forecasting are built on top of the same signal pipeline described above, but they are priced and sold separately as intelligence products (mostly x402, per-call) rather than bundled into settlement. They live in their own API references, not here:
 
-### Chaos Score
-
-A single real-time number (0–100) summarising global settlement conditions derived from the full oracle signal set. Useful as a dashboard widget or a pre-settlement condition check.
-
-```bash
-GET https://stability.untitledfinancial.com/chaos-score
-```
-
-```json
-{
-  "chaosScore": 34,
-  "label": "ELEVATED",
-  "stabilityScore": 66,
-  "minTierScore": 41,
-  "breakdown": { "tier0": 72, "tier1": 68, "tier3": 74, ... }
-}
-```
-
-Labels: `CALM` (< 20) · `ELEVATED` (20–39) · `VOLATILE` (40–64) · `HIGH` (65–79) · `CRITICAL` (≥ 80)
-
-An embeddable badge version is available at `GET /chaos-score/widget` — returns a transparent HTML widget suitable for embedding in dashboards or reports.
-
----
-
-### FX rate
-
-Live mid/bid/ask for any currency pair, derived from central bank rates via KV-cached snapshot (updated hourly). Includes daily volatility percentage and corridor risk flags from the oracle.
-
-```bash
-GET https://stability.untitledfinancial.com/fx/rate?from=USD&to=EUR
-```
-
-```json
-{
-  "from": "USD", "to": "EUR",
-  "mid": 0.9234,
-  "bid": 0.9211,
-  "ask": 0.9257,
-  "spreadPct": 0.25,
-  "dailyVolatilityPct": 0.40,
-  "corridorFlags": ["HIGH_LIQUIDITY"],
-  "ratesUpdatedAt": "2026-07-02T08:00:00Z"
-}
-```
-
-No API key required. 160+ currencies supported.
-
----
-
-### FX cost certainty
-
-CFO-grade cross-border cost quote — live rate, full rail fee breakdown, and 48-hour cost variance (±$) so treasury teams can plan without FX surprises. Includes best execution window analysis across 12 × 4-hour slots.
-
-```bash
-GET https://stability.untitledfinancial.com/fx/cost-certainty?from=USD&to=EUR&amount=500000
-```
-
-```json
-{
-  "from": "USD", "to": "EUR",
-  "amount": 500000,
-  "midRate": 0.9234,
-  "fees": {
-    "core": 4250,
-    "fx": 2000,
-    "esg": 375,
-    "license": 50,
-    "totalUsd": 6675
-  },
-  "netReceived": 456787.45,
-  "variance48hUsd": 2828,
-  "bestExecutionWindow": "2026-07-03T08:00Z",
-  "corridorRisk": "LOW",
-  "regulatoryFlags": []
-}
-```
-
-The `variance48hUsd` field is the ±$ cost range over 48 hours based on observed daily volatility for the corridor. Use it to set CFO-level budget bounds on cross-border payments.
-
----
-
-### FX corridors
-
-Full corridor risk matrix across 60+ currency pairs: liquidity scores, daily volatility, regulatory flags, and settlement risk notes. Sorted best-first. Use for route selection or corridor risk reporting.
-
-```bash
-GET https://stability.untitledfinancial.com/fx/corridors
-```
-
-Returns an array of corridors with `liquidityScore` (0–100), `dailyVolatilityPct`, `regulatoryFlags` (e.g. `CAPITAL_CONTROLS`, `SANCTIONS_RISK`), and risk notes. Higher liquidity score = more favourable settlement conditions.
-
----
-
-## Commodity Forecast
-
-The Commodity Forecast service (`forecast.untitledfinancial.com`) publishes climate-driven signals for 11 symbols: WTI, NG, CORN, WHEAT, SOYB, COFFEE, COCOA, SUGAR, COPPER, LUMBER, and GOLD. Signals run at 30/60/90-day horizons and are backed by Tier 0 climate data (NOAA, USDA FAS, OpenMeteo) plus real-time stressors.
-
-### Signal dashboard (heat check)
-
-```bash
-GET https://forecast.untitledfinancial.com/forecast/heat-check
-```
-
-Returns a RED / YELLOW / GREEN rating for all 11 commodities with the dominant direction (BULLISH/BEARISH/NEUTRAL) and a confidence score.
-
-### 48-Hour Call
-
-Pre-event early warning: cross-references active seasonal windows against current signal directions and returns urgency-ranked alerts.
-
-```bash
-GET https://forecast.untitledfinancial.com/forecast/48h-call
-```
-
-```json
-{
-  "callWindow": "48h",
-  "overallStatus": "CRITICAL",
-  "summary": { "critical": 5, "high": 7, "watch": 0, "total": 12 },
-  "activeSeasonalWindows": [
-    { "event": "US Gulf Hurricane Season", "commodities": ["WTI", "NG"], "severity": "HIGH" },
-    { "event": "US Corn Belt pollination window", "commodities": ["CORN"], "severity": "HIGH" }
-  ],
-  "calls": [
-    {
-      "urgency": "CRITICAL",
-      "commodity": "WTI",
-      "trigger": "US Gulf Hurricane Season",
-      "detail": "STRONGLY_BULLISH signal (84% confidence). Active seasonal window: US Gulf Hurricane Season.",
-      "action": "Immediate position review recommended"
-    }
-  ],
-  "generatedAt": "2026-07-02T21:26:41Z"
-}
-```
-
-**Urgency levels:**
-- `CRITICAL` — RED signal during a HIGH-severity seasonal window. Immediate action recommended.
-- `HIGH` — RED signal without seasonal match, or YELLOW signal during HIGH-severity window.
-- `WATCH` — YELLOW signal with a seasonal match. Elevated monitoring.
-
-### Commodity alert webhooks
-
-Subscribe to signal change events and receive HMAC-signed delivery within seconds of a signal shift:
-
-```bash
-POST https://forecast.untitledfinancial.com/forecast/subscribe
-Content-Type: application/json
-
-{
-  "url": "https://your-system.com/webhooks/commodity",
-  "symbols": ["WTI", "CORN", "WHEAT"],
-  "signals": ["signal_change", "heat_check_red"]
-}
-```
-
-Response includes a `webhookSecret` (returned once — store it). Each delivery is signed with `X-DPX-Signature: sha256=<hmac>` over the raw JSON body.
-
-**Event types:** `commodity.signal_changed` · `commodity.heat_check_red` · `commodity.heat_check_changed`
+- [Intelligence API](/api/intelligence-api) — macro-stress, FX settlement conditions, 48-hour forward regime calls, and the rest of the paid `/v1/intelligence/*` catalog
+- [Commodity Forecast API](/api/commodity-forecast) — climate-driven outlook, portfolio stress testing, and TCFD reporting across 11 commodity symbols
+- [Stability Oracle API → Corridor Intelligence](/api/stability-oracle#corridor-intelligence) — corridor and settlement-window scoring used directly in the settlement path
 
 ---
 

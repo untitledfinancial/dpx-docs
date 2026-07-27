@@ -227,7 +227,7 @@ Every DPX settlement returns:
 - **MiCA** — settlement rail and EURC both MiCA-compliant
 - **SFDR PAI** — ESG block per transaction for SFDR fund-level reporting
 - **AML6** — behavioural profiling + sanctions screening
-- **Travel Rule** — IVMS 101 records for payments ≥ €3,000
+- **Travel Rule** — IVMS 101 records for payments ≥ €1,000 (FATF R.16 EU threshold)
 
 ---
 

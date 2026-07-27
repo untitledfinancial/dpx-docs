@@ -66,7 +66,7 @@ from langchain_openai import ChatOpenAI
 from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain_core.prompts import ChatPromptTemplate
 
-llm = ChatOpenAI(model="gpt-4o")
+llm = ChatOpenAI(model="gpt-5.1")
 
 prompt = ChatPromptTemplate.from_messages([
     ("system", "You are a treasury intelligence assistant with access to DPX settlement pricing tools."),

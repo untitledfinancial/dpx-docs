@@ -9,7 +9,7 @@ The DPX Oracle Data API exposes the full signal stack as a programmable data fee
 
 ### Stability Oracle — macro conditions across 9 signal layers
 
-The Stability Oracle continuously models global conditions across climate, commodities, FX, macro, bonds, geopolitical risk, capital flows, and USD structural health. Every response includes a composite score (0–100), a regime status (STABLE / CAUTION / UNSTABLE), and a confidence-scored AI synthesis layer.
+The Stability Oracle continuously models global conditions across climate, commodities, FX, macro, bonds, geopolitical risk, capital flows, war/infrastructure risk, and USD structural health. Every response includes a composite score (0–100), a regime status (STABLE / CAUTION / UNSTABLE), and a confidence-scored AI synthesis layer.
 
 ```bash
 curl https://stability.untitledfinancial.com/api/status
@@ -140,7 +140,7 @@ Or as a Bearer token on the MCP server:
 
 ## MCP access
 
-All oracle data is also available via the [DPX MCP server](/integrations/mcp) — 56 tools covering the full oracle stack. Point Claude Desktop or Cursor at `mcp.untitledfinancial.com` with your subscription key for native in-conversation access.
+All oracle data is also available via the [DPX MCP server](/integrations/mcp) — the full DPX toolset covering the oracle stack. Point Claude Desktop or Cursor at `mcp.untitledfinancial.com` with your subscription key for native in-conversation access.
 
 ```
 oracle.stability       — composite score + status

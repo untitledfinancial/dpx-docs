@@ -72,7 +72,7 @@ For any settlement or pricing request:
 2. If a counterparty wallet is known, call get_esg_score
 3. Call get_settlement_quote with amount, FX flag, and ESG score
 4. Present: oracle status, ESG standing, fee breakdown, net recipient amount""",
-    model="gpt-4o",
+    model="gpt-5.1",
     tools=DPX_TOOLS
 )
 ```

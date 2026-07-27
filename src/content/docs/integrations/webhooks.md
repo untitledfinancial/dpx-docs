@@ -5,6 +5,8 @@ description: Receive real-time DPX settlement callbacks from the Integration API
 
 The DPX Integration API delivers outbound webhook callbacks on every payment event. Supply a `callbackUrl` in your payment request and DPX POSTs the full settlement result to your endpoint on completion.
 
+Looking for proactive risk/compliance alerts instead (counterparty score changes, blocked payments, stability breaches)? See [Compliance Event Webhooks](/integrations/compliance-webhooks).
+
 ---
 
 ## How it works

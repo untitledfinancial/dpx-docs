@@ -222,7 +222,7 @@ Entity-level ESG score from public compliance records. Pass any Ethereum address
 
 **Data sources:** GLEIF (legal registration) · EPA ECHO (environmental violations + penalties) · OSHA (workplace incidents + citations)
 
-**Weights:** Environmental 40% · Governance 35% · Social 25%
+**Weighting:** environmental-weighted composite blending environmental, governance, and social components. Exact weights are proprietary.
 
 **Response headers:** `X-DPX-ESG-Score` · `X-DPX-ESG-Tier`
 

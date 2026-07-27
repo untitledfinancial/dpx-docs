@@ -18,9 +18,9 @@ All rates are published on-chain. No rate can be changed without a governance tr
 
 ## ESG Fee
 
-The ESG fee is calculated live by the ESG Oracle using a **proprietary scoring methodology**. Higher score means a lower fee. **100% of ESG fees are redistributed to verified on-chain impact pools** — they are not revenue to Untitled_.
+The ESG fee is calculated live by the ESG Oracle as a sliding-scale surcharge: `(100 − avgScore) / 200`, expressed as a percentage. Higher score means a lower fee — a perfect score of 100 pays no ESG surcharge, a score of 0 pays 0.50%. **100% of ESG fees are redistributed to verified on-chain impact pools** — they are not revenue to Untitled_.
 
-The scoring methodology, weighting model, and calculation logic are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. Methodology documentation is available to approved institutional partners under NDA — apply via the [beta access page](/beta).
+The underlying ESG scoring methodology (how `avgScore` itself is computed — weighting model, source aggregation) remains proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. See [ESG for Institutions](/esg-institutional) for the full worked examples, or apply via the [beta access page](/beta) for institutional methodology documentation.
 
 ## Volume Discount Tiers
 

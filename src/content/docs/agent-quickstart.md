@@ -199,8 +199,8 @@ curl -X POST https://agent.untitledfinancial.com/settle \
     ],
     "fee": {
       "amountUsdc": "$0.5000",
-      "basisPoints": "0.05 bps",
-      "pricingNote": "0.5 bps of settlement amount, floor $0.001, cap $5.00"
+      "basisPoints": "0.005 bps",
+      "pricingNote": "0.005 bps of settlement amount, floor $0.001, cap $5.00"
     },
     "sandboxOption": "Add \"sandbox\": true to request body to test without payment."
   }

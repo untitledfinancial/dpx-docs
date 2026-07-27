@@ -146,7 +146,6 @@ SSL is automatic. Future deploys: `git push` → auto-redeploy in ~90 seconds.
 | `/integrations/gpt-actions` | ChatGPT Custom GPT |
 | `/integrations/langchain` | LangChain Python tools |
 | `/integrations/n8n` | n8n workflows |
-| `/integrations/storacha` | Storacha verifiable storage |
 | `/protocol/stability-oracle` | Oracle v6.0 architecture |
 | `/protocol/esg-oracle` | ESG oracle + redistribution |
 | `/protocol/contracts` | Smart contracts |

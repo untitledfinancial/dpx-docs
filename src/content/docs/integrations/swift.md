@@ -206,7 +206,7 @@ SWIFT gpi (Global Payments Innovation) adds end-to-end tracking and same-day set
 
 ### For financial institutions evaluating ISO 20022 migration
 
-SWIFT's ISO 20022 migration (completing 2025) standardises all SWIFT cross-border messages on the pain/pacs format DPX already uses natively. Institutions building ISO 20022-compliant payment infrastructure can add DPX without format translation.
+SWIFT's ISO 20022 migration (completed 2025) standardises all SWIFT cross-border messages on the pain/pacs format DPX already uses natively. Institutions building ISO 20022-compliant payment infrastructure can add DPX without format translation.
 
 ---
 

@@ -202,7 +202,7 @@ curl https://stability.untitledfinancial.com/api/adaptive/status
 | `predictions` | Total resolved prediction rows in the ledger |
 | `circuitBreakers` | Array of breaker states `{ breaker_name, is_open, failure_count }` |
 
-When the adaptive layer is active, `weights` will gradually drift from the default values as the regression learns which tiers are most predictive. The `ADAPTIVE_CONFIDENCE_THRESHOLD` environment variable controls whether autonomous on-chain policy execution is enabled (default `0.99` = disabled until manually lowered after testnet validation).
+When the adaptive layer is active, `weights` will gradually drift from the default values as the system learns which tiers are most predictive. Autonomous on-chain policy execution is gated behind a confidence threshold that is disabled by default until validated for a given deployment. See [Adaptive Layer](/protocol/stability-oracle#adaptive-layer) for the safety model.
 
 ---
 

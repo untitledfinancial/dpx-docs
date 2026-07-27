@@ -110,22 +110,24 @@ export default defineConfig({
             { label: 'dpx-x402 middleware',     slug: 'integrations/dpx-x402' },
           ],
         },
-        {
-          label: 'Platform Integrations',
-          items: [
-            { label: 'Stripe',                  slug: 'integrations/stripe' },
-            { label: 'Amazon Bedrock',           slug: 'integrations/amazon-bedrock' },
-            { label: 'Google Vertex AI',         slug: 'integrations/google-vertex' },
-            { label: 'n8n',                     slug: 'integrations/n8n' },
-            { label: 'Relevance AI',             slug: 'integrations/relevance-ai' },
-            { label: 'Microsoft Power Automate', slug: 'integrations/power-automate' },
-            { label: 'Salesforce Agentforce',    slug: 'integrations/salesforce' },
-          ],
-        },
+        // Platform Integrations — not live yet, keeping content in place for later
+        // {
+        //   label: 'Platform Integrations',
+        //   items: [
+        //     { label: 'Stripe',                  slug: 'integrations/stripe' },
+        //     { label: 'Amazon Bedrock',           slug: 'integrations/amazon-bedrock' },
+        //     { label: 'Google Vertex AI',         slug: 'integrations/google-vertex' },
+        //     { label: 'n8n',                     slug: 'integrations/n8n' },
+        //     { label: 'Relevance AI',             slug: 'integrations/relevance-ai' },
+        //     { label: 'Microsoft Power Automate', slug: 'integrations/power-automate' },
+        //     { label: 'Salesforce Agentforce',    slug: 'integrations/salesforce' },
+        //   ],
+        // },
         {
           label: 'Treasury Systems',
           items: [
-            { label: 'SAP TRM',                    slug: 'integrations/sap-trm' },
+            { label: 'Kyriba',                      slug: 'integrations/kyriba' },
+            { label: 'SAP TRM',                      slug: 'integrations/sap-trm' },
             { label: 'Webhook Events',              slug: 'integrations/webhooks' },
             { label: 'Compliance Event Webhooks',   slug: 'integrations/compliance-webhooks' },
           ],

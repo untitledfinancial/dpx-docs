@@ -28,16 +28,16 @@ Before any setup, verify DPX is accessible and the oracle is healthy:
 
 ```bash
 # Protocol manifest — capabilities, contracts, oracle status
-curl https://api.untitledfinancial.com/manifest
+curl https://agent.untitledfinancial.com/manifest
 
 # Oracle health — stability score, settlement gate
-curl https://api.untitledfinancial.com/reliability
+curl https://stability.untitledfinancial.com/reliability
 
 # ESG preflight for your counterparty (LEI required)
 curl "https://esg.untitledfinancial.com/esg-score?lei=YOUR_COUNTERPARTY_LEI"
 
 # Fee quote — EUR 250K, cross-border with FX
-curl "https://api.untitledfinancial.com/quote?amountUsd=280000&hasFx=false&esgScore=74"
+curl "https://stability.untitledfinancial.com/quote?amountUsd=250000&hasFx=true&esgScore=74"
 ```
 
 ---
@@ -73,7 +73,7 @@ For institutions running SAP Treasury & Risk Management, DPX connects via SAP In
 
 ### Option E — Direct REST API (pain.001)
 
-For any TMS or in-house system already generating ISO 20022:
+For any TMS or in-house system already generating ISO 20022. Note this institutional REST tier issues a Bearer-token institution key for audit and compliance attribution — this is separate from the public agent-native rail (`agent.untitledfinancial.com`) and oracle data (`stability.untitledfinancial.com`, `esg.untitledfinancial.com`), which remain keyless:
 
 ```bash
 curl -X POST https://integration.untitledfinancial.com/payments/initiate \

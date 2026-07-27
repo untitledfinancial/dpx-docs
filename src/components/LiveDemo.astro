@@ -1,107 +1,77 @@
 ---
-// LiveDemo — four-step interactive agent payment demo
+// LiveDemo — four-step interactive agent payment demo, styled as a terminal session
 // All API calls run client-side. No backend, no API key.
 ---
 
-<div class="demo-wrap">
-
-  <!-- Step 1: Oracle -->
-  <div class="demo-step" id="step-oracle">
-    <div class="demo-step-header">
-      <span class="demo-step-num">1</span>
-      <div>
-        <div class="demo-step-title">Oracle status</div>
-        <div class="demo-step-sub">9-layer macro stability check — gates every settlement</div>
-      </div>
-      <span class="demo-badge" id="oracle-badge"></span>
-    </div>
-    <div class="demo-step-body">
-      <div class="demo-response" id="oracle-response">
-        <span class="demo-loading">Checking oracle…</span>
-      </div>
-      <button class="demo-btn demo-btn-secondary" id="oracle-refresh-btn">Refresh</button>
-    </div>
+<div class="term">
+  <div class="term-titlebar">
+    <span class="term-dot term-dot--red"></span>
+    <span class="term-dot term-dot--yellow"></span>
+    <span class="term-dot term-dot--green"></span>
+    <span class="term-title">agent@dpx — sandbox — 80×24</span>
   </div>
 
-  <!-- Step 2: Quote -->
-  <div class="demo-step" id="step-quote">
-    <div class="demo-step-header">
-      <span class="demo-step-num">2</span>
-      <div>
-        <div class="demo-step-title">Get a quote</div>
-        <div class="demo-step-sub">Live fee calculation — valid for 300 seconds</div>
-      </div>
-      <span class="demo-badge" id="quote-badge"></span>
-    </div>
-    <div class="demo-step-body">
-      <div class="demo-inputs-row">
-        <div class="demo-field">
-          <label class="demo-label" for="quote-amount">Amount (USD)</label>
-          <div class="demo-input-prefix-wrap">
-            <span class="demo-prefix">$</span>
-            <input id="quote-amount" class="demo-input" type="number" value="50000" min="100" step="1000" />
-          </div>
-        </div>
-        <div class="demo-field">
-          <label class="demo-label" for="quote-fx">Cross-currency</label>
-          <label class="demo-toggle">
-            <input id="quote-fx" type="checkbox" />
-            <span class="demo-toggle-track"></span>
-            <span class="demo-toggle-label-text">FX overlay</span>
-          </label>
-        </div>
-        <button class="demo-btn" id="quote-btn">Get quote</button>
-      </div>
-      <div class="demo-response demo-response--hidden" id="quote-response"></div>
-    </div>
-  </div>
+  <div class="term-body">
 
-  <!-- Step 3: Compliance -->
-  <div class="demo-step" id="step-compliance">
-    <div class="demo-step-header">
-      <span class="demo-step-num">3</span>
-      <div>
-        <div class="demo-step-title">Compliance preflight</div>
-        <div class="demo-step-sub">AML · sanctions · FATF R16 · ESG · routing — one call</div>
-      </div>
-      <span class="demo-badge" id="compliance-badge"></span>
-    </div>
-    <div class="demo-step-body">
-      <div class="demo-inputs-row">
-        <div class="demo-field demo-field--wide">
-          <label class="demo-label" for="comp-name">Counterparty name</label>
-          <input id="comp-name" class="demo-input" type="text" value="Berlin Supplier GmbH" />
-        </div>
-        <div class="demo-field demo-field--wide">
-          <label class="demo-label" for="comp-lei">LEI (optional)</label>
-          <input id="comp-lei" class="demo-input" type="text" placeholder="20-char LEI" />
-        </div>
-        <button class="demo-btn" id="compliance-btn">Run preflight</button>
-      </div>
-      <div class="demo-response demo-response--hidden" id="compliance-response"></div>
-    </div>
-  </div>
+    <p class="term-line term-line--boot">Connected to <span class="term-accent">stability.untitledfinancial.com</span> and <span class="term-accent">agent.untitledfinancial.com</span>. No signup. No API key. Nothing on-chain.</p>
 
-  <!-- Step 4: Settle -->
-  <div class="demo-step" id="step-settle">
-    <div class="demo-step-header">
-      <span class="demo-step-num">4</span>
-      <div>
-        <div class="demo-step-title">Execute settlement</div>
-        <div class="demo-step-sub">Full stack, no on-chain transaction — oracle, compliance, and fee math run live</div>
+    <!-- Step 1: Oracle -->
+    <div class="term-block" id="step-oracle">
+      <p class="term-prompt"><span class="term-caret">❯</span> <span class="term-cmd">GET /reliability</span> <span class="term-badge" id="oracle-badge"></span></p>
+      <p class="term-comment"># 9-layer stability oracle — gates every settlement</p>
+      <div class="term-out" id="oracle-response">
+        <span class="term-loading">checking oracle<span class="term-dots"></span></span>
       </div>
-      <span class="demo-badge" id="settle-badge"></span>
+      <button class="term-action term-action--ghost" id="oracle-refresh-btn">[ rerun ]</button>
     </div>
-    <div class="demo-step-body">
-      <div class="demo-sandbox-note">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6.5" stroke="currentColor"/><path d="M7 4v4M7 9.5v.5" stroke="currentColor" stroke-linecap="round"/></svg>
-        Sandbox mode — full stack executes, nothing moves on-chain
-      </div>
-      <button class="demo-btn" id="settle-btn" disabled>Settle (sandbox)</button>
-      <div class="demo-response demo-response--hidden" id="settle-response"></div>
-    </div>
-  </div>
 
+    <!-- Step 2: Quote -->
+    <div class="term-block" id="step-quote">
+      <p class="term-prompt"><span class="term-caret">❯</span> <span class="term-cmd">GET /quote</span> <span class="term-badge" id="quote-badge"></span></p>
+      <p class="term-comment"># live fee calculation — quote valid for 300s</p>
+      <div class="term-flags">
+        <label class="term-flag">
+          <span class="term-flag-key">--amount</span>
+          <span class="term-flag-input-wrap">$<input id="quote-amount" class="term-input" type="number" value="50000" min="100" step="1000" /></span>
+        </label>
+        <label class="term-flag term-flag--check">
+          <input id="quote-fx" type="checkbox" class="term-checkbox" />
+          <span class="term-flag-key">--fx</span>
+        </label>
+        <button class="term-action" id="quote-btn">[ run ]</button>
+      </div>
+      <div class="term-out term-out--hidden" id="quote-response"></div>
+    </div>
+
+    <!-- Step 3: Compliance -->
+    <div class="term-block" id="step-compliance">
+      <p class="term-prompt"><span class="term-caret">❯</span> <span class="term-cmd">GET /flow-check</span> <span class="term-badge" id="compliance-badge"></span></p>
+      <p class="term-comment"># AML · sanctions · FATF R16 · ESG · routing — one call</p>
+      <div class="term-flags">
+        <label class="term-flag term-flag--wide">
+          <span class="term-flag-key">--name</span>
+          <input id="comp-name" class="term-input term-input--text" type="text" value="Berlin Supplier GmbH" />
+        </label>
+        <label class="term-flag term-flag--wide">
+          <span class="term-flag-key">--lei</span>
+          <input id="comp-lei" class="term-input term-input--text" type="text" placeholder="optional, 20-char" />
+        </label>
+        <button class="term-action" id="compliance-btn">[ run ]</button>
+      </div>
+      <div class="term-out term-out--hidden" id="compliance-response"></div>
+    </div>
+
+    <!-- Step 4: Settle -->
+    <div class="term-block" id="step-settle">
+      <p class="term-prompt"><span class="term-caret">❯</span> <span class="term-cmd">POST /settle</span> <span class="term-badge" id="settle-badge"></span></p>
+      <p class="term-comment"># full stack executes — oracle, compliance, fee math — nothing moves on-chain</p>
+      <button class="term-action term-action--primary" id="settle-btn" disabled>[ settle --sandbox ]</button>
+      <div class="term-out term-out--hidden" id="settle-response"></div>
+    </div>
+
+    <p class="term-line term-ready"><span class="term-caret">❯</span> <span class="term-cursor"></span></p>
+
+  </div>
 </div>
 
 <script>
@@ -111,10 +81,10 @@ const STABILITY_URL  = 'https://stability.untitledfinancial.com';
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function show(id) {
-  document.getElementById(id)?.classList.remove('demo-response--hidden');
+  document.getElementById(id)?.classList.remove('term-out--hidden');
 }
 function hide(id) {
-  document.getElementById(id)?.classList.add('demo-response--hidden');
+  document.getElementById(id)?.classList.add('term-out--hidden');
 }
 
 function setResponse(id, html) {
@@ -125,18 +95,18 @@ function setResponse(id, html) {
 function setBadge(id, text, type) {
   const el = document.getElementById(id);
   if (!el) return;
-  el.textContent = text;
-  el.className = `demo-badge demo-badge--${type}`;
+  el.textContent = text ? `[${text}]` : '';
+  el.className = `term-badge term-badge--${type}`;
 }
 
 function kv(label, value) {
-  return `<div class="demo-kv"><span class="demo-kv-label">${label}</span><span class="demo-kv-value">${value}</span></div>`;
+  return `<div class="term-kv"><span class="term-kv-label">${label}</span><span class="term-kv-value">${value}</span></div>`;
 }
 
 function statusBadge(status) {
   const cls = status === 'STABLE' || status === 'PROCEED' ? 'ok'
     : status === 'CAUTION' || status === 'HOLD' ? 'warn' : 'block';
-  return `<span class="demo-status demo-status--${cls}">${status}</span>`;
+  return `<span class="term-status term-status--${cls}">[${status}]</span>`;
 }
 
 function fmt(v) {
@@ -151,7 +121,7 @@ function setLoading(btnId: string, loading: boolean, label: string) {
   const btn = document.getElementById(btnId) as HTMLButtonElement | null;
   if (!btn) return;
   btn.disabled = loading;
-  btn.textContent = loading ? 'Running…' : label;
+  btn.textContent = loading ? '[ running… ]' : label;
 }
 
 // ── Shared state ──────────────────────────────────────────────────────────────
@@ -163,7 +133,7 @@ let compliancePassed = false;
 
 async function loadOracle() {
   const el = document.getElementById('oracle-response');
-  el.innerHTML = '<span class="demo-loading">Checking oracle…</span>';
+  el.innerHTML = '<span class="term-loading">checking oracle<span class="term-dots"></span></span>';
   show('oracle-response');
   try {
     const res  = await fetch(`${STABILITY_URL}/reliability`);
@@ -173,12 +143,12 @@ async function loadOracle() {
     const type = status === 'STABLE' ? 'ok' : status === 'CAUTION' ? 'warn' : 'block';
     setBadge('oracle-badge', status, type);
 
-    let html = kv('Status',  statusBadge(status));
-    html    += kv('Score',   `${score} / 100`);
-    if (data.recommendation) html += kv('Recommendation', data.recommendation);
+    let html = kv('status',  statusBadge(status));
+    html    += kv('score',   `${score} / 100`);
+    if (data.recommendation) html += kv('recommendation', data.recommendation);
     if (data.reasoning || data.briefing) {
       const text = (data.reasoning || data.briefing || '').substring(0, 300);
-      html += `<div class="demo-reasoning">${text}${text.length === 300 ? '…' : ''}</div>`;
+      html += `<div class="term-reasoning">${text}${text.length === 300 ? '…' : ''}</div>`;
     }
 
     el.innerHTML = html;
@@ -186,10 +156,10 @@ async function loadOracle() {
     const quoteBtn = document.getElementById('quote-btn');
     if (quoteBtn) quoteBtn.disabled = status === 'UNSTABLE';
     if (status === 'UNSTABLE') {
-      setBadge('oracle-badge', 'UNSTABLE — settlement held', 'block');
+      setBadge('oracle-badge', 'UNSTABLE — held', 'block');
     }
   } catch(e) {
-    el.innerHTML = `<span class="demo-error">Could not reach oracle: ${e.message}</span>`;
+    el.innerHTML = `<span class="term-error">error: could not reach oracle — ${e.message}</span>`;
     setBadge('oracle-badge', 'error', 'block');
   }
 }
@@ -202,7 +172,7 @@ document.getElementById('quote-btn')?.addEventListener('click', async () => {
   const amount = parseFloat(document.getElementById('quote-amount').value) || 50000;
   const hasFx  = document.getElementById('quote-fx').checked;
 
-  setLoading('quote-btn', true, 'Get quote');
+  setLoading('quote-btn', true, '[ run ]');
   hide('quote-response');
   quoteId = null;
   compliancePassed = false;
@@ -225,22 +195,22 @@ document.getElementById('quote-btn')?.addEventListener('click', async () => {
     const totalUsd = f.total?.usd ?? null;
     const netUsd   = q.settlement?.netUsd ?? data.netAmountUsd ?? null;
 
-    let html = kv('Amount', fmt(amount));
-    if (totalPct !== null) html += kv('All-in fee', fmtPct(totalPct));
-    if (totalUsd !== null) html += kv('Fee (USD)',   fmt(totalUsd));
-    if (netUsd   !== null) html += kv('You receive', fmt(netUsd));
-    if (quoteId)           html += kv('Quote ID',    `<code>${quoteId}</code>`);
-    html += kv('Valid for', '300 seconds');
+    let html = kv('amount', fmt(amount));
+    if (totalPct !== null) html += kv('all-in fee', fmtPct(totalPct));
+    if (totalUsd !== null) html += kv('fee (usd)',   fmt(totalUsd));
+    if (netUsd   !== null) html += kv('you receive', fmt(netUsd));
+    if (quoteId)           html += kv('quote id',    `<code>${quoteId}</code>`);
+    html += kv('valid for', '300 seconds');
 
     setResponse('quote-response', html);
     show('quote-response');
     setBadge('quote-badge', 'quoted', 'ok');
   } catch(e) {
-    setResponse('quote-response', `<span class="demo-error">${e.message}</span>`);
+    setResponse('quote-response', `<span class="term-error">error: ${e.message}</span>`);
     show('quote-response');
     setBadge('quote-badge', 'error', 'block');
   } finally {
-    setLoading('quote-btn', false, 'Get quote');
+    setLoading('quote-btn', false, '[ run ]');
   }
 });
 
@@ -252,7 +222,7 @@ document.getElementById('compliance-btn')?.addEventListener('click', async () =>
   const name    = (document.getElementById('comp-name')).value.trim() || 'Berlin Supplier GmbH';
   const lei     = (document.getElementById('comp-lei')).value.trim();
 
-  setLoading('compliance-btn', true, 'Run preflight');
+  setLoading('compliance-btn', true, '[ run ]');
   hide('compliance-response');
   compliancePassed = false;
   const settleBtn = document.getElementById('settle-btn');
@@ -275,19 +245,19 @@ document.getElementById('compliance-btn')?.addEventListener('click', async () =>
     const decision = data.decision ?? data.status ?? 'BLOCKED';
     const type = decision === 'PROCEED' ? 'ok' : decision === 'HOLD' ? 'warn' : 'block';
 
-    let html = kv('Decision', statusBadge(decision));
+    let html = kv('decision', statusBadge(decision));
     if (data.blockReason || data.holdReason) {
-      html += kv('Reason', data.blockReason ?? data.holdReason ?? '');
+      html += kv('reason', data.blockReason ?? data.holdReason ?? '');
     }
     if (data.amlResult) {
       const a = data.amlResult;
-      html += kv('AML', a.status ?? a.decision ?? '—');
-      if (a.sanctionsHit !== undefined) html += kv('Sanctions hit', a.sanctionsHit ? 'YES' : 'No');
+      html += kv('aml', a.status ?? a.decision ?? '—');
+      if (a.sanctionsHit !== undefined) html += kv('sanctions hit', a.sanctionsHit ? 'YES' : 'no');
     }
-    if (data.esgScore !== undefined) html += kv('ESG score', String(data.esgScore));
-    if (data.settleBody?.token) html += kv('Routed via', data.settleBody.token);
+    if (data.esgScore !== undefined) html += kv('esg score', String(data.esgScore));
+    if (data.settleBody?.token) html += kv('routed via', data.settleBody.token);
     if (data.reasoning) {
-      html += `<div class="demo-reasoning">${String(data.reasoning).substring(0, 300)}</div>`;
+      html += `<div class="term-reasoning">${String(data.reasoning).substring(0, 300)}</div>`;
     }
 
     setResponse('compliance-response', html);
@@ -299,11 +269,11 @@ document.getElementById('compliance-btn')?.addEventListener('click', async () =>
       if (settleBtn) settleBtn.disabled = false;
     }
   } catch(e) {
-    setResponse('compliance-response', `<span class="demo-error">${e.message}</span>`);
+    setResponse('compliance-response', `<span class="term-error">error: ${e.message}</span>`);
     show('compliance-response');
     setBadge('compliance-badge', 'error', 'block');
   } finally {
-    setLoading('compliance-btn', false, 'Run preflight');
+    setLoading('compliance-btn', false, '[ run ]');
   }
 });
 
@@ -313,7 +283,7 @@ document.getElementById('settle-btn')?.addEventListener('click', async () => {
   const amount = parseFloat((document.getElementById('quote-amount'))?.value) || 50000;
   const hasFx  = (document.getElementById('quote-fx'))?.checked;
 
-  setLoading('settle-btn', true, 'Settle (sandbox)');
+  setLoading('settle-btn', true, '[ settle --sandbox ]');
   hide('settle-response');
   setBadge('settle-badge', '', 'idle');
 
@@ -339,23 +309,23 @@ document.getElementById('settle-btn')?.addEventListener('click', async () => {
     const id     = data.settlementId ?? data.simulatedId ?? data.id ?? '—';
     const status = data.status ?? '—';
 
-    let html = kv('Status',    statusBadge(status === 'settled' || status === 'simulated' ? 'PROCEED' : status));
-    html    += kv('Settlement ID', `<code>${id}</code>`);
-    if (data.oracleStatus)  html += kv('Oracle at settlement', statusBadge(data.oracleStatus));
-    if (data.token)         html += kv('Token', data.token);
-    if (data.netUsd)        html += kv('Net received', fmt(data.netUsd));
-    html    += kv('On-chain', 'No — sandbox mode');
-    html    += `<div class="demo-reasoning demo-reasoning--success">Settlement complete. Set <code>sandbox: false</code> and supply a funded wallet to go live on Base mainnet.</div>`;
+    let html = kv('status',    statusBadge(status === 'settled' || status === 'simulated' ? 'PROCEED' : status));
+    html    += kv('settlement id', `<code>${id}</code>`);
+    if (data.oracleStatus)  html += kv('oracle at settlement', statusBadge(data.oracleStatus));
+    if (data.token)         html += kv('token', data.token);
+    if (data.netUsd)        html += kv('net received', fmt(data.netUsd));
+    html    += kv('on-chain', 'no — sandbox mode');
+    html    += `<div class="term-reasoning term-reasoning--success">settlement complete. set <code>sandbox: false</code> and supply a funded wallet to go live on Base mainnet.</div>`;
 
     setResponse('settle-response', html);
     show('settle-response');
     setBadge('settle-badge', 'settled', 'ok');
   } catch(e) {
-    setResponse('settle-response', `<span class="demo-error">${e.message}</span>`);
+    setResponse('settle-response', `<span class="term-error">error: ${e.message}</span>`);
     show('settle-response');
     setBadge('settle-badge', 'error', 'block');
   } finally {
-    setLoading('settle-btn', false, 'Settle (sandbox)');
+    setLoading('settle-btn', false, '[ settle --sandbox ]');
   }
 });
 
@@ -365,254 +335,267 @@ loadOracle();
 </script>
 
 <style>
-.demo-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.term {
   margin: 1.5rem 0;
-}
-
-.demo-step {
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 8px;
-  background: var(--sl-color-bg);
+  border-radius: 10px;
   overflow: hidden;
+  background: #0b0f0e;
+  border: 1px solid #1f2b29;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  font-family: var(--sl-font-mono, 'SF Mono', monospace);
 }
 
-.demo-step-header {
+.term-titlebar {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 1rem;
-  border-bottom: 1px solid var(--sl-color-gray-6);
-  background: var(--sl-color-gray-7);
+  gap: 0.4rem;
+  padding: 0.6rem 0.8rem;
+  background: #121a18;
+  border-bottom: 1px solid #1f2b29;
 }
-
-.demo-step-num {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
+.term-dot {
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
-  background: var(--sl-color-accent);
-  color: #fff;
-  font-size: 0.75rem;
-  font-weight: 700;
-  flex-shrink: 0;
+  display: inline-block;
+}
+.term-dot--red    { background: #ff5f56; }
+.term-dot--yellow { background: #ffbd2e; }
+.term-dot--green  { background: #27c93f; }
+.term-title {
+  margin: 0 auto;
+  transform: translateX(-16px);
+  font-size: 0.72rem;
+  color: #5f7873;
+  letter-spacing: 0.02em;
 }
 
-.demo-step-title {
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--sl-color-text);
-}
-
-.demo-step-sub {
-  font-size: 0.75rem;
-  color: var(--sl-color-gray-3);
-  margin-top: 1px;
-}
-
-.demo-badge {
-  margin-left: auto;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-.demo-badge--ok    { background: #d1fae5; color: #065f46; }
-.demo-badge--warn  { background: #fef3c7; color: #92400e; }
-.demo-badge--block { background: #fee2e2; color: #991b1b; }
-.demo-badge--idle  { display: none; }
-
-@media (prefers-color-scheme: dark) {
-  .demo-badge--ok    { background: #064e3b; color: #6ee7b7; }
-  .demo-badge--warn  { background: #451a03; color: #fcd34d; }
-  .demo-badge--block { background: #450a0a; color: #fca5a5; }
-}
-
-.demo-step-body {
-  padding: 1rem;
+.term-body {
+  padding: 1.1rem 1.1rem 0.9rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1.1rem;
+  color: #d3e6e1;
+  font-size: 0.84rem;
+  line-height: 1.6;
 }
 
-.demo-inputs-row {
+.term-line {
+  margin: 0;
+  color: #7d928d;
+}
+.term-line--boot {
+  padding-bottom: 0.2rem;
+  border-bottom: 1px dashed #1f2b29;
+}
+.term-accent { color: #5ee6b0; }
+
+.term-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.term-prompt {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.term-caret { color: #5ee6b0; font-weight: 700; }
+.term-cmd   { color: #eafff6; font-weight: 600; }
+
+.term-comment {
+  margin: 0;
+  color: #5f7873;
+  font-size: 0.78rem;
+  padding-left: 1.4rem;
+}
+
+.term-flags {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 0.9rem;
+  padding-left: 1.4rem;
 }
 
-.demo-field {
+.term-flag {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #9db3ad;
+  font-size: 0.8rem;
+}
+.term-flag--wide { flex: 1; min-width: 180px; }
+.term-flag--check { cursor: pointer; }
+.term-flag-key { color: #4fa8ff; white-space: nowrap; }
+
+.term-flag-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  color: #eafff6;
+}
+
+.term-input {
+  background: #0b0f0e;
+  border: none;
+  border-bottom: 1px solid #2a3a37;
+  color: #eafff6;
+  font-family: inherit;
+  font-size: 0.82rem;
+  padding: 0.15rem 0.2rem;
+  width: 100px;
+}
+.term-input--text { width: 100%; }
+.term-input:focus {
+  outline: none;
+  border-bottom-color: #5ee6b0;
+}
+
+.term-checkbox {
+  appearance: none;
+  width: 13px;
+  height: 13px;
+  border: 1px solid #4fa8ff;
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  margin: 0;
+}
+.term-checkbox:checked { background: #4fa8ff; }
+.term-checkbox:checked::after {
+  content: '✓';
+  position: absolute;
+  top: -3px; left: 1px;
+  font-size: 10px;
+  color: #0b0f0e;
+}
+
+.term-action {
+  background: transparent;
+  border: none;
+  color: #5ee6b0;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.15rem 0.3rem;
+  white-space: nowrap;
+}
+.term-action:hover:not(:disabled) { color: #eafff6; text-shadow: 0 0 8px rgba(94, 230, 176, 0.5); }
+.term-action:disabled { color: #3a4744; cursor: default; }
+.term-action--ghost { color: #7d928d; margin-left: 1.4rem; align-self: flex-start; }
+.term-action--ghost:hover:not(:disabled) { color: #d3e6e1; text-shadow: none; }
+.term-action--primary { margin-left: 1.4rem; align-self: flex-start; }
+
+.term-out {
+  margin-left: 1.4rem;
+  padding: 0.6rem 0.75rem;
+  background: #0e1513;
+  border-left: 2px solid #1f2b29;
+  border-radius: 0 4px 4px 0;
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
 }
-.demo-field--wide { flex: 1; min-width: 160px; }
+.term-out--hidden { display: none; }
 
-.demo-label {
-  font-size: 0.75rem;
-  color: var(--sl-color-gray-2);
-  font-weight: 500;
-}
-
-.demo-input-prefix-wrap {
-  display: flex;
-  align-items: center;
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 6px;
-  overflow: hidden;
-  background: var(--sl-color-bg);
-}
-.demo-prefix {
-  padding: 0 0.5rem;
-  font-size: 0.85rem;
-  color: var(--sl-color-gray-3);
-  background: var(--sl-color-gray-7);
-  border-right: 1px solid var(--sl-color-gray-5);
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-
-.demo-input {
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 6px;
-  padding: 0.4rem 0.6rem;
-  font-size: 0.85rem;
-  background: var(--sl-color-bg);
-  color: var(--sl-color-text);
-  min-width: 0;
-  width: 100%;
-}
-.demo-input-prefix-wrap .demo-input {
-  border: none;
-  border-radius: 0;
-}
-
-.demo-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  padding: 0.4rem 0;
-}
-.demo-toggle input { display: none; }
-.demo-toggle-track {
-  width: 32px;
-  height: 18px;
-  border-radius: 9px;
-  background: var(--sl-color-gray-5);
-  flex-shrink: 0;
-  position: relative;
-  transition: background 0.15s;
-}
-.demo-toggle-track::after {
-  content: '';
-  position: absolute;
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  background: #fff;
-  top: 2px; left: 2px;
-  transition: transform 0.15s;
-}
-.demo-toggle input:checked ~ .demo-toggle-track { background: var(--sl-color-accent); }
-.demo-toggle input:checked ~ .demo-toggle-track::after { transform: translateX(14px); }
-.demo-toggle-label-text { font-size: 0.82rem; color: var(--sl-color-text); }
-
-.demo-btn {
-  padding: 0.45rem 1rem;
-  border-radius: 6px;
-  border: none;
-  background: var(--sl-color-accent);
-  color: #fff;
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  align-self: flex-end;
-  transition: opacity 0.15s;
-}
-.demo-btn:disabled { opacity: 0.45; cursor: default; }
-.demo-btn:hover:not(:disabled) { opacity: 0.85; }
-.demo-btn-secondary {
-  background: var(--sl-color-gray-6);
-  color: var(--sl-color-text);
-  align-self: flex-start;
-  border: 1px solid var(--sl-color-gray-5);
-}
-
-.demo-response {
-  font-size: 0.82rem;
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 6px;
-  padding: 0.75rem;
-  background: var(--sl-color-gray-7);
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-.demo-response--hidden { display: none; }
-
-.demo-kv {
+.term-kv {
   display: flex;
   gap: 0.75rem;
   align-items: baseline;
 }
-.demo-kv-label {
-  color: var(--sl-color-gray-3);
-  font-size: 0.75rem;
-  min-width: 130px;
+.term-kv-label {
+  color: #5f7873;
+  font-size: 0.76rem;
+  min-width: 120px;
   flex-shrink: 0;
 }
-.demo-kv-value {
-  color: var(--sl-color-text);
-  font-family: var(--sl-font-mono, monospace);
+.term-kv-value {
+  color: #eafff6;
   font-size: 0.82rem;
 }
+.term-kv-value code {
+  background: rgba(94, 230, 176, 0.08);
+  color: #5ee6b0;
+  padding: 0.05rem 0.3rem;
+  border-radius: 3px;
+}
 
-.demo-status {
-  padding: 1px 6px;
-  border-radius: 4px;
+.term-badge {
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
 }
-.demo-status--ok    { background: #d1fae5; color: #065f46; }
-.demo-status--warn  { background: #fef3c7; color: #92400e; }
-.demo-status--block { background: #fee2e2; color: #991b1b; }
-@media (prefers-color-scheme: dark) {
-  .demo-status--ok    { background: #064e3b; color: #6ee7b7; }
-  .demo-status--warn  { background: #451a03; color: #fcd34d; }
-  .demo-status--block { background: #450a0a; color: #fca5a5; }
-}
+.term-badge--ok    { color: #5ee6b0; }
+.term-badge--warn  { color: #ffbd2e; }
+.term-badge--block { color: #ff5f56; }
+.term-badge--idle  { display: none; }
 
-.demo-reasoning {
-  margin-top: 0.5rem;
+.term-status {
+  font-weight: 700;
+}
+.term-status--ok    { color: #5ee6b0; }
+.term-status--warn  { color: #ffbd2e; }
+.term-status--block { color: #ff5f56; }
+
+.term-reasoning {
+  margin-top: 0.3rem;
   padding: 0.5rem 0.6rem;
-  background: var(--sl-color-bg);
-  border-left: 3px solid var(--sl-color-gray-4);
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 2px solid #2a3a37;
   border-radius: 0 4px 4px 0;
   font-size: 0.78rem;
-  color: var(--sl-color-gray-2);
-  line-height: 1.5;
-  font-family: var(--sl-font, inherit);
+  color: #9db3ad;
+  line-height: 1.55;
 }
-.demo-reasoning--success { border-color: var(--sl-color-accent); }
+.term-reasoning--success { border-color: #5ee6b0; }
+.term-reasoning code {
+  background: rgba(94, 230, 176, 0.08);
+  color: #5ee6b0;
+  padding: 0.05rem 0.3rem;
+  border-radius: 3px;
+}
 
-.demo-loading { color: var(--sl-color-gray-3); font-style: italic; }
-.demo-error   { color: #dc2626; }
+.term-loading { color: #5f7873; font-style: italic; }
+.term-dots::after {
+  content: '';
+  animation: term-dots 1.2s steps(4, end) infinite;
+}
+@keyframes term-dots {
+  0%   { content: ''; }
+  25%  { content: '.'; }
+  50%  { content: '..'; }
+  75%  { content: '...'; }
+  100% { content: ''; }
+}
 
-.demo-sandbox-note {
+.term-error { color: #ff5f56; }
+
+.term-ready {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.76rem;
-  color: var(--sl-color-gray-3);
+  padding-bottom: 0.9rem;
+}
+.term-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  background: #5ee6b0;
+  animation: term-blink 1s step-end infinite;
+}
+@keyframes term-blink {
+  0%, 49%  { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@media (max-width: 600px) {
+  .term-flags { flex-direction: column; align-items: stretch; }
+  .term-flag--wide { min-width: 0; }
 }
 </style>

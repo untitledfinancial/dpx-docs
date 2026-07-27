@@ -298,5 +298,5 @@ The Mercury payment is already sent — DPX logs the hold. Resubmit when oracle 
 ## Resources
 
 - [Mercury developer docs →](https://docs.mercury.com)
-- [DPX Settlement Agent →](/protocol/settlement-router)
+- [DPX Settlement Agent →](/api/stability-oracle)
 - [Oracle conditions →](/protocol/stability-oracle)

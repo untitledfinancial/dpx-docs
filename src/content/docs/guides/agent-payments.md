@@ -225,5 +225,5 @@ This is the key difference between DPX and a payment API: the intelligence is bu
 
 - [Agent Quick Start](/agent-quickstart) — full loop with all parameters documented
 - [x402 reference](/integrations/x402) — how micropayments work for agents
-- [MCP tools](/integrations/mcp) — 72 tools for Claude Desktop and Cursor
-- [Framework examples](/guides/framework-examples) — LangGraph and CrewAI integrations
+- [MCP tools](/integrations/mcp) — 76 tools for Claude Desktop and Cursor
+- [CrewAI integration](/integrations/crewai) and [LangChain integration](/integrations/langchain)

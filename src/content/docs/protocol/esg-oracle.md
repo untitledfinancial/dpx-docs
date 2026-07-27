@@ -93,7 +93,7 @@ The contract maps each company to an industry. When redistribution is triggered,
 
 ### Impact wallet
 
-All redistributed fees consolidate to a single on-chain impact wallet — a multi-signature Safe wallet on Base mainnet. Destination addresses can only be updated via `setFundingAreas` — callable by the contract owner only.
+All redistributed fees route through the `ESGRedistribution` contract on Base mainnet, which forwards them on-chain to the designated per-program destination wallets. Destination addresses can only be updated via `setFundingAreas` — callable by the contract owner only.
 
 ### Impact at scale
 
@@ -206,37 +206,21 @@ If synthesis is unavailable, the oracle returns the full quantitative result and
 
 ## Adaptive Layer
 
-> **Proprietary technology.** The adaptive learning architecture, weight regression model, entity bootstrapping methodology, and policy execution logic are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc.
+> **Proprietary technology.** The adaptive learning architecture, weight regression model, entity bootstrapping methodology, and policy execution logic are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc. This section describes what the layer does — not the underlying algorithms, weights, or thresholds.
 
 The ESG Oracle includes a fully autonomous adaptive layer that continuously improves E/S/G score weighting, calibrates confidence, and bootstraps ESG profiles for new counterparties — running entirely on Cloudflare native infrastructure.
 
-**Architecture overview:**
+**What it does:**
 
-| Component | Technology | Role |
-|---|---|---|
-| Prediction ledger | Cloudflare D1 | Logs every oracle run; resolves E/S/G predictions against actuals; scores per-dimension accuracy |
-| Weight regression | Cloudflare Workflows (correlation) | Adjusts the E/S/G weighting using 30-day accuracy correlation — weekly |
-| Confidence calibration | Cloudflare Workflows (Platt scaling) | Sigmoid calibration of raw confidence scores weekly |
-| Semantic memory | Cloudflare Vectorize (3-dim signals) | Fingerprints each run as normalised [E, S, G] vector; recalls top-3 similar historical scenarios for AI prompt injection |
-| Entity profiles | Cloudflare Vectorize (5-dim profiles) | Stores per-counterparty [E, S, G, settlement_count, avg_fee] vectors; nearest-neighbour bootstrapping for new entities |
-| Async event pipeline | Cloudflare Queues | Non-blocking — oracle response latency is never affected by adaptive writes |
-| Policy execution | Cloudflare Workflows | 5-gate safety check before any on-chain call to `ESGCompliance.setESGFee()` |
-
-**Entity bootstrapping:**
-
-When a new counterparty address has no ESG history, the ESG Oracle queries Vectorize for the nearest known entity by profile similarity (cosine score > 0.90). If found, the new entity inherits that neighbour's E/S/G priors as a starting point — rather than defaulting to an arbitrary equal-weight score. This means first-settlement pricing is informed by comparable actors rather than a cold start.
+- Logs every oracle run and resolves E/S/G predictions against actuals to score per-dimension accuracy
+- Periodically re-weights the E/S/G components based on which have been most predictive
+- Calibrates confidence scores against historical prediction outcomes
+- Bootstraps a starting ESG profile for new counterparties by comparing them to similar known entities, rather than defaulting to an arbitrary score — so first-settlement pricing is informed by comparable actors instead of a cold start
+- Executes on-chain fee updates (`ESGCompliance.setESGFee()`) only after passing a multi-gate safety check, mirroring the Stability Oracle's policy execution gates
 
 **Adaptive weight bounds:**
 
-The minimum weight floor per E/S/G component is 10% (higher than Stability Oracle's 5% — justified by the smaller number of components). Max shift per week: 2%. All bounds enforced by immutable TypeScript `SAFETY_BOUNDS`.
-
-**Cron schedule:**
-
-| Cron | Job |
-|---|---|
-| `0 * * * *` (every hour) | Oracle update |
-| `0 5 * * 0` (Sunday 05:00 UTC) | Weight regression workflow |
-| `0 6 * * 0` (Sunday 06:00 UTC) | Calibration workflow |
+Each E/S/G component has a hard minimum weight floor, and weights can only drift gradually week over week — both enforced by an immutable, non-overridable bounds object. Exact bound values are proprietary.
 
 **Adaptive status endpoint:**
 
@@ -250,146 +234,7 @@ Returns current E/S/G adaptive weights, prediction count, and circuit breaker st
 
 ## Entity-Level Scoring
 
-In addition to the global protocol oracle, the ESG Oracle provides entity-level scoring for individual counterparties, portfolios, and supply chains using GLEIF, SEC EDGAR, BLS, OSHA, and World Bank sources.
-
-**Base URL:** `https://esg.untitledfinancial.com`
-
----
-
-### GET /esg/lookup
-
-Resolve a company name or LEI to a full entity-level ESG score. GLEIF-resolved, cached 4 hours.
-
-```bash
-curl "https://esg.untitledfinancial.com/esg/lookup?q=Deutsche+Bank&country=DE"
-```
-
-| Parameter | Description |
-|---|---|
-| `q` | Company name or LEI (20-char alphanumeric) |
-| `country` | ISO-2 country code to narrow GLEIF resolution (optional) |
-
----
-
-### POST /esg/batch
-
-Score up to 50 entities in one call (synchronous) or up to 500 via async job. Results ranked by composite score descending.
-
-```bash
-curl -X POST https://esg.untitledfinancial.com/esg/batch \
-  -H "Content-Type: application/json" \
-  -d '{ "leis": ["7LTWFZYICNSX8D621K86"], "names": ["Siemens AG"], "since": "2026-01-01" }'
-```
-
-| Field | Description |
-|---|---|
-| `leis` | Array of 20-char GLEIF LEIs |
-| `names` | Array of company names (GLEIF-resolved) |
-| `since` | ISO date — each result includes `delta` vs score at that date |
-| `webhookUrl` | Provide to trigger async processing (>50 entities automatically async) |
-
-Each result carries `confidence` (HIGH/MEDIUM/LOW based on data source coverage), `cacheAgeHours`, and `failureReason` (GLEIF_NOT_FOUND / SCORING_ERROR / LOW_COVERAGE) on failures.
-
-**Async batches (>50 entities or `webhookUrl` provided):**
-- Returns `{ jobId, pollUrl, estimatedSeconds }` with HTTP 202
-- Poll `GET /esg/job/:id` for status and results
-- Webhook fires on completion with full results payload
-
----
-
-### POST /esg/portfolio
-
-Score an entire counterparty portfolio (up to 200 entities). Returns portfolio composite, tier distribution, MiCA Article 72 status, SFDR PAI flags, worst offenders, and top performers.
-
-```bash
-curl -X POST https://esg.untitledfinancial.com/esg/portfolio \
-  -H "Content-Type: application/json" \
-  -d '{ "leis": ["...", "..."], "label": "Q2 2026 Counterparties" }'
-```
-
----
-
-### GET /esg/velocity/:lei
-
-Predictive ESG deterioration signal. Fits a linear regression on the last 90 days of score history and projects when the entity will cross the next tier boundary.
-
-```bash
-curl "https://esg.untitledfinancial.com/esg/velocity/7LTWFZYICNSX8D621K86?days=90"
-```
-
-**Response includes:** trajectory (IMPROVING / STABLE / DETERIORATING), slope in pts/month, residual standard error, confidence (HIGH/MEDIUM/LOW), and projected tier-crossing dates within 365 days.
-
----
-
-### POST /esg/supply-chain
-
-ESG exposure across a company's direct subsidiaries via GLEIF relationship records. Scores all linked entities and returns an exposure map with SFDR PAI-2 flag.
-
-```bash
-curl -X POST https://esg.untitledfinancial.com/esg/supply-chain \
-  -H "Content-Type: application/json" \
-  -d '{ "lei": "7LTWFZYICNSX8D621K86", "maxEntities": 50 }'
-```
-
-**Response includes:** exposureComposite, highRiskPct, SFDR PAI-2 flag, tier distribution, worst offenders, and per-subsidiary scores.
-
----
-
-### GET /esg/sector-benchmark
-
-Peer distribution (p25 / median / p75) for a sector and country, built from all entities scored through the oracle. Grows with each batch — returns a 503 with guidance if insufficient data exists for a sector.
-
-```bash
-curl "https://esg.untitledfinancial.com/esg/sector-benchmark?sector=financial_services&country=DE&days=90"
-```
-
-**Sectors:** `financial_services`, `energy`, `technology`, `healthcare`, `manufacturing`, `real_estate`, `consumer`, `logistics`, `diversified`
-
----
-
-### GET /esg/controversy/:lei
-
-30-day adverse media scan via GDELT. Returns article count, severity (LOW / MODERATE / HIGH / CRITICAL), category breakdown (REGULATORY / ENVIRONMENTAL / LABOR / GOVERNANCE / FINANCIAL), and estimated ESG score impact (0 to −15 points).
-
-```bash
-curl "https://esg.untitledfinancial.com/esg/controversy/7LTWFZYICNSX8D621K86?days=30"
-```
-
----
-
-### GET /esg/trend/:lei
-
-Historical composite trend for a LEI. Returns direction, delta, and full score history.
-
-```bash
-curl "https://esg.untitledfinancial.com/esg/trend/7LTWFZYICNSX8D621K86?days=90"
-```
-
----
-
-### POST /esg/watch
-
-Register an entity for ongoing monitoring. Fires a webhook when score shifts by ≥ N points.
-
-```bash
-curl -X POST https://esg.untitledfinancial.com/esg/watch \
-  -H "Content-Type: application/json" \
-  -d '{ "lei": "7LTWFZYICNSX8D621K86", "webhookUrl": "https://...", "thresholdPoints": 5 }'
-```
-
-Manage via `GET /esg/watch/:id` and `DELETE /esg/watch/:id`.
-
----
-
-### GET /entity/:lei/profile
-
-Single-call unified counterparty profile. Aggregates ESG score + governance score + GLEIF entity details + compliance and controversy pointers into one response. Reduces agent round-trips from 5 calls to 1.
-
-```bash
-curl "https://esg.untitledfinancial.com/entity/7LTWFZYICNSX8D621K86/profile"
-```
-
-**Response includes:** overallRisk (composite of ESG 60% + governance 40%), per-pillar ESG breakdown, governance tier and MiCA flag, GLEIF entity details, and links to compliance screen and controversy check endpoints.
+In addition to the global protocol oracle described above, the ESG Oracle offers entity-level scoring for individual counterparties, portfolios, and supply chains (lookup, batch, portfolio stress, velocity/trend, controversy screening, and watch subscriptions) as a separate product on the same `esg.untitledfinancial.com` base URL. Full endpoint reference: [ESG Oracle API → Entity-Level Scoring](/api/esg-oracle#entity-level-scoring).
 
 ---
 

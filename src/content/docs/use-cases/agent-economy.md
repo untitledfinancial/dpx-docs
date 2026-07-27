@@ -167,7 +167,7 @@ Five layers run before every payment, in sequence:
 | 3 — Graph risk | Direct counterparty risk propagation (1-hop) |
 | 4 — Network proximity risk | Pre-computed signal propagation from the broader agent network (1–2 hops, 72h TTL) |
 
-Signal weights calibrate autonomously — daily stats collection, weekly adjustment via triple-check gate. Weights are maintained per cohort (UNKNOWN / NEW / DEVELOPING / ESTABLISHED) so a first-time wallet and a 500-transaction wallet are screened differently. The calibration system never silences a sanctions-correlated signal and never skips calibration if any signal weight drifts more than 20% from baseline.
+Signal weights calibrate autonomously against observed payment data. Weights are maintained per cohort (UNKNOWN / NEW / DEVELOPING / ESTABLISHED) so a first-time wallet and a long-history wallet are screened differently. Sanctions-correlated signals are never weakened by calibration, regardless of cohort. Exact weighting and calibration cadence are proprietary.
 
 Flagged decisions (score 50–74) route through an AI synthesis layer that returns a structured recommendation — `PROCEED_WITH_REVIEW` or `ESCALATE_TO_BLOCK` — with confidence and key factors. The reasoning is baked into the compliance attestation.
 
@@ -262,7 +262,7 @@ The human reviews analytics. The agent executes payments.
 | Pay for intelligence via x402 micropayment | Yes — USDC on Base, per-call pricing |
 | Receive settlement results via webhook | Yes — HMAC-SHA256 signed callbacks |
 | Verify on-chain | Yes — Base Blockscout or `cast call` |
-| Connect via MCP | Yes — 64 tools, `npx @untitledfinancial/dpx-mcp` |
+| Connect via MCP | Yes — 76 tools, `npx @untitledfinancial/dpx-mcp` |
 | Network proximity risk screening | Yes — propagated signals from flagged neighbours surface in AML layer |
 | Fast-path routing for trusted pairs | Yes — earned by bilateral history; computed nightly, applied at settlement |
 | Open a streaming micropayment session | Yes — `POST /stream/open` with x402 payment; AML runs once at open |

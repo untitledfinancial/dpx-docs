@@ -1,13 +1,13 @@
 ---
 title: MCP Subscriptions
-description: Monthly subscription access to all 56 DPX MCP tools — oracle queries, ESG scoring, compliance screening, settlement execution, corridor intelligence, and market analysis. For treasury teams, accounting firms, and AI-native finance workflows.
+description: Monthly subscription access to the full DPX MCP toolset — oracle queries, ESG scoring, compliance screening, settlement execution, corridor intelligence, and market analysis. For treasury teams, accounting firms, and AI-native finance workflows.
 ---
 
 The DPX MCP server gives Claude Desktop, Cursor, and any MCP-compatible AI host native access to the full DPX data and settlement stack. A subscription key replaces per-call payment prompts with flat monthly access — optimized for teams running repeated oracle queries, compliance screens, or settlement flows throughout the month.
 
 ## What's included
 
-56 tools across settlement, oracle data, ESG scoring, compliance screening, corridor intelligence, Ramp integration, Mercury banking, market intelligence, and agent identity.
+A wide range of tools across settlement, oracle data, ESG scoring, compliance screening, corridor intelligence, Ramp integration, Mercury banking, market intelligence, and agent identity.
 
 | Category | Tools |
 |---|---|
@@ -31,7 +31,7 @@ Full tool reference: [MCP — Claude](/integrations/mcp).
 | **Professional** | 200 | 25,000 | 5,000 | 10,000 | 100 |
 | **Institutional** | 800 | Unlimited | Unlimited | Unlimited | Unlimited |
 
-All tiers include: full 56-tool access, FATF R.16 attestations, SFDR PAI indicators, corridor intelligence, and AI synthesis on oracle responses.
+All tiers include: full DPX MCP tool access, FATF R.16 attestations, SFDR PAI indicators, corridor intelligence, and AI synthesis on oracle responses.
 
 ## Get a subscription key
 
@@ -50,7 +50,7 @@ curl -X POST https://compliance.untitledfinancial.com/subscribe \
 {
   "apiKey": "dpx_sub_pk_...",
   "tier": "professional",
-  "expiresAt": "2026-07-30T00:00:00Z",
+  "expiresAt": "2026-08-22T00:00:00Z",
   "limits": {
     "mcpCallsPerMonth": 25000,
     "complianceScreensPerMonth": 5000,
@@ -110,7 +110,6 @@ Point any MCP-compatible host directly at the remote server — no `npx`, no loc
 }
 ```
 
-
 ## Use cases by team
 
 ### Treasury / FX desk
@@ -155,7 +154,7 @@ curl https://compliance.untitledfinancial.com/subscribe/status \
 ```json
 {
   "tier": "professional",
-  "expiresAt": "2026-07-30T00:00:00Z",
+  "expiresAt": "2026-08-22T00:00:00Z",
   "usage": {
     "mcpCalls": 1243,
     "complianceScreens": 87,

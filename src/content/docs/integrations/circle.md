@@ -15,7 +15,7 @@ npm install @circle-fin/developer-controlled-wallets x402-fetch dotenv
 
 ```bash
 git clone https://github.com/untitledfinancial/dpx-agent-public
-cd dpx-agent
+cd dpx-agent-public
 npm install
 cp .env.example .env
 # add Circle credentials (see below)
@@ -66,7 +66,7 @@ Save the output as `CIRCLE_ENTITY_SECRET` in your `.env`. Then register it in th
 ## Example output
 
 ```
-Circle Wallet  0x3a8F9e2D1c5B7f4A0E6d2c9b8a1f3e5d7c2a4b6
+Circle Wallet  0x3a8F9e2D1c5B7f4A0E6d2c9b8a1f3e5d7c2a4b6c
 Wallet ID    a1b2c3d4-e5f6-7890-abcd-ef1234567890
 Circle SDK   initialized ✓
 
