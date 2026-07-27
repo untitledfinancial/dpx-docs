@@ -8,7 +8,7 @@
     <span class="term-dot term-dot--red"></span>
     <span class="term-dot term-dot--yellow"></span>
     <span class="term-dot term-dot--green"></span>
-    <span class="term-title">agent@dpx — sandbox — 80×24</span>
+    <span class="term-title">dpx-sandbox — agent.untitledfinancial.com</span>
   </div>
 
   <div class="term-body">
@@ -22,7 +22,7 @@
       <div class="term-out" id="oracle-response">
         <span class="term-loading">checking oracle<span class="term-dots"></span></span>
       </div>
-      <button class="term-action term-action--ghost" id="oracle-refresh-btn">[ rerun ]</button>
+      <button class="term-action term-action--ghost" id="oracle-refresh-btn"><span class="term-action-dot"></span> Rerun</button>
     </div>
 
     <!-- Step 2: Quote -->
@@ -38,7 +38,7 @@
           <input id="quote-fx" type="checkbox" class="term-checkbox" />
           <span class="term-flag-key">--fx</span>
         </label>
-        <button class="term-action" id="quote-btn">[ run ]</button>
+        <button class="term-action" id="quote-btn"><span class="term-action-dot"></span> Run</button>
       </div>
       <div class="term-out term-out--hidden" id="quote-response"></div>
     </div>
@@ -56,7 +56,7 @@
           <span class="term-flag-key">--lei</span>
           <input id="comp-lei" class="term-input term-input--text" type="text" placeholder="optional, 20-char" />
         </label>
-        <button class="term-action" id="compliance-btn">[ run ]</button>
+        <button class="term-action" id="compliance-btn"><span class="term-action-dot"></span> Run</button>
       </div>
       <div class="term-out term-out--hidden" id="compliance-response"></div>
     </div>
@@ -65,12 +65,15 @@
     <div class="term-block" id="step-settle">
       <p class="term-prompt"><span class="term-caret">❯</span> <span class="term-cmd">POST /settle</span> <span class="term-badge" id="settle-badge"></span></p>
       <p class="term-comment"># full stack executes — oracle, compliance, fee math — nothing moves on-chain</p>
-      <button class="term-action term-action--primary" id="settle-btn" disabled>[ settle --sandbox ]</button>
+      <button class="term-action term-action--primary" id="settle-btn" disabled><span class="term-action-dot"></span> Settle (sandbox)</button>
       <div class="term-out term-out--hidden" id="settle-response"></div>
     </div>
 
-    <p class="term-line term-ready"><span class="term-caret">❯</span> <span class="term-cursor"></span></p>
+  </div>
 
+  <div class="term-statusbar">
+    <span class="term-status-dot term-status-dot--active" id="term-status-dot"></span>
+    <span id="term-status-text">Live — connected to DPX sandbox</span>
   </div>
 </div>
 
@@ -100,7 +103,7 @@ function setBadge(id, text, type) {
 }
 
 function kv(label, value) {
-  return `<div class="term-kv"><span class="term-kv-label">${label}</span><span class="term-kv-value">${value}</span></div>`;
+  return `<div class="term-kv"><span class="term-kv-label">${label}:</span><span class="term-kv-value">${value}</span></div>`;
 }
 
 function statusBadge(status) {
@@ -121,7 +124,8 @@ function setLoading(btnId: string, loading: boolean, label: string) {
   const btn = document.getElementById(btnId) as HTMLButtonElement | null;
   if (!btn) return;
   btn.disabled = loading;
-  btn.textContent = loading ? '[ running… ]' : label;
+  btn.classList.toggle('running', loading);
+  btn.innerHTML = `<span class="term-action-dot"></span> ${loading ? 'Running…' : label}`;
 }
 
 // ── Shared state ──────────────────────────────────────────────────────────────
@@ -172,7 +176,7 @@ document.getElementById('quote-btn')?.addEventListener('click', async () => {
   const amount = parseFloat(document.getElementById('quote-amount').value) || 50000;
   const hasFx  = document.getElementById('quote-fx').checked;
 
-  setLoading('quote-btn', true, '[ run ]');
+  setLoading('quote-btn', true, 'Run');
   hide('quote-response');
   quoteId = null;
   compliancePassed = false;
@@ -210,7 +214,7 @@ document.getElementById('quote-btn')?.addEventListener('click', async () => {
     show('quote-response');
     setBadge('quote-badge', 'error', 'block');
   } finally {
-    setLoading('quote-btn', false, '[ run ]');
+    setLoading('quote-btn', false, 'Run');
   }
 });
 
@@ -222,7 +226,7 @@ document.getElementById('compliance-btn')?.addEventListener('click', async () =>
   const name    = (document.getElementById('comp-name')).value.trim() || 'Berlin Supplier GmbH';
   const lei     = (document.getElementById('comp-lei')).value.trim();
 
-  setLoading('compliance-btn', true, '[ run ]');
+  setLoading('compliance-btn', true, 'Run');
   hide('compliance-response');
   compliancePassed = false;
   const settleBtn = document.getElementById('settle-btn');
@@ -273,7 +277,7 @@ document.getElementById('compliance-btn')?.addEventListener('click', async () =>
     show('compliance-response');
     setBadge('compliance-badge', 'error', 'block');
   } finally {
-    setLoading('compliance-btn', false, '[ run ]');
+    setLoading('compliance-btn', false, 'Run');
   }
 });
 
@@ -283,7 +287,7 @@ document.getElementById('settle-btn')?.addEventListener('click', async () => {
   const amount = parseFloat((document.getElementById('quote-amount'))?.value) || 50000;
   const hasFx  = (document.getElementById('quote-fx'))?.checked;
 
-  setLoading('settle-btn', true, '[ settle --sandbox ]');
+  setLoading('settle-btn', true, 'Settle (sandbox)');
   hide('settle-response');
   setBadge('settle-badge', '', 'idle');
 
@@ -325,7 +329,7 @@ document.getElementById('settle-btn')?.addEventListener('click', async () => {
     show('settle-response');
     setBadge('settle-badge', 'error', 'block');
   } finally {
-    setLoading('settle-btn', false, '[ settle --sandbox ]');
+    setLoading('settle-btn', false, 'Settle (sandbox)');
   }
 });
 
@@ -339,56 +343,56 @@ loadOracle();
   margin: 1.5rem 0;
   border-radius: 10px;
   overflow: hidden;
-  background: #0b0f0e;
-  border: 1px solid #1f2b29;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
-  font-family: var(--sl-font-mono, 'SF Mono', monospace);
+  background: #0d1f1c;
+  border: 1px solid rgba(95, 212, 168, 0.15);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+  font-family: 'JetBrains Mono', var(--sl-font-mono, 'SF Mono', monospace);
 }
 
 .term-titlebar {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.6rem 0.8rem;
-  background: #121a18;
-  border-bottom: 1px solid #1f2b29;
+  padding: 0.75rem 1rem;
+  background: #162320;
+  border-bottom: 1px solid rgba(95, 212, 168, 0.08);
 }
 .term-dot {
-  width: 11px;
-  height: 11px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   display: inline-block;
 }
-.term-dot--red    { background: #ff5f56; }
-.term-dot--yellow { background: #ffbd2e; }
-.term-dot--green  { background: #27c93f; }
+.term-dot--red    { background: #ff5f57; }
+.term-dot--yellow { background: #febc2e; }
+.term-dot--green  { background: #28c840; }
 .term-title {
   margin: 0 auto;
-  transform: translateX(-16px);
+  transform: translateX(-18px);
   font-size: 0.72rem;
-  color: #5f7873;
+  color: rgba(255, 255, 255, 0.35);
   letter-spacing: 0.02em;
 }
 
 .term-body {
-  padding: 1.1rem 1.1rem 0.9rem;
+  padding: 1.25rem 1.25rem 1rem;
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
-  color: #d3e6e1;
+  color: #a8c5c0;
   font-size: 0.84rem;
   line-height: 1.6;
 }
 
 .term-line {
   margin: 0;
-  color: #7d928d;
+  color: rgba(255, 255, 255, 0.35);
 }
 .term-line--boot {
   padding-bottom: 0.2rem;
-  border-bottom: 1px dashed #1f2b29;
+  border-bottom: 1px dashed rgba(95, 212, 168, 0.12);
 }
-.term-accent { color: #5ee6b0; }
+.term-accent { color: #5fd4a8; }
 
 .term-block {
   display: flex;
@@ -403,13 +407,14 @@ loadOracle();
   gap: 0.5rem;
   flex-wrap: wrap;
 }
-.term-caret { color: #5ee6b0; font-weight: 700; }
-.term-cmd   { color: #eafff6; font-weight: 600; }
+.term-caret { color: #5fd4a8; font-weight: 700; }
+.term-cmd   { color: #ffffff; font-weight: 500; }
 
 .term-comment {
   margin: 0;
-  color: #5f7873;
-  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.3);
+  font-style: italic;
+  font-size: 0.75rem;
   padding-left: 1.4rem;
 }
 
@@ -425,25 +430,25 @@ loadOracle();
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  color: #9db3ad;
+  color: #a8c5c0;
   font-size: 0.8rem;
 }
 .term-flag--wide { flex: 1; min-width: 180px; }
 .term-flag--check { cursor: pointer; }
-.term-flag-key { color: #4fa8ff; white-space: nowrap; }
+.term-flag-key { color: #5fd4a8; white-space: nowrap; opacity: 0.85; }
 
 .term-flag-input-wrap {
   display: flex;
   align-items: center;
   gap: 0.15rem;
-  color: #eafff6;
+  color: #ffffff;
 }
 
 .term-input {
-  background: #0b0f0e;
+  background: transparent;
   border: none;
-  border-bottom: 1px solid #2a3a37;
-  color: #eafff6;
+  border-bottom: 1px solid rgba(95, 212, 168, 0.25);
+  color: #ffffff;
   font-family: inherit;
   font-size: 0.82rem;
   padding: 0.15rem 0.2rem;
@@ -452,55 +457,79 @@ loadOracle();
 .term-input--text { width: 100%; }
 .term-input:focus {
   outline: none;
-  border-bottom-color: #5ee6b0;
+  border-bottom-color: #5fd4a8;
 }
 
 .term-checkbox {
   appearance: none;
   width: 13px;
   height: 13px;
-  border: 1px solid #4fa8ff;
+  border: 1px solid #5fd4a8;
   border-radius: 3px;
   background: transparent;
   cursor: pointer;
   position: relative;
   margin: 0;
 }
-.term-checkbox:checked { background: #4fa8ff; }
+.term-checkbox:checked { background: #5fd4a8; }
 .term-checkbox:checked::after {
   content: '✓';
   position: absolute;
   top: -3px; left: 1px;
   font-size: 10px;
-  color: #0b0f0e;
+  color: #0f1e1d;
 }
 
 .term-action {
-  background: transparent;
-  border: none;
-  color: #5ee6b0;
-  font-family: inherit;
-  font-size: 0.82rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #5fd4a8;
+  color: #0f1e1d;
+  font-family: var(--sl-font, inherit);
+  font-size: 0.78rem;
   font-weight: 600;
+  letter-spacing: 0.02em;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.9rem;
   cursor: pointer;
-  padding: 0.15rem 0.3rem;
   white-space: nowrap;
+  margin-left: 1.4rem;
+  align-self: flex-start;
+  transition: background 0.15s, transform 0.1s;
 }
-.term-action:hover:not(:disabled) { color: #eafff6; text-shadow: 0 0 8px rgba(94, 230, 176, 0.5); }
-.term-action:disabled { color: #3a4744; cursor: default; }
-.term-action--ghost { color: #7d928d; margin-left: 1.4rem; align-self: flex-start; }
-.term-action--ghost:hover:not(:disabled) { color: #d3e6e1; text-shadow: none; }
-.term-action--primary { margin-left: 1.4rem; align-self: flex-start; }
+.term-action:hover:not(:disabled) { background: #7ee3bc; transform: translateY(-1px); }
+.term-action:disabled { opacity: 0.4; cursor: default; transform: none; }
+.term-action-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #0f1e1d;
+  flex-shrink: 0;
+}
+.term-action.running .term-action-dot { animation: term-pulse 1s ease-in-out infinite; }
+@keyframes term-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+.term-action--ghost {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(95, 212, 168, 0.2);
+}
+.term-action--ghost:hover:not(:disabled) { background: rgba(95, 212, 168, 0.06); color: #a8c5c0; transform: none; }
+.term-action--ghost .term-action-dot { background: #5fd4a8; }
 
 .term-out {
   margin-left: 1.4rem;
-  padding: 0.6rem 0.75rem;
-  background: #0e1513;
-  border-left: 2px solid #1f2b29;
+  padding: 0.7rem 0.9rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 2px solid rgba(95, 212, 168, 0.15);
   border-radius: 0 4px 4px 0;
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.35rem;
 }
 .term-out--hidden { display: none; }
 
@@ -510,18 +539,18 @@ loadOracle();
   align-items: baseline;
 }
 .term-kv-label {
-  color: #5f7873;
+  color: rgba(255, 255, 255, 0.5);
   font-size: 0.76rem;
   min-width: 120px;
   flex-shrink: 0;
 }
 .term-kv-value {
-  color: #eafff6;
+  color: #ffffff;
   font-size: 0.82rem;
 }
 .term-kv-value code {
-  background: rgba(94, 230, 176, 0.08);
-  color: #5ee6b0;
+  background: rgba(95, 212, 168, 0.1);
+  color: #5fd4a8;
   padding: 0.05rem 0.3rem;
   border-radius: 3px;
 }
@@ -531,37 +560,37 @@ loadOracle();
   font-weight: 700;
   letter-spacing: 0.02em;
 }
-.term-badge--ok    { color: #5ee6b0; }
-.term-badge--warn  { color: #ffbd2e; }
-.term-badge--block { color: #ff5f56; }
+.term-badge--ok    { color: #5fd4a8; }
+.term-badge--warn  { color: #febc2e; }
+.term-badge--block { color: #ff6b6b; }
 .term-badge--idle  { display: none; }
 
 .term-status {
   font-weight: 700;
 }
-.term-status--ok    { color: #5ee6b0; }
-.term-status--warn  { color: #ffbd2e; }
-.term-status--block { color: #ff5f56; }
+.term-status--ok    { color: #5fd4a8; }
+.term-status--warn  { color: #febc2e; }
+.term-status--block { color: #ff6b6b; }
 
 .term-reasoning {
   margin-top: 0.3rem;
-  padding: 0.5rem 0.6rem;
-  background: rgba(255, 255, 255, 0.02);
-  border-left: 2px solid #2a3a37;
+  padding: 0.6rem 0.75rem;
+  background: rgba(95, 212, 168, 0.04);
+  border-left: 2px solid rgba(95, 212, 168, 0.2);
   border-radius: 0 4px 4px 0;
   font-size: 0.78rem;
-  color: #9db3ad;
+  color: #a8c5c0;
   line-height: 1.55;
 }
-.term-reasoning--success { border-color: #5ee6b0; }
+.term-reasoning--success { border-color: #5fd4a8; }
 .term-reasoning code {
-  background: rgba(94, 230, 176, 0.08);
-  color: #5ee6b0;
+  background: rgba(95, 212, 168, 0.1);
+  color: #5fd4a8;
   padding: 0.05rem 0.3rem;
   border-radius: 3px;
 }
 
-.term-loading { color: #5f7873; font-style: italic; }
+.term-loading { color: rgba(255, 255, 255, 0.35); font-style: italic; }
 .term-dots::after {
   content: '';
   animation: term-dots 1.2s steps(4, end) infinite;
@@ -574,24 +603,28 @@ loadOracle();
   100% { content: ''; }
 }
 
-.term-error { color: #ff5f56; }
+.term-error { color: #ff6b6b; }
 
-.term-ready {
+.term-statusbar {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding-bottom: 0.9rem;
+  gap: 8px;
+  padding: 0.6rem 1rem;
+  background: #162320;
+  border-top: 1px solid rgba(95, 212, 168, 0.08);
+  font-family: 'JetBrains Mono', var(--sl-font-mono, monospace);
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.4);
 }
-.term-cursor {
-  display: inline-block;
-  width: 8px;
-  height: 15px;
-  background: #5ee6b0;
-  animation: term-blink 1s step-end infinite;
+.term-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
 }
-@keyframes term-blink {
-  0%, 49%  { opacity: 1; }
-  50%, 100% { opacity: 0; }
+.term-status-dot--active {
+  background: #5fd4a8;
+  animation: term-pulse 1.2s ease-in-out infinite;
 }
 
 @media (max-width: 600px) {
