@@ -50,11 +50,11 @@
       <div class="term-flags">
         <label class="term-flag term-flag--wide">
           <span class="term-flag-key">--name</span>
-          <input id="comp-name" class="term-input term-input--text" type="text" value="Berlin Supplier GmbH" />
+          <input id="comp-name" class="term-input term-input--text" type="text" value="Deutsche Bank AG" />
         </label>
         <label class="term-flag term-flag--wide">
           <span class="term-flag-key">--lei</span>
-          <input id="comp-lei" class="term-input term-input--text" type="text" placeholder="optional, 20-char" />
+          <input id="comp-lei" class="term-input term-input--text" type="text" value="7LTWFZYICNSX8D621K86" placeholder="optional, 20-char" />
         </label>
         <button class="term-action" id="compliance-btn"><span class="term-action-dot"></span> Run</button>
       </div>
@@ -223,7 +223,7 @@ document.getElementById('quote-btn')?.addEventListener('click', async () => {
 document.getElementById('compliance-btn')?.addEventListener('click', async () => {
   const amount  = parseFloat((document.getElementById('quote-amount'))?.value) || 50000;
   const hasFx   = (document.getElementById('quote-fx'))?.checked;
-  const name    = (document.getElementById('comp-name')).value.trim() || 'Berlin Supplier GmbH';
+  const name    = (document.getElementById('comp-name')).value.trim() || 'Deutsche Bank AG';
   const lei     = (document.getElementById('comp-lei')).value.trim();
 
   setLoading('compliance-btn', true, 'Run');
