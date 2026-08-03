@@ -1,9 +1,12 @@
 /*
  * ═══════════════════════════════════════════════════════════════
  *  UNTITLED FINANCIAL — DPX DOCS
- *  Design: Notion-inspired clean document aesthetic
- *  Display: Bebas Neue (hero headings)
- *  Body:    Inter (UI + body — like Notion)
+ *  Design: research-memo aesthetic (kicker · serif headline · numbered
+ *  sections · monospace metadata) — same system as the internal memo
+ *  format, re-skinned onto DPX's ocean teal palette.
+ *  Display: Georgia / system serif (headings)
+ *  Body:    Inter (UI + body)
+ *  Mono:    SF Mono / JetBrains Mono (kickers, metadata, section badges, code)
  *  Palette: #ffffff bg · #1e2e2c text · #dce8e7 borders (ocean teal palette)
  * ═══════════════════════════════════════════════════════════════
  */
@@ -12,7 +15,6 @@
 @import '@fontsource/inter/400.css';
 @import '@fontsource/inter/500.css';
 @import '@fontsource/inter/600.css';
-@import '@fontsource/bebas-neue/400.css';
 
 /* ── VARIABLES ───────────────────────────────────────────────── */
 :root,
@@ -53,6 +55,9 @@
   --sl-font:                 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --sl-font-system:          'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --sl-font-mono:            'SF Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  /* Research-memo display serif — headings only */
+  --font-serif:              Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
 }
 
 /* ── SITE HEADER — dark teal to match untitledfinancial.com ─── */
@@ -177,43 +182,68 @@ h1, h2, h3, h4, h5, h6,
 .sl-markdown-content h4,
 .sl-markdown-content h5 {
   color: #192f2d !important;
-  font-family: 'Inter', sans-serif !important;
+  font-family: var(--font-serif) !important;
 }
 
 .sl-markdown-content h1 {
-  font-family: 'Bebas Neue', 'Arial Black', sans-serif !important;
-  font-size: 2.8rem !important;
+  font-family: var(--font-serif) !important;
+  font-size: 2.15rem !important;
   font-weight: 400 !important;
-  letter-spacing: 0.04em !important;
-  line-height: 1.05 !important;
-  margin-bottom: 1.25rem !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.15 !important;
+  text-wrap: balance;
+  margin-bottom: 0.5rem !important;
   color: #192f2d !important;
 }
 
+/* Section headers get an auto-numbered pill badge, like § markers in a memo */
+.sl-markdown-content {
+  counter-reset: section;
+}
+
 .sl-markdown-content h2 {
-  font-family: 'Inter', sans-serif !important;
-  font-size: 1.25rem !important;
-  font-weight: 600 !important;
+  counter-increment: section;
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 0.85rem !important;
+  font-family: var(--font-serif) !important;
+  font-size: 1.5rem !important;
+  font-weight: 400 !important;
   letter-spacing: -0.01em !important;
   text-transform: none !important;
-  border-bottom: 1px solid #dce8e7 !important;
-  padding-bottom: 0.5rem !important;
-  margin-top: 2.5rem !important;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  margin-top: 3rem !important;
+}
+
+.sl-markdown-content h2::before {
+  content: '§' counter(section);
+  flex-shrink: 0;
+  font-family: 'SF Mono', 'JetBrains Mono', ui-monospace, monospace !important;
+  font-size: 0.85rem !important;
+  font-weight: 400 !important;
+  color: #254442 !important;
+  border: 1px solid #254442 !important;
+  border-radius: 100px !important;
+  padding: 0.15rem 0.6rem !important;
+  line-height: 1.4 !important;
 }
 
 .sl-markdown-content h3 {
-  font-family: 'Inter', sans-serif !important;
-  font-size: 1rem !important;
-  font-weight: 600 !important;
-  letter-spacing: -0.01em !important;
+  font-family: var(--font-serif) !important;
+  font-style: italic !important;
+  font-size: 1.12rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  margin: 2rem 0 0.6rem !important;
 }
 
 .sl-markdown-content h4 {
-  font-family: 'Inter', sans-serif !important;
-  font-size: 0.72rem !important;
-  font-weight: 600 !important;
+  font-family: 'SF Mono', 'JetBrains Mono', ui-monospace, monospace !important;
+  font-size: 0.7rem !important;
+  font-weight: 500 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.12em !important;
+  letter-spacing: 0.1em !important;
   color: #9b9a97 !important;
 }
 
@@ -223,11 +253,12 @@ h1, h2, h3, h4, h5, h6,
 .hero .sl-flex h1,
 [data-has-hero] .hero h1,
 .sl-markdown-content .hero h1 {
-  font-family: 'Bebas Neue', 'Arial Black', sans-serif !important;
-  font-size: clamp(2.5rem, 5vw, 3.5rem) !important;
+  font-family: var(--font-serif) !important;
+  font-size: clamp(2.4rem, 5vw, 3.2rem) !important;
   font-weight: 400 !important;
-  letter-spacing: 0.04em !important;
-  line-height: 1.05 !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.12 !important;
+  text-wrap: balance;
   color: #192f2d !important;
   border-bottom: none !important;   /* override h2 border if hero h2 bleeds */
 }
@@ -236,11 +267,11 @@ h1, h2, h3, h4, h5, h6,
 .hero p.tagline,
 [data-has-hero] .tagline {
   font-family: 'Inter', sans-serif !important;
-  font-size: 1rem !important;
-  font-weight: 300 !important;
-  color: #787774 !important;
+  font-size: 1.05rem !important;
+  font-weight: 400 !important;
+  color: #5a6e6c !important;
   line-height: 1.65 !important;
-  max-width: 54ch !important;
+  max-width: 62ch !important;
 }
 
 .hero .actions a {
@@ -286,6 +317,135 @@ h1, h2, h3, h4, h5, h6,
   font-weight: 600 !important;
 }
 
+/* ── BLOCKQUOTE (lede paragraph) ─────────────────────────────── */
+.sl-markdown-content blockquote {
+  border-left: 2px solid #254442 !important;
+  padding-left: 1.1rem !important;
+  margin: 1.2rem 0 1.8rem !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 1.05rem !important;
+  color: #5a6e6c !important;
+  max-width: 64ch !important;
+}
+
+.sl-markdown-content blockquote p {
+  font-size: inherit !important;
+  color: inherit !important;
+}
+
+/* ── KICKER / DECK / META (research-memo page header) ────────── */
+.kicker {
+  font-family: 'SF Mono', 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #254442;
+  margin-bottom: 0.9rem;
+}
+
+.deck {
+  font-family: 'Inter', sans-serif;
+  color: #5a6e6c;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  max-width: 62ch;
+  margin: 0.6rem 0 0;
+}
+
+.meta {
+  font-family: 'SF Mono', 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.78rem;
+  color: #9b9a97;
+  margin-top: 1.4rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid #dce8e7;
+  line-height: 1.6;
+}
+
+/* Manual section badge — same look as the auto ::before on h2, for standalone use */
+.section-num {
+  display: inline-block;
+  font-family: 'SF Mono', 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.85rem;
+  color: #254442;
+  border: 1px solid #254442;
+  border-radius: 100px;
+  padding: 0.15rem 0.6rem;
+  line-height: 1.4;
+}
+
+/* ── STATUS CHIPS — teal/gray only, no red/orange ────────────── */
+.chip {
+  display: inline-block;
+  font-family: 'SF Mono', 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.16rem 0.5rem;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+.chip.live     { background: #e8f0ef; color: #254442; }
+.chip.progress { background: #f2f7f6; color: #5a6e6c; }
+.chip.planned  { background: #f2f7f6; color: #9b9a97; }
+.chip.gap      { background: #dce8e7; color: #192f2d; }
+
+/* ── PANELS / TWO-COLUMN GRID ────────────────────────────────── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem;
+  margin: 1.4rem 0;
+}
+@media (max-width: 640px) {
+  .two-col { grid-template-columns: 1fr; }
+}
+
+.panel {
+  border: 1px solid #dce8e7;
+  border-radius: 10px;
+  padding: 1.1rem 1.3rem;
+  background: #f2f7f6;
+}
+.panel h4 {
+  font-family: 'SF Mono', 'JetBrains Mono', ui-monospace, monospace !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  margin: 0 0 0.7rem !important;
+}
+.panel.shipped h4  { color: #254442 !important; }
+.panel.gap-panel h4 { color: #5a6e6c !important; }
+.panel ul { padding-left: 1.1rem; margin: 0; max-width: none; }
+.panel li { font-size: 0.9rem; margin: 0.5rem 0; }
+
+/* ── FLOW DIAGRAM BOX ─────────────────────────────────────────── */
+.flow {
+  font-family: 'SF Mono', 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.82rem;
+  background: #f2f7f6;
+  border: 1px solid #dce8e7;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 1.2rem 0;
+  color: #5a6e6c;
+  line-height: 1.9;
+}
+.flow b { color: #192f2d; }
+
+/* ── FLAT CALLOUT (no left border, tinted fill) ──────────────── */
+.callout {
+  background: #e8f0ef;
+  border-radius: 10px;
+  padding: 1rem 1.3rem;
+  margin: 1.4rem 0;
+  font-size: 0.95rem;
+}
+.callout p {
+  margin: 0.4rem 0 !important;
+  max-width: none !important;
+}
+
 /* ── LINKS ───────────────────────────────────────────────────── */
 a,
 .sl-markdown-content a {
@@ -314,9 +474,9 @@ code:not(pre code),
 .sl-markdown-content code:not(pre code) {
   background: #e8f0ef !important;
   color: #37352f !important;
-  border: 1px solid #dce8e7 !important;
-  border-radius: 3px !important;
-  padding: 0.1em 0.4em !important;
+  border: none !important;
+  border-radius: 4px !important;
+  padding: 0.08em 0.35em !important;
   font-size: 0.875em !important;
   font-family: 'SF Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace !important;
 }
@@ -343,7 +503,7 @@ code:not(pre code),
   table-layout: fixed !important;
   font-size: 0.9rem !important;
   border: 1px solid #dce8e7 !important;
-  border-radius: 4px !important;
+  border-radius: 10px !important;
   overflow: hidden !important;
 }
 
@@ -410,10 +570,10 @@ code:not(pre code),
 }
 
 .stat-value {
-  font-family: 'Bebas Neue', 'Arial Black', sans-serif;
-  font-size: 1.75rem;
+  font-family: var(--font-serif);
+  font-size: 1.65rem;
   font-weight: 400;
-  letter-spacing: 0.04em;
+  letter-spacing: -0.01em;
   color: #192f2d;
   line-height: 1.1;
 }
