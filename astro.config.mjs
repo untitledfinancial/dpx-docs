@@ -41,6 +41,7 @@ export default defineConfig({
           items: [
             { label: 'What is DPX?',      slug: 'index' },
             { label: 'Agent Quick Start', slug: 'agent-quickstart' },
+            { label: 'AI Agent Prompts',  slug: 'agent-prompts' },
             { label: 'Sandbox',            slug: 'sandbox' },
           ],
         },
