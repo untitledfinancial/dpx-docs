@@ -699,11 +699,13 @@ starlight-theme-select {
   display: none !important;
 }
 
-/* ── CARD GRID ───────────────────────────────────────────────── */
+/* ── CARD GRID — flat, quiet panels, no rainbow icon badges ──── */
 .card {
+  --sl-card-border: transparent !important;
+  --sl-card-bg: transparent !important;
   background: #f2f7f6 !important;
   border: 1px solid #dce8e7 !important;
-  border-radius: 4px !important;
+  border-radius: 10px !important;
   box-shadow: none !important;
 }
 
@@ -719,6 +721,14 @@ starlight-theme-select {
   font-weight: 600 !important;
   letter-spacing: -0.01em !important;
   color: #192f2d !important;
+}
+
+/* Icon badge — one quiet monochrome treatment, no per-card hue rotation */
+.card .icon {
+  border: none !important;
+  background: transparent !important;
+  color: #7a8583 !important;
+  padding: 0 !important;
 }
 
 /* ── PAGINATION ──────────────────────────────────────────────── */
