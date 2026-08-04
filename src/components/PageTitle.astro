@@ -1,0 +1,56 @@
+---
+// Research-memo page header: kicker → h1 → deck → meta (git last-updated date).
+// Replaces Starlight's default bare <h1>.
+// PAGE_TITLE_ID matches Starlight's internal constant (not part of the public
+// package export surface, so it's inlined here rather than imported).
+const PAGE_TITLE_ID = '_top';
+
+const { entry, lastUpdated, lang } = Astro.locals.starlightRoute;
+const { title, description } = entry.data;
+
+const KICKER_MAP: [string, string][] = [
+  ['use-cases/', 'Use Cases'],
+  ['guides/', 'Guides'],
+  ['api/', 'API Reference'],
+  ['integrations/', 'Integrations'],
+  ['protocol/', 'Protocol'],
+  ['products/', 'Products'],
+  ['enterprise/', 'Enterprise'],
+  ['legal/', 'Legal'],
+];
+const kicker = KICKER_MAP.find(([prefix]) => entry.slug.startsWith(prefix))?.[1];
+---
+
+<div class="dpx-page-header">
+  {kicker && <p class="kicker">{kicker}</p>}
+  <h1 id={PAGE_TITLE_ID}>{title}</h1>
+  {description && <p class="deck">{description}</p>}
+  {
+    lastUpdated && (
+      <p class="meta">
+        Updated{' '}
+        <time datetime={lastUpdated.toISOString()}>
+          {lastUpdated.toLocaleDateString(lang, { dateStyle: 'medium', timeZone: 'UTC' })}
+        </time>
+      </p>
+    )
+  }
+</div>
+
+<style>
+  @layer starlight.core {
+    .dpx-page-header {
+      margin-top: 1rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: 2.15rem;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      text-wrap: balance;
+      margin: 0 0 0.5rem;
+      color: #192f2d;
+    }
+  }
+</style>

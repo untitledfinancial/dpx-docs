@@ -13,9 +13,11 @@ export default defineConfig({
       title: 'DPX Docs',
       description: 'Programmable stablecoin settlement rails — AI-powered oracles, ESG-weighted fees, and 9-layer stability intelligence on Base mainnet.',
       favicon: '/favicon.png',
+      lastUpdated: true,
       components: {
-        Banner:  './src/components/Banner.astro',
-        Footer:  './src/components/Footer.astro',
+        Banner:    './src/components/Banner.astro',
+        Footer:    './src/components/Footer.astro',
+        PageTitle: './src/components/PageTitle.astro',
       },
       logo: {
         src: './src/assets/dpx-logo.png',

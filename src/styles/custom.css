@@ -58,6 +58,11 @@
 
   /* Research-memo display serif — headings only */
   --font-serif:              Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
+
+  /* Slim, muted chrome — the reading column should dominate, not the nav */
+  --sl-sidebar-width:        13rem;
+  --sl-content-width:        48rem;
+  --sl-nav-height:           3.25rem;
 }
 
 /* ── SITE HEADER — dark teal to match untitledfinancial.com ─── */
@@ -130,47 +135,52 @@ main {
   color: #37352f;
 }
 
-/* ── SIDEBAR ─────────────────────────────────────────────────── */
+/* ── SIDEBAR — slim, muted rail (reading column should dominate) ── */
 .sidebar-pane,
 nav.sidebar {
-  background: #f2f7f6 !important;
-  border-right: 1px solid #dce8e7 !important;
+  background: #fbfcfc !important;
+  border-right: 1px solid #ebf1f0 !important;
+}
+
+.sidebar-content {
+  padding-inline: 0.85rem !important;
 }
 
 /* Group labels */
 .group-label span,
 details summary span {
   font-family: 'Inter', sans-serif !important;
-  font-size: 0.65rem !important;
+  font-size: 0.62rem !important;
   font-weight: 600 !important;
-  letter-spacing: 0.16em !important;
+  letter-spacing: 0.14em !important;
   text-transform: uppercase !important;
-  color: #9b9a97 !important;
+  color: #b3b2ae !important;
 }
 
 /* Sidebar links */
 .sidebar-content a,
 nav.sidebar a {
   font-family: 'Inter', sans-serif !important;
-  font-size: 0.85rem !important;
+  font-size: 0.8rem !important;
   font-weight: 400 !important;
-  color: #6b6b6b !important;
+  color: #7a8583 !important;
   border-radius: 4px !important;
+  padding-block: 0.3rem !important;
 }
 
 .sidebar-content a:hover,
 nav.sidebar a:hover {
-  color: #37352f !important;
-  background: #dce8e7 !important;
+  color: #192f2d !important;
+  background: transparent !important;
 }
 
-/* Active page */
+/* Active page — quiet: color + thin rule, no fill */
 [aria-current='page'],
 .sidebar-content [aria-current='page'] {
   color: #192f2d !important;
   font-weight: 500 !important;
-  background: #dce8e7 !important;
-  border-left: 2px solid #192f2d !important;
+  background: transparent !important;
+  border-left: 2px solid #254442 !important;
   padding-left: calc(0.5rem - 2px) !important;
 }
 
