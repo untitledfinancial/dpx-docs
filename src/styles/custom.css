@@ -65,10 +65,10 @@
   --sl-nav-height:           3.25rem;
 }
 
-/* ── SITE HEADER — dark teal to match untitledfinancial.com ─── */
+/* ── SITE HEADER — quiet, blends with the page (no chrome block) ── */
 header.header {
-  background: #192f2d !important;
-  border-bottom: 1px solid #254442 !important;
+  background: #ffffff !important;
+  border-bottom: 1px solid #ebf1f0 !important;
   box-shadow: none !important;
 }
 
@@ -95,37 +95,37 @@ a.site-title {
   letter-spacing: 0.22em !important;
   text-transform: uppercase !important;
   font-size: 0.72rem !important;
-  color: #ffffff !important;
+  color: #192f2d !important;
   text-decoration: none !important;
   gap: 0.6rem !important;
   align-items: center !important;
 }
 
-/* Header icons & nav — white on dark */
+/* Header icons & nav — muted teal on white */
 header .social-icons a,
 header [data-icon],
 header nav a {
-  color: rgba(255,255,255,0.75) !important;
+  color: #7a8583 !important;
 }
 header .social-icons a:hover,
-header nav a:hover { color: #ffffff !important; }
+header nav a:hover { color: #192f2d !important; }
 
-/* Hamburger — white */
+/* Hamburger */
 starlight-menu-button button,
-starlight-menu-button button svg { color: rgba(255,255,255,0.85) !important; }
+starlight-menu-button button svg { color: #7a8583 !important; }
 
 /* Back to main site link in header */
 header .header-link-main {
   font-family: 'Inter', sans-serif;
   font-size: 0.72rem;
-  color: rgba(255,255,255,0.55) !important;
+  color: #9b9a97 !important;
   letter-spacing: 0.04em;
   text-decoration: none !important;
-  border-left: 1px solid rgba(255,255,255,0.15);
+  border-left: 1px solid #ebf1f0;
   padding-left: 0.75rem;
   margin-left: 0.25rem;
 }
-header .header-link-main:hover { color: rgba(255,255,255,0.9) !important; }
+header .header-link-main:hover { color: #192f2d !important; }
 
 /* ── PAGE BACKGROUND ─────────────────────────────────────────── */
 body,
@@ -679,18 +679,18 @@ nav[aria-label='On this page'] a:hover {
   font-weight: 500 !important;
 }
 
-/* ── SEARCH BOX — white-on-dark for header ───────────────────── */
+/* ── SEARCH BOX — quiet, for the light header ────────────────── */
 site-search button[data-open-modal] {
-  background: rgba(255,255,255,0.08) !important;
-  border: 1px solid rgba(255,255,255,0.15) !important;
+  background: #fbfcfc !important;
+  border: 1px solid #ebf1f0 !important;
   border-radius: 4px !important;
-  color: rgba(255,255,255,0.6) !important;
+  color: #9b9a97 !important;
   font-family: 'Inter', sans-serif !important;
   font-size: 0.85rem !important;
 }
 site-search button[data-open-modal] kbd {
-  color: rgba(255,255,255,0.35) !important;
-  border-color: rgba(255,255,255,0.12) !important;
+  color: #b3b2ae !important;
+  border-color: #ebf1f0 !important;
   background: transparent !important;
 }
 
