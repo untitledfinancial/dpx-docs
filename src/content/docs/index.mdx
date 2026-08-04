@@ -3,8 +3,6 @@ title: What is DPX?
 description: DPX is the payment and settlement layer for the agentic internet — compliance-grade stablecoin rails where any AI agent can discover, price, and settle without human intervention.
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
-
 ## TL;DR
 
 DPX is the payment and settlement layer for the agentic internet. Any autonomous agent can call `/manifest` to discover DPX, `/flow-estimate` to preview a full settlement response before committing, `/quote` to get a binding fee, and `POST /settle` to authorize on-chain execution — no onboarding, no API key, no human step. The x402 intelligence fee payment authorizes the oracle signal and quoteId. Settlement execution is sender-funded: DPX returns execution parameters and the caller calls `router.settle()` on-chain, paying their own gas. A 9-layer Stability Oracle gates every settlement on real-world conditions — climate, macro, FX, geopolitical — and holds automatically when conditions are UNSTABLE. ESG scores are a congestion fee, not a gate: every counterparty can settle, higher-impact activity simply costs more, and 100% of ESG fees are redistributed to verified on-chain impact programs. MCP-native, x402-native, ISO 20022-compatible. Contracts live on Base mainnet.
@@ -65,172 +63,179 @@ DPX runs a live prediction ledger. Every forecast — regime transition probabil
 
 ## Start here
 
-<CardGrid>
-  <Card title="Add payments to your agent" icon="rocket">
-    Five steps: oracle gate → quote → compliance check → buy intel (x402) → settle. Works with any agent framework. No API key.
-    [Get started →](/guides/agent-payments)
-  </Card>
-  <Card title="Compliance as a tool call" icon="approve-check">
-    AML screening, sanctions checks, and FATF R16 counterparty verification in a single call — before any funds move.
-    [Read →](/guides/compliance-for-agents)
-  </Card>
-  <Card title="MCP — Claude Desktop & Cursor" icon="puzzle">
-    81 tools for Claude Desktop and Cursor — payments, compliance, oracle, ESG, analytics, x402 intelligence, and more.
-    [Set up MCP →](/integrations/mcp)
-  </Card>
-</CardGrid>
+<div class="link-grid">
+  <a class="link-grid-item" href="/guides/agent-payments">
+    <span class="link-grid-title">Add payments to your agent<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Five steps: oracle gate → quote → compliance check → buy intel (x402) → settle. Works with any agent framework. No API key.</span>
+  </a>
+  <a class="link-grid-item" href="/guides/compliance-for-agents">
+    <span class="link-grid-title">Compliance as a tool call<span class="arrow">→</span></span>
+    <span class="link-grid-desc">AML screening, sanctions checks, and FATF R16 counterparty verification in a single call — before any funds move.</span>
+  </a>
+  <a class="link-grid-item" href="/integrations/mcp">
+    <span class="link-grid-title">MCP — Claude Desktop &amp; Cursor<span class="arrow">→</span></span>
+    <span class="link-grid-desc">81 tools for Claude Desktop and Cursor — payments, compliance, oracle, ESG, analytics, x402 intelligence, and more.</span>
+  </a>
+</div>
 
 ## Build with DPX
 
-<CardGrid>
-  <Card title="Agent Quick Start" icon="rocket">
-    The complete autonomous settlement loop — discover, quote, gate on oracle, pay via x402, execute on-chain.
-    [Get started →](/agent-quickstart)
-  </Card>
-  <Card title="Agent-to-agent payments" icon="star">
-    Agent A creates an invoice. Agent B pays it. No human, no shared credentials, no out-of-band coordination.
-    [Read →](/guides/agent-to-agent-payments)
-  </Card>
-  <Card title="AP automation agent" icon="setting">
-    Drop-in Claude Project config for autonomous accounts payable — oracle-gated, compliance-screened, fully auditable.
-    [Read →](/guides/ap-automation)
-  </Card>
-  <Card title="Computer use payments" icon="puzzle">
-    When Claude's computer use session hits a payment form — route it through DPX instead of stopping for human input.
-    [Read →](/guides/computer-use-payments)
-  </Card>
-  <Card title="Natural language settlement" icon="information">
-    Call `settlement.nl` with a plain-English instruction. DPX parses it, screens it, and settles it.
-    [Read →](/guides/for-ai-builders)
-  </Card>
-  <Card title="x402 — payments for agents" icon="information">
-    How the HTTP 402 payment protocol works, why it matters for autonomous agents, and how DPX implements it.
-    [Read →](/integrations/x402)
-  </Card>
-  <Card title="x402 intelligence signals" icon="star">
-    23 live intelligence endpoints — macro stress, sovereign debt, FX corridors, cascade, climate. Agents pay $0.15–$0.75 USDC per signal, no account required.
-    [Read →](/guides/x402-intelligence)
-  </Card>
-</CardGrid>
+<div class="link-grid">
+  <a class="link-grid-item" href="/agent-quickstart">
+    <span class="link-grid-title">Agent Quick Start<span class="arrow">→</span></span>
+    <span class="link-grid-desc">The complete autonomous settlement loop — discover, quote, gate on oracle, pay via x402, execute on-chain.</span>
+  </a>
+  <a class="link-grid-item" href="/guides/agent-to-agent-payments">
+    <span class="link-grid-title">Agent-to-agent payments<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Agent A creates an invoice. Agent B pays it. No human, no shared credentials, no out-of-band coordination.</span>
+  </a>
+  <a class="link-grid-item" href="/guides/ap-automation">
+    <span class="link-grid-title">AP automation agent<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Drop-in Claude Project config for autonomous accounts payable — oracle-gated, compliance-screened, fully auditable.</span>
+  </a>
+  <a class="link-grid-item" href="/guides/computer-use-payments">
+    <span class="link-grid-title">Computer use payments<span class="arrow">→</span></span>
+    <span class="link-grid-desc">When Claude's computer use session hits a payment form — route it through DPX instead of stopping for human input.</span>
+  </a>
+  <a class="link-grid-item" href="/guides/for-ai-builders">
+    <span class="link-grid-title">Natural language settlement<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Call settlement.nl with a plain-English instruction. DPX parses it, screens it, and settles it.</span>
+  </a>
+  <a class="link-grid-item" href="/integrations/x402">
+    <span class="link-grid-title">x402 — payments for agents<span class="arrow">→</span></span>
+    <span class="link-grid-desc">How the HTTP 402 payment protocol works, why it matters for autonomous agents, and how DPX implements it.</span>
+  </a>
+  <a class="link-grid-item" href="/guides/x402-intelligence">
+    <span class="link-grid-title">x402 intelligence signals<span class="arrow">→</span></span>
+    <span class="link-grid-desc">23 live intelligence endpoints — macro stress, sovereign debt, FX corridors, cascade, climate. Agents pay $0.15–$0.75 USDC per signal, no account required.</span>
+  </a>
+</div>
 
 
 ## Agent integrations & SDKs
 
-<CardGrid>
-  <Card title="MCP — Claude Desktop" icon="puzzle">
-    Native Claude integration via Model Context Protocol. Query fees, get quotes, execute settlements.
-    [Configure →](/integrations/mcp)
-  </Card>
-  <Card title="GPT Actions" icon="external">
-    Build a Custom GPT that calls DPX directly. No API key required for pricing endpoints.
-    [Configure →](/integrations/gpt-actions)
-  </Card>
-  <Card title="LangChain" icon="seti:python">
-    Python tool wrappers for LangChain agents. Drop-in settlement tools for any chain.
-    [Configure →](/integrations/langchain)
-  </Card>
-  <Card title="n8n Workflows" icon="setting">
-    No-code automation — trigger settlements from any webhook, schedule, or external system.
-    [Configure →](/integrations/n8n)
-  </Card>
-</CardGrid>
+<div class="link-grid">
+  <a class="link-grid-item" href="/integrations/mcp">
+    <span class="link-grid-title">MCP — Claude Desktop<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Native Claude integration via Model Context Protocol. Query fees, get quotes, execute settlements.</span>
+  </a>
+  <a class="link-grid-item" href="/integrations/gpt-actions">
+    <span class="link-grid-title">GPT Actions<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Build a Custom GPT that calls DPX directly. No API key required for pricing endpoints.</span>
+  </a>
+  <a class="link-grid-item" href="/integrations/langchain">
+    <span class="link-grid-title">LangChain<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Python tool wrappers for LangChain agents. Drop-in settlement tools for any chain.</span>
+  </a>
+  <a class="link-grid-item" href="/integrations/n8n">
+    <span class="link-grid-title">n8n Workflows<span class="arrow">→</span></span>
+    <span class="link-grid-desc">No-code automation — trigger settlements from any webhook, schedule, or external system.</span>
+  </a>
+</div>
 
 ## European institutions
 
-<CardGrid>
-  <Card title="European Quickstart" icon="rocket">
-    ISO 20022, EURC settlement, SFDR ESG data, and MiCA compliance — the fastest path for European banks and asset managers.
-    [Get started →](/guides/european-institutions)
-  </Card>
-  <Card title="SFDR & CSRD" icon="approve-check">
-    PAI indicators per transaction, Article 8/9 compatibility flags, CSRD audit trail. Transaction-level sustainability data.
-    [Read →](/protocol/sfdr-csrd)
-  </Card>
-  <Card title="EURC Settlement" icon="information">
-    EUR-denominated settlement with no FX exposure. MiCA-compliant e-money token on Base mainnet.
-    [Read →](/integrations/eurc)
-  </Card>
-  <Card title="SWIFT Compatibility" icon="external">
-    DPX speaks ISO 20022 natively — pain.001 in, pacs.002 out. How DPX fits alongside SWIFT infrastructure.
-    [Read →](/integrations/swift)
-  </Card>
-</CardGrid>
+<div class="link-grid">
+  <a class="link-grid-item" href="/guides/european-institutions">
+    <span class="link-grid-title">European Quickstart<span class="arrow">→</span></span>
+    <span class="link-grid-desc">ISO 20022, EURC settlement, SFDR ESG data, and MiCA compliance — the fastest path for European banks and asset managers.</span>
+  </a>
+  <a class="link-grid-item" href="/protocol/sfdr-csrd">
+    <span class="link-grid-title">SFDR &amp; CSRD<span class="arrow">→</span></span>
+    <span class="link-grid-desc">PAI indicators per transaction, Article 8/9 compatibility flags, CSRD audit trail. Transaction-level sustainability data.</span>
+  </a>
+  <a class="link-grid-item" href="/integrations/eurc">
+    <span class="link-grid-title">EURC Settlement<span class="arrow">→</span></span>
+    <span class="link-grid-desc">EUR-denominated settlement with no FX exposure. MiCA-compliant e-money token on Base mainnet.</span>
+  </a>
+  <a class="link-grid-item" href="/integrations/swift">
+    <span class="link-grid-title">SWIFT Compatibility<span class="arrow">→</span></span>
+    <span class="link-grid-desc">DPX speaks ISO 20022 natively — pain.001 in, pacs.002 out. How DPX fits alongside SWIFT infrastructure.</span>
+  </a>
+</div>
 
 ## Treasury system integrations
 
-<CardGrid>
-  <Card title="REST API — Any TMS" icon="document" href="/integrations/rest-api">
-    Standard REST endpoints that connect to any treasury management system.
-  </Card>
-  <Card title="Mercury" icon="open-book" href="/integrations/mercury">
-    Route Mercury banking payments to DPX settlements automatically via webhook.
-  </Card>
-  <Card title="Ramp" icon="open-book" href="/integrations/ramp">
-    Agent Cards fund the fiat leg of DPX cross-border settlements — no crypto wallet pre-funding required.
-  </Card>
-  <Card title="Kyriba" icon="setting" href="/integrations/kyriba">
-    Native Kyriba connector — ISO 20022 pain.001 routes directly to DPX settlement.
-  </Card>
-  <Card title="SAP TRM" icon="setting" href="/integrations/sap-trm">
-    SAP Treasury & Risk Management via Integration Suite, BTP, or direct ABAP.
-  </Card>
-  <Card title="TIS" icon="setting" href="/integrations/tis">
-    Treasury Intelligence Solutions — payment factory used across DACH and EU. DPX connects as an H2H bank endpoint.
-  </Card>
-  <Card title="Finastra" icon="setting" href="/integrations/finastra">
-    FusionFabric.cloud marketplace app — European banks on Fusion Treasury route international payments to DPX without changing their core system.
-  </Card>
-</CardGrid>
+<div class="link-grid">
+  <a class="link-grid-item" href="/integrations/rest-api">
+    <span class="link-grid-title">REST API — Any TMS<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Standard REST endpoints that connect to any treasury management system.</span>
+  </a>
+  <a class="link-grid-item" href="/integrations/mercury">
+    <span class="link-grid-title">Mercury<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Route Mercury banking payments to DPX settlements automatically via webhook.</span>
+  </a>
+  <a class="link-grid-item" href="/integrations/ramp">
+    <span class="link-grid-title">Ramp<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Agent Cards fund the fiat leg of DPX cross-border settlements — no crypto wallet pre-funding required.</span>
+  </a>
+  <a class="link-grid-item" href="/integrations/kyriba">
+    <span class="link-grid-title">Kyriba<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Native Kyriba connector — ISO 20022 pain.001 routes directly to DPX settlement.</span>
+  </a>
+  <a class="link-grid-item" href="/integrations/sap-trm">
+    <span class="link-grid-title">SAP TRM<span class="arrow">→</span></span>
+    <span class="link-grid-desc">SAP Treasury &amp; Risk Management via Integration Suite, BTP, or direct ABAP.</span>
+  </a>
+  <a class="link-grid-item" href="/integrations/tis">
+    <span class="link-grid-title">TIS<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Treasury Intelligence Solutions — payment factory used across DACH and EU. DPX connects as an H2H bank endpoint.</span>
+  </a>
+  <a class="link-grid-item" href="/integrations/finastra">
+    <span class="link-grid-title">Finastra<span class="arrow">→</span></span>
+    <span class="link-grid-desc">FusionFabric.cloud marketplace app — European banks on Fusion Treasury route international payments to DPX without changing their core system.</span>
+  </a>
+</div>
 
 ## Protocol
 
-<CardGrid>
-  <Card title="Stability Oracle" icon="star">
-    9-layer signal pipeline with 30–90 day early warning. Architecture and endpoints.
-    [Read →](/protocol/stability-oracle)
-  </Card>
-  <Card title="Predictive Intelligence Layer" icon="star">
-    Regime transition probabilities at 30/60/90-day horizons. Composite index across 19 signal endpoints. Prediction ledger with tracked accuracy. Oracle synthesis using only DPX signals — no external prediction markets.
-    [Read →](/protocol/predictive-intelligence)
-  </Card>
-  <Card title="ESG Oracle" icon="approve-check">
-    ESG scoring engine across 8 institutional sources. Fee discount logic and impact pool redistribution.
-    [Read →](/protocol/esg-oracle)
-  </Card>
-  <Card title="Smart Contracts" icon="seti:config">
-    10 deployed contracts — settlement router, compliance, stability, ESG, governance. All verified on Base.
-    [Read →](/protocol/contracts)
-  </Card>
-  <Card title="Compliance Oracle" icon="approve-check">
-    Verification of Payee for every payment. FATF R16, MiCA, GENIUS Act. No human queues.
-    [Read →](/api/compliance-oracle)
-  </Card>
-  <Card title="Commodity Forecast" icon="information">
-    Climate-driven outlook across 11 commodity markets. Heat-check, portfolio stress test, scenario analysis, and TCFD physical risk reports.
-    [Read →](/api/commodity-forecast)
-  </Card>
-  <Card title="Reports" icon="document">
-    AI-synthesized institutional reports gated via x402 — climate, macro, ESG, compliance, and treasury. Pay per report in USDC on Base mainnet. No account or API key required.
-    [Read →](/api/reports)
-  </Card>
-  <Card title="Regulatory Positioning" icon="information">
-    MiCA, SFDR, CSRD, FCA, Basel III Group 1b, and OCC coverage across EU, UK, and US.
-    [Read →](/protocol/regulatory)
-  </Card>
-</CardGrid>
+<div class="link-grid">
+  <a class="link-grid-item" href="/protocol/stability-oracle">
+    <span class="link-grid-title">Stability Oracle<span class="arrow">→</span></span>
+    <span class="link-grid-desc">9-layer signal pipeline with 30–90 day early warning. Architecture and endpoints.</span>
+  </a>
+  <a class="link-grid-item" href="/protocol/predictive-intelligence">
+    <span class="link-grid-title">Predictive Intelligence Layer<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Regime transition probabilities at 30/60/90-day horizons. Composite index across 19 signal endpoints. Prediction ledger with tracked accuracy. Oracle synthesis using only DPX signals — no external prediction markets.</span>
+  </a>
+  <a class="link-grid-item" href="/protocol/esg-oracle">
+    <span class="link-grid-title">ESG Oracle<span class="arrow">→</span></span>
+    <span class="link-grid-desc">ESG scoring engine across 8 institutional sources. Fee discount logic and impact pool redistribution.</span>
+  </a>
+  <a class="link-grid-item" href="/protocol/contracts">
+    <span class="link-grid-title">Smart Contracts<span class="arrow">→</span></span>
+    <span class="link-grid-desc">10 deployed contracts — settlement router, compliance, stability, ESG, governance. All verified on Base.</span>
+  </a>
+  <a class="link-grid-item" href="/api/compliance-oracle">
+    <span class="link-grid-title">Compliance Oracle<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Verification of Payee for every payment. FATF R16, MiCA, GENIUS Act. No human queues.</span>
+  </a>
+  <a class="link-grid-item" href="/api/commodity-forecast">
+    <span class="link-grid-title">Commodity Forecast<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Climate-driven outlook across 11 commodity markets. Heat-check, portfolio stress test, scenario analysis, and TCFD physical risk reports.</span>
+  </a>
+  <a class="link-grid-item" href="/api/reports">
+    <span class="link-grid-title">Reports<span class="arrow">→</span></span>
+    <span class="link-grid-desc">AI-synthesized institutional reports gated via x402 — climate, macro, ESG, compliance, and treasury. Pay per report in USDC on Base mainnet. No account or API key required.</span>
+  </a>
+  <a class="link-grid-item" href="/protocol/regulatory">
+    <span class="link-grid-title">Regulatory Positioning<span class="arrow">→</span></span>
+    <span class="link-grid-desc">MiCA, SFDR, CSRD, FCA, Basel III Group 1b, and OCC coverage across EU, UK, and US.</span>
+  </a>
+</div>
 
 ## Enterprise
 
-<CardGrid>
-  <Card title="Multi-Tenant Setup" icon="setting">
-    Run isolated DPX instances per entity — separate fee schedules, oracles, and audit trails.
-    [Read →](/enterprise/multi-tenant)
-  </Card>
-  <Card title="Beta Access" icon="rocket">
-    Request access to the live protocol. Sandbox environment available immediately.
-    [Apply →](/beta)
-  </Card>
-</CardGrid>
+<div class="link-grid">
+  <a class="link-grid-item" href="/enterprise/multi-tenant">
+    <span class="link-grid-title">Multi-Tenant Setup<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Run isolated DPX instances per entity — separate fee schedules, oracles, and audit trails.</span>
+  </a>
+  <a class="link-grid-item" href="/beta">
+    <span class="link-grid-title">Beta Access<span class="arrow">→</span></span>
+    <span class="link-grid-desc">Request access to the live protocol. Sandbox environment available immediately.</span>
+  </a>
+</div>
 
 ## Agent discovery
 

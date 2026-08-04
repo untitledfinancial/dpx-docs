@@ -68,7 +68,7 @@
 /* ── SITE HEADER — quiet, blends with the page (no chrome block) ── */
 header.header {
   background: #ffffff !important;
-  border-bottom: 1px solid #ebf1f0 !important;
+  border-bottom: 1px solid #dce8e7 !important;
   box-shadow: none !important;
 }
 
@@ -121,7 +121,7 @@ header .header-link-main {
   color: #9b9a97 !important;
   letter-spacing: 0.04em;
   text-decoration: none !important;
-  border-left: 1px solid #ebf1f0;
+  border-left: 1px solid #dce8e7;
   padding-left: 0.75rem;
   margin-left: 0.25rem;
 }
@@ -135,11 +135,11 @@ main {
   color: #37352f;
 }
 
-/* ── SIDEBAR — slim, muted rail (reading column should dominate) ── */
+/* ── SIDEBAR — slim rail, visible ─────────────────────────────── */
 .sidebar-pane,
 nav.sidebar {
-  background: #fbfcfc !important;
-  border-right: 1px solid #ebf1f0 !important;
+  background: #f2f7f6 !important;
+  border-right: 1px solid #dce8e7 !important;
 }
 
 .sidebar-content {
@@ -154,7 +154,7 @@ details summary span {
   font-weight: 600 !important;
   letter-spacing: 0.14em !important;
   text-transform: uppercase !important;
-  color: #b3b2ae !important;
+  color: #9b9a97 !important;
 }
 
 /* Sidebar links */
@@ -163,23 +163,23 @@ nav.sidebar a {
   font-family: 'Inter', sans-serif !important;
   font-size: 0.8rem !important;
   font-weight: 400 !important;
-  color: #7a8583 !important;
+  color: #6b6b6b !important;
   border-radius: 4px !important;
   padding-block: 0.3rem !important;
 }
 
 .sidebar-content a:hover,
 nav.sidebar a:hover {
-  color: #192f2d !important;
-  background: transparent !important;
+  color: #37352f !important;
+  background: #dce8e7 !important;
 }
 
-/* Active page — quiet: color + thin rule, no fill */
+/* Active page */
 [aria-current='page'],
 .sidebar-content [aria-current='page'] {
   color: #192f2d !important;
   font-weight: 500 !important;
-  background: transparent !important;
+  background: #dce8e7 !important;
   border-left: 2px solid #254442 !important;
   padding-left: calc(0.5rem - 2px) !important;
 }
@@ -681,16 +681,16 @@ nav[aria-label='On this page'] a:hover {
 
 /* ── SEARCH BOX — quiet, for the light header ────────────────── */
 site-search button[data-open-modal] {
-  background: #fbfcfc !important;
-  border: 1px solid #ebf1f0 !important;
+  background: #f2f7f6 !important;
+  border: 1px solid #dce8e7 !important;
   border-radius: 4px !important;
-  color: #9b9a97 !important;
+  color: #6b6b6b !important;
   font-family: 'Inter', sans-serif !important;
   font-size: 0.85rem !important;
 }
 site-search button[data-open-modal] kbd {
-  color: #b3b2ae !important;
-  border-color: #ebf1f0 !important;
+  color: #9b9a97 !important;
+  border-color: #dce8e7 !important;
   background: transparent !important;
 }
 
@@ -699,36 +699,71 @@ starlight-theme-select {
   display: none !important;
 }
 
-/* ── CARD GRID — flat, quiet panels, no rainbow icon badges ──── */
-.card {
-  --sl-card-border: transparent !important;
-  --sl-card-bg: transparent !important;
-  background: #f2f7f6 !important;
-  border: 1px solid #dce8e7 !important;
-  border-radius: 10px !important;
-  box-shadow: none !important;
+/* ── LINK GRID — plain linked rows, no boxes, no icon badges ──── */
+/* Replaces Starlight's default <CardGrid>/<Card> boxes on the homepage
+   with a row-list pattern common in developer docs (Stripe, Vercel):
+   whole row is a link, hairline separators, no fill, no per-item chrome. */
+.link-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid #dce8e7;
+  margin: 1.5rem 0;
 }
 
-.card:hover {
-  border-color: #c5d8d7 !important;
-  background: #e8f0ef !important;
-  box-shadow: none !important;
+@media (max-width: 640px) {
+  .link-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-.card .title {
+.link-grid-item {
+  display: block;
+  padding: 1.1rem 1.5rem 1.1rem 0;
+  border-bottom: 1px solid #dce8e7;
+  text-decoration: none !important;
+}
+
+.link-grid-item:nth-child(odd) {
+  border-right: 1px solid #dce8e7;
+}
+
+.link-grid-item:nth-child(even) {
+  padding-left: 1.5rem;
+  padding-right: 0;
+}
+
+@media (max-width: 640px) {
+  .link-grid-item:nth-child(odd) { border-right: none; }
+  .link-grid-item:nth-child(even) { padding-left: 0; }
+}
+
+.link-grid-title {
+  display: block;
   font-family: 'Inter', sans-serif !important;
   font-size: 0.95rem !important;
   font-weight: 600 !important;
   letter-spacing: -0.01em !important;
   color: #192f2d !important;
+  margin-bottom: 0.35rem !important;
 }
 
-/* Icon badge — one quiet monochrome treatment, no per-card hue rotation */
-.card .icon {
-  border: none !important;
-  background: transparent !important;
-  color: #7a8583 !important;
-  padding: 0 !important;
+.link-grid-title .arrow {
+  color: #254442 !important;
+  margin-left: 0.15rem;
+}
+
+.link-grid-desc {
+  display: block;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.85rem !important;
+  line-height: 1.55 !important;
+  color: #5a6e6c !important;
+}
+
+.link-grid-item:hover .link-grid-title {
+  color: #254442 !important;
+  text-decoration: underline !important;
+  text-decoration-color: #254442 !important;
 }
 
 /* ── PAGINATION ──────────────────────────────────────────────── */
