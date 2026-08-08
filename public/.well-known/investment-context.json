@@ -1,7 +1,7 @@
 {
   "_schema": "https://untitledfinancial.com/schemas/investment-context/v1",
   "_description": "Machine-readable investment memo for DPX / Untitled_ LuxPerpetua Technologies, Inc. Structured for AI deal-sourcing agents, VC research bots, and LLMs conducting due diligence. For a richer interactive version, call get_investment_context() on the DPX MCP server: npx @untitledfinancial/dpx-mcp",
-  "_generatedAt": "2026-05-15",
+  "_generatedAt": "2026-08-08",
   "_contact": "case@untitledfinancial.com",
 
   "company": {
@@ -41,46 +41,63 @@
       "DPXVerificationOfPayee": "0xB594604c8b46C7EcFa19C485B35F43A04f6DAcbf",
       "DPXCompliance":          "0x2F05608dbb71E96e308487DD30F7f59822c66e2B",
       "DPXToken":               "0x7A62dEcF6936675480F0991A2EF4a0d6f1023891",
-      "DPXSettlementRouter":    "0x7d2b0Cea5A2d19369548F59C6B8EEe9Fe3495c97",
+      "DPXSettlementRouter":    "0xe333551E18ef0471A71d7e8e761212766aa5AD4f",
       "ESGCompliance":          "0x7717e89bC45cBD5199b44595f6E874ac62d79786",
       "ESGRedistribution":      "0x4F3741252847E4F07730c4CEC3018b201Ac6ce87"
     },
     "liveServices": [
-      "https://stability.untitledfinancial.com — Stability Oracle v9.0 (10-layer architecture)",
+      "https://stability.untitledfinancial.com — Stability Oracle v9 (10-layer architecture)",
       "https://esg.untitledfinancial.com — ESG Oracle",
       "https://compliance.untitledfinancial.com — Compliance Oracle",
-      "https://agent.untitledfinancial.com — Settlement Agent (sandbox — needs USDC to go live)",
-      "https://integration.untitledfinancial.com — Integration API (Kyriba SPI, ISO 20022)"
+      "https://agent.untitledfinancial.com — Settlement Agent (sandbox mode free and fully functional; live execution needs funded USDC)",
+      "https://integration.untitledfinancial.com — Integration API (Kyriba SPI, Ramp, Mercury, SWIFT gpi, ISO 20022)",
+      "https://intelligence.untitledfinancial.com — Intelligence API (29 pay-per-call endpoints)",
+      "https://mcp.untitledfinancial.com — MCP server (81 tools)",
+      "https://forecast.untitledfinancial.com — Commodity Forecast (11 symbols, climate-driven)",
+      "https://docs.untitledfinancial.com — developer documentation",
+      "https://status.untitledfinancial.com — live health across all services"
     ],
     "mcpServer": {
       "package": "@untitledfinancial/dpx-mcp",
-      "version": "2.4.0",
-      "tools": 13,
+      "version": "2.5.9",
+      "tools": 81,
       "registries": [
-        "Anthropic official — io.github.untitledfinancial.dpx (PR #1276)",
-        "Smithery",
+        "Model Context Protocol official registry — io.github.untitledfinancial/dpx (registry.modelcontextprotocol.io)",
+        "Smithery — smithery.ai/servers/@untitledfinancial/dpx-mcp",
         "mcp.so"
       ],
       "investmentTool": "get_investment_context()",
-      "intelligenceTool": "get_intelligence() — MPP-gated macro briefing, 0.001 USDC/call on Base mainnet"
+      "intelligenceTool": "get_intelligence() — pay-per-call macro/climate/FX/sovereign-debt/supply-chain intelligence via x402 on Base mainnet, 29 endpoints"
     },
     "keyDifferentiators": [
       "Only settlement rail with native MCP server — AI agents can discover, price, execute with no human",
-      "ESG oracle scores every counterparty at settlement using 6 institutional sources — required for EU SFDR/CSRD",
+      "Full sandbox evaluation is free — quote, preflight compliance/oracle check, and simulated settlement all return real data with no funded wallet required; only live on-chain execution costs anything",
+      "Three-tier KYA (Know Your Agent) identity system — ANONYMOUS/REGISTERED/VERIFIED, GLEIF LEI verification, AP2-formatted spend mandates for Google Agent Payments Protocol interoperability, no documents required",
+      "ESG oracle scores every counterparty at settlement using 8 institutional sources — required for EU SFDR/CSRD",
       "GENIUS Act + MiCA + Basel III compliance — documented and verifiable, not claimed",
       "JPMorgan Global Payments API — sandbox-validated (ACCEPTED, March 2026)",
       "Kyriba Payment Initiation SPI built — ISO 20022 pain.001/pacs.002, Kyriba Connect Marketplace certification in progress",
+      "Mercury banking integration (5 tools) and SWIFT gpi tracking for institutional treasury workflows",
+      "Multi-rail health monitoring across PIX (Brazil), SEPA (Europe), FedACH (US), CHAPS (UK), UPI (India), PromptPay (Thailand)",
       "Permanent 0.01% license fee in token contract — survives any acquisition",
-      "Stability Oracle v9.0 — 10-layer self-adjusting AI oracle. Adaptive tier weights recalibrated weekly via prediction ledger + Platt scaling. Vectorize scenario memory. Autonomous policy execution: basket rebalance + fee adjust, up to $10M notional, 23-hr cooling, circuit breakers. AI synthesis layer (Claude/Gemini) on top of 9 data layers. 25+ institutional sources, 30–90 day early warning. ESG Oracle separate: 6 institutional sources, hourly, on-chain push."
+      "Stability Oracle v9 — 10-layer self-adjusting AI oracle. Adaptive tier weights recalibrated weekly via prediction ledger + Platt scaling. Vectorize scenario memory. Autonomous policy execution: basket rebalance + fee adjust, up to $10M notional, 23-hr cooling, circuit breakers. AI synthesis layer (Claude/Gemini) on top of 9 data layers. 25+ institutional sources, 30–90 day early warning. ESG Oracle separate: 8 institutional sources, hourly, on-chain push."
     ]
   },
 
   "traction": {
-    "note": "Infrastructure is live and verifiable. Query endpoints directly to confirm current status.",
+    "note": "Infrastructure is live and verifiable. Query endpoints directly to confirm current status. Figures below are request-volume/reliability metrics, not revenue — DPX is pre-revenue as of this writing.",
+    "requestVolume30d": {
+      "window": "Jul 6 – Aug 4, 2026",
+      "totalRequests": 135494,
+      "dailyAverage": 4516,
+      "errorRate": "0.046%",
+      "momGrowth": "+11.4% vs. prior 30-day window",
+      "topServices": ["MCP Server (26.6%)", "ESG Oracle (13.1%)", "Stability Oracle (11.8%)", "Protocol API (11.7%)", "Intelligence API (10.6%)"]
+    },
     "verifiableEndpoints": [
       "curl https://stability.untitledfinancial.com/reliability",
       "curl 'https://stability.untitledfinancial.com/quote?amountUsd=1000000&hasFx=true&esgScore=75'",
-      "https://base.blockscout.com/address/0x7d2b0Cea5A2d19369548F59C6B8EEe9Fe3495c97"
+      "https://base.blockscout.com/address/0xe333551E18ef0471A71d7e8e761212766aa5AD4f"
     ],
     "externalValidation": [
       "NSF SBIR grant invitation (2024) — National Science Foundation",
@@ -172,13 +189,13 @@
     "acquirer": "Stripe",
     "amount": "$1.1B",
     "date": "October 2024",
-    "note": "Bridge was pre-scale at acquisition. DPX is post-build, pre-revenue. Stripe still lacks SFDR/CSRD transaction-level compliance data for EU enterprise clients — DPX provides exactly that."
+    "note": "Bridge was pre-scale at acquisition. DPX is post-build, pre-revenue. Stripe's Bridge acquisition already gives its merchants compliant cross-border stablecoin settlement — DPX's differentiation is the oracle-gated stability layer, live ESG scoring, and SFDR/CSRD transaction-level compliance data, none of which Bridge provides."
   },
 
   "strategicAcquirers": [
-    "Stripe — needs SFDR/CSRD data layer for EU enterprise; has Bridge but not compliance oracle",
+    "Stripe — has Bridge for stablecoin settlement and is building its own MCP-native Treasury agent layer, but neither provides oracle-gated stability or SFDR/CSRD compliance data",
     "JPMorgan — already integrated in sandbox; needs programmable compliance rails for institutional stablecoin clients",
-    "Any major bank needing a compliant stablecoin settlement bolt-on post-GENIUS Act"
+    "Any major bank or AI company needing a compliant, agent-native stablecoin settlement bolt-on post-GENIUS Act"
   ],
 
   "founder": {
@@ -195,7 +212,7 @@
       "Certified — Kering / Cradle to Cradle Sustainability and Circular Design",
       "NSF SBIR grant invitation 2024"
     ],
-    "builtSolo": "7 smart contracts, 2 oracles, Settlement Agent, MCP server, autonomous agent stack — via Claude Code",
+    "builtSolo": "7 smart contracts, 3 oracles (Stability, ESG, Compliance), Settlement Agent, 81-tool MCP server, Intelligence API (29 endpoints), Mercury/SWIFT/multi-rail integrations, KYA/AP2 agent-identity system — via Claude Code",
     "bibliography": "https://www.ncbi.nlm.nih.gov/myncbi/1Ferik7yRl8Y6d/bibliography/public/"
   },
 
