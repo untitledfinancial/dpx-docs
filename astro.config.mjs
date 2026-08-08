@@ -131,6 +131,7 @@ export default defineConfig({
           items: [
             { label: 'Kyriba',                      slug: 'integrations/kyriba' },
             { label: 'SAP TRM',                      slug: 'integrations/sap-trm' },
+            { label: 'Crypto Card Settlement',      slug: 'integrations/crypto-card-settlement' },
             { label: 'Webhook Events',              slug: 'integrations/webhooks' },
             { label: 'Compliance Event Webhooks',   slug: 'integrations/compliance-webhooks' },
           ],
@@ -146,6 +147,7 @@ export default defineConfig({
             { label: 'FATF & Travel Rule',     slug: 'protocol/fatf-compliance' },
             { label: 'FinCEN Travel Rule (US)', slug: 'protocol/fincen-travel-rule' },
             { label: 'Governance',             slug: 'protocol/governance' },
+            { label: 'AI & Climate',           slug: 'protocol/ai-climate-impact' },
           ],
         },
         {
