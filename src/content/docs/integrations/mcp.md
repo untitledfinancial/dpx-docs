@@ -64,6 +64,28 @@ Restart Claude Desktop — **DPX** appears in the MCP toolbar with 83 tools.
 }
 ```
 
+## Connect via Claude.ai, Claude mobile, or Claude Code (remote — no install)
+
+The steps above (`npx`, local config) spawn DPX as a local stdio server — that only works for Claude Desktop and Cursor. Claude.ai web, Claude mobile, and Cowork need a **remote** connector instead — DPX already runs one, no separate setup required.
+
+**In Claude.ai:** go to **Customize → Connectors → Add custom connector**, paste in:
+
+```
+https://mcp.untitledfinancial.com/mcp
+```
+
+Free tools (oracle status, FX rates, fee schedules, market intelligence, and others) work immediately with no credential. Paid tools require an API key — Claude doesn't natively support x402 micropayments yet, so add one under **Request headers**:
+
+| Header | Value |
+|---|---|
+| `Authorization` | `Bearer <your-dpx-api-key>` |
+
+Contact [case@untitledfinancial.com](mailto:case@untitledfinancial.com) for an API key, or use x402 (USDC on Base) directly against the same tools via any x402-aware client — see [x402 payments](#x402-payments) below.
+
+**In Claude Code:** run `claude mcp add --transport http dpx https://mcp.untitledfinancial.com/mcp` — see the [Claude Code MCP quickstart](https://code.claude.com/docs/en/mcp-quickstart) for header/auth flags.
+
+This works today on any Claude plan — Free, Pro, Max, Team, or Enterprise. It's separate from (and doesn't require) a listing in Anthropic's official connectors directory.
+
 ## Available tools (83)
 
 ### Settlement & Oracle
