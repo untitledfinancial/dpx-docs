@@ -604,7 +604,7 @@ curl -X POST https://compliance.untitledfinancial.com/agent/register \
 
 ### POST /agent/:id/verify
 
-Returns a signed 1-hour credential with effective spend caps and FATF attestation. Attach as `X-Agent-Credential` header on `/settle` requests.
+Returns a signed 1-hour credential with effective spend caps and FATF attestation. Useful as a standalone audit artifact or for a third party checking an agent's standing — not required to attach a mandate to a settlement (see below).
 
 ```bash
 curl -X POST https://compliance.untitledfinancial.com/agent/agt_Xy9.../verify
@@ -671,6 +671,42 @@ curl -X DELETE https://compliance.untitledfinancial.com/agent/agt_Xy9...
 Tiers upgrade at registration time by providing additional fields. To upgrade an existing agent, re-register — a new `agentId` is issued. The registration response includes a `_next` field explaining the upgrade path when the agent is below VERIFIED.
 
 To obtain a GLEIF LEI for your organization: [gleif.org](https://www.gleif.org/en/lei/search) — LEIs are issued by Local Operating Units (LOUs), typically within 1–3 business days. Many financial institutions can also obtain an LEI on behalf of a client.
+
+### Attaching a mandate to a settlement
+
+Once an agent is registered with a mandate, attach it to a settlement with a single header — no credential to fetch or relay first:
+
+```bash
+curl -X POST https://agent.untitledfinancial.com/settle \
+  -H "Content-Type: application/json" \
+  -H "X-Agent-Id: agt_Xy9..." \
+  -d '{
+    "amount": 250000,
+    "sourceCurrency": "USD",
+    "destinationCurrency": "EUR",
+    "recipientAddress": "0x..."
+  }'
+```
+
+`X-Agent-Id` is enough. The Settlement Agent calls back to `/agent/:id/verify` itself, live, at settlement time, and checks the returned mandate against the request: max notional, daily cap, counterparty whitelist, currency pairs, and ESG floor. A violation holds the settlement — same outcome as any other oracle/AI hold — rather than rejecting the request outright. Nothing needs to be pre-fetched or cached on the caller's side, and there's no signature to relay: the trust boundary is the live call between the two DPX services, not a bearer credential the caller has to protect.
+
+### Alternate: AP2 Payment Mandate (SD-JWT)
+
+For agents whose mandate is issued by their own wallet or credentials provider rather than DPX's registry — the [AP2 spec](https://ap2-protocol.org/) form — submit a signed AP2 Payment Mandate directly in `POST /settle` as `body.mandate`:
+
+```bash
+curl -X POST https://agent.untitledfinancial.com/settle \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 1000,
+    "sourceCurrency": "USD",
+    "destinationCurrency": "USD",
+    "recipientAddress": "0x...",
+    "mandate": "<AP2 Payment Mandate SD-JWT>"
+  }'
+```
+
+The mandate must be a `mandate.payment.1` or `mandate.payment.open.1` Verifiable Credential, ES256-signed, with `payee` and `payment_amount` matching the settlement being requested exactly — DPX verifies the signature against a configured trusted-issuer allowlist and cross-checks the terms against the quote computed for that same call. A mandate that doesn't verify or doesn't match is a hard failure (HTTP 400), not a soft hold, since submitting one is an explicit request to authorize via mandate rather than the default sender-funded flow. Full capability document: `GET https://agent.untitledfinancial.com/.well-known/ap2.json`.
 
 ---
 
