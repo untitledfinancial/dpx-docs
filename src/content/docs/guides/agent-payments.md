@@ -151,6 +151,8 @@ console.log(settled.txHash);   // on-chain confirmation (when sandbox: false)
 
 **To go live:** change `sandbox: true` to `sandbox: false`. Fund your wallet with USDC on Base equal to the gross settlement amount.
 
+**Sanctions/AML screening runs automatically on every `/settle` call**, sandbox included — you don't need to call it separately. `status` comes back `failed` if the recipient is sanctions-blocked, or `held` if it's flagged for review; check `complianceScreen` in the response for the detail (`status`, `amlScore`, `sanctions`). This runs in addition to, not instead of, the Step 4 VoP check above — VoP confirms identity, this screens for sanctions/AML risk.
+
 ---
 
 ## Full working example
