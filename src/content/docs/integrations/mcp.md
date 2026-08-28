@@ -80,7 +80,7 @@ Free tools (oracle status, FX rates, fee schedules, market intelligence, and oth
 |---|---|
 | `Authorization` | `Bearer <your-dpx-api-key>` |
 
-Contact [case@untitledfinancial.com](mailto:case@untitledfinancial.com) for an API key, or use x402 (USDC on Base) directly against the same tools via any x402-aware client — see [x402 payments](#x402-payments) below.
+Contact [case@untitledfinancial.com](mailto:case@untitledfinancial.com) for an API key, or use x402 (USDC on Base) directly against the same tools via any x402-aware client — see [paying via x402 or MPP](#paying-via-x402-or-mpp) below.
 
 **In Claude Code:** run `claude mcp add --transport http dpx https://mcp.untitledfinancial.com/mcp` — see the [Claude Code MCP quickstart](https://code.claude.com/docs/en/mcp-quickstart) for header/auth flags.
 
@@ -286,6 +286,15 @@ Claude calls:
 ```
 
 No browser. No API call. No manual fee calculation. The full loop in one prompt.
+
+## Paying via x402 or MPP
+
+Any paid tool call without a Bearer token returns HTTP 402 with payment requirements. The response carries **two** ways to discover and pay it — same underlying rail (USDC on Base, verified via the Coinbase CDP facilitator), two ways in:
+
+- **x402** — the JSON body's `x402` field, in the shape the published `x402-fetch`/`x402` npm clients validate against.
+- **MPP** ([mpp.dev](https://mpp.dev), Stripe and Tempo's Machine Payments Protocol) — a `WWW-Authenticate: Payment ...` header on the same response (`method="x402"`, `header="X-PAYMENT"`), so MPP-aware agents can discover and pay without knowing DPX's specific JSON shape in advance.
+
+Either way, build the payment from the `x402` field (or the decoded `request` param in the MPP challenge) and retry the exact same request with an `X-PAYMENT` header attached.
 
 ## Transport
 
