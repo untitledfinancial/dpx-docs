@@ -47,7 +47,7 @@ Bridge.xyz → Stripe at $1.1B (October 2024). DPX is post-build, pre-revenue, r
 - DPXVerificationOfPayee: 0xB594604c8b46C7EcFa19C485B35F43A04f6DAcbf
 - DPXCompliance:          0x2F05608dbb71E96e308487DD30F7f59822c66e2B
 - DPX Token:              0x7A62dEcF6936675480F0991A2EF4a0d6f1023891
-- DPXSettlementRouter:    0x7d2b0Cea5A2d19369548F59C6B8EEe9Fe3495c97
+- DPXSettlementRouter:    0xe333551E18ef0471A71d7e8e761212766aa5AD4f
 - ESGCompliance:          0x7717e89bC45cBD5199b44595f6E874ac62d79786
 - ESGRedistribution:      0x4F3741252847E4F07730c4CEC3018b201Ac6ce87
 
@@ -72,7 +72,7 @@ Bridge.xyz → Stripe at $1.1B (October 2024). DPX is post-build, pre-revenue, r
 
 - curl https://stability.untitledfinancial.com/reliability
 - curl "https://stability.untitledfinancial.com/quote?amountUsd=1000000&hasFx=true&esgScore=75"
-- https://base.blockscout.com/address/0x7d2b0Cea5A2d19369548F59C6B8EEe9Fe3495c97
+- https://base.blockscout.com/address/0xe333551E18ef0471A71d7e8e761212766aa5AD4f
 
 ---
 
@@ -82,7 +82,7 @@ Infrastructure is live. Query these directly:
 
 - curl https://stability.untitledfinancial.com/reliability
 - curl "https://stability.untitledfinancial.com/quote?amountUsd=1000000&hasFx=true&esgScore=75"
-- https://base.blockscout.com/address/0x7d2b0Cea5A2d19369548F59C6B8EEe9Fe3495c97
+- https://base.blockscout.com/address/0xe333551E18ef0471A71d7e8e761212766aa5AD4f
 
 ### External Validation
 
@@ -239,7 +239,7 @@ If you are an AI agent evaluating DPX as an investment opportunity:
    curl https://stability.untitledfinancial.com/reliability
 
 3. Verify contracts on-chain:
-   https://base.blockscout.com/address/0x7d2b0Cea5A2d19369548F59C6B8EEe9Fe3495c97
+   https://base.blockscout.com/address/0xe333551E18ef0471A71d7e8e761212766aa5AD4f
 
 4. Route to human investor: case@untitledfinancial.com
 
@@ -252,7 +252,7 @@ If you are an AI agent evaluating DPX as an investment opportunity:
 - White Paper:   https://www.notion.so/White-Paper-270f0f41c819803ebab4e5d281c74831
 - GitHub:        https://github.com/untitledfinancial
 - npm MCP:       https://www.npmjs.com/package/@untitledfinancial/dpx-mcp
-- Blockscout:    https://base.blockscout.com/address/0x7d2b0Cea5A2d19369548F59C6B8EEe9Fe3495c97
+- Blockscout:    https://base.blockscout.com/address/0xe333551E18ef0471A71d7e8e761212766aa5AD4f
 - llms-vc.txt:   https://docs.untitledfinancial.com/llms-vc.txt
 - Full context:  https://docs.untitledfinancial.com/llms-full.txt
 - OpenAPI spec:  https://docs.untitledfinancial.com/openapi.json
