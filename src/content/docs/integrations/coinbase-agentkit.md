@@ -56,7 +56,7 @@ SANDBOX=true
 | Step | Call | Notes |
 |------|------|-------|
 | Discover | `GET /manifest` | Agent finds DPX cold — no config needed |
-| Oracle check | `GET /reliability` | Stability conditions across 9 signal layers |
+| Oracle check | `GET /reliability` | Stability conditions across 11 signal layers |
 | Quote | `GET /quote?amountUsd=N` | Binding fee breakdown, valid 300s |
 | Intelligence | `POST /intelligence/macro-stress` | x402 micropayment — USDC on Base |
 | Compliance | `POST /vop/verify` | x402 micropayment — GLEIF + FATF R16 |

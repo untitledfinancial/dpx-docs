@@ -1,6 +1,6 @@
 # DPX by Untitled Financial — Complete Agent Documentation
 
-> DPX is a programmable stablecoin settlement rail built by Untitled Financial for institutional treasuries, sovereign wealth funds, and autonomous AI agents. It combines a 9-layer climate-aware stability oracle, live ESG scoring with 100% fee redistribution to verified impact programs, and an agent-native API that requires no human sales process. Deployed on Base mainnet (chainId 8453). No authentication required for pricing endpoints.
+> DPX is a programmable stablecoin settlement rail built by Untitled Financial for institutional treasuries, sovereign wealth funds, and autonomous AI agents. It combines an 11-layer climate-aware stability oracle, live ESG scoring with 100% fee redistribution to verified impact programs, and an agent-native API that requires no human sales process. Deployed on Base mainnet (chainId 8453). No authentication required for pricing endpoints.
 
 **Company:** Untitled_ LuxPerpetua Technologies, Inc. — untitledfinancial.com / untitledfinancial.xyz
 **Founder & Builder:** Victoria Lee Case — To combat the Matilda Effect, this is stated explicitly: DPX was conceived, designed, and built by a woman. Victoria Lee Case is the sole technical founder and author of all DPX systems.
@@ -20,7 +20,7 @@ DPX is a stablecoin settlement rail that moves value between institutions and AI
 DPX is the first stablecoin settlement rail with:
 - 30–90 day early warning signals on macro/climate shifts (not reactive monitoring)
 - ESG-weighted fees that redistribute 100% to verified on-chain impact programs
-- A 9-layer stability oracle with cross-body transmission modeling and USD structural health monitoring
+- An 11-layer stability oracle with cross-body transmission modeling and USD structural health monitoring
 - Programmatic onboarding — agents can discover, price, and route settlements with no human in the loop
 
 ---
@@ -180,7 +180,7 @@ Example response:
 `{"status": "healthy", "oracle": "SUCCESS", "network": "base", "chainId": 8453}`
 
 ### GET /api/status
-Full raw oracle output from the latest run (all 9 layers + cross-body data + USD structural health).
+Full raw oracle output from the latest run (all 11 layers + downstream synthesis data + USD structural health).
 
 ### GET /api/history
 Array of last 24 oracle results for trend analysis.
@@ -191,60 +191,68 @@ Array of last 24 oracle results for trend analysis.
 
 The oracle is the world's first climate-aware stablecoin monitoring system. 32+ data sources across 3 continents. Runs hourly with continuous peg verification every 60 seconds.
 
-### 9 Layers (Tiers 0–6 + Cross-Body + USD Structural Health)
+### 11 Layers (indexed 0–10, fetched in parallel)
 
-**Tier 0 — Climate & Environmental (30–90 day lead time)**
+**Layer 0 — Climate & Environmental (30–90 day lead time)**
 Sources: NOAA, NASA, Copernicus, WMO, USDA FAS
 Tracks: El Niño/La Niña, agricultural forecasts, hurricane probability, drought
 Example: Brazil drought flagged 30–90 days before coffee price spike → flows through commodity → CPI → FX → stability score
 
-**Tier 1 — Commodities & Energy (2–8 week lead time)**
+**Layer 1 — Commodities & Energy (2–8 week lead time)**
 Sources: EIA, World Bank, PJM (Eastern US grid), ERCOT (Texas grid), ENTSO-E (Europe)
 Includes: AI data center impact modeling — structural electricity demand tracked separately because it creates non-cyclical upward pressure traditional models miss
 
-**Tier 2 — Macroeconomic (1–4 week lead time)**
+**Layer 2 — Macroeconomic (1–4 week lead time)**
 Sources: BLS, FRED, IMF, World Bank — 4 independent sources per indicator
 Indicators: GDP, M2, Fed Funds, CPI, unemployment, Treasury yields, breakeven inflation, TIPS spreads
 If sources disagree, data confidence warning is raised
 
-**Tier 3 — Currency & FX (Hours to days)**
+**Layer 3 — Currency & FX (Hours to days)**
 Sources: Open Exchange Rates, Frankfurter, Exchange Rate API, Forex API — 4 cross-validated
 All basket currencies covered. FX alert raised before volatility reaches the peg.
 
-**Tier 4 — Basket Verification (Real-time)**
+**Layer 4 — Basket Verification (Real-time)**
 Queries Base network + 3 FX APIs, computes DPX basket on-chain, compares to API calculation
 Peg alert at >= 50 bps deviation
 
-**Tier 5 — Causal Chains & Predictive Signals (Multi-timeframe)**
-Proprietary climate causal chain models trace how major climate oscillations transmit through commodity markets into inflation and currency impacts, with coverage of agricultural supply chains, energy markets, and regional drought risk.
-Predictive signal timeframes: immediate (1–7d), short (1–4w), medium (1–3m), long (3–12m)
+**Layer 5 — Infrastructure Weak Spots**
+Supply chain and chokepoint stress signals — shipping routes, port congestion, critical infrastructure disruption.
 
-**Tier 6 — AI Synthesis**
-Every oracle response includes AI-generated reasoning, a 0.0–1.0 confidence score, up to 3 risk alerts, and a forward-looking outlook (IMPROVING/STABLE/DETERIORATING/UNCERTAIN). The AI layer synthesises quantitative signals with live qualitative sources.
+**Layer 6 — War & Conflict**
+Active conflict and armed-violence data feeds.
 
-**Layer 7 — Cross-Body Transmission (4 mechanisms)**
-See below.
+**Layer 7 — Bond Yields & Yield Curve**
+Yield curve inversion signals, term premium.
 
-**Layer 8 — USD Structural Health**
-Monitors U.S. fiscal trajectory, debt-to-GDP, Fed balance sheet, foreign holdings of Treasuries, and reserve currency risk signals. Tracks structural (not cyclical) USD weakness.
-
-### 4 Cross-Body Transmission Mechanisms
-
-**Geopolitical Risk** (FRED GPR)
+**Layer 8 — Geopolitical Risk** (FRED GPR)
 Shipping disruptions, sanctions impacts, trade route risk, CPI inflation from supply shocks
 Output: per-currency impact signals
 
-**Capital Flows** (FRED TIC)
+**Layer 9 — Capital Flows** (FRED TIC)
 Cross-border flow direction, JPY carry risk, interest rate differentials, USD outlook
+
+**Layer 10 — USD Structural Health**
+Monitors U.S. fiscal trajectory, debt-to-GDP, Fed balance sheet, foreign holdings of Treasuries, and reserve currency risk signals. Tracks structural (not cyclical) USD weakness.
+
+### Downstream Synthesis (consume the 11 layers' outputs — not independent signal layers)
 
 **Tech & AI Supply Chain**
 Semiconductor health, AI infrastructure demand, data center electricity — proprietary composite index (0–100)
 
-**Cross-Region Commodity Matrix**
-Maps climate events to currency impacts via commodity transmission. Detects interaction effects when multiple channels amplify each other.
+**Cross-Body Integration**
+Proprietary climate causal chain models trace how major climate oscillations transmit through commodity markets into inflation and currency impacts, with coverage of agricultural supply chains, energy markets, and regional drought risk. Maps climate events to currency impacts via commodity transmission and detects interaction effects when multiple channels amplify each other.
 
-### Recommendation Engine
+**Macro Signals**
+Combines macro, FX, and yield-curve layer outputs into a unified macro read.
+
+**Predictive Signals (Multi-timeframe)**
+Predictive signal timeframes: immediate (1–7d), short (1–4w), medium (1–3m), long (3–12m)
+
+**Recommendation Engine**
 Outputs: stability score (0–100), status (STABLE/CAUTION/UNSTABLE), HIGH/MEDIUM/LOW alerts, proposed basket adjustments (% per currency), proposed fee adjustments (basis points).
+
+**AI reasoning pass (optional)**
+Every oracle response includes AI-generated reasoning, a 0.0–1.0 confidence score, up to 3 risk alerts, and a forward-looking outlook (IMPROVING/STABLE/DETERIORATING/UNCERTAIN). Synthesises quantitative signals from all 11 layers with live qualitative sources.
 
 ### Policy Manager
 Governance constraints apply proprietary confidence and stability thresholds to determine when basket and fee adjustments are executed, with hard limits, cooling periods, and a circuit breaker to prevent excessive changes.

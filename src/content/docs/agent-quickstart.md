@@ -11,7 +11,7 @@ The DPX settlement stack has three layers:
 
 | Layer | What it does |
 |---|---|
-| **Stability Oracle** | 9-layer signal pipeline. Returns `STABLE / CAUTION / UNSTABLE` with confidence score and reasoning. Agents check this before every large settlement. |
+| **Stability Oracle** | 11-layer signal pipeline. Returns `STABLE / CAUTION / UNSTABLE` with confidence score and reasoning. Agents check this before every large settlement. |
 | **Settlement Agent** | Cloudflare Worker. Receives payment instructions, applies oracle conditions and compliance checks, and calls the router. |
 | **DPXSettlementRouter v2.0** | On-chain contract (Base). Accepts any whitelisted ERC-20 (USDC, EURC, USDT). Enforces fees, sends net to recipient. |
 
@@ -563,7 +563,7 @@ curl -X POST https://agent.untitledfinancial.com/_cron/calibrate \
 
 ## SSE streaming reasoning
 
-For integrations that support streaming, `GET /stream-check` emits real-time Claude reasoning tokens via Server-Sent Events. This is a preview endpoint — it reasons from general corridor knowledge without fetching live oracle data.
+For integrations that support streaming, `GET /stream-check` emits real-time AI synthesis reasoning tokens via Server-Sent Events. This is a preview endpoint — it reasons from general corridor knowledge without fetching live oracle data.
 
 ```bash
 curl -N "https://agent.untitledfinancial.com/stream-check?amount=50000&from=USD&to=EUR"

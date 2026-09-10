@@ -218,7 +218,7 @@ For the full intelligence signal with AI reasoning and confidence score, use the
 | Route via Mercury | `mercury.send` |
 | Analyze Ramp spend | `ramp.spend_analysis` |
 
-Full tool reference: [MCP — 76 tools →](/integrations/mcp)
+Full tool reference: [MCP — 85 tools →](/integrations/mcp)
 
 ---
 

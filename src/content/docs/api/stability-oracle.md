@@ -1,13 +1,13 @@
 ---
 title: Stability Oracle API
-description: Complete endpoint reference for the DPX Stability Oracle v9.0 — 9-layer intelligence, USD structural health, and AI synthesis across 32+ sources.
+description: Complete endpoint reference for the DPX Stability Oracle v9.0 — 11-layer intelligence, USD structural health, and AI synthesis across 32+ sources.
 ---
 
 No authentication required. All responses are JSON. All prices in USD.
 
 **Base URL:** `https://stability.untitledfinancial.com`
 
-**Version:** v9.0 — 9-layer signal pipeline, USD structural health monitoring (12 independent signals, cross-validated against non-US sources), and AI synthesis on every response.
+**Version:** v9.0 — 11-layer signal pipeline, USD structural health monitoring (12 independent signals, cross-validated against non-US sources), and AI synthesis on every response.
 
 ---
 

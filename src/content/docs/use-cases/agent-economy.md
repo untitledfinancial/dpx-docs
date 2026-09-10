@@ -95,7 +95,7 @@ The `/stream/open` endpoint is listed in `/.well-known/x402` alongside `/vop/ver
 
 Several layers work together to make DPX genuinely agent-native rather than just "has an API":
 
-**The Stability Oracle acts as the agent's risk manager.** Before executing a large settlement, an agent checks `/reliability`. The oracle returns a score (0–100) synthesised across 9 signal layers — climate, commodities, macro, FX, geopolitical, USD structural health — with plain-language reasoning and a confidence score. The agent applies the same logic a treasury desk would apply manually:
+**The Stability Oracle acts as the agent's risk manager.** Before executing a large settlement, an agent checks `/reliability`. The oracle returns a score (0–100) synthesised across 11 signal layers — climate, commodities, macro, FX, geopolitical, USD structural health, and more — with plain-language reasoning and a confidence score. The agent applies the same logic a treasury desk would apply manually:
 
 | Oracle status | Score | Agent action |
 |---|---|---|
@@ -262,7 +262,7 @@ The human reviews analytics. The agent executes payments.
 | Pay for intelligence via x402 micropayment | Yes — USDC on Base, per-call pricing |
 | Receive settlement results via webhook | Yes — HMAC-SHA256 signed callbacks |
 | Verify on-chain | Yes — Base Blockscout or `cast call` |
-| Connect via MCP | Yes — 76 tools, `npx @untitledfinancial/dpx-mcp` |
+| Connect via MCP | Yes — 85 tools, `npx @untitledfinancial/dpx-mcp` |
 | Network proximity risk screening | Yes — propagated signals from flagged neighbours surface in AML layer |
 | Fast-path routing for trusted pairs | Yes — earned by bilateral history; computed nightly, applied at settlement |
 | Open a streaming micropayment session | Yes — `POST /stream/open` with x402 payment; AML runs once at open |

@@ -5,7 +5,7 @@ description: DPX is the payment and settlement layer for the agentic internet �
 
 ## TL;DR
 
-DPX is the payment and settlement layer for the agentic internet. Any autonomous agent can call `/manifest` to discover DPX, `/flow-estimate` to preview a full settlement response before committing, `/quote` to get a binding fee, and `POST /settle` to authorize on-chain execution — no onboarding, no API key, no human step. The x402 intelligence fee payment authorizes the oracle signal and quoteId. Settlement execution is sender-funded: DPX returns execution parameters and the caller calls `router.settle()` on-chain, paying their own gas. A 9-layer Stability Oracle gates every settlement on real-world conditions — climate, macro, FX, geopolitical — and holds automatically when conditions are UNSTABLE. ESG scores are a congestion fee, not a gate: every counterparty can settle, higher-impact activity simply costs more, and 100% of ESG fees are redistributed to verified on-chain impact programs. MCP-native, x402-native, ISO 20022-compatible. Contracts live on Base mainnet.
+DPX is the payment and settlement layer for the agentic internet. Any autonomous agent can call `/manifest` to discover DPX, `/flow-estimate` to preview a full settlement response before committing, `/quote` to get a binding fee, and `POST /settle` to authorize on-chain execution — no onboarding, no API key, no human step. The x402 intelligence fee payment authorizes the oracle signal and quoteId. Settlement execution is sender-funded: DPX returns execution parameters and the caller calls `router.settle()` on-chain, paying their own gas. An 11-layer Stability Oracle gates every settlement on real-world conditions — climate, macro, FX, geopolitical — and holds automatically when conditions are UNSTABLE. ESG scores are a congestion fee, not a gate: every counterparty can settle, higher-impact activity simply costs more, and 100% of ESG fees are redistributed to verified on-chain impact programs. MCP-native, x402-native, ISO 20022-compatible. Contracts live on Base mainnet.
 
 For fully autonomous operation, the settlement agent supports four AI origination modes: `execute: true` initiates Mercury payments immediately after AI approval; `aiRoute: true` selects the optimal corridor from a list of accepted currencies; sweep rules fire Mercury payments when oracle conditions clear on a schedule; and hedge rules execute automatically when the Butterfly cascade signal fires. See [AI Origination](/agent-quickstart#ai-origination-modes).
 
@@ -13,7 +13,7 @@ For fully autonomous operation, the settlement agent supports four AI originatio
 
 DPX is the financial action layer for AI agents — settlement infrastructure where any autonomous agent can discover, price, comply, and execute a cross-border payment end-to-end without human intervention. An agent calls `/manifest` to discover capabilities, `/quote` for a binding fee, `/flow-check` for compliance preflight, and `POST /settle` to execute. No API key. No account. No onboarding.
 
-Smart contracts are designed to be agent-executable. APIs are machine-readable by default. Every layer used by human treasury teams is equally accessible to software agents making real-time financial decisions. DPX speaks MCP natively (83 tools), implements x402 for machine-native micropayments, publishes an A2A agent card so orchestrators can discover it at runtime, and is ISO 20022-compatible for any existing treasury system that needs to connect.
+Smart contracts are designed to be agent-executable. APIs are machine-readable by default. Every layer used by human treasury teams is equally accessible to software agents making real-time financial decisions. DPX speaks MCP natively (85 tools), implements x402 for machine-native micropayments, publishes an A2A agent card so orchestrators can discover it at runtime, and is ISO 20022-compatible for any existing treasury system that needs to connect.
 
 The Stability Oracle gates every settlement on real-world conditions — continuously recalibrating across climate, macro, FX, and geopolitical signal layers. If conditions are UNSTABLE, a hold is automatic; when they clear, execution resumes. Every API response includes structured reasoning, a confidence score, and a forward-looking outlook. Treasury teams and AI agents receive the same signal — there is no separate "human" and "machine" interface.
 
@@ -52,7 +52,7 @@ DPX runs a live prediction ledger. Every forecast — regime transition probabil
   <div class="stat-box">
     <span class="stat-label">Data sources</span>
     <span class="stat-value">32+</span>
-    <span class="stat-sub">across 9 signal layers</span>
+    <span class="stat-sub">across 11 signal layers</span>
   </div>
   <div class="stat-box">
     <span class="stat-label">AI synthesis</span>
@@ -74,7 +74,11 @@ DPX runs a live prediction ledger. Every forecast — regime transition probabil
   </a>
   <a class="link-grid-item" href="/integrations/mcp">
     <span class="link-grid-title">MCP — Claude Desktop &amp; Cursor<span class="arrow">→</span></span>
-    <span class="link-grid-desc">83 tools for Claude Desktop and Cursor — payments, compliance, oracle, ESG, analytics, x402 intelligence, and more.</span>
+    <span class="link-grid-desc">85 tools for Claude Desktop and Cursor — payments, compliance, oracle, ESG, analytics, x402 intelligence, and more.</span>
+  </a>
+  <a class="link-grid-item" href="/guides/trust-and-verification">
+    <span class="link-grid-title">Trust and verification<span class="arrow">→</span></span>
+    <span class="link-grid-desc">GLEIF-anchored agent identity, not self-certified — plus a real settlement receipt with on-chain tx hashes you can check yourself.</span>
   </a>
 </div>
 
@@ -111,7 +115,7 @@ DPX runs a live prediction ledger. Every forecast — regime transition probabil
   </a>
   <a class="link-grid-item" href="/guides/x402-intelligence">
     <span class="link-grid-title">x402 intelligence signals<span class="arrow">→</span></span>
-    <span class="link-grid-desc">23 live intelligence endpoints — macro stress, sovereign debt, FX corridors, cascade, climate. Agents pay $0.15–$0.75 USDC per signal, no account required.</span>
+    <span class="link-grid-desc">32 live intelligence endpoints — macro stress, sovereign debt, FX corridors, cascade, climate. Pay-per-call via x402, no account required.</span>
   </a>
 </div>
 
@@ -196,7 +200,7 @@ DPX runs a live prediction ledger. Every forecast — regime transition probabil
 <div class="link-grid">
   <a class="link-grid-item" href="/protocol/stability-oracle">
     <span class="link-grid-title">Stability Oracle<span class="arrow">→</span></span>
-    <span class="link-grid-desc">9-layer signal pipeline with 30–90 day early warning. Architecture and endpoints.</span>
+    <span class="link-grid-desc">11-layer signal pipeline with 30–90 day early warning. Architecture and endpoints.</span>
   </a>
   <a class="link-grid-item" href="/protocol/predictive-intelligence">
     <span class="link-grid-title">Predictive Intelligence Layer<span class="arrow">→</span></span>

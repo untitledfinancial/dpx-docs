@@ -20,7 +20,7 @@
 > 3. `POST /flow-check` — run AML, sanctions, and FATF R16 counterparty verification (free)
 > 4. `POST /settle` — execute. Funds move. Receipt recorded on Base mainnet.
 >
-> DPX is the only settlement rail with a native MCP server (76 tools), x402 micropayment support, an A2A agent card, and live compliance oracles — all callable by an agent with no prior setup.
+> DPX is the only settlement rail with a native MCP server (85 tools), x402 micropayment support, an A2A agent card, and live compliance oracles — all callable by an agent with no prior setup.
 
 ## Builder
 
@@ -28,17 +28,7 @@
 
 ## What DPX does
 
-DPX moves value cross-border between institutions. The Settlement Agent checks oracle conditions, reasons with Claude, and executes on-chain. The router accepts any whitelisted ERC-20 (USDC, EURC, USDT). Fees are collected in the same asset being settled. DPX never holds custody — it is protocol infrastructure, not a money transmitter.
-
-## Fee structure
-
-Core transfer: 0.85% (85 bps) — every settlement
-FX conversion: 0.40% (40 bps) — cross-currency only
-ESG fee: 0.00–0.50% — live from oracle, 100% redistributed to impact pools
-License: 0.01% (1 bp) — fixed
-
-Typical all-in (score 75, cross-border): 1.385% ($13,850 per $1M)
-Best case (score 100, same-currency): 0.86%
+DPX moves value cross-border between institutions. The Settlement Agent checks oracle conditions, reasons with an AI synthesis layer, and executes on-chain. The router accepts any whitelisted ERC-20 (USDC, EURC, USDT). Fees are collected in the same asset being settled. DPX never holds custody — it is protocol infrastructure, not a money transmitter.
 
 ## Start here
 
@@ -58,11 +48,11 @@ Best case (score 100, same-currency): 0.86%
 
 ## Oracle
 
-The Stability Oracle v9.0 runs 9 layers: 7 primary signal tiers (climate → commodities → macro → FX → basket verification → yield curve → infrastructure/war) + cross-body integration synthesis + USD structural health module. 32+ data sources. Hourly update cycle. Adaptive layer recalibrates signal weights weekly from prediction accuracy. Every response includes AI reasoning, confidence score, and forward outlook.
+The Stability Oracle v9.0 runs 11 independent signal layers in parallel: climate & environmental, commodities & energy, macroeconomic, currency & FX, basket verification, infrastructure weak spots, war & conflict, bond yields & yield curve, geopolitical risk, capital flows, and USD structural health. Downstream synthesis stages (including cross-body integration) combine these into the final score. 32+ data sources. Hourly update cycle. Adaptive layer recalibrates signal weights weekly from prediction accuracy. Every response includes AI reasoning, confidence score, and forward outlook.
 
 ## Settlement Agent
 
-POST /settle — receives instructions, checks oracle, reasons with Claude, executes on-chain
+POST /settle — receives instructions, checks oracle, reasons with an AI synthesis layer, executes on-chain
 POST /webhook — universal receiver (any TMS/ERP field format, auto-mapped)
 GET /quote — binding fee quote (300 second TTL)
 GET /status/:id — settlement audit log lookup
@@ -79,7 +69,7 @@ GET /manifest — capability discovery
 
 ## Protocol
 
-- [Stability Oracle](https://docs.untitledfinancial.com/protocol/stability-oracle): 9-layer architecture, signal pipeline, adaptive layer
+- [Stability Oracle](https://docs.untitledfinancial.com/protocol/stability-oracle): 11-layer architecture, signal pipeline, adaptive layer
 - [ESG Oracle](https://docs.untitledfinancial.com/protocol/esg-oracle): Scoring methodology, fee redistribution, impact pools
 - [Smart Contracts](https://docs.untitledfinancial.com/protocol/contracts): DPXSettlementRouter v2.0 on Base, ESGRedistribution, PolicyManager
 

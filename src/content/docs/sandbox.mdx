@@ -13,7 +13,7 @@ No signup. No API key. No wallet. Every step below hits the live DPX endpoints �
 
 ## What just ran
 
-**Step 1 — Oracle gate.** Before any payment can execute, the 9-layer Stability Oracle checks current macro conditions. An `UNSTABLE` result halts settlement automatically — the same gate that runs in production.
+**Step 1 — Oracle gate.** Before any payment can execute, the 11-layer Stability Oracle checks current macro conditions. An `UNSTABLE` result halts settlement automatically — the same gate that runs in production.
 
 **Step 2 — Quote.** A binding fee quote is calculated against live oracle data. The number you saw is what production would charge.
 
@@ -62,6 +62,6 @@ Remove `sandbox: true` and supply a funded wallet address to go live on Base mai
 npx @untitledfinancial/dpx-mcp
 ```
 
-The MCP server exposes 76 tools covering oracle status, compliance, quoting, and settlement. Any MCP-compatible host (Claude Desktop, Cursor) can call them directly.
+The MCP server exposes 85 tools covering oracle status, compliance, quoting, and settlement. Any MCP-compatible host (Claude Desktop, Cursor) can call them directly.
 
 [MCP setup →](/integrations/mcp) · [Add payments to your agent →](/guides/agent-payments)

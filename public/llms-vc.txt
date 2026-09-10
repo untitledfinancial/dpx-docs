@@ -91,24 +91,36 @@ meaning competitive positioning exceeds initial model assumptions.
 
 ## Proprietary IP — The Moat
 
-### 9-Layer Stability Oracle (Proprietary)
+### 11-Layer Stability Oracle (Proprietary)
 The most significant technical moat. Proprietary architecture, not open source.
 
-The Stability Oracle is a 9-layer signal pipeline aggregating 32+ real-world data
+The Stability Oracle is an 11-layer signal pipeline aggregating 32+ real-world data
 sources into a single confidence score with 30–90 day early warning capability.
 Every response includes AI-synthesised reasoning, a confidence score, and a forward
 outlook. No competitor offers oracle-grade settlement intelligence at this depth.
 
-Tier architecture (causal, each tier feeds the next):
-- **Tier 0 — Climate & Environmental** (30–90 day lead time): NOAA, NASA,
+Layer architecture (11 independent signal-gathering layers, fetched in parallel,
+indexed 0–10):
+- **Layer 0 — Climate & Environmental** (30–90 day lead time): NOAA, NASA,
   Copernicus, USDA — detects commodity disruptions before they hit prices
-- **Tier 1 — Commodities & Energy** (2–8 weeks): EIA, World Bank, grid operators.
+- **Layer 1 — Commodities & Energy** (2–8 weeks): EIA, World Bank, grid operators.
   Includes proprietary AI data center impact modeling — structural electricity
   demand from AI infrastructure tracked as a unique non-cyclical signal
-- **Tier 2 — Macroeconomic** (1–4 weeks): Fed, ECB, IMF, World Bank data
-- **Tier 3 — Currency & FX** (days–weeks): Central bank reserves, FX volatility
-- **Tier 4 — Market Microstructure** (hours–days): On-chain DEX data, stablecoin flows
-- **Tier 5 — Systemic Risk** (real-time): Geopolitical, contagion modeling
+- **Layer 2 — Macroeconomic** (1–4 weeks): Fed, ECB, IMF, World Bank data
+- **Layer 3 — Currency & FX** (days–weeks): Central bank reserves, FX volatility
+- **Layer 4 — Basket Verification**: multi-currency stability cross-check
+- **Layer 5 — Infrastructure Weak Spots**: supply chain and chokepoint stress
+- **Layer 6 — War & Conflict**: conflict data feeds
+- **Layer 7 — Bond Yields & Yield Curve**: inversion signals, term premium
+- **Layer 8 — Geopolitical Risk**
+- **Layer 9 — Capital Flows**
+- **Layer 10 — USD Structural Health**: DXY, reserve-status indicators
+
+Downstream of these 11 layers, five synchronous synthesis stages (Tech Supply
+Chain, Cross-Body Integration, Macro Signals, Predictive Signals, Recommendation
+Engine) plus an optional AI reasoning pass combine their outputs into the final
+score — these consume the layers' data and aren't counted as independent signal
+layers themselves.
 
 This is not a price feed. It is a 30-90 day early warning system for macro stress —
 a capability that institutional risk teams pay millions for annually, embedded
@@ -364,7 +376,7 @@ in the digital payments space.
 ## Traction & Status
 
 - **Protocol live on Base mainnet** — DPX token deployed, verifiable on-chain
-- **Stability Oracle v9.0 live** — 9-layer, 32+ data sources, hourly runs + AI synthesis
+- **Stability Oracle v9.0 live** — 11-layer, 32+ data sources, hourly runs + AI synthesis
 - **ESG Oracle live** — 8 institutional sources, live E/S/G scoring + AI intelligence layer
 - **APIs fully live** — pricing, quoting, verification, stability signals
 - **Agent integrations shipped** — MCP, GPT Actions, LangChain, n8n

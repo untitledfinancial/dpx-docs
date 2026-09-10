@@ -19,7 +19,7 @@ a binding fee, and POST /settle to execute via x402 USDC payment: no API key, no
 no onboarding. The fee payment IS the authorization. Sender pays in USD, recipient receives
 EUR — neither party touches crypto. Fees are 1.385% all-in versus 5.4%+ for Stripe or
 2–5% for SWIFT. Seven contracts are live on Base mainnet, verified on Sourcify. The only
-settlement rail with a native MCP server, x402 micropayment support, a 10-layer Stability
+settlement rail with a native MCP server, x402 micropayment support, an 11-layer Stability
 Oracle, and GENIUS Act (US) / MiCA (EU) compliance. Treasury management is the first
 institutional vertical built on the agent layer. The comparable acquisition is
 Bridge.xyz → Stripe at $1.1B (October 2024). DPX is post-build, pre-revenue, raising seed.
@@ -53,7 +53,7 @@ Bridge.xyz → Stripe at $1.1B (October 2024). DPX is post-build, pre-revenue, r
 
 ### Live Services (Cloudflare Workers — always-on, no cold start)
 
-- https://stability.untitledfinancial.com  — Stability Oracle v9.0 (10-layer, self-adjusting AI oracle — adaptive tier weights, Platt-scaled confidence, Vectorize scenario memory, autonomous policy execution)
+- https://stability.untitledfinancial.com  — Stability Oracle v9.0 (11-layer, self-adjusting AI oracle — adaptive tier weights, Platt-scaled confidence, Vectorize scenario memory, autonomous policy execution)
 - https://esg.untitledfinancial.com        — ESG Oracle (6 institutional sources, hourly scoring)
 - https://compliance.untitledfinancial.com — Compliance Oracle
 - https://agent.untitledfinancial.com      — Settlement Agent (sandbox — needs USDC to go live)

@@ -46,10 +46,15 @@ Should I execute now or wait?
   └─ UNSTABLE (< 75):  Hold — do not execute, retry later
 ```
 
+## Settlement is sender-funded — DPX never holds funds or a private key
+
+`POST /settle` does not execute on-chain itself and never returns a `txHash` directly. It's an oracle + authorization layer: it runs the stability check, compliance screen, and ESG scoring, then returns an `execution` object. **The calling agent's own wallet** signs and broadcasts `approve()` then `router.settle()` on `DPXSettlementRouter` — paying its own gas. If you see a doc or example anywhere that assumes DPX returns a real `txHash` directly from `/settle`, it's describing a retired architecture.
+
 ## Minimal execution loop
 
 ```python
 import httpx
+from ethers import Wallet, JsonRpcProvider, Interface  # or any EVM lib in your stack
 
 AGENT = "https://agent.untitledfinancial.com"
 
@@ -60,7 +65,7 @@ status = reliability["stabilityScore"]["status"]  # STABLE | CAUTION | UNSTABLE
 if status == "UNSTABLE":
     return {"action": "held", "reason": reliability["intelligence"]["reasoning"]}
 
-# 2. Execute
+# 2. Request authorization — this does NOT execute anything on-chain
 result = httpx.post(f"{AGENT}/settle", json={
     "amount": 100000,
     "sourceCurrency": "USD",
@@ -68,18 +73,18 @@ result = httpx.post(f"{AGENT}/settle", json={
     "recipientAddress": "0xRecipient...",
     "purpose": "intercompany",
     "referenceId": "your-reference-id",
-    "sandbox": False,  # True for testing
+    "sandbox": False,  # True for testing — skips real payment and on-chain execution
 }).json()
 
-# 3. Return result to calling agent
-return {
-    "settlementId": result["settlementId"],
-    "status": result["status"],
-    "txHash": result.get("txHash"),
-    "netAmount": result["netAmount"],
-    "feesTotal": result["feesTotal"],
-    "reasoning": result["reasoning"],
-}
+if result["status"] != "authorized":
+    return {"action": "held", "reasoning": result.get("reasoning")}
+
+# 3. Your agent's own wallet signs and broadcasts both transactions
+execution = result["execution"]  # { routerAddress, tokenAddress, grossAmountRaw, recipient, quoteIdBytes32, abi }
+# approve(execution.routerAddress, execution.grossAmountRaw) on execution.tokenAddress
+# router.settle(execution.recipient, execution.grossAmountRaw, execution.isCrossCurrency,
+#               execution.quoteIdBytes32, execution.tokenAddress) on execution.routerAddress
+# Full worked example: https://github.com/anthropics/claude-cookbooks/pull/796 (third_party/DPX/)
 ```
 
 ## Complete API reference for agents
@@ -107,8 +112,16 @@ return {
 ```json
 {
   "settlementId": "dpx_a1b2c3d4e5f6",
-  "status": "executed | held | sandbox | failed",
-  "txHash": "0x...",
+  "status": "authorized | sandbox | held | review | failed",
+  "execution": {
+    "routerAddress": "0x...",
+    "tokenAddress": "0x...",
+    "grossAmountRaw": "100000000000",
+    "recipient": "0x...",
+    "isCrossCurrency": false,
+    "quoteIdBytes32": "0x...",
+    "abi": ["function settle(address recipient, uint256 grossAmount, bool isCrossCurrency, bytes32 quoteId, address tokenAddress) external returns (uint256 netAmount)"]
+  },
   "netAmount": 98615,
   "grossAmount": 100000,
   "feesTotal": 1385,
@@ -118,11 +131,13 @@ return {
   "oracleStatus": "STABLE",
   "oracleScore": 88,
   "esgScore": 75,
-  "reasoning": "Oracle conditions stable. Yield curve normal. Executing immediately.",
+  "reasoning": "Oracle conditions stable. Yield curve normal. Authorizing immediately.",
   "timestamp": "2026-04-24T10:00:00Z",
   "sandboxMode": false
 }
 ```
+
+`status: "authorized"` means proceed to step 3 above. `"sandbox"` means the same response shape but nothing to execute. `"held"` / `"review"` mean don't execute — check `reasoning`.
 
 ### GET https://agent.untitledfinancial.com/quote
 

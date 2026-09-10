@@ -32,8 +32,8 @@ The Settlement Agent maps common TMS field names automatically. No custom integr
 
 ## What happens on every settlement
 
-1. Stability Oracle checks 9 signal layers — climate, commodities, macro, FX, basket, yield curve, infrastructure, geopolitical risk, USD structural health
-2. Claude reasons about whether conditions are right: STABLE = execute, CAUTION = hold if large amount, UNSTABLE = hold
+1. Stability Oracle checks 11 signal layers — climate, commodities, macro, FX, basket, infrastructure, war & conflict, bond yields, geopolitical risk, capital flows, USD structural health
+2. The AI synthesis layer reasons about whether conditions are right: STABLE = execute, CAUTION = hold if large amount, UNSTABLE = hold
 3. Router executes on-chain: fees deducted, net transferred to recipient wallet, ESG fee to impact pools
 4. Settlement record emitted on-chain — permanently auditable on Base Blockscout, accepted by CSRD/SFDR auditors
 

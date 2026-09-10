@@ -78,10 +78,13 @@ Response:
   "description": "Data processing services — batch job #2026-0042",
   "recipientAddress": "0xd8...",
   "payUrl": "https://agent.untitledfinancial.com/invoice/dpx-inv-abc123/pay",
+  "viewUrl": "https://agent.untitledfinancial.com/widgets/invoice?id=dpx-inv-abc123",
   "status": "pending",
   "expiresAt": "2026-07-25T20:00:00.000Z"
 }
 ```
+
+`viewUrl` is a human-readable page — open it in a browser to see the invoice, and after payment, a receipt summary (compliance/oracle detail, transaction link). `GET /invoice/{id}` itself still returns the machine-readable JSON above for agents parsing it programmatically.
 
 ### Agent B — pay invoice
 
@@ -194,6 +197,41 @@ Agent B doesn't need to run any checks manually. At `POST /invoice/{id}/pay` DPX
 | AI decision | `aiDecision: EXECUTE / HOLD / BLOCK` with confidence + reasoning |
 
 Everything is in the receipt.
+
+---
+
+## Proven live
+
+Every step above has been run for real — two independent agent processes, no shared code path between them, settling a real payment on Base mainnet.
+
+**Invoice created**
+
+```json
+{ "invoiceId": "2c846308-9071-4313-9c1a-1f951d6d7be3", "amount": 1, "currency": "USD", "status": "OPEN" }
+```
+
+**Settlement authorized** — oracle, compliance, and ESG all run automatically at pay time:
+
+```json
+{
+  "settlementId": "dpx_549e32f44119abdbf95558edea33b0ca",
+  "status": "authorized",
+  "oracleStatus": "STABLE", "oracleScore": 77,
+  "complianceScreen": { "status": "CLEAR", "amlScore": 24 },
+  "aiDecision": "EXECUTE", "aiConfidence": 0.98
+}
+```
+
+**On-chain receipt**
+
+| Step | Tx hash |
+|---|---|
+| `approve()` | [`0x962454...c14f1`](https://basescan.org/tx/0x962454379c1dca682b2f2cfff0f1d55833619d37fb4e197398ff6b450e3c14f1) |
+| `router.settle()` | [`0xd12437...c86d2`](https://basescan.org/tx/0xd12437bcc126b247ed0dc7551f2c3ef1397d4454ddffcfb51f8addbb60ac86d2) |
+
+Confirmed independently on-chain: the receiving address's balance increased by the net settlement amount, and the ESG redistribution contract's balance increased by exactly the ESG fee portion — in the same transaction.
+
+A full runnable version of this flow — two Claude agents, one creating the invoice and one paying it — is in the [Claude Cookbooks PR](https://github.com/anthropics/claude-cookbooks/pull/796) (`third_party/DPX/agent_to_agent_invoice.ipynb`), pending merge.
 
 ---
 

@@ -217,7 +217,7 @@ No HTTP, no auth setup, no x402 library to install. The MCP layer handles it.
 
 ## What the oracle is doing
 
-Every call to `/reliability` runs a 9-layer signal pipeline: climate conditions, commodity markets, macroeconomic indicators, FX movements, yield curve signals, geopolitical risk. The output isn't just a status flag — it includes structured reasoning and a confidence score your agent can act on.
+Every call to `/reliability` runs an 11-layer signal pipeline: climate conditions, commodity markets, macroeconomic indicators, FX movements, yield curve signals, geopolitical risk, and more. The output isn't just a status flag — it includes structured reasoning and a confidence score your agent can act on.
 
 This is the key difference between DPX and a payment API: the intelligence is built into the rail. Your agent doesn't have to implement risk logic — it delegates to the oracle and acts on the verdict.
 
@@ -227,5 +227,5 @@ This is the key difference between DPX and a payment API: the intelligence is bu
 
 - [Agent Quick Start](/agent-quickstart) — full loop with all parameters documented
 - [x402 reference](/integrations/x402) — how micropayments work for agents
-- [MCP tools](/integrations/mcp) — 76 tools for Claude Desktop and Cursor
+- [MCP tools](/integrations/mcp) — 85 tools for Claude Desktop and Cursor
 - [CrewAI integration](/integrations/crewai) and [LangChain integration](/integrations/langchain)

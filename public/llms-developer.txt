@@ -39,7 +39,7 @@ const result = await dpx.settle({
 
 console.log(result.status);       // "sandbox"
 console.log(result.settlementId); // "dpx_a1b2c3..."
-console.log(result.reasoning);    // Claude's reasoning string
+console.log(result.reasoning);    // AI synthesis layer's reasoning string
 ```
 
 ## Settlement Agent API
@@ -72,7 +72,7 @@ Base URL: `https://agent.untitledfinancial.com`
   oracleStatus: string,        // "STABLE" | "CAUTION" | "UNSTABLE"
   oracleScore: number,         // 0–100
   esgScore: number,            // 0–100
-  reasoning: string,           // Claude's reasoning in plain language
+  reasoning: string,           // AI synthesis layer's reasoning in plain language
   timestamp: string,
   sandboxMode: boolean,
 }

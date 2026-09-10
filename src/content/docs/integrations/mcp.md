@@ -1,9 +1,9 @@
 ---
 title: MCP — Connect Claude
-description: 83 tools for Claude Desktop and Cursor — add payments, AML screening, compliance verification, oracle-gated settlement, and live macro intelligence to any AI agent in minutes.
+description: 85 tools for Claude Desktop and Cursor — add payments, AML screening, compliance verification, oracle-gated settlement, and live macro intelligence to any AI agent in minutes.
 ---
 
-The DPX MCP server gives any AI agent native access to payments, compliance, and intelligence infrastructure — without writing HTTP calls or managing auth. 83 tools covering: agent-to-agent payments, AML and sanctions screening, FATF R.16 counterparty verification, oracle-gated settlement, ESG scoring, x402 intelligence endpoints, multi-stablecoin routing, Mercury banking, Ramp card integration, FX corridor intelligence, macro intelligence briefings, network topology, butterfly effect cascade analysis, AP2-compatible agent mandate management, and KYA (Know Your Agent) identity. Works with Claude Desktop, Cursor, and any MCP-compatible host. No API key. No browser. No copy-paste.
+The DPX MCP server gives any AI agent native access to payments, compliance, and intelligence infrastructure — without writing HTTP calls or managing auth. 85 tools covering: agent-to-agent payments, AML and sanctions screening, FATF R.16 counterparty verification, oracle-gated settlement, ESG scoring, x402 intelligence endpoints, multi-stablecoin routing, Mercury banking, Ramp card integration, FX corridor intelligence, macro intelligence briefings, network topology, butterfly effect cascade analysis, AP2-compatible agent mandate management, and KYA (Know Your Agent) identity. Works with Claude Desktop, Cursor, and any MCP-compatible host. No API key. No browser. No copy-paste.
 
 **Also available on [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp)** — install with one click from the Smithery marketplace.
 
@@ -40,7 +40,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 }
 ```
 
-Restart Claude Desktop — **DPX** appears in the MCP toolbar with 83 tools.
+Restart Claude Desktop — **DPX** appears in the MCP toolbar with 85 tools.
 
 :::note[Sandbox mode]
 `SANDBOX_MODE: "true"` means `settle` runs real calculations with no on-chain execution. Set to `"false"` only when you are ready for live settlements with real USDC.
@@ -99,7 +99,7 @@ This works today on any Claude plan — Free, Pro, Max, Team, or Enterprise. It'
 | `settlement.status` | Look up any settlement by ID |
 | `computer_use.pay` | **Computer use payment interception** — describe what's on screen, DPX settles it. Closes the payment gap in Claude computer use sessions. |
 | `oracle.stability` | Oracle stability status — STABLE / CAUTION / UNSTABLE (cross-border and domestic) |
-| `oracle.status` | Full 9-layer Stability Oracle v9.0 signal — ESG Oracle is separate |
+| `oracle.status` | Full 11-layer Stability Oracle v9.0 signal — ESG Oracle is separate |
 | `oracle.rails` | **Live health of local payment rails** — PIX, SEPA, FedACH, CHAPS, UPI, PromptPay |
 | `oracle.mycelium` | **Mycelium Network Oracle** — financial system network topology, crisis detection 6–14 weeks ahead |
 

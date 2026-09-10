@@ -55,6 +55,7 @@ export default defineConfig({
           label: 'Guides',
           items: [
             { label: 'For AI builders',            slug: 'guides/for-ai-builders' },
+            { label: 'Trust and verification',     slug: 'guides/trust-and-verification' },
             { label: 'Agent-to-agent payments',    slug: 'guides/agent-to-agent-payments' },
             { label: 'AP automation agent',        slug: 'guides/ap-automation' },
             { label: 'Computer use payments',      slug: 'guides/computer-use-payments' },
@@ -83,6 +84,12 @@ export default defineConfig({
           label: 'Live Data',
           items: [
             { label: '⚡ Fee Calculator',  slug: 'demo' },
+          ],
+        },
+        {
+          label: 'Changelog',
+          items: [
+            { label: 'Changelog', slug: 'changelog' },
           ],
         },
         {

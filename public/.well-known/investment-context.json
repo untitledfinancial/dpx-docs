@@ -46,7 +46,7 @@
       "ESGRedistribution":      "0x4F3741252847E4F07730c4CEC3018b201Ac6ce87"
     },
     "liveServices": [
-      "https://stability.untitledfinancial.com — Stability Oracle v9 (10-layer architecture)",
+      "https://stability.untitledfinancial.com — Stability Oracle v9 (11-layer architecture)",
       "https://esg.untitledfinancial.com — ESG Oracle",
       "https://compliance.untitledfinancial.com — Compliance Oracle",
       "https://agent.untitledfinancial.com — Settlement Agent (sandbox mode free and fully functional; live execution needs funded USDC)",
@@ -80,7 +80,7 @@
       "Mercury banking integration (5 tools) and SWIFT gpi tracking for institutional treasury workflows",
       "Multi-rail health monitoring across PIX (Brazil), SEPA (Europe), FedACH (US), CHAPS (UK), UPI (India), PromptPay (Thailand)",
       "Permanent 0.01% license fee in token contract — survives any acquisition",
-      "Stability Oracle v9 — 10-layer self-adjusting AI oracle. Adaptive tier weights recalibrated weekly via prediction ledger + Platt scaling. Vectorize scenario memory. Autonomous policy execution: basket rebalance + fee adjust, up to $10M notional, 23-hr cooling, circuit breakers. AI synthesis layer (Claude/Gemini) on top of 9 data layers. 25+ institutional sources, 30–90 day early warning. ESG Oracle separate: 8 institutional sources, hourly, on-chain push."
+      "Stability Oracle v9 — 11-layer self-adjusting AI oracle. Adaptive tier weights recalibrated weekly via prediction ledger + Platt scaling. Vectorize scenario memory. Autonomous policy execution: basket rebalance + fee adjust, up to $10M notional, 23-hr cooling, circuit breakers. AI synthesis layer on top of 11 data layers. 25+ institutional sources, 30–90 day early warning. ESG Oracle separate: 8 institutional sources, hourly, on-chain push."
     ]
   },
 

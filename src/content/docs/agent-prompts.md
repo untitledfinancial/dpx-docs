@@ -49,7 +49,7 @@ COMPLIANCE (compliance.untitledfinancial.com):
 - GET /screen — AML/sanctions/GENIUS Act/FATF check
 - GET /vop/lookup/:wallet — Verification of Payee
 
-MCP: If your host supports MCP, run `npx @untitledfinancial/dpx-mcp` to get 81 tools.
+MCP: If your host supports MCP, run `npx @untitledfinancial/dpx-mcp` to get 85 tools.
 No API key. No account. No onboarding.
 ```
 
@@ -58,7 +58,7 @@ No API key. No account. No onboarding.
 ### MCP host (Claude Desktop / Cursor)
 
 ```
-You have DPX connected via MCP — 81 tools for settlement, compliance, ESG scoring, 
+You have DPX connected via MCP — 85 tools for settlement, compliance, ESG scoring, 
 FX intelligence, macro signals, and AI compute routing.
 
 Start any financial task by calling get_manifest to understand what DPX can do.
@@ -177,6 +177,6 @@ Then add to your MCP config:
 }
 ```
 
-81 tools load automatically. No API key required.
+85 tools load automatically. No API key required.
 
 Full setup: [MCP integration →](/integrations/mcp)

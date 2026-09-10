@@ -7,7 +7,7 @@ The DPX Oracle Data API exposes the full signal stack as a programmable data fee
 
 ## What's included
 
-### Stability Oracle — macro conditions across 9 signal layers
+### Stability Oracle — macro conditions across 11 signal layers
 
 The Stability Oracle continuously models global conditions across climate, commodities, FX, macro, bonds, geopolitical risk, capital flows, war/infrastructure risk, and USD structural health. Every response includes a composite score (0–100), a regime status (STABLE / CAUTION / UNSTABLE), and a confidence-scored AI synthesis layer.
 
@@ -144,7 +144,7 @@ All oracle data is also available via the [DPX MCP server](/integrations/mcp) �
 
 ```
 oracle.stability       — composite score + status
-oracle.status          — full 9-layer signal breakdown
+oracle.status          — full 11-layer signal breakdown
 oracle.rails           — local payment rail health
 oracle.mycelium        — network topology + crisis detection
 esg.score              — entity ESG score by LEI

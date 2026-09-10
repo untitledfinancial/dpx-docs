@@ -1,21 +1,21 @@
 ---
 title: Stability Oracle
-description: DPX Stability Oracle v9.0 — 9-layer architecture, USD structural health monitoring, AI intelligence synthesis, and cross-validated signals from independent non-US sources.
+description: DPX Stability Oracle v9.0 — 11-layer architecture, USD structural health monitoring, AI intelligence synthesis, and cross-validated signals from independent non-US sources.
 ---
 
 > **Proprietary technology.** The Stability Oracle architecture, signal pipeline, weighting model, AI synthesis methodology, and source code are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc.
 
-The DPX Stability Oracle v9.0 is a 9-layer signal pipeline that aggregates 32+ real-world data sources into a single actionable confidence score — with an AI intelligence layer that synthesises every signal into a plain-language briefing for treasury and risk teams. It runs 7 primary signal tiers (Tiers 0–6), a cross-body integration synthesis pass, and a USD structural health module (v9.0) that cross-validates US official data against independent and non-US sources — all feeding into a full recommendation engine with active war mitigation protocols and 30–90 day early warning signals.
+The DPX Stability Oracle v9.0 is an 11-layer signal pipeline that aggregates 32+ real-world data sources into a single actionable confidence score — with an AI intelligence layer that synthesises every signal into a plain-language briefing for treasury and risk teams. It runs 11 independent signal-gathering layers (indexed 0–10), fetched in parallel, feeding into five downstream synthesis stages — Tech Supply Chain, Cross-Body Integration, Macro Signals, Predictive Signals, and the Recommendation Engine — plus an optional AI reasoning pass, with active war mitigation protocols and 30–90 day early warning signals.
 
 **New in v9.0:** USD structural health monitoring (12 signals), independent inflation cross-validation, [stablecoin](https://alternativeassetliteracy.com/glossary.html#stablecoin) market health, [DeFi](https://alternativeassetliteracy.com/glossary.html#defi-decentralized-finance) systemic risk signal, ECB cross-validation, gold price debasement signal, seismic supply-chain impact — all feeding a `usdHealth` confidence score blended into the composite stability score.
 
 ---
 
-## The 9 Layers
+## The 11 Layers
 
-The first 7 layers are numbered signal tiers (0–6). Each tier feeds into the next — the output of Tier 0 causally influences Tier 1, propagating through to Tier 6. Two additional layers run on top: a cross-body integration synthesis pass (v8.0) and the USD Structural Health module (v9.0).
+The oracle fetches 11 independent signal-gathering layers in parallel, indexed 0–10. Each layer gathers its own signals independently; their outputs are then combined by the downstream synthesis stages described further down this page — the layers themselves don't feed into each other sequentially.
 
-### Tier 0 — Climate & Environmental
+### Layer 0 — Climate & Environmental
 **Lead time: 30–90 days**
 
 | Data source | What it tracks |
@@ -26,16 +26,16 @@ The first 7 layers are numbered signal tiers (0–6). Each tier feeds into the n
 | OpenMeteo | Regional weather for crop impact modeling |
 | Regional climate models | Drought, flood, hurricane probability |
 
-**Example:** Brazil drought detected → coffee risk flagged 30–90 days before price spike → flows through Tier 1 (commodities) → Tier 2 (CPI) → Tier 3 (BRL/FX) → final stability score.
+**Example:** Brazil drought detected → coffee risk flagged 30–90 days before price spike → propagates through downstream synthesis (commodities → CPI → BRL/FX) → final stability score.
 
 ---
 
-### Tier 1 — Commodities & Energy
+### Layer 1 — Commodities & Energy
 **Lead time: 2–8 weeks**
 
 Sources: EIA, World Bank, PJM, ERCOT, ENTSO-E. Includes **AI data center impact modeling** — structural electricity demand from AI infrastructure tracked as a separate signal.
 
-**Also in Tier 1: Oil & Energy Stress module** — dedicated monitoring of Brent/WTI prices, OPEC production discipline, US refinery utilization, natural gas stress, and petrodollar recycling signal. Computes direct per-currency vulnerability from energy import dependency.
+**Also in Layer 1: Oil & Energy Stress module** — dedicated monitoring of Brent/WTI prices, OPEC production discipline, US refinery utilization, natural gas stress, and petrodollar recycling signal. Computes direct per-currency vulnerability from energy import dependency.
 
 | Oil price level | CPI impact (adj) | USD signal | EUR signal |
 |---|---|---|---|
@@ -48,7 +48,7 @@ Sources: EIA, World Bank, PJM, ERCOT, ENTSO-E. Includes **AI data center impact 
 
 ---
 
-### Tier 2 — Macroeconomic
+### Layer 2 — Macroeconomic
 **Lead time: 1–4 weeks**
 
 Four independent sources per indicator (Bureau of Labor Statistics, Federal Reserve, IMF, World Bank). If sources disagree, a data confidence warning is flagged.
@@ -57,38 +57,21 @@ Indicators: GDP, M2 money supply, Fed Funds rate, CPI, unemployment, Treasury yi
 
 ---
 
-### Tier 3 — Currency & FX
+### Layer 3 — Currency & FX
 **Lead time: Hours to days**
 
 Four independent FX sources cross-validated in real time. All basket currencies covered. If volatility exceeds thresholds, FX alert raised before it reaches the peg.
 
 ---
 
-### Tier 4 — Basket Verification
+### Layer 4 — Basket Verification
 **Real-time on-chain vs. API comparison**
 
 Queries Base network + 3 FX APIs, computes DPX basket value on-chain, and compares to API calculation. If computed basket diverges from on-chain by more than peg tolerance, a peg alert is raised immediately. Agents should hold large settlements when `peg.deviationBps >= 50`.
 
 ---
 
-### Tier 5 — Causal Chains & Predictive Signals
-**Forward-looking multi-timeframe synthesis**
-
-**Climate causal chain models (Enhanced):**
-Proprietary models trace how major climate oscillations transmit through commodity markets into inflation and currency impacts — with specific coverage of agricultural supply chains, energy markets, and regional drought risk. ERCOT and PJM real-time grid data feeds the causal chain.
-
-**Predictive signals:** Four timeframes — immediate (1–7 days), short (1–4 weeks), medium (1–3 months), long (3–12 months).
-
----
-
-### Tier 6 — Non-Linear Dynamics, War Economics & Infrastructure
-**v8.0 — adds bond yield curve analysis, geopolitical EPU risk, capital flows (policy rate differentials), tech supply chain index, cross-body integration, macro signals (stagflation/goldilocks detection), predictive signals, and full recommendation engine**
-
-Standard economic models assume linear relationships and Gaussian (normal) distributions. Tier 6 addresses the reality: real financial systems exhibit phase transitions, correlation collapse, cascade failures, and fat-tail events that standard models systematically miss.
-
-**Three sub-modules:**
-
-#### Global Infrastructure Weak Spots
+### Layer 5 — Infrastructure Weak Spots
 
 Monitors the physical and digital chokepoints whose failure cascades into economic and currency instability:
 
@@ -102,7 +85,9 @@ Monitors the physical and digital chokepoints whose failure cascades into econom
 
 Cascade risk is assessed: when multiple chokepoints are stressed simultaneously, interconnected failures become non-linear.
 
-#### War Destabilization & Mitigation
+---
+
+### Layer 6 — War & Conflict
 
 Real-time conflict event monitoring runs on a 15-minute update cycle across 4 conflict regions (Ukraine-Russia, Middle East, Taiwan Strait, global), cross-validated against a second independent conflict data source.
 
@@ -129,9 +114,47 @@ Seven war-to-economy transmission channels are modelled for each active conflict
 
 De-escalation uses a gated normalisation: all four gates (ceasefire holding, energy recovery, food routes open, markets stabilised) must confirm before weights return to neutral. This prevents premature rebalancing on false-dawn ceasefires.
 
-#### Chaos Theory Signals
+---
 
-Applies non-linear dynamics analysis to the aggregate signal set:
+### Layer 7 — Bond Yields & Yield Curve
+
+Tracks 2Y/10Y Treasury yields, yield curve shape, and inversion signals — a standard recession early-warning indicator — alongside term premium. Cross-validated against Federal Reserve and FRED data.
+
+---
+
+### Layer 8 — Geopolitical Risk
+
+Geopolitical risk indices (FRED GPR) — shipping disruptions (Red Sea, Hormuz, Panama, Suez, Taiwan Strait), sanctions impacts, trade route risk, currency flight-to-safety. Output: per-currency impact signals.
+
+---
+
+### Layer 9 — Capital Flows
+
+Cross-border capital flow direction (FRED TIC), carry trade positions, interest rate differentials, USD strength outlook.
+
+---
+
+### Layer 10 — USD Structural Health
+
+Monitors U.S. fiscal trajectory, debt-to-GDP, Fed balance sheet, and foreign holdings of Treasuries. Tracks structural (not cyclical) USD weakness via 12 signals, including independent inflation cross-validation, stablecoin market health, DeFi systemic risk signal, ECB cross-validation, gold price debasement signal, and seismic supply-chain impact — all feeding a `usdHealth` confidence score blended into the composite stability score.
+
+---
+
+## Downstream Synthesis
+
+Five synchronous stages consume the 11 layers' outputs and combine them — they are not independent signal layers themselves, since they don't gather their own external data; they synthesize what the layers above already collected.
+
+### Tech Supply Chain
+
+Semiconductor supply chain health, AI infrastructure demand, tech sector inflation contribution. Proprietary composite index (0–100) captures structural demand-side inflation traditional macro models miss.
+
+### Cross-Body Integration
+
+Aggregates outputs from all 11 layers into unified currency impact vectors. Detects **interaction effects** — when multiple layers amplify each other. Includes the **Cross-Region Commodity Matrix**, which maps how regional climate events transmit to specific currencies through commodity markets (example: US wheat export share gain from Russia/Ukraine disruption → USD strength signal).
+
+### Macro Signals
+
+Applies non-linear dynamics analysis to the aggregate signal set — stagflation/goldilocks regime detection and chaos-theory signals. Standard economic models assume linear relationships and Gaussian (normal) distributions; this stage addresses the reality that real financial systems exhibit phase transitions, correlation collapse, cascade failures, and fat-tail events that standard models systematically miss.
 
 | Signal | What it detects | Basket action |
 |---|---|---|
@@ -152,38 +175,23 @@ Applies non-linear dynamics analysis to the aggregate signal set:
 | CRISIS | 65–80 | Non-linear cascade underway; standard models unreliable | +5–8% USD; widen tolerance |
 | CATASTROPHE | 80–100 | Systemic failure; extreme fat tails | Emergency protocol; human review |
 
----
+### Predictive Signals
+**Forward-looking multi-timeframe synthesis**
 
-## Cross-Body Transmission Mechanisms
+**Climate causal chain models (Enhanced):**
+Proprietary models trace how major climate oscillations transmit through commodity markets into inflation and currency impacts — with specific coverage of agricultural supply chains, energy markets, and regional drought risk. ERCOT and PJM real-time grid data feeds the causal chain.
 
-Five channels that cut across tier boundaries:
+**Predictive signals:** Four timeframes — immediate (1–7 days), short (1–4 weeks), medium (1–3 months), long (3–12 months).
 
-### Geopolitical Risk
-Geopolitical risk indices — shipping disruptions (Red Sea, Hormuz, Panama, Suez, Taiwan Strait), sanctions impacts, trade route risk, currency flight-to-safety.
+### Recommendation Engine
 
-### Capital Flows & Monetary Policy
-Cross-border capital flow direction, carry trade positions, interest rate differentials, USD strength outlook.
-
-### Tech & AI Supply Chain
-Semiconductor supply chain health, AI infrastructure demand, tech sector inflation contribution. Proprietary composite index (0–100) captures structural demand-side inflation traditional macro models miss.
-
-### Cross-Region Commodity Matrix
-Maps how regional climate events transmit to specific currencies through commodity markets. Example: US wheat export share gain from Russia/Ukraine disruption → USD strength signal.
-
-### Cross-Body Integration
-Aggregates all channels into unified currency impact vectors. Detects **interaction effects** — when multiple channels amplify each other.
-
----
-
-## Recommendation Engine
-
-Produces actionable outputs from all tier and cross-body data:
+Produces actionable outputs from all 11 layers plus the synthesis stages above:
 
 | Output | Description |
 |---|---|
 | `stabilityScore.overall` | 0–100 composite score |
 | `stabilityScore.status` | STABLE (90–100) / CAUTION (75–89) / UNSTABLE (<75) |
-| `stabilityScore.components` | Per-tier scores: climate, commodity, macro, FX, basket |
+| `stabilityScore.components` | Per-layer scores: climate, commodity, macro, FX, basket |
 | `alerts.items` | HIGH / MEDIUM / LOW alerts with rationale |
 | `basketAdjustments` | Proposed % changes per currency with confidence |
 | `feeAdjustments` | Proposed basis point changes with rationale |
@@ -207,7 +215,7 @@ War mitigation protocols add a second override layer: when escalation risk is HI
 
 > **Proprietary technology.** The AI synthesis methodology, prompt architecture, and inference infrastructure are proprietary intellectual property of Untitled_ LuxPerpetua Technologies, Inc.
 
-The Stability Oracle includes an embedded AI intelligence layer that runs after all 32+ data sources are collected and all 9 layers are computed. It synthesises the full signal set across all 9 layers into a structured institutional briefing appended to every oracle response as an `intelligence` object.
+The Stability Oracle includes an embedded AI intelligence layer that runs after all 32+ data sources are collected and all 11 layers are computed. It synthesises the full signal set across all 11 layers into a structured institutional briefing appended to every oracle response as an `intelligence` object.
 
 **What it produces:**
 
@@ -234,8 +242,8 @@ The Stability Oracle includes a fully autonomous adaptive layer that continuousl
 
 **What it does:**
 
-- Logs every oracle run and resolves predictions against actuals to score accuracy per tier
-- Periodically re-weights signal tiers based on which have been most predictive
+- Logs every oracle run and resolves predictions against actuals to score accuracy per layer
+- Periodically re-weights signal layers based on which have been most predictive
 - Calibrates confidence scores against historical prediction outcomes
 - Recalls similar historical scenarios to inform the AI synthesis layer
 - Executes on-chain policy adjustments only after passing a multi-gate safety check
@@ -246,7 +254,7 @@ Before any on-chain call to `BasketPegManager` or `StabilityFeeController`, the 
 
 **Adaptive weight bounds:**
 
-Tier weights can only drift gradually and cannot be pushed below a hard floor — both enforced by an immutable, non-overridable bounds object. The learning system cannot destabilize the oracle by over-weighting any single tier.
+Layer weights can only drift gradually and cannot be pushed below a hard floor — both enforced by an immutable, non-overridable bounds object. The learning system cannot destabilize the oracle by over-weighting any single layer.
 
 **Adaptive status endpoint:**
 
@@ -270,18 +278,20 @@ Corridor risk, FX cost-certainty, chaos/regime scoring, and climate-driven commo
 
 ## Data Sources (32+)
 
-| Tier | Sources |
+| Layer | Sources |
 |---|---|
-| Tier 0 — Climate | NOAA, NASA, USDA FAS, global weather services, regional forecasts |
-| Tier 1 — Energy | EIA (prices + OPEC + refinery), World Bank, US and European grid operators, AI data center tracking |
-| Tier 1 — Oil stress | Brent/WTI spot prices (4 independent sources), refinery utilisation, natural gas spot |
-| Tier 2 — Macro | Bureau of Labor Statistics, Federal Reserve, IMF, World Bank (4 per indicator) |
-| Tier 3 — FX | 4 independent FX sources, cross-validated in real time |
-| Tier 4 — Basket | Base network Chainlink on-chain feeds + 3 FX sources |
-| Tier 5 — Analysis | Enhanced causal modeling, predictive signals (4 timeframes) |
-| Cross-body | Geopolitical risk indices, capital flow data, tech supply chain, climate-commodity matrix |
-| Tier 6 — Infrastructure | Shipping indices, semiconductor production data, copper/nickel/aluminum (World Bank commodity series), FAO Food Price Index composite, wheat/corn/sugar spot prices, EIA grid demand |
-| Tier 6 — War | Real-time conflict event monitoring (4 regions, 15-min cycle, 2 independent sources), defence spending, fiscal deficit data |
-| Tier 6 — Chaos | Computed from all above signals (no external API) |
+| Layer 0 — Climate | NOAA, NASA, USDA FAS, global weather services, regional forecasts |
+| Layer 1 — Energy | EIA (prices + OPEC + refinery), World Bank, US and European grid operators, AI data center tracking |
+| Layer 1 — Oil stress | Brent/WTI spot prices (4 independent sources), refinery utilisation, natural gas spot |
+| Layer 2 — Macro | Bureau of Labor Statistics, Federal Reserve, IMF, World Bank (4 per indicator) |
+| Layer 3 — FX | 4 independent FX sources, cross-validated in real time |
+| Layer 4 — Basket | Base network Chainlink on-chain feeds + 3 FX sources |
+| Layer 5 — Infrastructure | Shipping indices, semiconductor production data, copper/nickel/aluminum (World Bank commodity series), FAO Food Price Index composite, wheat/corn/sugar spot prices, EIA grid demand |
+| Layer 6 — War | Real-time conflict event monitoring (4 regions, 15-min cycle, 2 independent sources), defence spending, fiscal deficit data |
+| Layer 7 — Bond Yields | Treasury yield curve data (2Y/10Y), Federal Reserve, FRED |
+| Layer 8 — Geopolitical Risk | Geopolitical risk indices (FRED GPR), shipping chokepoint monitoring |
+| Layer 9 — Capital Flows | FRED TIC, cross-border flow data |
+| Layer 10 — USD Structural Health | Debt-to-GDP, Fed balance sheet, foreign Treasury holdings, ECB cross-validation, gold price, DeFi/stablecoin health |
+| Downstream synthesis | Enhanced causal modeling, predictive signals (4 timeframes), tech supply chain index, climate-commodity matrix — computed from the 11 layers above, no separate external API |
 
 ---
