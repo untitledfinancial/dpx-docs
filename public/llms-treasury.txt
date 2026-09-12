@@ -12,6 +12,10 @@ A multinational moves funds between its own subsidiaries. Both sides are control
 
 At $10M/month intercompany volume (Sovereign tier), DPX costs 1.130% all-in vs. 2.50–6.00% via bank wire. That is $119,000–$487,000 saved per $10M.
 
+## No vendor approval required
+
+Kyriba, SAP TRM, and TIS all reach DPX today from the customer's own admin panel — a custom outbound payment type or H2H connection pointed at `integration.untitledfinancial.com`. This does not require Kyriba's, SAP's, or TIS's certification, marketplace listing, or involvement — it is configured entirely on the treasury team's side, live today, not "coming soon." An AI copilot embedded in any of these systems can independently discover DPX's pricing and capabilities with zero credentials: `GET /manifest` and `GET /quote` on `stability.untitledfinancial.com` require no API key.
+
 ## How it plugs into your TMS
 
 DPX accepts payment instructions via webhook. Any system that can POST JSON can trigger a settlement:
@@ -53,21 +57,14 @@ CAUTION signals include: yield curve inverting, FX volatility elevated, shipping
 
 | Component | Rate | Applies |
 |---|---|---|
-| Core transfer | 0.85% | Every settlement |
+| Core transfer | 1.50% | Every settlement |
 | FX conversion | 0.40% | Cross-currency only |
 | ESG fee | 0.00–0.50% | Every settlement — live from oracle |
 | License | 0.01% | Every settlement — fixed |
 
-ESG fee formula: `(100 - yourESGScore) / 200`. Score 100 = 0% ESG fee. Score 75 = 0.125%.
+ESG fee formula: `(100 - yourESGScore) / 200`. Score 100 = 0% ESG fee. Score 75 = 0.125%. Typical all-in (cross-border, score 75): 2.035%.
 
-## Volume discount tiers
-
-| Tier | Monthly volume | Core discount | All-in (score 75, FX) |
-|---|---|---|---|
-| Standard | < $100K | 0% | 1.385% |
-| Growth | $100K–$1M | 10% | 1.300% |
-| Institutional | $1M–$10M | 20% | 1.215% |
-| Sovereign | $10M+ | 30% | 1.130% |
+Volume-based pricing is available for qualifying institutional monthly volumes on request — contact DPX directly. This is not yet an automatic on-chain discount; the settlement router charges the rate above uniformly regardless of volume today.
 
 ## ESG and CSRD compliance
 
@@ -92,8 +89,9 @@ Returns fees, net amount, oracle status, AI reasoning, and a quoteId valid for 3
 ## Integration
 
 - [Webhook receiver](https://docs.untitledfinancial.com/integrations/rest-api): Connect any TMS in minutes
-- [Kyriba connector](https://docs.untitledfinancial.com/integrations/kyriba): Native Kyriba integration (coming soon)
-- [SAP TRM](https://docs.untitledfinancial.com/integrations/sap-trm): SAP Treasury & Risk Management (coming soon)
+- [Kyriba connector](https://docs.untitledfinancial.com/integrations/kyriba): Live today — self-serve direct integration, no Kyriba approval needed
+- [SAP TRM](https://docs.untitledfinancial.com/integrations/sap-trm): Live today via SAP Integration Suite / BTP — no SAP approval needed
+- [TIS](https://docs.untitledfinancial.com/integrations/tis): Live today as a standard H2H bank connection — no TIS approval needed
 - [Agent Quick Start](https://docs.untitledfinancial.com/agent-quickstart): Full settlement loop documentation
 - [Pilot program](https://docs.untitledfinancial.com/pilot): Sandbox with real oracle data, no funds moved
 

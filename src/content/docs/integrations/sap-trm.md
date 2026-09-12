@@ -5,6 +5,8 @@ description: Connect DPX settlement rails to SAP TRM — ISO 20022 pain.001 outp
 
 SAP TRM connects to DPX through the [Integration API](/api/integration-api) via SAP Integration Suite (formerly Cloud Platform Integration) or BTP. SAP already emits ISO 20022 pain.001 from payment programs — the Integration API accepts it without transformation.
 
+**No SAP approval needed.** This is configured entirely within your own SAP Integration Suite / BTP tenant, live today — SAP's certification or involvement is not required. An AI copilot embedded in SAP TRM (or acting on a treasury team's behalf) can independently discover DPX's pricing with zero credentials: `GET /manifest` and `GET /quote` on `stability.untitledfinancial.com` require no API key.
+
 **Base URL:** `https://integration.untitledfinancial.com`
 
 ---

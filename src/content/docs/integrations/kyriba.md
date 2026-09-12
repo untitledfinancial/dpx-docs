@@ -3,14 +3,14 @@ title: Kyriba
 description: Two integration modes — DPX as a Kyriba Connect Marketplace connector (SPI), and Kyriba pushing ISO 20022 pain.001 directly to the DPX Integration API.
 ---
 
-DPX integrates with Kyriba in two modes:
+**No Kyriba approval needed.** Any Kyriba customer can route to DPX today by configuring a custom payment type in their own instance — this requires nobody's certification, works immediately, and is the recommended path for almost everyone. A second mode exists for teams that specifically want the official Kyriba Connect Marketplace badge, which requires Kyriba's own certification process and is unrelated to whether the integration itself works.
 
 | Mode | Who initiates | Best for |
 |---|---|---|
-| **[Payment Initiation SPI](#payment-initiation-service-spi)** | Kyriba calls DPX | Kyriba Connect Marketplace certified connector — Kyriba-native flow |
-| **[Direct Integration API](#direct-integration-api)** | Kyriba calls DPX | Custom setup, non-Marketplace deployments |
+| **[Direct Integration API](#direct-integration-api)** | Kyriba calls DPX | **Recommended.** Live today, zero waiting, configured entirely from your own Kyriba admin panel |
+| **[Payment Initiation SPI](#payment-initiation-service-spi)** | Kyriba calls DPX | Only if you specifically want Kyriba Connect Marketplace certification |
 
-Both modes accept ISO 20022 pain.001, return pacs.002, and include full FATF R16 / MiCA / GENIUS Act compliance attestation.
+Both modes accept ISO 20022 pain.001, return pacs.002, and include full FATF R16 / MiCA / GENIUS Act compliance attestation. An AI copilot embedded in Kyriba (or acting on a customer's behalf) can independently discover DPX's pricing and capabilities with zero credentials via `GET /manifest` and `GET /quote` on `stability.untitledfinancial.com` — no API key required for discovery.
 
 **Base URL:** `https://integration.untitledfinancial.com`
 

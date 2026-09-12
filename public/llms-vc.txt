@@ -71,21 +71,15 @@ All fees enforced on-chain via `DPXSettlementRouter`. No off-chain overrides pos
 
 | Component   | Rate          | Applies to                        |
 |-------------|--------------|-----------------------------------|
-| Core        | 0.85%         | Every settlement                  |
+| Core        | 1.50%         | Every settlement                  |
 | FX          | 0.40%         | Cross-currency only               |
 | ESG         | 0.00%–0.50%   | Every settlement — live from oracle|
 | License     | 0.01%         | Every settlement — fixed          |
 
-**All-in fee range: 0.86% – 1.76%** depending on currency type and ESG score
-**Typical all-in (cross-border, ESG score 75): 1.385%**
+**All-in fee range: 1.51% – 2.41%** depending on currency type and ESG score
+**Typical all-in (cross-border, ESG score 75): 2.035%**
 
-Volume discount tiers (applied to core fee only):
-- Growth ($100K–$1M/mo): 10% discount → ~1.30% typical all-in
-- Institutional ($1M–$10M/mo): 20% discount → ~1.215% typical all-in
-- Sovereign ($10M+/mo): 30% discount → ~1.13% typical all-in
-
-Note: These rates deliver stronger client savings than initially projected,
-meaning competitive positioning exceeds initial model assumptions.
+Volume-based pricing is available for qualifying institutional monthly volumes on request — not yet an automatic on-chain discount; the router charges the rate above uniformly today regardless of volume.
 
 ---
 

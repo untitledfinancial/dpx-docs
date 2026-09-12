@@ -155,8 +155,8 @@ strategic acquisition angle.
 
 ## FINANCIAL MODEL
 
-- Fee structure:      0.85% core + 0.40% FX + 0–0.50% ESG + 0.01% license
-- Typical all-in:     1.385% (cross-border, ESG score 75)
+- Fee structure:      1.50% core + 0.40% FX + 0–0.50% ESG + 0.01% license
+- Typical all-in:     2.035% (cross-border, ESG score 75)
 - Break-even volume:  ~$340M/year
 - Gross margin:       ~92% at $5B/year
 - 10-yr cumulative NOI: $459.5M (at $12B annual volume)

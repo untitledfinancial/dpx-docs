@@ -7,6 +7,8 @@ TIS is a cloud-based enterprise payment factory used by 500+ corporates across G
 
 DPX integrates as a **bank endpoint** within TIS — treated identically to a bank H2H connection. When a treasury team initiates a cross-border payment in TIS and selects DPX as the routing bank, TIS delivers the payment file to DPX's Integration API. The rest of the flow — oracle gating, ESG scoring, on-chain settlement — is handled by DPX automatically.
 
+**No TIS approval needed.** This is configured entirely from your own TIS bank-connections admin panel, live today — TIS's involvement or certification is not required. Any AI copilot embedded in TIS (or acting on a treasury team's behalf) can independently discover DPX's pricing with zero credentials: `GET /manifest` and `GET /quote` on `stability.untitledfinancial.com` require no API key.
+
 ---
 
 ## How it works

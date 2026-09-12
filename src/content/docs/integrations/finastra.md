@@ -7,6 +7,8 @@ Finastra is the third-largest fintech by revenue, dominant in European bank trea
 
 DPX integrates via **FusionFabric.cloud** — Finastra's open API marketplace. DPX registers as a FusionFabric app. Banks already running Fusion Treasury install the DPX app from the marketplace. When a treasury team initiates a cross-border payment, DPX appears as an alternative settlement channel alongside SWIFT.
 
+Unlike DPX's Kyriba, SAP TRM, and TIS integrations, this one genuinely requires Finastra's marketplace review — FusionFabric doesn't expose a direct, bank-side-only path the way those do. A bank on Fusion Treasury can still reach DPX's underlying REST API directly without waiting on the marketplace listing (see the [REST API integration](/integrations/rest-api)); only the in-app marketplace experience is gated on Finastra.
+
 ```
 Fusion Treasury payment run (bank-side)
     │

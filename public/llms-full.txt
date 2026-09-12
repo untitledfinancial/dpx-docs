@@ -40,7 +40,7 @@ All fees enforced on-chain via DPXSettlementRouter on Base mainnet.
 
 | Component | Rate | When it applies |
 |---|---|---|
-| Core transfer | 0.85% (85 bps) | Every settlement |
+| Core transfer | 1.50% (150 bps) | Every settlement |
 | FX conversion | 0.40% (40 bps) | Cross-currency only |
 | ESG fee | 0.00–0.50% | Every settlement, live from oracle |
 | License | 0.01% (1 bp) | Every settlement, fixed in token contract |
@@ -60,19 +60,12 @@ All fees enforced on-chain via DPXSettlementRouter on Base mainnet.
 
 | Scenario | Total Rate | Per $1M |
 |---|---|---|
-| Best case — score 100, no FX | 0.86% | $8,600 |
-| Typical — score 75, cross-border | 1.385% | $13,850 |
-| Average — score 50, cross-border | 1.51% | $15,100 |
-| Worst case — score 0, cross-border | 1.76% | $17,600 |
+| Best case — score 100, no FX | 1.51% | $15,100 |
+| Typical — score 75, cross-border | 2.035% | $20,350 |
+| Average — score 50, cross-border | 2.16% | $21,600 |
+| Worst case — score 0, cross-border | 2.41% | $24,100 |
 
-**Volume discount tiers (core fee only):**
-
-| Tier | Monthly Volume | Core Discount | Effective All-In (score 75, FX) |
-|---|---|---|---|
-| Standard | < $100K | 0% | 1.385% |
-| Growth | $100K–$1M | 10% | 1.30% |
-| Institutional | $1M–$10M | 20% | 1.215% |
-| Sovereign | $10M+ | 30% | 1.13% |
+**Volume-based pricing:** Available for qualifying institutional monthly volumes — contact DPX directly. Not yet an automatic on-chain discount applied per transaction; the rate above is what the router actually charges regardless of volume today.
 
 **ESG redistribution (100% of ESG fees, on-chain enforced):**
 
