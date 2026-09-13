@@ -12,9 +12,9 @@ Consumer payment, card charge, subscription, invoice, refund → Stripe
 B2B cross-border, cross-currency, or large notional (>$10K)  → DPX
 ```
 
-## Stripe App (recommended)
+## Stripe App
 
-Install the **DPX B2B Settlement** app from the [Stripe App Marketplace](https://marketplace.stripe.com/apps/dpx-b2b-settlement). It adds a live settlement intelligence panel directly to your Stripe Dashboard — no code required.
+**⚠️ Built, not yet published.** The **DPX B2B Settlement** app (v0.2.0) is built and uploaded to Stripe but was never submitted for marketplace review — verified 2026-09-13: the marketplace listing does not exist yet. The description below is the intended functionality once it's live. Use Patterns 1–3 below for a working integration today.
 
 **What the app does:**
 - Detects B2B cross-border payments in PaymentIntent and Invoice views
@@ -86,9 +86,11 @@ all_tools = stripe_toolkit.get_tools() + DPX_TOOLS
 
 ### Pattern 2 — Stripe webhook → DPX settlement
 
-Stripe fires events → the DPX Settlement Bridge Worker catches them → runs an oracle check → fetches execution params and logs to KV.
+**⚠️ Planned, not yet deployed.** The design below (`DPX Settlement Bridge`) describes the intended integration — the endpoint is not currently live. Verified 2026-09-13: `webhook.untitledfinancial.com` resolves in DNS but has no origin server behind it (Cloudflare 522 on every path). Documented here for the design, not as something to point real Stripe events at today. Use Pattern 1 or Pattern 3 for a working integration in the meantime.
 
-**Deployed endpoint:** `https://webhook.untitledfinancial.com/stripe/webhook`
+Once built: Stripe fires events → the DPX Settlement Bridge Worker catches them → runs an oracle check → fetches execution params and logs to KV.
+
+**Intended endpoint (not live):** `https://webhook.untitledfinancial.com/stripe/webhook`
 
 Flag payments for DPX routing when creating the payment intent:
 
@@ -165,6 +167,6 @@ quote  = requests.get("https://stability.untitledfinancial.com/quote",
 | Oracle stability | `https://stability.untitledfinancial.com/reliability` |
 | Fee quote | `https://stability.untitledfinancial.com/quote` |
 | ESG score | `https://esg.untitledfinancial.com/esg-score` |
-| Webhook bridge | `https://webhook.untitledfinancial.com/stripe/webhook` |
+| Webhook bridge *(planned, not yet deployed — see Pattern 2)* | `https://webhook.untitledfinancial.com/stripe/webhook` |
 
 No API key required for oracle and pricing endpoints. Settlement execution requires a DPX integration key — contact [case@untitledfinancial.com](mailto:case@untitledfinancial.com).
