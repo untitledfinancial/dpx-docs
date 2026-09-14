@@ -153,6 +153,7 @@ export default defineConfig({
             { label: 'SFDR & CSRD',            slug: 'protocol/sfdr-csrd' },
             { label: 'FATF & Travel Rule',     slug: 'protocol/fatf-compliance' },
             { label: 'FinCEN Travel Rule (US)', slug: 'protocol/fincen-travel-rule' },
+            { label: 'Agent Transaction Compliance', slug: 'protocol/agent-transaction-compliance' },
             { label: 'Governance',             slug: 'protocol/governance' },
             { label: 'AI & Climate',           slug: 'protocol/ai-climate-impact' },
           ],
