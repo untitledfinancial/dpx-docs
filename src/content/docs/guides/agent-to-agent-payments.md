@@ -65,9 +65,13 @@ curl -X POST https://agent.untitledfinancial.com/invoice \
     "amount": 5000,
     "recipientAddress": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
     "description": "Data processing services — batch job #2026-0042",
-    "currency": "USD"
+    "currency": "USD",
+    "externalReference": "PO-2026-0042",
+    "lineItems": [{ "description": "Batch processing, 500K records", "quantity": 1, "unitPrice": 5000 }]
   }'
 ```
+
+`externalReference` and `lineItems` (added 2026-09-14) are optional — pass your own PO/bill number and structured line items if you want them carried through to reconciliation later (see below). Omit either and the invoice behaves exactly as before.
 
 Response:
 ```json
@@ -77,6 +81,8 @@ Response:
   "currency": "USD",
   "description": "Data processing services — batch job #2026-0042",
   "recipientAddress": "0xd8...",
+  "externalReference": "PO-2026-0042",
+  "lineItems": [{ "description": "Batch processing, 500K records", "quantity": 1, "unitPrice": 5000 }],
   "payUrl": "https://agent.untitledfinancial.com/invoice/dpx-inv-abc123/pay",
   "viewUrl": "https://agent.untitledfinancial.com/widgets/invoice?id=dpx-inv-abc123",
   "status": "pending",
@@ -85,6 +91,36 @@ Response:
 ```
 
 `viewUrl` is a human-readable page — open it in a browser to see the invoice, and after payment, a receipt summary (compliance/oracle detail, transaction link). `GET /invoice/{id}` itself still returns the machine-readable JSON above for agents parsing it programmatically.
+
+### Reconciling a paid invoice against your own records
+
+Once an invoice is paid, `GET /invoice/{id}/reconciliation` joins it with the full on-chain settlement record — amounts, fees, tx hash, oracle/ESG attestation at time of settlement — into one export your own AP/ERP system can match against `externalReference`:
+
+```bash
+curl https://agent.untitledfinancial.com/invoice/dpx-inv-abc123/reconciliation
+```
+
+```json
+{
+  "invoiceId": "dpx-inv-abc123",
+  "externalReference": "PO-2026-0042",
+  "lineItems": [{ "description": "Batch processing, 500K records", "quantity": 1, "unitPrice": 5000 }],
+  "reconciled": true,
+  "settlement": {
+    "settlementId": "dpx_abc123...",
+    "txHash": "0x...",
+    "txExplorerUrl": "https://base.blockscout.com/tx/0x...",
+    "grossAmount": 5000,
+    "netAmount": 4917.5,
+    "feesTotal": 82.5,
+    "token": "USDC",
+    "timestamp": "2026-09-14T20:00:00.000Z"
+  },
+  "complianceAttestation": { "oracleStatus": "STABLE", "oracleScore": 92, "esgScore": 78 }
+}
+```
+
+This is a convenience export, not the source of truth — `settlement.txExplorerUrl` is independently verifiable on-chain. There's no bulk/CSV export or webhook push on settlement yet; this is a pull-per-invoice endpoint today.
 
 ### Agent B — pay invoice
 

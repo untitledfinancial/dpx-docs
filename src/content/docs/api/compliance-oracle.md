@@ -629,7 +629,43 @@ curl -X POST https://compliance.untitledfinancial.com/agent/agt_Xy9.../verify
       "maxNotionalUsd": 5000000
     },
     "signature": "HMAC-SHA256 signed, 1h TTL"
-  }
+  },
+  "verifiableCredential": "eyJhbGciOiJFUzI1NiIsInR5cCI6InZjK2p3dCIsImtpZCI6ImRpZDp3ZWI6Y29tcGxpYW5jZS51bnRpdGxlZGZpbmFuY2lhbC5jb20ja2V5LTEifQ...."
+}
+```
+
+`credential` is signed with HMAC — only DPX itself can verify it; a third party holding it has no way to check it's real without calling DPX's API back. `verifiableCredential` (added 2026-09-14) is a [W3C Verifiable Credential](/protocol/agent-transaction-compliance) in VC-JWT form, signed with an asymmetric key resolvable at `https://compliance.untitledfinancial.com/.well-known/did.json` — any third party can verify it independently, with no callback to DPX. Both attest the same underlying facts; use `verifiableCredential` for anything a party other than DPX needs to check on its own.
+
+### GET /.well-known/did.json and GET /agents/:id/did.json
+
+`did:web` documents — DPX's own identity as the credential issuer, and, per-agent, the identity `verifiableCredential` subjects resolve to. An agent's own document only includes a `verificationMethod` (its own key) if it supplied `publicKey` at registration; otherwise it resolves but is DPX-anchored rather than self-controlled.
+
+```bash
+curl https://compliance.untitledfinancial.com/.well-known/did.json
+curl https://compliance.untitledfinancial.com/agents/agt_Xy9.../did.json
+```
+
+### GET /agents/directory
+
+Opt-in counterparty discovery — lists agents that explicitly set `discoverable: true` at registration (default `false`; registering does not make an agent publicly listed). Minimal fields only: no email, no raw LEI, no mandate detail.
+
+```bash
+curl "https://compliance.untitledfinancial.com/agents/directory?ownerEntity=Acme"
+```
+
+```json
+{
+  "count": 1,
+  "agents": [{
+    "agentId": "agt_Xy9...",
+    "name": "Acme Procurement Agent",
+    "ownerEntity": "Acme GmbH",
+    "kyaLevel": "VERIFIED",
+    "leiVerified": true,
+    "did": "did:web:compliance.untitledfinancial.com:agents:agt_Xy9...",
+    "protocols": ["x402", "ap2"],
+    "registeredAt": "2026-09-14T12:00:00.000Z"
+  }]
 }
 ```
 

@@ -3,6 +3,15 @@ title: Changelog
 description: Notable fixes and additions to DPX, dated.
 ---
 
+## 2026-09-14
+
+- **Bridged KYA agent identity to W3C DID Core + Verifiable Credentials** — `POST /agent/:id/verify` now also returns `verifiableCredential`, a VC-JWT signed with an asymmetric key resolvable at `https://compliance.untitledfinancial.com/.well-known/did.json`. A third party can now verify a DPX KYA credential independently, with no callback to DPX — the original HMAC-signed `credential` field could only ever be checked by DPX itself. See [Compliance for Autonomous Agent Transactions](/protocol/agent-transaction-compliance).
+- **Added opt-in counterparty discovery** — `GET /agents/directory` lists agents that explicitly set `discoverable: true` at registration (default `false`). Solves a real gap: there was previously no way for one agent to discover that another, unrelated agent accepted DPX settlement before initiating a transaction.
+- **Added invoice reconciliation** — `POST /invoice` accepts optional `externalReference` and `lineItems`; `GET /invoice/:id/reconciliation` joins a paid invoice with its full on-chain settlement record for AP/ERP matching.
+- **Added recipient verification via test payment** — `POST /settle/verify-recipient` lets a paying agent confirm the on-chain counterparty is correct using a real, tiny ($0.01–$1) direct transfer before committing to a full settlement. DPX never holds funds at any point — it only checks the chain and reports what it finds.
+- **Fixed the MCP/Compliance subscription system, which had never actually run** — `POST /subscribe` wrote to a KV binding name (`ORACLE_KV`) that didn't match the one actually bound (`COMPLIANCE_KV`), so an issued key was never persisted; separately, `POST /compliance/screen` never checked subscription keys at all despite its own documentation describing that it should. Both fixed; added a `free` tier (500 compliance screens/month, no payment) to `POST /subscribe` in the process. See [MCP Subscriptions](/products/mcp-subscriptions).
+- **Fixed `GET /subscribe/status`'s `remaining` field**, which never actually subtracted usage due to a key-naming mismatch between the `limits` and `usage` objects — it always reported the full limit regardless of real usage.
+
 ## 2026-09-10
 
 - **Added `agent-to-agent-invoice` to the A2A discovery card** — the invoice settlement flow (`POST /invoice` → `POST /invoice/:id/pay`) previously had no dedicated entry in `.well-known/agent.json`, so an orchestrating agent scanning the card for it would find nothing.

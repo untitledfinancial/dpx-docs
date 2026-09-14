@@ -27,13 +27,27 @@ Full tool reference: [MCP — Claude](/integrations/mcp).
 
 | Tier | Monthly (USDC) | MCP calls/month | Compliance screens | ESG entities/month | Settlement executions |
 |---|---|---|---|---|---|
+| **Free** | 0 | 50 | 500 | 50 | 0 |
 | **Analyst** | 50 | 5,000 | 500 | 1,000 | 10 |
 | **Professional** | 200 | 25,000 | 5,000 | 10,000 | 100 |
 | **Institutional** | 800 | Unlimited | Unlimited | Unlimited | Unlimited |
 
-All tiers include: full DPX MCP tool access, FATF R.16 attestations, SFDR PAI indicators, corridor intelligence, and AI synthesis on oracle responses.
+All tiers include: full DPX MCP tool access, FATF R.16 attestations, SFDR PAI indicators, corridor intelligence, and AI synthesis on oracle responses. Free requires no payment — just an email — and is meant for evaluating the toolset before committing to a paid tier; it does not include settlement execution rights.
 
 ## Get a subscription key
+
+Free tier — no payment required:
+
+```bash
+curl -X POST https://compliance.untitledfinancial.com/subscribe \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tier": "free",
+    "email": "you@yourfirm.com"
+  }'
+```
+
+Paid tiers — requires a confirmed USDC payment on Base mainnet first:
 
 ```bash
 curl -X POST https://compliance.untitledfinancial.com/subscribe \
@@ -61,7 +75,7 @@ curl -X POST https://compliance.untitledfinancial.com/subscribe \
 }
 ```
 
-**Payment:** Send USDC to the DPX settlement address on Base mainnet and include the transaction hash. Subscription activates within 60 seconds of on-chain confirmation.
+**Payment:** Send USDC to the DPX subscription address on Base mainnet, then call `/subscribe` with the resulting transaction hash. Activation is immediate on that call — DPX checks the transaction directly (confirmed, correct recipient, correct amount, not already used) as part of the request; there's no separate waiting period.
 
 | Tier | USDC amount | Address |
 |---|---|---|
@@ -168,15 +182,19 @@ curl https://compliance.untitledfinancial.com/subscribe/status \
     "settlementExecutions": 100
   },
   "remaining": {
-    "mcpCalls": 23757,
-    "complianceScreens": 4913
+    "mcpCallsPerMonth": 23757,
+    "compliancePerMonth": 4913,
+    "esgEntitiesPerMonth": 9660,
+    "settlementExecutions": 97
   }
 }
 ```
 
+Note `remaining`'s keys match `limits`' naming (`*PerMonth`-suffixed), not `usage`'s (bare category names) — the two objects use different key conventions for the same underlying counters.
+
 ## Renew or upgrade
 
-Send a new USDC payment with your existing API key in the memo field to extend or upgrade. Upgrades apply immediately. Renewals extend the expiry from the current expiry date (not the payment date), so paying early doesn't waste days.
+There is no separate renewal endpoint yet — call `POST /subscribe` again with a new payment (or `tier: "free"` with no payment) to get a new key. This issues a **new** API key rather than extending the existing one; there is currently no way to keep the same key across a renewal or tier change.
 
 ## Beta Access
 
