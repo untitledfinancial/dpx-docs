@@ -58,6 +58,7 @@ export default defineConfig({
             { label: 'Trust and verification',     slug: 'guides/trust-and-verification' },
             { label: 'Agent-to-agent payments',    slug: 'guides/agent-to-agent-payments' },
             { label: 'AP automation agent',        slug: 'guides/ap-automation' },
+            { label: 'Get paid via DPX',           slug: 'guides/get-paid-via-dpx' },
             { label: 'Computer use payments',      slug: 'guides/computer-use-payments' },
             { label: 'Agent frameworks',           slug: 'guides/agent-frameworks' },
             { label: 'Add payments to your agent', slug: 'guides/agent-payments' },

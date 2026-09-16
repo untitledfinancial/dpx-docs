@@ -3,6 +3,10 @@ title: Changelog
 description: Notable fixes and additions to DPX, dated.
 ---
 
+## 2026-09-16 (later, same day)
+
+- **Added [Get paid via DPX](/guides/get-paid-via-dpx)** — a plain-language page for a vendor, contractor, or counterparty asked to receive a payment via DPX instead of a wire or ACH. No DPX account or MCP knowledge assumed; addresses the practical questions a first-time recipient actually has (wallet setup, converting to cash, verifying the sender independently on Basescan).
+
 ## 2026-09-16
 
 - **Added a UCP payment handler** — the DPX settlement rail is now declarable as a payment handler under Google's Universal Commerce Protocol (`com.untitledfinancial.agent`, handler `dpx_settlement`), reusing the existing `/quote` and `/settle` endpoints unchanged. A Business (supplier/vendor) declares the handler in its own `/.well-known/ucp` profile; a Platform (typically a buyer's procurement agent) pays with it. Framed for B2B procurement, not consumer checkout — see [UCP Settlement Handler](/protocol/ucp-settlement-handler). First implementation; not yet referenced by a live Business profile or run against UCP's conformance suite.
