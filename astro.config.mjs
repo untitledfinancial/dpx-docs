@@ -154,6 +154,7 @@ export default defineConfig({
             { label: 'FATF & Travel Rule',     slug: 'protocol/fatf-compliance' },
             { label: 'FinCEN Travel Rule (US)', slug: 'protocol/fincen-travel-rule' },
             { label: 'Agent Transaction Compliance', slug: 'protocol/agent-transaction-compliance' },
+            { label: 'UCP Settlement Handler',  slug: 'protocol/ucp-settlement-handler' },
             { label: 'Governance',             slug: 'protocol/governance' },
             { label: 'AI & Climate',           slug: 'protocol/ai-climate-impact' },
           ],

@@ -3,6 +3,11 @@ title: Changelog
 description: Notable fixes and additions to DPX, dated.
 ---
 
+## 2026-09-16
+
+- **Added a UCP payment handler** — the DPX settlement rail is now declarable as a payment handler under Google's Universal Commerce Protocol (`com.untitledfinancial.agent`, handler `dpx_settlement`), reusing the existing `/quote` and `/settle` endpoints unchanged. A Business (supplier/vendor) declares the handler in its own `/.well-known/ucp` profile; a Platform (typically a buyer's procurement agent) pays with it. Framed for B2B procurement, not consumer checkout — see [UCP Settlement Handler](/protocol/ucp-settlement-handler). First implementation; not yet referenced by a live Business profile or run against UCP's conformance suite.
+- **Corrected a naming collision found while researching this:** DPX's existing `/.well-known/mpp.json` and the `dpx-virtuals-acp` integration are **not** the industry "MPP" (Stripe/Tempo's Machine Payments Protocol) or "ACP" (OpenAI/Stripe's Agentic Commerce Protocol) that Visa's Intelligent Commerce Connect routes — same acronyms, unrelated protocols. No public claim was ever made linking them; noted here so it isn't assumed internally either.
+
 ## 2026-09-14
 
 - **Bridged KYA agent identity to W3C DID Core + Verifiable Credentials** — `POST /agent/:id/verify` now also returns `verifiableCredential`, a VC-JWT signed with an asymmetric key resolvable at `https://compliance.untitledfinancial.com/.well-known/did.json`. A third party can now verify a DPX KYA credential independently, with no callback to DPX — the original HMAC-signed `credential` field could only ever be checked by DPX itself. See [Compliance for Autonomous Agent Transactions](/protocol/agent-transaction-compliance).
