@@ -1,6 +1,6 @@
 ---
 title: Compliance Screening API
-description: Sanctions, PEP, UBO chain, and FATF country risk in a single API call. Replaces Refinitiv World-Check, Dow Jones Risk, and Comply Advantage for most enterprise screening use cases. APPROVED / FLAGGED / BLOCKED with FATF R.16 attestation.
+description: Sanctions, PEP, UBO chain, and FATF country risk in a single API call — instant decision instead of a manual analyst queue. APPROVED / FLAGGED / BLOCKED with FATF R.16 attestation.
 ---
 
 The DPX Compliance Screening API runs five checks in parallel and returns a single decision — APPROVED, FLAGGED, or BLOCKED — with a `humanRequired` boolean. APPROVED payments proceed automatically, no human review queue. This removes the operational overhead that currently gates the majority of international payments at most institutions.
@@ -9,7 +9,7 @@ The DPX Compliance Screening API runs five checks in parallel and returns a sing
 
 ## The problem it solves
 
-Most compliance screening today works like this: payment gets queued → analyst opens three tabs (World-Check, internal sanctions list, GLEIF) → manually cross-references → approves or escalates → logs the decision. That queue is the bottleneck that keeps international payments slow.
+Most compliance screening today works like this: payment gets queued → analyst opens multiple tabs (a commercial watchlist tool, an internal sanctions list, GLEIF) → manually cross-references → approves or escalates → logs the decision. That queue is the bottleneck that keeps international payments slow.
 
 DPX runs the same checks in a single API call, returns a structured decision in under 3 seconds, and generates a compliance receipt suitable for audit. For the ~95% of payments that are clean, the human never needs to be involved.
 
@@ -221,15 +221,14 @@ if (result.decision === 'APPROVED' && !result.humanRequired) {
 
 ## Comparison
 
-| | DPX Compliance API | Refinitiv World-Check | Dow Jones Risk | Comply Advantage |
-|---|---|---|---|---|
-| Setup | API key, instant | Contract + onboarding (weeks) | Contract + onboarding | Contract + onboarding |
-| Response time | &lt;3 seconds | Batch/async | Batch/async | API, variable |
-| UBO chain | Automatic (GLEIF) | Manual lookup | Manual lookup | Limited |
-| FATF R.16 attestation | Machine-readable, included | Not included | Not included | Not included |
-| PEP screen | Included | Included | Included | Included |
-| Price | $0.005–$0.01/screen | $5,000–$50,000+/year | $5,000–$30,000+/year | $1,500–$10,000+/year |
-| humanRequired flag | Yes — removes queue for clean payments | No | No | No |
+| | DPX Compliance API | Traditional enterprise screening |
+|---|---|---|
+| Setup | API key, instant | Contract + onboarding, typically weeks |
+| Response time | &lt;3 seconds | Batch/async in most legacy deployments |
+| UBO chain | Automatic (GLEIF) | Usually a manual lookup |
+| FATF R.16 attestation | Machine-readable, included | Not typically included |
+| Price | $0.005–$0.01/screen | Annual contract, usually five figures or more |
+| humanRequired flag | Yes — removes queue for clean payments | Not a standard feature |
 
 ## Related endpoints
 
