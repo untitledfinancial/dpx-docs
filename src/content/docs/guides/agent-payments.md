@@ -1,199 +1,233 @@
 ---
-title: How to add payments to your AI agent
-description: A step-by-step guide for developers adding payment capability to an AI agent — oracle gate, fee quote, x402 intelligence, counterparty verification, and settlement. No API key required.
+title: How to set up your agent wallet and call /settle
+description: Wallet setup, funding, and end-to-end settlement — from oracle check through on-chain execution. No API key required.
 ---
 
-Most AI agents hit a wall when they need to move money. You can reason, plan, and call any API — but the payment step sends you back to a human. This guide shows you how to close that loop.
+DPX is sender-funded: when your agent calls `/settle`, DPX returns execution parameters and your agent runs `approve()` + `router.settle()` on-chain from its own wallet. DPX never holds or moves funds on your behalf.
 
-By the end you'll have an agent that:
-- Checks whether global conditions are safe to settle
-- Gets a binding fee quote
-- Pays for live intelligence via x402
-- Verifies the counterparty
-- Executes a settlement — fully autonomous, no human required
+This guide walks through every step from a blank wallet to a confirmed settlement.
 
 ---
 
-## Before you start
+## What you need
 
-You need:
-- A Base wallet with a small USDC balance (for x402 payments in steps 3–4)
-- Node 18+ or Python 3.10+
-- No API key, no account, no onboarding
+- An EVM wallet on **Base** (chainId 8453) with:
+  - **USDC** equal to your settlement amount (goes to the recipient)
+  - A small **ETH** buffer for gas (~$0.01 covers 5 settlements at Base rates)
+  - A **small USDC buffer** for the x402 intelligence fee (0.5 bps of settlement amount, floor $0.001, cap $5.00)
+- Node 18+
 
 ```bash
-git clone https://github.com/untitledfinancial/dpx-agent-public
-cd dpx-agent-public
-npm install
-cp .env.example .env
+npm install ethers x402-fetch
 ```
 
-Set your wallet and recipient in `.env`:
+---
+
+## Setting up your wallet
+
+**1. Create a self-custody EVM wallet**
+
+Any wallet that gives you the private key works: Coinbase Wallet, MetaMask, or generate one programmatically:
+
+```typescript
+import { ethers } from 'ethers';
+const wallet = ethers.Wallet.createRandom();
+console.log(wallet.address);    // your wallet address
+console.log(wallet.privateKey); // store this securely — never commit it
 ```
-PRIVATE_KEY=0x...
-RECIPIENT_ADDRESS=0x...
-SANDBOX=true
+
+**2. Get USDC on Base**
+
+Buy USDC on an exchange and withdraw to your wallet on the Base network, or bridge from another chain. Your wallet must hold enough USDC to cover the gross settlement amount (after DPX fees).
+
+**3. Get ETH on Base for gas**
+
+Bridge a small amount of ETH to Base. Each settlement is two transactions: `approve()` + `settle()`. Gas on Base is typically under $0.01 total.
+
+**4. Configure your environment**
+
+```bash
+export SETTLEMENT_WALLET_PRIVATE_KEY=0x...  # your wallet private key
+export RECIPIENT_ADDRESS=0x...              # where settlement net lands
 ```
+
+---
+
+## The settlement flow
+
+Every settlement runs through five stages:
+
+```
+oracle check (free) → fee quote (free) → POST /settle (x402 fee) → approve() → settle()
+```
+
+The first two are informational. The x402 fee is paid automatically by `x402-fetch`. The last two are on-chain transactions your wallet signs and broadcasts.
 
 ---
 
 ## Step 1 — Oracle gate
 
-Before your agent commits to a payment, check whether conditions are right to settle. The oracle monitors global conditions across climate, macro, FX, and geopolitical signals and returns a simple verdict: `STABLE`, `CAUTION`, or `UNSTABLE`.
+Check whether global conditions are safe before committing. Free, no auth.
 
 ```typescript
 const oracle = await fetch('https://stability.untitledfinancial.com/reliability')
   .then(r => r.json());
 
-console.log(oracle.status);   // "STABLE"
-console.log(oracle.score);    // 91
-console.log(oracle.reasoning); // "Yield curve normal, FX stress low."
+// { status: "STABLE", score: 91, reasoning: "Yield curve normal, FX stress low." }
 
 if (oracle.status === 'UNSTABLE') {
-  // Hold and retry later — don't settle into bad conditions
-  throw new Error('Oracle UNSTABLE — holding.');
+  throw new Error('Oracle UNSTABLE — hold and retry');
 }
 ```
-
-This call is free. Your agent should always run it before committing.
 
 ---
 
 ## Step 2 — Get a binding quote
 
-Request a fee breakdown before executing. The quote is binding for 300 seconds and returns a `quoteId` you'll use in the settle call.
+Returns fees, net amount, and a `quoteId` valid for 300 seconds. Pass the `quoteId` to `/settle` to lock in the rate.
 
 ```typescript
 const { quote } = await fetch(
-  `https://agent.untitledfinancial.com/quote?amountUsd=50000&hasFx=false`
+  'https://agent.untitledfinancial.com/quote?amountUsd=10000&hasFx=false'
 ).then(r => r.json());
 
-console.log(quote.fees.total.bps);       // 85
-console.log(quote.settlement.netUsd);    // 49575
-console.log(quote.quoteId);              // "dpx_a1b2c3..."
+console.log(quote.fees.total.bps);    // 85
+console.log(quote.settlement.netUsd); // 9915
+console.log(quote.quoteId);           // "dpx_a1b2c3..."
 ```
-
-The fee is ~0.85% for same-currency, ~1.25% cross-currency. ESG score adjusts it in real time.
 
 ---
 
-## Step 3 — Buy live intelligence (x402)
+## Step 3 — POST /settle (x402 intelligence fee)
 
-This is where x402 comes in. Your agent pays a small amount of USDC to get a live macro-stress signal — current conditions, confidence score, and AI reasoning. The `x402-fetch` library handles the payment automatically.
+`/settle` is gated by a small x402 payment that covers oracle signal + AI reasoning. `x402-fetch` handles the 402 → sign → retry cycle automatically — your code just calls fetch.
 
 ```typescript
 import { createSigner, wrapFetchWithPayment } from 'x402-fetch';
 
-const signer    = await createSigner('base', process.env.PRIVATE_KEY);
-const fetchX402 = wrapFetchWithPayment(fetch, signer);
+const signer    = await createSigner('base', process.env.SETTLEMENT_WALLET_PRIVATE_KEY);
+const fetchX402 = wrapFetchWithPayment(fetch, signer, BigInt(1 * 10 ** 6)); // $1 cap
 
-const intel = await fetchX402(
-  'https://intelligence.untitledfinancial.com/v1/intelligence/macro-stress'
-).then(r => r.json());
-
-console.log(intel.score);     // 14
-console.log(intel.reasoning); // "Low systemic stress. Credit spreads tight."
-```
-
-When the server returns HTTP 402, `fetchX402` signs a USDC transfer on Base and retries automatically. Your agent never sees the payment mechanics — it just gets the data.
-
-Cost: ~$0.001 USDC per call.
-
----
-
-## Step 4 — Verify the counterparty
-
-Before releasing funds, verify the recipient through the compliance layer. This checks identity against legal entity registries and screens for FATF R16 compliance.
-
-```typescript
-const vop = await fetchX402('https://compliance.untitledfinancial.com/vop/verify', {
-  method: 'POST',
+const result = await fetchX402('https://agent.untitledfinancial.com/settle', {
+  method:  'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    walletAddress: process.env.RECIPIENT_ADDRESS,
-    submittedName: 'Acme Corp',
-  }),
-}).then(r => r.json());
-
-console.log(vop.result);      // "NOT_REGISTERED" or "VERIFIED"
-console.log(vop.proceedSafe); // true
-
-if (!vop.proceedSafe) {
-  throw new Error(`Counterparty blocked: ${vop.message}`);
-}
-```
-
----
-
-## Step 5 — Settle
-
-All checks passed. Execute the settlement.
-
-```typescript
-const settled = await fetch('https://agent.untitledfinancial.com/settle', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    amount:              50000,
+    amount:              10000,
     sourceCurrency:      'USD',
     destinationCurrency: 'USD',
     recipientAddress:    process.env.RECIPIENT_ADDRESS,
     purpose:             'agent-payment',
-    referenceId:         `a2a-${Date.now()}`,
+    referenceId:         `ref-${Date.now()}`,
     quoteId:             quote.quoteId,
-    sandbox:             true, // set false to go live
+    sandbox:             false,  // true to test without broadcasting
   }),
 }).then(r => r.json());
 
-console.log(settled.status);   // "executed"
-console.log(settled.txHash);   // on-chain confirmation (when sandbox: false)
+// result.status === 'authorized'
+// result.execution has everything you need for the on-chain calls
 ```
 
-**To go live:** change `sandbox: true` to `sandbox: false`. Fund your wallet with USDC on Base equal to the gross settlement amount.
+A `status` of `'authorized'` means DPX has verified the counterparty, checked compliance, and computed the execution params. Other statuses:
 
-**Sanctions/AML screening runs automatically on every `/settle` call**, sandbox included — you don't need to call it separately. `status` comes back `failed` if the recipient is sanctions-blocked, or `held` if it's flagged for review; check `complianceScreen` in the response for the detail (`status`, `amlScore`, `sanctions`). This runs in addition to, not instead of, the Step 4 VoP check above — VoP confirms identity, this screens for sanctions/AML risk.
+| status | meaning |
+|---|---|
+| `authorized` | Ready to execute on-chain |
+| `sandbox` | Dry run — no on-chain calls needed |
+| `held` | Oracle flagged the corridor — retry when conditions clear |
+| `review` | Compliance escalation — check `complianceScreen` in the response |
+| `failed` | Sanctions block or hard validation failure |
 
 ---
 
-## Full working example
+## Step 4 — approve()
 
-The complete loop — clone, configure, run:
-
-```bash
-git clone https://github.com/untitledfinancial/dpx-agent-public
-cd dpx-agent-public
-npm install && cp .env.example .env
-# edit .env with your wallet
-npm start
-```
-
-Python version also available in the same repo.
-
----
-
-## Adding it to an existing agent
-
-If your agent is already built, the settlement loop is a single function call:
+Authorize the DPX router to pull the settlement amount from your wallet. Nothing moves yet — this is a standard ERC-20 approval.
 
 ```typescript
-// After your agent decides a payment is needed
-const result = await runSettlement({
-  amount: invoiceAmount,
-  recipient: supplierWallet,
-  sandbox: false,
-});
+import { ethers } from 'ethers';
 
-if (result.txHash) {
-  // Payment confirmed on-chain
-  agent.log(`Settled: https://base.blockscout.com/tx/${result.txHash}`);
-}
+const { execution } = result;
+const provider = new ethers.JsonRpcProvider('https://mainnet.base.org');
+const wallet   = new ethers.Wallet(process.env.SETTLEMENT_WALLET_PRIVATE_KEY, provider);
+
+const erc20  = new ethers.Interface(['function approve(address,uint256) returns (bool)']);
+const approveTx = await wallet.sendTransaction({
+  to:   execution.tokenAddress,
+  data: erc20.encodeFunctionData('approve', [
+    execution.routerAddress,
+    execution.grossAmountRaw,  // in USDC token decimals (6)
+  ]),
+});
+await approveTx.wait();
+console.log('approved:', approveTx.hash);
 ```
+
+---
+
+## Step 5 — router.settle()
+
+Pulls funds, runs final oracle checks, and nets the amount to the recipient. The router ABI is returned by `/settle` in `execution.abi` — you don't need to hardcode it.
+
+```typescript
+const router = new ethers.Interface(execution.abi);
+const settleTx = await wallet.sendTransaction({
+  to:   execution.routerAddress,
+  data: router.encodeFunctionData('settle', [
+    execution.recipient,
+    execution.grossAmountRaw,
+    execution.isCrossCurrency,
+    execution.quoteIdBytes32,
+    execution.tokenAddress,
+  ]),
+});
+const receipt = await settleTx.wait();
+console.log('settled:', settleTx.hash);
+console.log('explorer: https://base.blockscout.com/tx/' + settleTx.hash);
+```
+
+---
+
+## Full reference client
+
+A complete, runnable script is in the DPX protocol repo:
+
+```bash
+git clone https://github.com/untitledfinancial/dpx-protocol
+cd dpx-protocol/examples
+
+SETTLEMENT_WALLET_PRIVATE_KEY=0x... \
+RECIPIENT_ADDRESS=0x... \
+npx ts-node quickstart-settle.ts
+```
+
+To test the full flow without real funds:
+
+```bash
+SANDBOX=true \
+SETTLEMENT_WALLET_PRIVATE_KEY=0x... \
+RECIPIENT_ADDRESS=0x... \
+npx ts-node quickstart-settle.ts
+```
+
+Oracle checks and compliance screening run live even in sandbox mode — only the on-chain transactions are skipped.
+
+---
+
+## Try the oracle without a wallet
+
+Before setting up a wallet at all, run the live oracle demo — no payment required:
+
+```
+GET https://agent.untitledfinancial.com/try?amount=10000&from=USD&to=USD
+```
+
+Returns the full oracle response your agent would get on a real `/settle` call.
 
 ---
 
 ## Using MCP instead of REST
 
-If you're building with Claude Desktop or Cursor, use the MCP server — your agent calls DPX tools the same way it calls any other tool:
+If you're building with Claude Desktop or Cursor, the MCP server wraps the full flow as tool calls:
 
 ```json
 {
@@ -206,26 +240,13 @@ If you're building with Claude Desktop or Cursor, use the MCP server — your ag
 }
 ```
 
-Then in your session:
-```
-settlement.quote → settlement.execute → compliance.screen
-```
-
-No HTTP, no auth setup, no x402 library to install. The MCP layer handles it.
-
----
-
-## What the oracle is doing
-
-Every call to `/reliability` runs an 11-layer signal pipeline: climate conditions, commodity markets, macroeconomic indicators, FX movements, yield curve signals, geopolitical risk, and more. The output isn't just a status flag — it includes structured reasoning and a confidence score your agent can act on.
-
-This is the key difference between DPX and a payment API: the intelligence is built into the rail. Your agent doesn't have to implement risk logic — it delegates to the oracle and acts on the verdict.
+Then in your session: `settlement.quote` → `settlement.execute`. The MCP layer handles oracle checks, x402 payment, and returns the execution params — on-chain signing still happens on your side.
 
 ---
 
 ## Next steps
 
-- [Agent Quick Start](/agent-quickstart) — full loop with all parameters documented
-- [x402 reference](/integrations/x402) — how micropayments work for agents
-- [MCP tools](/integrations/mcp) — 85 tools for Claude Desktop and Cursor
-- [CrewAI integration](/integrations/crewai) and [LangChain integration](/integrations/langchain)
+- [Agent Quick Start](/agent-quickstart) — all parameters documented
+- [x402 reference](/integrations/x402) — micropayment mechanics
+- [MCP tools reference](/integrations/mcp)
+- [Error handling](/guides/error-handling) — held, review, and failed statuses
