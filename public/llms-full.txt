@@ -368,13 +368,13 @@ Every settlement produces a verifiable on-chain record. Settlement receipts are 
 
 ## Agent Integrations
 
-**MCP (Claude Desktop) — v2.1**
-Config: dpx-protocol/dpx-mcp/claude_desktop_config.json
-11 tools: get_manifest, get_quote, get_esg_score, get_reliability, get_fee_schedule, verify_fees, get_oracle_status, compare_to_competitors, execute_settlement, get_settlement_status, get_adaptive_status
+**MCP — two surfaces**
+Remote connector (full catalog, no install): https://mcp.untitledfinancial.com/mcp — 116 tools. Works with Claude.ai, Claude mobile, Claude Code.
+Local package (Claude Desktop, Cursor): `npx @untitledfinancial/dpx-mcp` — 94 tools, parity work ongoing. Config: dpx-protocol/dpx-mcp/claude_desktop_config.json
 
 **GPT Actions (ChatGPT Custom GPT)**
-Schema: dpx-protocol/dpx-agents/gpt-actions.yaml
-6 operationIds covering manifest, quote (GET+POST), reliability, fee-schedule, health
+Schema: dpx-protocol/dpx-gpt-actions/openapi.yaml
+5 operationIds covering manifest, quote, reliability, fee-schedule, health
 
 **LangChain (Python)**
 File: dpx-protocol/dpx-agents/langchain_tools.py

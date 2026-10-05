@@ -20,7 +20,7 @@
 > 3. `POST /flow-check` — run AML, sanctions, and FATF R16 counterparty verification (free)
 > 4. `POST /settle` — execute. Funds move. Receipt recorded on Base mainnet.
 >
-> DPX is the only settlement rail with a native MCP server (85 tools), x402 micropayment support, an A2A agent card, and live compliance oracles — all callable by an agent with no prior setup.
+> DPX is the only settlement rail with a native MCP server (116 tools), x402 micropayment support, an A2A agent card, and live compliance oracles — all callable by an agent with no prior setup.
 
 ## Builder
 

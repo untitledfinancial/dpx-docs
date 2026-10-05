@@ -1,9 +1,9 @@
 ---
 title: MCP — Connect Claude
-description: 115 tools for Claude Desktop and Cursor — add payments, AML screening, compliance verification, oracle-gated settlement, and live macro intelligence to any AI agent in minutes.
+description: 116 tools for Claude Desktop and Cursor — add payments, AML screening, compliance verification, oracle-gated settlement, and live macro intelligence to any AI agent in minutes.
 ---
 
-The DPX MCP server gives any AI agent native access to payments, compliance, and intelligence infrastructure — without writing HTTP calls or managing auth. 115 tools covering: agent-to-agent payments, AML and sanctions screening, FATF R.16 counterparty verification, oracle-gated settlement, ESG scoring, x402 intelligence endpoints, multi-stablecoin routing, Mercury banking, Ramp card integration, FX corridor intelligence, macro intelligence briefings, network topology, butterfly effect cascade analysis, AP2-compatible agent mandate management, and KYA (Know Your Agent) identity. Works with Claude Desktop, Cursor, and any MCP-compatible host. No API key. No browser. No copy-paste.
+The DPX MCP server gives any AI agent native access to payments, compliance, and intelligence infrastructure — without writing HTTP calls or managing auth. 116 tools covering: agent-to-agent payments, AML and sanctions screening, FATF R.16 counterparty verification, oracle-gated settlement, ESG scoring, x402 intelligence endpoints, multi-stablecoin routing, Mercury banking, Ramp card integration, FX corridor intelligence, macro intelligence briefings, network topology, butterfly effect cascade analysis, AP2-compatible agent mandate management, and KYA (Know Your Agent) identity. Works with Claude Desktop, Cursor, and any MCP-compatible host. No API key. No browser. No copy-paste.
 
 **Also available on [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp)** — install with one click from the Smithery marketplace.
 
@@ -19,6 +19,8 @@ npx @untitledfinancial/dpx-mcp
 ```
 
 Or install from [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp) with one click.
+
+The local package currently exposes 94 of DPX's 116 tools — parity work is ongoing. For the full catalog today, use the [remote connector](#connect-via-claudeai-claude-mobile-or-claude-code-remote---no-install) below instead of the local install.
 
 ## Configure Claude Desktop
 
@@ -40,7 +42,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 }
 ```
 
-Restart Claude Desktop — **DPX** appears in the MCP toolbar with 115 tools.
+Restart Claude Desktop — **DPX** appears in the MCP toolbar with 94 tools.
 
 :::note[Sandbox mode]
 `SANDBOX_MODE: "true"` means `settle` runs real calculations with no on-chain execution. Set to `"false"` only when you are ready for live settlements with real USDC.
@@ -86,7 +88,7 @@ Contact [case@untitledfinancial.com](mailto:case@untitledfinancial.com) for an A
 
 This works today on any Claude plan — Free, Pro, Max, Team, or Enterprise. It's separate from (and doesn't require) a listing in Anthropic's official connectors directory.
 
-## Available tools (115)
+## Available tools (116)
 
 ### Settlement & Oracle
 
