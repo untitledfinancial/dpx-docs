@@ -93,7 +93,7 @@ For sandbox/testing without settlement: omit Step 5. Steps 1–4 are fully live.
 Protocol discovery. Call once and cache. No parameters required.
 
 Key response fields:
-- `fees.coreBps` 85, `fees.fxBps` 40, `fees.licenseBps` 1
+- `fees.coreBps` 150, `fees.fxBps` 40, `fees.licenseBps` 1
 - `fees.esgFormula` "(100 - esgScore) / 200"
 - `capabilities` — full list of protocol features
 - `contracts` — all deployed addresses on Base
@@ -118,13 +118,13 @@ Example response:
   "quoteId": "dpx-1234567890-abc123",
   "validForSeconds": 300,
   "fees": {
-    "core":    { "bps": 85,   "usd": 8500 },
+    "core":    { "bps": 150,   "usd": 15000 },
     "fx":      { "bps": 40,   "usd": 4000 },
     "esg":     { "bps": 12.5, "usd": 1250, "score": 75, "tier": "Good" },
     "license": { "bps": 1,    "usd": 100 },
-    "total":   { "bps": 138.5, "pct": 1.385, "usd": 13850 }
+    "total":   { "bps": 203.5, "pct": 2.035, "usd": 20350 }
   },
-  "settlement": { "netUsd": 986150, "grossUsd": 1000000 },
+  "settlement": { "netUsd": 979650, "grossUsd": 1000000 },
   "esgImpact": {
     "poolContributionUsd": 1250,
     "redistribution": {
@@ -409,12 +409,12 @@ Contact: untitledfinancial.com
 
 ---
 
-## Competitive Positioning
+## Rail Comparison
 
-| Provider | Rate | Per $1M | vs DPX |
-|---|---|---|---|
-| SWIFT / Bank Wire | 2.00–5.00% | $20K–$50K | DPX saves $6K–$36K |
-| Stripe stablecoin | 1.50% | $15,000 | DPX saves $1,150 |
-| DPX (typical) | 1.385% | $13,850 | — |
-| Wise cross-border | ~0.95% typical | ~$9,500 | Wise cheaper, but no stability oracle, no ESG, no agent API, no audit trail |
-| Raw USDC/USDT | ~0.10% | ~$1,000 | No stability, no ESG, no verifiability |
+| Rail type | Typical rate | Per $1M |
+|---|---|---|
+| SWIFT / Bank Wire | 2.00–5.00% | $20K–$50K |
+| DPX (typical, score 75, cross-border) | 2.035% | $20,350 |
+| Raw USDC/USDT transfer | ~0.10% | ~$1,000 — no stability oracle, no ESG scoring, no agent-native API, no on-chain impact redistribution |
+
+DPX's rate reflects what a stability oracle, live ESG scoring with 100% on-chain redistribution, FATF R.16 attestation, and an agent-native discovery API cost to run — a raw stablecoin transfer is cheaper precisely because it has none of that.
