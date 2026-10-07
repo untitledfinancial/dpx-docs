@@ -1,9 +1,11 @@
 ---
 title: Stripe
-description: Use DPX alongside Stripe — card billing via Stripe, cross-border B2B settlement via DPX.
+description: Use DPX alongside Stripe — card billing and agentic commerce via Stripe, agent-to-agent B2B settlement and compliance via DPX.
 ---
 
-Stripe and DPX handle different layers of the payments stack. Stripe owns consumer and card billing. DPX handles cross-border B2B settlement when card rails are the wrong instrument.
+Stripe and DPX sit at different layers of the agent-payments stack, and that's deliberate — DPX is built to compose with the rail Stripe is assembling (Open USD, Tempo, Machine Payments Protocol, Universal Commerce Protocol), not to replace it. Stripe's 2026 stack gives agents a settlement network and a payment-authorization protocol. It does not yet publish FATF R.16 travel-rule attestation, sanctions/AML screening wired into payment authorization, KYA (Know Your Agent) identity tiers with GLEIF LEI verification, or ESG/SFDR-linked compliance anywhere in its public materials. That's exactly DPX's depth, and it's protocol-level — an agent settling value over OUSD, Tempo, or MPP today can independently layer DPX's mandate/compliance checks on top without either side needing to integrate with the other first.
+
+The practical routing split below still holds for day-to-day use: Stripe owns consumer and card billing. DPX handles agent-to-agent and cross-border B2B settlement — the cases Stripe's card rails were never built for, and where compliance screening on the payment itself matters most. DPX settles in USDC/EURC today and also has its own token deployed on Base mainnet; it is not a single-stablecoin rail.
 
 ## Routing logic
 
@@ -14,7 +16,7 @@ B2B cross-border, cross-currency, or large notional (>$10K)  → DPX
 
 ## Stripe App
 
-**⚠️ Built, not yet published.** The **DPX B2B Settlement** app (v0.2.0) is built and uploaded to Stripe but was never submitted for marketplace review — verified 2026-09-13: the marketplace listing does not exist yet. The description below is the intended functionality once it's live. Use Patterns 1–3 below for a working integration today.
+**⚠️ Built and live for DPX's own account, not yet marketplace-listed.** The **DPX B2B Settlement** app (v0.2.0) is built, and its webhook bridge (Pattern 2 below) is deployed and live — verified: `https://webhook.untitledfinancial.com/stripe/health` returns 200. Two things still block a public listing: `stripe-app.json` has `distribution_type: "private"` (a Stripe App setting, nothing to do with DPX's own privacy — it just means only accounts DPX explicitly invites can install it), and the webhook's multi-tenant OAuth path (per-merchant Stripe account credentials) is coded but not yet configured in the Stripe Dashboard — so today the app only writes back correctly to DPX's own account, not an installing merchant's. Use Patterns 1–3 below for a working integration today; Pattern 2 is live, not hypothetical.
 
 **What the app does:**
 - Detects B2B cross-border payments in PaymentIntent and Invoice views
@@ -86,11 +88,9 @@ all_tools = stripe_toolkit.get_tools() + DPX_TOOLS
 
 ### Pattern 2 — Stripe webhook → DPX settlement
 
-**⚠️ Planned, not yet deployed.** The design below (`DPX Settlement Bridge`) describes the intended integration — the endpoint is not currently live. Verified 2026-09-13: `webhook.untitledfinancial.com` resolves in DNS but has no origin server behind it (Cloudflare 522 on every path). Documented here for the design, not as something to point real Stripe events at today. Use Pattern 1 or Pattern 3 for a working integration in the meantime.
+**Live for DPX's own Stripe account.** Stripe fires events → the DPX Settlement Bridge Worker catches them → runs an oracle check → fetches execution params and logs to KV. Verified live: health check returns 200, event lookup correctly 404s on an unknown event ID (not a dead route). A different company cannot yet point its own Stripe account at this endpoint and get correct metadata write-back — that requires the multi-tenant OAuth path, which is written but not yet configured (see the Stripe App note above). Contact [case@untitledfinancial.com](mailto:case@untitledfinancial.com) if you want this wired to your own account ahead of the public OAuth flow going live.
 
-Once built: Stripe fires events → the DPX Settlement Bridge Worker catches them → runs an oracle check → fetches execution params and logs to KV.
-
-**Intended endpoint (not live):** `https://webhook.untitledfinancial.com/stripe/webhook`
+**Endpoint:** `https://webhook.untitledfinancial.com/stripe/webhook`
 
 Flag payments for DPX routing when creating the payment intent:
 
@@ -167,6 +167,6 @@ quote  = requests.get("https://stability.untitledfinancial.com/quote",
 | Oracle stability | `https://stability.untitledfinancial.com/reliability` |
 | Fee quote | `https://stability.untitledfinancial.com/quote` |
 | ESG score | `https://esg.untitledfinancial.com/esg-score` |
-| Webhook bridge *(planned, not yet deployed — see Pattern 2)* | `https://webhook.untitledfinancial.com/stripe/webhook` |
+| Webhook bridge *(live for DPX's own account; multi-tenant OAuth not yet configured — see Pattern 2)* | `https://webhook.untitledfinancial.com/stripe/webhook` |
 
 No API key required for oracle and pricing endpoints. Settlement execution requires a DPX integration key — contact [case@untitledfinancial.com](mailto:case@untitledfinancial.com).

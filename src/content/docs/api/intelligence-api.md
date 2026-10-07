@@ -76,6 +76,9 @@ curl https://intelligence.untitledfinancial.com/v1/intelligence/instability \
 | `GET /v1/intelligence/shipping-stress` | $0.25 | 4h | Physical |
 | `GET /v1/intelligence/fx-settlement` | $0.25 | 1h | Financial |
 | `GET /v1/intelligence/transition-risk` | $0.75 | 1h | Predictive |
+| `GET /v1/intelligence/financed-emissions` | $0.25 | no-cache | Compliance |
+| `GET /v1/intelligence/taxonomy-alignment` | $0.25 | no-cache | Compliance |
+| `POST /v1/intelligence/tnfd-report` | $1.00 | no-cache | Compliance |
 | `GET /v1/intelligence/ledger` | $0.25 | no-cache | Predictive |
 | `GET /v1/intelligence/causal-graph` | $0.50 | 5min | Predictive |
 | `GET /intelligence/48h-call` | $0.50 | 4h | Predictive |
@@ -1353,6 +1356,115 @@ Synthesises seven lead signals into a current composite stress index and forward
 ```
 
 See [Predictive Intelligence Layer](/protocol/predictive-intelligence) for methodology.
+
+---
+
+## GET /v1/intelligence/financed-emissions — $0.25
+
+**PCAF Financed Emissions** — settlement-level tCO2e estimate for any Ethereum address or GLEIF LEI, per the PCAF (Partnership for Carbon Accounting Financials) Part A standard (Dec 2025 update, use-of-proceeds / short-term trade-finance methodology).
+
+**Params:** `address` (required) · `amountUsd` (optional, defaults to a $1M reference exposure) · `sector` (optional — see sector list below)
+
+Two limitations are stated directly in every response, not buried in docs: `attributionFactor` defaults to `1.0` (the full settlement amount attributed to DPX) because DPX doesn't have visibility into a counterparty's total balance-sheet exposure, which true PCAF attribution requires; and without a `sector` param, emissions use a general/unclassified blended factor with `confidence: "LOW"` rather than guessing a sector.
+
+**Sectors:** `utilities_power` · `oil_gas` · `mining` · `chemicals` · `heavy_manufacturing` · `shipping_transport` · `agriculture` · `construction` · `light_manufacturing` · `healthcare` · `real_estate` · `retail_consumer` · `technology_software` · `financial_services`
+
+```bash
+curl "https://intelligence.untitledfinancial.com/v1/intelligence/financed-emissions?address=0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&amountUsd=5000000&sector=oil_gas" \
+  -H "X-API-Key: your-key"
+```
+
+```json
+{
+  "generatedAt": "2026-10-07T00:00:00Z",
+  "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+  "entityName": "Example Corp",
+  "amountUsd": 5000000,
+  "estimatedTCO2e": 3250,
+  "sectorFactor": 650,
+  "sectorSource": "CALLER_PROVIDED",
+  "sectorLabel": "Oil & Gas Extraction / Refining",
+  "attributionFactor": 1.0,
+  "confidence": "MEDIUM",
+  "methodology": "PCAF Part A — Financed Emissions standard. financedEmissions = sectorEmissionFactor (tCO2e/$M) x (amountUsd/1,000,000) x attributionFactor...",
+  "limitations": "Sector emission factors are an order-of-magnitude static reference table, not a licensed PCAF/EPA/DEFRA factor database lookup..."
+}
+```
+
+---
+
+## GET /v1/intelligence/taxonomy-alignment — $0.25
+
+**EU Taxonomy Alignment** — coarse sector-to-objective classification against the EU Taxonomy, scoped deliberately to what DPX has real supporting data for.
+
+**Params:** `address` (required) · `sector` (optional — same sector keys as financed-emissions, plus `renewable_energy`)
+
+Only **Climate Change Mitigation** is classified with any confidence (via the same sector factors `energy-transition.ts`/`financed-emissions.ts` use); sectors outside the reference table return `NOT_ASSESSED` rather than a guessed classification. **DNSH (Do No Significant Harm) is an explicit, honest stub** — `dnshAssessed: false` always — because a real DNSH assessment needs facility-level technical screening data DPX doesn't have.
+
+```bash
+curl "https://intelligence.untitledfinancial.com/v1/intelligence/taxonomy-alignment?address=0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&sector=renewable_energy" \
+  -H "X-API-Key: your-key"
+```
+
+```json
+{
+  "generatedAt": "2026-10-07T00:00:00Z",
+  "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+  "sector": "renewable_energy",
+  "classification": "ENVIRONMENTALLY_SUSTAINABLE",
+  "substantialContributionObjective": "Climate Change Mitigation",
+  "dnshAssessed": false,
+  "dnshNote": "Do No Significant Harm assessment requires facility-level EU Taxonomy technical screening criteria data DPX does not have today. Deliberately left unassessed rather than fabricated.",
+  "natureCrossReference": { "biodiversitySensitive": false, "waterStressRelevant": false },
+  "methodology": "Coarse sector-to-EU-Taxonomy-objective mapping, limited to Climate Change Mitigation...",
+  "limitations": "Sector-level classification only — not a facility-level or activity-level EU Taxonomy assessment. DNSH not assessed (see dnshNote)."
+}
+```
+
+---
+
+## POST /v1/intelligence/tnfd-report — $1.00
+
+**TNFD LEAP Report** — packages DPX's existing biodiversity, water-risk, and supply-chain signals into the four TNFD (Taskforce on Nature-related Financial Disclosures) LEAP phases — Locate, Evaluate, Assess, Prepare — for a named portfolio or sector. Same "package existing signals into a named disclosure framework" pattern [DPX-Commodity-Forecast's TCFD report](/api/commodity-forecast) already uses for physical climate risk; this is the nature-risk analogue.
+
+**Body:** `{ sector?, portfolioName? }` — sector-specific nature-risk notes are only available for `agriculture`, `food`, `forestry`, `mining`, `pharmaceuticals`, `textiles`, `finance`; other sectors get the global narrative only.
+
+This is a **macro/systemic pre-screening signal, not a facility- or holdings-level TNFD LEAP assessment** — DPX has no per-entity nature-dependency data source today. Stated in every response's `limitations` field, not just here.
+
+```bash
+curl -X POST https://intelligence.untitledfinancial.com/v1/intelligence/tnfd-report \
+  -H "X-API-Key: your-key" -H "Content-Type: application/json" \
+  -d '{"sector": "agriculture", "portfolioName": "Example Fund I"}'
+```
+
+```json
+{
+  "generatedAt": "2026-10-07T00:00:00Z",
+  "portfolioName": "Example Fund I",
+  "sector": "agriculture",
+  "schema": "dpx-tnfd-leap/1.0",
+  "framework": "TNFD (Taskforce on Nature-related Financial Disclosures) — LEAP Recommendations",
+  "locate": {
+    "narrative": "...",
+    "biodiversitySensitiveRegions": ["..."],
+    "waterStressedExposure": true,
+    "supplyChainLanesAtRisk": ["..."]
+  },
+  "evaluate": {
+    "globalBiodiversityIntegrityIndex": 58,
+    "globalWaterStressIndex": 62,
+    "overallTnfdRating": "ELEVATED",
+    "sectorNatureRiskNote": "..."
+  },
+  "assess": { "materialityRating": "MEDIUM", "rationale": "..." },
+  "prepare": {
+    "disclosureReadiness": "...",
+    "recommendedActions": ["..."]
+  },
+  "methodology": "Aggregates biodiversity.ts, water-risk.ts, and supply-chain.ts into the four TNFD LEAP phases...",
+  "limitations": "This is a macro/systemic pre-screening signal, not a facility-level or holdings-level TNFD LEAP assessment..."
+}
+```
 
 ---
 

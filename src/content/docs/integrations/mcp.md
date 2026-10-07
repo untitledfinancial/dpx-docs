@@ -375,3 +375,26 @@ stdio (JSON-RPC 2.0). All tool logging goes to stderr; stdout is reserved for th
 
 "What seasonal climate events should I be watching for July through September?"
 ```
+
+### Reports (6 tools)
+
+AI-synthesized institutional reports — see [Reports API](/api/reports) for the underlying `reports.untitledfinancial.com` endpoints these wrap. Each requires a pre-purchased DPX Reports API key (`apiKey` param, or `Authorization: Bearer <key>`).
+
+| Tool | Description |
+|---|---|
+| `reports.climate` | TCFD physical risk assessment, commodity stress across 11 markets, climate outlook (STABLE/ELEVATED/CRITICAL), narrative guidance. Cached hourly. |
+| `reports.macro` | Global macro stability score, regime classification, USD structural health across 12 signals, 30/60/90-day outlook. Cached hourly. |
+| `reports.esg` | All 18 SFDR Annex I PAI indicators, E/S/G sub-scores, CSRD financed-emissions estimate, fee-tier implication. Takes a wallet address or LEI. |
+| `reports.compliance` | OpenSanctions screening, PEP status, FATF country risk tier, AML risk score, Travel Rule / FATF R.16 attestation status. Takes an LEI or entity name. |
+| `reports.treasury` | 30-day settlement volume by corridor, AI decision audit (authorized/held/review/failed breakdown), escalation rate. Takes an optional `YYYY-MM` period. |
+| `reports.scenario` | Decision-support scenario brief — **not** a prediction market. Compares up to 20 positions (commodity, currency pair, sovereign, sector, entity) across current/30d/60d/90d/tail-risk regimes, with dominant drivers and the closest historical analogue. The one report priced at $5 instead of $2 — it fans out to the most signal sources. |
+
+**Example prompts:**
+
+```
+"Give me the macro report for this month."
+
+"Pull an ESG report on 0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984."
+
+"Compare my position in wheat, USD/BRL, and Brazilian sovereign risk under a la_nina_severe scenario."
+```

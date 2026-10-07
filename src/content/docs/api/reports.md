@@ -20,6 +20,7 @@ Reports are gated via the [x402 micropayment protocol](/integrations/x402). Call
 | ESG | `GET /report/esg` | SFDR PAI indicators, ESG sub-scores, CSRD data |
 | Compliance | `GET /report/compliance` | AML/sanctions screening, PEP check, Travel Rule status |
 | Treasury | `GET /report/treasury` | Settlement volume, corridor performance, AI decision audit |
+| Scenario | `POST /report/scenario` | Multi-position decision brief — regime, commodity, currency, sovereign, and entity signals compared across current/30d/60d/90d/tail horizons |
 
 ---
 
@@ -47,6 +48,22 @@ Query parameters for entity-specific reports:
 | `/report/esg` | `?address=0x...` (wallet address) or `?lei=...` |
 | `/report/compliance` | `?lei=...` and/or `?name=...` (at least one required) |
 | `/report/treasury` | `?period=YYYY-MM` (optional, defaults to current month) |
+
+`/report/scenario` is the one `POST` report — it takes a JSON body instead of query params:
+
+```json
+{
+  "positions": [
+    { "type": "commodity",     "symbol": "WHEAT", "weight": 1 },
+    { "type": "currency_pair", "from": "USD", "to": "BRL" },
+    { "type": "sovereign",     "country": "BR" },
+    { "type": "entity",        "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984" }
+  ],
+  "scenario": "la_nina_severe"
+}
+```
+
+`positions` is required (max 20, each a `commodity` | `currency_pair` | `sovereign` | `sector` | `entity`). `scenario` is optional — name a [built-in commodity scenario](/api/commodity-forecast) to compare against (ignored for non-commodity positions). The report fans out to existing signal endpoints in parallel per position type — it is decision support for comparing a position/portfolio across conditions, not a prediction market or a resolution/settlement oracle.
 
 ---
 
@@ -82,6 +99,8 @@ Without an `X-PAYMENT` header, every endpoint returns HTTP 402 with the payment 
 ---
 
 ## Report response
+
+All five single-position reports are **$2.00 USDC**. The scenario report is **$5.00 USDC** — it fans out to more signal endpoints than any other report. Its envelope adds two fields: `partial` (`true` if any signal source was unreachable) and `unavailableSignals` (which ones) — the report still synthesizes from whatever succeeded rather than failing the whole request.
 
 All reports share a common envelope:
 
@@ -142,6 +161,7 @@ All reports share a common envelope:
 | ESG | DPX ESG Oracle · World Bank WGI · UN Global Compact · SFDR Annex I |
 | Compliance | OpenSanctions · GLEIF LEI Registry · FATF Country Risk · DPX Compliance Oracle |
 | Treasury | DPX Settlement Agent D1 · Corridor Feedback Signal |
+| Scenario | DPX Intelligence API (transition-risk, causal-graph, currency-stress, sovereign-debt, supply-chain, shipping-stress, esg, financed-emissions) · DPX Commodity Forecast Oracle |
 
 ---
 
