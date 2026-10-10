@@ -56,6 +56,8 @@ export default defineConfig({
           items: [
             { label: 'For AI builders',            slug: 'guides/for-ai-builders' },
             { label: 'Trust and verification',     slug: 'guides/trust-and-verification' },
+            { label: 'Data lineage and methodology', slug: 'guides/data-lineage' },
+            { label: 'Reliability and status',     slug: 'guides/reliability-and-status' },
             { label: 'Agent-to-agent payments',    slug: 'guides/agent-to-agent-payments' },
             { label: 'AP automation agent',        slug: 'guides/ap-automation' },
             { label: 'Get paid via DPX',           slug: 'guides/get-paid-via-dpx' },

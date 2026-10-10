@@ -724,7 +724,7 @@ G10 and EM currency stress assessment. Returns a dollar regime classification, p
 
 TNFD-aligned nature risk assessment. Returns IUCN Red List species threat signals by sector exposure, habitat integrity indices, and SFDR PAI 7 biodiversity-sensitive area data for portfolio compliance.
 
-**Data sources:** IUCN Red List API (open) · GBIF species occurrence (open) · NASA MODIS land cover · USGS land use change
+**Data sources:** IUCN Red List API (species counts) · World Bank (forest area indicator) · FRED. See [Data lineage and methodology](/guides/data-lineage/).
 
 **Frameworks:** TNFD LEAP · SFDR PAI 7 · CSRD ESRS E4
 
