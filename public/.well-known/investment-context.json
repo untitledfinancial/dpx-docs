@@ -52,7 +52,7 @@
       "https://agent.untitledfinancial.com — Settlement Agent (sandbox mode free and fully functional; live execution needs funded USDC)",
       "https://integration.untitledfinancial.com — Integration API (Kyriba SPI, Ramp, Mercury, SWIFT gpi, ISO 20022)",
       "https://intelligence.untitledfinancial.com — Intelligence API (29 pay-per-call endpoints)",
-      "https://mcp.untitledfinancial.com — MCP server (81 tools)",
+      "https://mcp.untitledfinancial.com — MCP server (111 tools)",
       "https://forecast.untitledfinancial.com — Commodity Forecast (11 symbols, climate-driven)",
       "https://docs.untitledfinancial.com — developer documentation",
       "https://status.untitledfinancial.com — live health across all services"
