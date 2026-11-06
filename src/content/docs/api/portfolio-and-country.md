@@ -60,6 +60,17 @@ Each report carries a `runId` (stored 30 days), a `vintage` stamp, and `dataVint
 
 These are shown side by side and **never added together**.
 
+## Reconciling the sources by scope
+
+The evidence layers measure different slices of the same footprint, so each holding with at least one direct-emissions source also gets a `scopeEstimate` that combines them under one identity: **cradle-to-gate = scope 1 + purchased-electricity-related (about scope 2) + other upstream (scope 3 purchased goods and services)**.
+
+- **Scope 1** is the larger of company-reported US facility emissions (a floor, because they exclude non-US operations) and the mid-point of the modelled direct sources, with their range and an `agreement` label (`DISAGREE` when they differ by more than 2x).
+- **Upstream** appears where a supply-chain multiplier table covers the holding's country and sector. Where it is not loaded, the upstream slice is `null` and no boundary total is given.
+- **Checks** compare the sources with each other and add a `SCOPE_SOURCES_DISAGREE` flag when they disagree.
+- **Not included:** downstream scope 3, the holding's own financed emissions, and scope 3 beyond purchased goods, energy and transport. The boundary is cradle-to-gate, not a full scope 1-2-3 inventory.
+
+The portfolio rollup (`scopeReconciliation`) sums each slice over the holdings that have it and reports the holding counts, because slice totals are comparable only when the counts match.
+
 ## Country profile
 
 `GET /v1/intelligence/country-profile?country=DEU` returns environmental, social and governance percentile scores for about 200 economies from World Bank open data (WDI and WGI). Each indicator is ranked among all countries with fresh data; scores are relative, not absolute. Because wealth and these indicators correlate strongly, every score is also given relative to the country's World Bank income group (`incomeGroupScore`). This is a country-level view, not a score of any company.
