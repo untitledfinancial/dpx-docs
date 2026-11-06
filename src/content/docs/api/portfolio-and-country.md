@@ -51,11 +51,12 @@ Each report carries a `runId` (stored 30 days), a `vintage` stamp, and `dataVint
 - **Per holding:** resolution (type, confidence, method, sources); legal entity (LEI, name, legal-address country); sector and where it came from; sector-average financed emissions with a low–high range and intensity; a sector-level taxonomy screen; country scores; sanctions screening; company-reported emissions where available; and `flags`.
 - **Rollup:** coverage by value for each kind of data, financed emissions total and range, weighted-average carbon intensity, fossil-fuel exposure, taxonomy shares, country exposure, sanctions counts, top contributors, carbon-price sensitivity and scenario paths. **Every rollup states the share of portfolio value it covers.**
 
-### Three kinds of emissions evidence, kept apart
+### Four kinds of emissions evidence, kept apart
 
 1. **Sector-average estimate** (all holdings with a sector). US EPA supply-chain factors, median of the sector's industries, applied to the exposure. A screening figure, not company data. Non-US issuers use US-industry factors and are flagged `FACTOR_BASIS_US_INDUSTRY`.
 2. **Company-reported emissions** (US facilities). From the US EPA Greenhouse Gas Reporting Program: direct emissions that facilities above the reporting threshold are legally required to report, by highest-level US parent company with reported ownership percentages. With `evicUsd` the report also gives the holding's attributed share. Scope 1 only, US facilities only; a foreign group's US subsidiary is listed under its own name; EPA notes ownership percentage does not necessarily equal the share of emissions a parent is responsible for. No match says nothing about a company's emissions.
-3. **Scenario analysis** (your carbon-price paths). Financed emissions × price per year, with emissions held constant. A gross notional figure, not a stress test.
+3. **Regional direct estimate** (EU member states and a few European countries). Eurostat air-emissions accounts divided by output for the holding's sector in its legal-address country, applied to the same exposure. Direct (scope 1) emissions only, so it has a different basis from the US cradle-to-gate factors in (1). It covers electricity, gas and steam, which the US source does not. A branch average for that country, not company data.
+4. **Scenario analysis** (your carbon-price paths). Financed emissions × price per year, with emissions held constant. A gross notional figure, not a stress test.
 
 These are shown side by side and **never added together**.
 
