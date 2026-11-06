@@ -3,6 +3,11 @@ title: Changelog
 description: Notable fixes and additions to DPX, dated.
 ---
 
+## 2026-11-06
+
+- **Added four AI-sector risk endpoints to the Intelligence API** — [`vol-positioning`](/api/intelligence-api#get-v1intelligencevol-positioning), [`minsky-regime`](/api/intelligence-api#get-v1intelligenceminsky-regime), [`supplier-exposure`](/api/intelligence-api#get-v1intelligencesupplier-exposure) and [`counterparty-stress`](/api/intelligence-api#get-v1intelligencecounterparty-stress). They measure the concentration of debt-funded AI infrastructure from public data: index volatility and Nasdaq-100 futures positioning (daily, with an `asOf` replay that uses only data published by that date), debt-service class and buildout funding of listed filers computed from SEC XBRL, a citation-backed read of a supplier's customer concentration and commitments, and a caller-assumption what-if on contracted backlog. Every filing-derived value carries its accession number and source sentence. Private companies cannot be observed through these sources, and none of the endpoints forecasts a price or an outcome.
+- **Fixed free-tier calls with query parameters returning another request's answer** — the free-tier delay served the previous different response for an endpoint, which is only correct for an endpoint with a single answer. The new endpoints now return live data for any request that carries query parameters.
+
 ## 2026-09-16 (later, same day)
 
 - **Added [Get paid via DPX](/guides/get-paid-via-dpx)** — a plain-language page for a vendor, contractor, or counterparty asked to receive a payment via DPX instead of a wire or ACH. No DPX account or MCP knowledge assumed; addresses the practical questions a first-time recipient actually has (wallet setup, converting to cash, verifying the sender independently on Basescan).

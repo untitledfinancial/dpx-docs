@@ -3,7 +3,7 @@ title: Intelligence API
 description: Per-call macro, climate, geopolitical, ESG, systemic risk, and predictive intelligence — x402 micropayments and API key access on intelligence.untitledfinancial.com.
 ---
 
-Standalone per-call data product. 26 intelligence endpoints covering climate, planetary health, credit stress, supply chain, energy transition, entity ESG, financial shock cascades, structural geopolitical instability, commodity markets, sovereign debt, physical water risk, financial network topology, G10/EM currency stress, TNFD-aligned nature risk, butterfly effect cascade, tectonic structural stress, aftershock secondary waves, contagion network simulation, resonance phase alignment detection, gender-economic risk and opportunity signals, shipping and logistics stress, FX settlement corridor intelligence, regime transition probabilities, prediction ledger, and causal signal graph.
+Standalone per-call data product. 26 intelligence endpoints covering climate, planetary health, credit stress, supply chain, energy transition, entity ESG, financial shock cascades, structural geopolitical instability, commodity markets, sovereign debt, physical water risk, financial network topology, G10/EM currency stress, TNFD-aligned nature risk, butterfly effect cascade, tectonic structural stress, aftershock secondary waves, contagion network simulation, resonance phase alignment detection, gender-economic risk and opportunity signals, shipping and logistics stress, FX settlement corridor intelligence, regime transition probabilities, AI-sector volatility and positioning, debt-service and funding structure of AI-infrastructure filers, supplier customer concentration, counterparty what-if stress, prediction ledger, and causal signal graph.
 
 **Base URL:** `https://intelligence.untitledfinancial.com`
 
@@ -1465,6 +1465,179 @@ curl -X POST https://intelligence.untitledfinancial.com/v1/intelligence/tnfd-rep
   "limitations": "This is a macro/systemic pre-screening signal, not a facility-level or holdings-level TNFD LEAP assessment..."
 }
 ```
+
+---
+
+## GET /v1/intelligence/vol-positioning
+
+Daily nowcast of the volatility and positioning state behind the concentration of AI-sector companies in equity indexes. Volatility and positioning are the core signal; no social or sentiment data is used.
+
+**Price:** listed per call in the x402 manifest (`/.well-known/x402`).
+
+**Parameters**
+
+| Param | Description |
+|---|---|
+| `asOf` | Optional, `YYYY-MM-DD`. Replays the reading using only data that had been published by that date: market observations up to it, and positioning reports published by it. Earliest 2008-01-01; not in the future. |
+
+**Inputs, all public and cited in every response**
+
+| Input | Source |
+|---|---|
+| VIX, VXN, VIX3M | Cboe indexes via FRED (`VIXCLS`, `VXNCLS`, `VXVCLS`) |
+| Positioning | CFTC Traders in Financial Futures, NASDAQ-100 Consolidated (CME contract `20974+`): leveraged-money and asset-manager long and short, open interest |
+
+**Response (abridged), `?asOf=2026-11-03`**
+
+```json
+{
+  "block": "daily",
+  "replay": true,
+  "asOf": "2026-11-03",
+  "dataDate": "2026-11-03",
+  "regime": "STRESSED",
+  "regimeTriggers": ["VXN_TOP_DECILE"],
+  "regimePeakLast5Sessions": "STRESSED",
+  "volatility": {
+    "vix": { "value": 20.83, "change1dPct": -1.5, "change5dPct": 18.9 },
+    "vxn": { "value": 30.53, "percentile252": 95.8, "change5dPct": 22.6 },
+    "techVolSpread": { "vxnMinusVix": 9.7, "zScore252": 1.49 },
+    "termStructure": { "vix3m": 21.27, "vixOverVix3m": 0.979, "invertedFront": false }
+  },
+  "positioning": {
+    "reportDate": "2026-10-27",
+    "ageDays": 4,
+    "freshness": 0.71,
+    "leveragedFunds": { "netPctOI": -1.99, "percentile3y": 91.3, "change4wPctOI": 9.9 },
+    "assetManagers": { "netPctOI": 23.56, "percentile3y": 31.7, "change4wPctOI": -1.37 },
+    "flags": ["LEVERAGED_FUNDS_NET_TOP_DECILE_OF_3Y"]
+  },
+  "flags": ["LEVERAGED_FUNDS_NET_TOP_DECILE_OF_3Y", "POSITIONING_TOP_DECILE_INTO_ELEVATED_VOL"]
+}
+```
+
+**Regime rules.** Fixed thresholds, returned in the response as `regimeRules`:
+
+| Regime | Condition |
+|---|---|
+| `DISLOCATED` | VIX 1-day change ≥ +40%, or (VIX/VIX3M ≥ 1.0 and VXN percentile ≥ 90) |
+| `STRESSED` | VXN percentile ≥ 90, or VIX 1-day change ≥ +25%, or VIX/VIX3M ≥ 1.0 |
+| `ELEVATED` | VXN percentile ≥ 75, or VXN 5-day change ≥ +20%, or VXN-minus-VIX z-score ≥ 1.5 |
+| `CALM` | none of the above |
+
+The percentile is a mid-rank percentile over the trailing 252 sessions. `regimePeakLast5Sessions` and the `EASED_FROM_STRESS_WITHIN_5_SESSIONS` flag exist so that a one-day fall in volatility is not read as an all-clear.
+
+**Positioning flags** describe where a position sits in its own 3-year history (`..._TOP_DECILE_OF_3Y`, `..._BOTTOM_DECILE_OF_3Y`). They do not assert whether the group is net long or net short; read `netPctOI` for the sign. CFTC positions are weekly (Tuesday data, published the following Friday). `ageDays` is measured from publication, and `freshness` falls to zero at 14 days.
+
+**Limits**
+
+- The regime thresholds were set before any calibration and are not fitted to outcomes.
+- Skew, VVIX and the VIX futures term structure are reported as unavailable; no free source has been confirmed, and they are never estimated.
+- The reading describes market state. It does not forecast a price or a drawdown.
+- Index-level volatility is not specific to any one company.
+
+---
+
+## GET /v1/intelligence/minsky-regime
+
+Classifies listed AI-infrastructure filers by debt-service capacity, using Minsky's financing framework, and separately by how each funds its capital buildout. Every figure is computed from the filer's SEC XBRL filings.
+
+**Price:** listed per call in the x402 manifest.
+
+**Parameters**
+
+| Param | Description |
+|---|---|
+| `tickers` | Optional, comma-separated. Restricts the response to those members of the measured universe. |
+| `events` | Optional, `1`. Includes the funding events ledger entries for each filer. |
+
+**Debt-service class** (`class`), set by comparing trailing-12-month cash flow before debt service with trailing-12-month interest plus principal due in the next 12 months:
+
+| Class | Meaning (Minsky term) |
+|---|---|
+| `COVERED` | Cash flow covers interest and principal due (hedge finance) |
+| `PRINCIPAL_REFINANCING_DEPENDENT` | Covers interest but not principal; principal depends on refinancing (speculative finance) |
+| `INTEREST_REFINANCING_DEPENDENT` | Does not cover interest; interest depends on new borrowing or capital (Ponzi finance) |
+| `UNOBSERVABLE` | Required inputs not available |
+
+Per-company output uses the neutral names above. Minsky's own terms appear only in the methodology and in sector-level aggregates, and no company is named under them.
+
+**Investment funding** (`investmentFunding`), a second axis: `SELF_FUNDED` if capex plus debt service is covered by cash flow, `CASH_FUNDED` if the shortfall is covered by cash on hand, `EXTERNALLY_FUNDED` if it exceeds cash on hand. A filer can be `COVERED` on debt service and still be `EXTERNALLY_FUNDED` on its buildout. The funding gap is capex + interest + principal due − cash flow before debt service.
+
+**Response sections**
+
+| Field | Contents |
+|---|---|
+| `entities[]` | Per filer: `class`, `test`, `investmentFunding`, `metrics`, `ratios` (interest coverage, debt-service coverage, funding gap), `flags`, `inclusion` (`CORE` or `AUTO`), `fundingCommitments` |
+| `aggregate` | Core universe only: debt share and entity count by class, capex observed, share of capex that is externally funded, external capital need |
+| `extendedAggregate` | Core plus auto-screened members, reported separately |
+| `methodology`, `limitations`, `sources` | Rules, known gaps and filing references |
+
+**Universe.** `CORE` members are a fixed, human-maintained list. `AUTO` members enter through a weekly screen of SEC XBRL data (large capex or contracted backlog), then must pass a sector filter and a data-quality filter. `AUTO` means the screen passed; it does not mean the company's AI relevance has been verified. Promotion to `CORE` and rejection are manual. Private companies cannot be observed through this source.
+
+**Data-quality rules.** A tag value older than the filer's reference period by more than 120 days (flows) or 200 days (balances) is treated as missing. When two tags report the same quantity, the freshest wins; a disagreement above 10% raises `DEBT_TAG_DISAGREEMENT`. Flow items are put on a trailing-12-month basis, and annualized values are labeled. Other flags: `CASH_INTEREST_UNAVAILABLE_USED_EXPENSE`, `GUARANTEE_TAG_PRESENT_NATURE_NOT_IDENTIFIED`, `THIN_DEBT_SERVICE_COVER` (a covered filer with debt-service coverage below 1.25x).
+
+**Funding events.** Funding that closes after a filer's latest balance sheet adjusts the funding gap only if a reviewer has verified it against a primary source, it is closed, and it is dated after the balance-sheet date. Filings found by the nightly 8-K scan are listed with a citation but carry no amounts until reviewed. Undrawn committed amounts are shown separately, and guarantees are reported as contingent claims, not as funding.
+
+**Limits.** Guarantees, related-party dealing and special-purpose-vehicle claims are mostly in filing text, not XBRL, and are not tested here. Lease liabilities are context only. Operating cash flow is as reported and may include customer prepayments. The measure understates system-wide dependence because private borrowers and off-balance-sheet claims are outside it.
+
+---
+
+## GET /v1/intelligence/supplier-exposure
+
+Citation-backed read of a supplier's periodic filings: customer concentration, extended payment terms, and the future-commitments table.
+
+**Price:** listed per call in the x402 manifest.
+
+**Parameters**
+
+| Param | Description |
+|---|---|
+| `ticker` | Optional. Default `NVDA`. The parsers are built and tested against NVIDIA's disclosure wording; other filers will mostly return nothing found. |
+
+Reads the last three 10-K and 10-Q filings. Each parsed value carries the accession number, filing date, URL and the verbatim sentence it was read from.
+
+| Field | Contents |
+|---|---|
+| `revenueConcentration` | Share of revenue from direct customers that each exceeded 10% |
+| `receivableConcentration` | Share of accounts receivable held by the largest customers |
+| `paymentTerms` | Extended payment terms where the filing states them, including the stated range |
+| `commitments` | The commitments table (supply and capacity, cloud service agreements, data-center leases, equity investments, capex) with row and column totals cross-checked; `tableConsistent` reports the result |
+| `trend` | The same series across the three filings |
+
+An empty field means the value was not found in that filing; it is never assumed to be zero. "Direct customers" follows the filer's own definition (distributors, system builders and cloud providers) and is not a hyperscaler share.
+
+---
+
+## GET /v1/intelligence/counterparty-stress
+
+A what-if on a filer's filed numbers: if one counterparty holding a share of its contracted backlog walks away, what happens to cash flow, debt-service coverage, debt-service class and the funding gap.
+
+**Price:** listed per call in the x402 manifest.
+
+**Parameters**
+
+| Param | Description |
+|---|---|
+| `share` | Required, 0 to 1. Share of the filer's remaining performance obligations assumed to be tied to one counterparty. |
+| `ticker` | Optional. Default `ORCL`. Any member of the measured universe. |
+| `loss` | Optional, 0 to 1. Fraction of that counterparty's revenue lost. Default scenarios: 0.25, 0.5 and 1. |
+| `margin` | Optional. Operating margin applied to lost revenue. Default: the filer's trailing operating margin. |
+| `next12Pct` | Optional. Share of backlog recognized in the next 12 months. Default: the filer's own stated percentage, parsed from its filing text with citation. |
+| `capexCut` | Optional. Fraction of capex assumed cut under stress. Default 0. |
+| `label` | Optional. Free-text label echoed in the response. |
+
+The share is the caller's assumption. Filings rarely name the counterparty behind a backlog, so no one can read the real share from public filings, and this endpoint never states any counterparty's actual share.
+
+**Mechanics (also returned in `assumptions` and `notes`)**
+
+- backlog at risk = share × remaining performance obligations
+- lost next-12-month revenue = backlog at risk × next-12-month % × loss
+- cash flow impact = −lost revenue × margin
+- debt, interest and principal due are held fixed; capex is held fixed unless `capexCut` is set
+- the debt-service class under stress uses the same rule as `minsky-regime`
+
+The response gives a `base` case, one entry per loss scenario (`debtServiceCoverage`, `debtServiceClass`, `fundingGap`, `proportionalCapexAtRisk`), and `breakEven.shareAtFullLoss`, the backlog share at which debt-service coverage reaches 1.0x. `proportionalCapexAtRisk` allocates capex in proportion to backlog share; filers do not disclose which capex serves which customer. The output is not a forecast that any counterparty will fail.
 
 ---
 
