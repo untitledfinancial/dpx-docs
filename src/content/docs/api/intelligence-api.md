@@ -1361,13 +1361,15 @@ See [Predictive Intelligence Layer](/protocol/predictive-intelligence) for metho
 
 ## GET /v1/intelligence/financed-emissions — $0.25
 
-**PCAF Financed Emissions** — settlement-level tCO2e estimate for any Ethereum address or GLEIF LEI, per the PCAF (Partnership for Carbon Accounting Financials) Part A standard (Dec 2025 update, use-of-proceeds / short-term trade-finance methodology).
+**PCAF Financed Emissions** — sector-average tCO2e estimate for a position in an Ethereum address or GLEIF LEI, following the PCAF (Partnership for Carbon Accounting Financials) Part A economic-activity-based approach. Issuers can also be identified by ISIN, CUSIP, FIGI or ticker on `/v1/intelligence/entity/financed-emissions`.
 
-**Params:** `address` (required) · `amountUsd` (optional, defaults to a $1M reference exposure) · `sector` (optional — see sector list below)
+**Params:** `address` (required) · `amountUsd` (optional, defaults to a $1M reference exposure) · `sector` or `naics` (the sector; a 2–6 digit NAICS prefix) · `evicUsd` and `revenueUsd` (optional, together — switch to enterprise-value attribution)
 
-Two limitations are stated directly in every response, not buried in docs: `attributionFactor` defaults to `1.0` (the full settlement amount attributed to DPX) because DPX doesn't have visibility into a counterparty's total balance-sheet exposure, which true PCAF attribution requires; and without a `sector` param, emissions use a general/unclassified blended factor with `confidence: "LOW"` rather than guessing a sector.
+**Factors.** Sector intensities come from the US EPA Supply Chain Greenhouse Gas Emission Factors (v1.3, kg CO2e per 2022 USD, converted to tCO2e per $M). A named sector is the median of its NAICS industries, and each response gives the low–high spread across those industries (`estimateRangeTCO2e`). The factors are cradle-to-gate (scope 1, 2 and upstream together) and describe US industries; they are applied to non-US issuers too.
 
-**Sectors:** `utilities_power` · `oil_gas` · `mining` · `chemicals` · `heavy_manufacturing` · `shipping_transport` · `agriculture` · `construction` · `light_manufacturing` · `healthcare` · `real_estate` · `retail_consumer` · `technology_software` · `financial_services`
+**Stated in every response:** without `evicUsd` and `revenueUsd` the exposure stands in for the revenue-equivalent and `attributionBasis` is `EXPOSURE_AS_REVENUE_PROXY` (a screening figure); with both, attribution is exposure ÷ enterprise value (capped at 1) applied to revenue × sector intensity. Without a sector the all-industry median is used and `factorStatus` is `UNSPECIFIED_DEFAULT` with `confidence: "LOW"`; an unrecognised sector is flagged `UNRECOGNIZED_SECTOR_DEFAULTED`. **Electricity generation is not covered by the source**, so `utilities_power` returns no estimate (`factorStatus: "NOT_COVERED_BY_SOURCE"`) instead of a guess.
+
+**Sectors:** `oil_gas` · `mining` · `chemicals` · `heavy_manufacturing` · `shipping_transport` · `agriculture` · `construction` · `light_manufacturing` · `healthcare` · `real_estate` · `retail_consumer` · `technology_software` · `financial_services` · `electronics_hardware` · `transport_equipment` · `utilities_power` (no estimate) · `general_unclassified`
 
 ```bash
 curl "https://intelligence.untitledfinancial.com/v1/intelligence/financed-emissions?address=0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&amountUsd=5000000&sector=oil_gas" \
@@ -1376,18 +1378,19 @@ curl "https://intelligence.untitledfinancial.com/v1/intelligence/financed-emissi
 
 ```json
 {
-  "generatedAt": "2026-10-07T00:00:00Z",
   "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
-  "entityName": "Example Corp",
   "amountUsd": 5000000,
-  "estimatedTCO2e": 3250,
-  "sectorFactor": 650,
+  "estimatedTCO2e": 1942.5,
+  "estimateRangeTCO2e": { "low": 1350, "high": 2025 },
+  "sectorFactor": 388.5,
+  "factorStatus": "SOURCED",
   "sectorSource": "CALLER_PROVIDED",
   "sectorLabel": "Oil & Gas Extraction / Refining",
-  "attributionFactor": 1.0,
+  "factorSource": { "dataset": "US EPA Supply Chain GHG Emission Factors for US Industries and Commodities", "version": "1.3.0", "priceBasis": "2022 USD, purchaser price, with margins" },
+  "attributionBasis": "EXPOSURE_AS_REVENUE_PROXY",
+  "attributionFactor": null,
   "confidence": "MEDIUM",
-  "methodology": "PCAF Part A — Financed Emissions standard. financedEmissions = sectorEmissionFactor (tCO2e/$M) x (amountUsd/1,000,000) x attributionFactor...",
-  "limitations": "Sector emission factors are an order-of-magnitude static reference table, not a licensed PCAF/EPA/DEFRA factor database lookup..."
+  "limitations": "Sector-average estimate, the weakest tier of PCAF data quality; not company-reported emissions and not audit-grade..."
 }
 ```
 

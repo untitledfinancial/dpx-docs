@@ -101,6 +101,7 @@ export default defineConfig({
             { label: 'Integration API',     slug: 'api/integration-api' },
             { label: 'Stability Oracle',    slug: 'api/stability-oracle' },
             { label: 'Intelligence API',    slug: 'api/intelligence-api' },
+            { label: 'Portfolio & country reports', slug: 'api/portfolio-and-country' },
             // { label: 'Oracle Feeds — Free', slug: 'api/oracle-feeds' },
             { label: 'ESG Oracle',          slug: 'api/esg-oracle' },
             { label: 'Compliance Oracle',   slug: 'api/compliance-oracle' },
