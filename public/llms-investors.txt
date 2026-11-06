@@ -22,7 +22,7 @@ EUR — neither party touches crypto. Fees are 1.385% all-in versus 5.4%+ for St
 settlement rail with a native MCP server, x402 micropayment support, an 11-layer Stability
 Oracle, and GENIUS Act (US) / MiCA (EU) compliance. Treasury management is the first
 institutional vertical built on the agent layer. The comparable acquisition is
-Bridge.xyz → Stripe at $1.1B (October 2024). DPX is post-build, pre-revenue, raising seed.
+Bridge.xyz → Stripe at $1.1B (October 2024). DPX is post-build and pre-revenue.
 
 ---
 
@@ -30,7 +30,7 @@ Bridge.xyz → Stripe at $1.1B (October 2024). DPX is post-build, pre-revenue, r
 
 - Name:    Untitled_ LuxPerpetua Technologies, Inc.
 - Founder: Victoria Lee Case (sole founder, 100% equity)
-- Stage:   Seed — raising
+- Stage:   Pre-seed
 - Contact: case@untitledfinancial.com
 - Website: https://untitledfinancial.com
 - Docs:    https://docs.untitledfinancial.com
@@ -157,11 +157,7 @@ strategic acquisition angle.
 
 - Fee structure:      1.50% core + 0.40% FX + 0–0.50% ESG + 0.01% license
 - Typical all-in:     2.035% (cross-border, ESG score 75)
-- Break-even volume:  ~$340M/year
-- Gross margin:       ~92% at $5B/year
-- 10-yr cumulative NOI: $459.5M (at $12B annual volume)
 - ESG redistribution: enforced on-chain via the ESGRedistribution contract
-- Payback year:       Year 4 at modeled volume curve
 - Permanent license:  0.01% per settlement enforced in token contract —
                       survives any acquisition or white-labeling
 
@@ -182,18 +178,6 @@ Strategic acquirers:
 - JPMorgan: Already integrated (sandbox validated). Needs programmable
   compliance rails for institutional stablecoin clients.
 - Any major bank needing a compliant stablecoin settlement bolt-on.
-
----
-
-## RAISE
-
-- Stage:   Seed
-- Status:  Raising
-- Use:     First enterprise treasury client (BD), GLEIF/LEI registration,
-           Mercury banking integration, executor wallet USDC for live settlements,
-           Ethereum Foundation grant application
-- Contact: case@untitledfinancial.com
-- Entity:  Untitled_ LuxPerpetua Technologies, Inc.
 
 ---
 

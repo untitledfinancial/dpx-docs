@@ -8,7 +8,7 @@
 > that integrate via API into existing treasury management systems.
 > The protocol is agent-native by design: AI agents and autonomous treasury systems
 > can discover, price, verify, and execute settlements without human intervention.
-> Pre-seed. Raising $2M–$2.5M. Accepting beta partners now.
+> Pre-seed. Accepting beta partners now.
 
 ---
 
@@ -171,26 +171,6 @@ Market momentum:
 
 ---
 
-## Revenue Projections
-
-**Scenario A — Broad market capture (0.5% of programmable market):**
-- $78B in volume × ~1.385% = **~$1.08B annual revenue**
-  *(note: original $1.55B projection used 1.99% fee — actual rate is lower
-  but savings to clients are correspondingly larger, accelerating adoption)*
-
-**Scenario B — Targeted institutional base:**
-- 2 institutional banks ($4T) + 5 fintechs ($1T) + 10 corporate treasuries ($1T)
-- 0.5% of $6T = $30B volume × 1.385% = **~$415M annual revenue**
-
-**Scenario C — Long-term target:**
-- $10B revenue requires ~$722B in protocol volume at 1.385% typical rate
-
-**ESG revenue (separate stream):**
-- ESG fee redistribution is enforced on-chain via the ESGRedistribution contract
-- Creates institutional LP alignment and impact reporting capability for allocators
-
----
-
 ## Competitive Landscape
 
 | Provider            | Rate        | Programmatic | AI-Native | TMS Integration | Regulatory |
@@ -347,26 +327,6 @@ architecture, compliance framework, and market positioning.
 
 ---
 
-## Exit Landscape
-
-Strategic acquirers with clear rationale:
-
-| Acquirer     | Rationale                                            | Comparable      |
-|-------------|------------------------------------------------------|-----------------|
-| Coinbase     | Base ecosystem infrastructure, institutional push    | $2B+ infra deals|
-| Stripe       | Stablecoin settlement layer, B2B treasury expansion  | Bridge ($1.1B)  |
-| JPMorgan     | Onyx digital assets, institutional DeFi access       | -               |
-| Circle       | USDC settlement infrastructure + ESG oracle moat     | -               |
-| Visa/MC      | Digital payments infrastructure diversification      | -               |
-| Ripple       | Cross-border settlement expansion, ESG alignment     | -               |
-| Kyriba/SAP   | Native stablecoin settlement for TMS platforms       | Strategic       |
-
-Financial sponsor interest: infrastructure plays with recurring fee revenue
-and defensible moats are currently commanding 15–25x revenue multiples
-in the digital payments space.
-
----
-
 ## Traction & Status
 
 - **Protocol live on Base mainnet** — DPX token deployed, verifiable on-chain
@@ -379,19 +339,6 @@ in the digital payments space.
   family office investment committee
 - **Documentation live** — https://docs.untitledfinancial.com
 - **AI discoverable** — llms.txt indexed, OpenAPI live, agent manifests active
-
----
-
-## The Raise
-
-**Stage:** Pre-seed
-**Amount:** $2M – $2.5M
-**Dilution:** 10%–15% equity
-**Use of proceeds:** API integrations, TMS sandbox trials, oracle production
-  deployment, regulatory compliance (US/UK/EU), team
-
-**Target close:** 2026
-**Structure:** Equity (SAFE or priced round)
 
 ---
 

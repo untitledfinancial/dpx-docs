@@ -14,21 +14,6 @@
     "npm": "https://www.npmjs.com/package/@untitledfinancial/dpx-mcp"
   },
 
-  "raise": {
-    "stage": "seed",
-    "status": "raising",
-    "contact": "case@untitledfinancial.com",
-    "accelerators": ["YC F26 — application submitted 2026-05-14"],
-    "priorValidation": ["NSF SBIR grant invitation 2024"],
-    "useOfFunds": [
-      "First enterprise treasury client — business development",
-      "GLEIF LEI registration for institutional credibility",
-      "Mercury banking integration",
-      "Executor wallet USDC funding for live settlements",
-      "Ethereum Foundation ESP grant application"
-    ]
-  },
-
   "product": {
     "oneLiner": "Compliance-grade stablecoin settlement rail replacing SWIFT for institutional cross-border payments — the only rail with a native MCP server, live ESG oracle, and GENIUS Act / MiCA / Basel III compliance.",
     "category": ["fintech", "defi", "stablecoin", "settlement", "payments", "compliance", "ai-native", "mcp"],

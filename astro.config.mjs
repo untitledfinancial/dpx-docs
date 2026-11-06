@@ -11,7 +11,7 @@ export default defineConfig({
     markdoc(),
     starlight({
       title: 'DPX Docs',
-      description: 'Programmable stablecoin settlement rails — AI-powered oracles, ESG-weighted fees, and 9-layer stability intelligence on Base mainnet.',
+      description: 'Programmable stablecoin settlement rails — AI-powered oracles, ESG-weighted fees, and 11-layer stability intelligence on Base mainnet.',
       favicon: '/favicon.png',
       lastUpdated: true,
       components: {
