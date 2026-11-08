@@ -539,7 +539,7 @@ FATF R.16 requires identifying the *originator* — the human or legal entity in
 |---|---|---|---|
 | ANONYMOUS | Agent name only | $1K | None — instant |
 | REGISTERED | Name + email (self-attested) | $25K | None — instant |
-| VERIFIED | Active GLEIF LEI | No platform cap | Automatic GLEIF API lookup — no documents |
+| VERIFIED | Active GLEIF LEI + trusted-issuer attestation naming the agentId and LEI | No platform cap | GLEIF lookup for the LEI; issuer-signed VC-JWT via `POST /agent/:id/kyc-attestation`. An LEI alone is recorded as a claim at REGISTERED tier |
 
 **Legal basis:**
 - **FATF R.16** — owner entity registration satisfies originator identification requirement
@@ -567,8 +567,9 @@ curl -X POST https://compliance.untitledfinancial.com/agent/register \
     "protocols": ["x402", "ap2"]
   }'
 
-# VERIFIED — add a GLEIF LEI. DPX calls the public GLEIF API and confirms ACTIVE status.
-# No documents. No manual review. LEI issuers (LOUs) have already done identity verification.
+# LEI claim — add a GLEIF LEI. DPX confirms it is ACTIVE and records it as a claim (REGISTERED tier, leiProof CLAIMED).
+# VERIFIED then needs a trusted issuer's VC-JWT whose credentialSubject carries this agentId and the LEI (POST /agent/:id/kyc-attestation).
+# Changes to an agent (mandate, revoke, attestation) must be signed by its registered walletAddress — see GET /agent/auth-spec.
 curl -X POST https://compliance.untitledfinancial.com/agent/register \
   -H "Content-Type: application/json" \
   -d '{

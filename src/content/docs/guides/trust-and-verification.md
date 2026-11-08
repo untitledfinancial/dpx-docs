@@ -9,17 +9,17 @@ Most claims about agent payment rails are unverifiable — "compliance-grade," "
 
 ## Agent identity is anchored to a real external registry, not self-certified
 
-KYA (Know Your Agent) maps every AI agent's actions back to a legal entity for FATF R.16 (Travel Rule) purposes. The top tier, `VERIFIED`, isn't a DPX-issued claim — it's a live lookup against [GLEIF](https://www.gleif.org), the global registry of Legal Entity Identifiers used across banking and financial regulation worldwide. DPX doesn't decide an agent's owner is who it says it is; GLEIF's Local Operating Units already did that identity verification, independently, and DPX just checks the registry.
+KYA (Know Your Agent) maps every AI agent's actions back to a legal entity for FATF R.16 (Travel Rule) purposes. The top tier, `VERIFIED`, isn't a DPX-issued claim. It combines an active Legal Entity Identifier checked against [GLEIF](https://www.gleif.org) with an attestation from an independent trusted issuer that this specific agent belongs to that LEI. A LEI is a public identifier, so an active LEI on its own is recorded as a claim and does not raise an agent above `REGISTERED`. DPX doesn't decide an agent's owner is who it says it is; the issuer does, and the grant lapses when the issuer's credential expires.
 
 | Tier | What it takes | Who vouches for it |
 |---|---|---|
 | `ANONYMOUS` | Agent name only | Nobody — informational only, $1K/day cap |
 | `REGISTERED` | Owner entity + email, self-attested | The agent operator, self-declared, $25K/day cap |
-| `VERIFIED` | Active GLEIF LEI | GLEIF — an independent, globally-recognized registry, no platform cap |
+| `VERIFIED` | Active GLEIF LEI plus a trusted-issuer attestation naming the agent and the LEI | The attesting issuer; GLEIF confirms the LEI exists. No platform cap |
 
 This is the same identity infrastructure banks and asset managers already rely on for regulatory reporting — not a DPX-specific trust scheme with no external anchor. Full reference: [KYA — Know Your Agent](/api/compliance-oracle#kya--know-your-agent).
 
-**On AP2 mandates specifically:** DPX also accepts AP2 (Agent Payments Protocol) SD-JWT mandates issued by an agent's own wallet or credentials provider, verified against a trusted-issuer allowlist (`GET /.well-known/ap2.json`). AP2 trust is inherently bilateral — each relying party decides whose mandates to honor — so this path grows as real AP2-issuing platforms are added to that allowlist over time. GLEIF-anchored KYA above doesn't depend on that ecosystem maturing; it's real and checkable today.
+**On AP2 mandates specifically:** DPX also accepts AP2 (Agent Payments Protocol) SD-JWT mandates issued by an agent's own wallet or credentials provider, verified against a trusted-issuer allowlist (`GET /.well-known/ap2.json`). AP2 trust is inherently bilateral — each relying party decides whose mandates to honor — so this path grows as real AP2-issuing platforms are added to that allowlist over time. The KYA tiers above don't depend on that ecosystem maturing.
 
 **Requesting trusted-issuer status:** any agent, platform, or credentials provider can ask to have its mandates trusted via `POST /trust/request-issuer-status` (status: `GET /trust/request-issuer-status/{requestId}`) — a machine-callable entry point so an agent doesn't need to first find a human to email. This only queues the request for human review; no code path grants trust automatically, and the trusted-issuer allowlist only ever changes through a manual, human-executed deploy — the same standard applied to on-chain transaction signing, extended to the trust boundary.
 
