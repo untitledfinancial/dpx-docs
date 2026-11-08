@@ -1,9 +1,9 @@
 ---
 title: MCP — Connect Claude
-description: 111 tools for Claude Desktop and Cursor — add payments, AML screening, compliance verification, oracle-gated settlement, and live macro intelligence to any AI agent in minutes.
+description: 113 tools for Claude Desktop and Cursor — add payments, AML screening, compliance verification, oracle-gated settlement, and live macro intelligence to any AI agent in minutes.
 ---
 
-The DPX MCP server gives any AI agent native access to payments, compliance, and intelligence infrastructure — without writing HTTP calls or managing auth. 111 tools covering: agent-to-agent payments, AML and sanctions screening, FATF R.16 counterparty verification, oracle-gated settlement, ESG scoring, x402 intelligence endpoints, multi-stablecoin routing, Mercury banking, Ramp card integration, FX corridor intelligence, macro intelligence briefings, network topology, butterfly effect cascade analysis, AP2-compatible agent mandate management, and KYA (Know Your Agent) identity. Works with Claude Desktop, Cursor, and any MCP-compatible host. No API key. No browser. No copy-paste.
+The DPX MCP server gives any AI agent native access to payments, compliance, and intelligence infrastructure — without writing HTTP calls or managing auth. 113 tools covering: agent-to-agent payments, AML and sanctions screening, FATF R.16 counterparty verification, oracle-gated settlement, ESG scoring, x402 intelligence endpoints, multi-stablecoin routing, Mercury banking, Ramp card integration, FX corridor intelligence, macro intelligence briefings, network topology, butterfly effect cascade analysis, AP2-compatible agent mandate management, and KYA (Know Your Agent) identity. Works with Claude Desktop, Cursor, and any MCP-compatible host. No API key. No browser. No copy-paste.
 
 **Also available on [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp)** — install with one click from the Smithery marketplace.
 
@@ -88,7 +88,7 @@ Contact [case@untitledfinancial.com](mailto:case@untitledfinancial.com) for an A
 
 This works today on any Claude plan — Free, Pro, Max, Team, or Enterprise. It's separate from (and doesn't require) a listing in Anthropic's official connectors directory.
 
-## Available tools (111)
+## Available tools (113)
 
 ### Settlement & Oracle
 
@@ -149,6 +149,8 @@ This works today on any Claude plan — Free, Pro, Max, Team, or Enterprise. It'
 | `agent.kya_register` | KYA — Know Your Agent. Three tiers, no documents ever. **ANONYMOUS** (name only, $1K/day): instant. **REGISTERED** (name + email, $25K/day): instant self-attestation. **VERIFIED** (active GLEIF LEI plus a trusted-issuer attestation naming the agent and LEI): an LEI alone is recorded as a claim at REGISTERED tier, since a LEI is public. Supply `walletAddress` with a wallet signature to bind a wallet; mandates then require that wallet's signature (see `GET /agent/auth-spec`). VERIFIED agents get institutional caps, FATF R.16 attestation on every settlement, and full AP2 mandate support |
 | `agent.mandate_create` | Create or update an AP2-compatible spend mandate for a REGISTERED or VERIFIED agent — max notional, daily cap, counterparty whitelist, currency pair restrictions, ESG floor, expiry. REGISTERED caps are clamped to the $25K tier limit; VERIFIED agents set their own. Enforced at settlement time |
 | `agent.kya_verify` | Verify a registered agent and receive a signed 1-hour credential with effective spend caps and FATF R.16 compliance attestation. Attach as X-Agent-Credential header on settlement requests |
+| `agent.authority` | What is this agent allowed to do right now? KYA tier, effective (tier-clamped) mandate, Policy Engine policies found by agentId or registered wallet, and the combined effective limits (lowest cap wins). States what is enforced at settlement (the mandate) versus advisory (policies, unless the deployment enables policy checks). Free |
+| `agent.audit_export` | An agent's own settlement audit trail: tier, mandate, policy and screening decisions recorded at the time, whether the payer was the registered wallet, and a SHA-256 export digest. Wallet-signed read (EIP-191 over `DPX-KYA-AUDIT`), JSON or CSV. Free |
 
 ### Integration
 

@@ -541,6 +541,12 @@ FATF R.16 requires identifying the *originator* — the human or legal entity in
 | REGISTERED | Name + email (self-attested) | $25K | None — instant |
 | VERIFIED | Active GLEIF LEI + trusted-issuer attestation naming the agentId and LEI | No platform cap | GLEIF lookup for the LEI; issuer-signed VC-JWT via `POST /agent/:id/kyc-attestation`. An LEI alone is recorded as a claim at REGISTERED tier |
 
+**Agent authority and audit**
+
+`GET /agent/{agentId}/authority` answers "what may this agent do right now?" in one read-only call: its KYA tier (effective, not just stored), its tier-clamped mandate, the Policy Engine policies held under its `agentId` or registered wallet, and the combined effective limits (the lowest cap wins). The response also says what is enforced and what is advisory: the mandate is checked live by `POST /settle` when the request carries `X-Agent-Id`; policies are checked by `POST /policy/check` and are enforced at settlement only on deployments that enable policy checks.
+
+`GET https://agent.untitledfinancial.com/audit/agent/{agentId}` returns the agent's settlement trail as JSON or CSV (`?format=csv&from=&to=&limit=`): the KYA tier, mandate decision, policy decision and sanctions screen recorded at the time, and whether the paying wallet was the wallet the agent registered. `X-Agent-Id` is a claim, so attribution is reported, not assumed. The export carries a SHA-256 `exportDigest`. Reads are authorised by an EIP-191 signature from the agent's registered wallet over `DPX-KYA-AUDIT` (see `GET /agent/auth-spec`); an agent with no registered wallet cannot authorise reads. Settlements decided before attribution logging began are not included.
+
 **Legal basis:**
 - **FATF R.16** — owner entity registration satisfies originator identification requirement
 - **MiCA Art. 45 / 72** — LEI explicitly accepted as entity identification
