@@ -547,6 +547,15 @@ FATF R.16 requires identifying the *originator* — the human or legal entity in
 
 `GET https://agent.untitledfinancial.com/audit/agent/{agentId}` returns the agent's settlement trail as JSON or CSV (`?format=csv&from=&to=&limit=`): the KYA tier, mandate decision, policy decision and sanctions screen recorded at the time, and whether the paying wallet was the wallet the agent registered. `X-Agent-Id` is a claim, so attribution is reported, not assumed. The export carries a SHA-256 `exportDigest`. Reads are authorised by an EIP-191 signature from the agent's registered wallet over `DPX-KYA-AUDIT` (see `GET /agent/auth-spec`); an agent with no registered wallet cannot authorise reads. Settlements decided before attribution logging began are not included.
 
+**Risk signals.** When a settlement carries `X-Agent-Id`, the settlement agent also checks it against four explainable patterns over that agent's own history and returns them in `riskAssessment.signals`, each with a plain-language reason:
+
+- `PAYER_NOT_REGISTERED_WALLET`: the paying wallet is not the wallet the agent registered.
+- `NEAR_CAP_REPEAT`: repeated payments just under the mandate's per-settlement cap within 24 hours.
+- `MANDATE_RECENT_LARGE`: a large payment (at least half the cap) soon after the mandate was created.
+- `NEW_RECIPIENT_OUTLIER`: a first payment to a recipient that is also far above the agent's own average.
+
+No signal proves misuse on its own, and none blocks a payment. By default they are reported and recorded in the audit export (`riskSignals`); a deployment can set `RISK_SIGNALS_MODE=hold` to route a signalled payment to review instead.
+
 **Legal basis:**
 - **FATF R.16** — owner entity registration satisfies originator identification requirement
 - **MiCA Art. 45 / 72** — LEI explicitly accepted as entity identification
