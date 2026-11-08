@@ -663,7 +663,9 @@ curl https://compliance.untitledfinancial.com/agents/agt_Xy9.../did.json
 
 ### GET /agents/directory
 
-Opt-in counterparty discovery — lists agents that explicitly set `discoverable: true` at registration (default `false`; registering does not make an agent publicly listed). Minimal fields only: no email, no raw LEI, no mandate detail.
+Opt-in counterparty discovery — lists agents that explicitly set `discoverable: true` at registration (default `false`; registering does not make an agent publicly listed). Minimal fields only: no email, no raw LEI, no mandate detail. A listing also requires the agent to have registered a `walletAddress` with a signed proof of control (the register response says `directory: listed` or why it was not listed). Each entry carries `identityBasis`: `self_declared` for owner names that were only typed in, `issuer_attested` only when a trusted issuer has vouched for the LEI.
+
+Registration is rate limited per IP and also capped overall per hour (separately for wallet-signed and unbound registrations); over the cap the endpoint returns 429 and the caller should retry later. Anonymous agents with no registered wallet expire after 30 days.
 
 ```bash
 curl "https://compliance.untitledfinancial.com/agents/directory?ownerEntity=Acme"
