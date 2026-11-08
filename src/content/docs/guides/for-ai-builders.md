@@ -137,14 +137,16 @@ policy.ledger session_id=<session>
 **REST (abbreviated)**
 
 ```typescript
+// Writes are signed by the agent's wallet (see the signing helper in the walkthrough below);
+// an agent's id in the Policy Engine is its wallet address.
 // Orchestrator creates policy
-const policy = await post('https://policy.untitledfinancial.com/policy', {
-  agent_id: 'orchestrator', max_per_tx: 10_000, max_per_day: 50_000,
+const policy = await signedPost('/policy', orchestrator, {
+  agent_id: orchestrator.address, name: 'Q3 policy', max_per_tx: 10_000, max_per_day: 50_000,
 });
 
 // Delegate to sub-agent
-const delegation = await post('https://policy.untitledfinancial.com/delegate', {
-  parent_agent_id: 'orchestrator',
+const delegation = await signedPost('/delegate', orchestrator, {
+  parent_agent_id: orchestrator.address,
   child_agent_id:  'sub-agent-a',
   policy_id:       policy.id,
   max_per_tx:      5_000,
@@ -153,7 +155,7 @@ const delegation = await post('https://policy.untitledfinancial.com/delegate', {
 
 // Sub-agent checks before spending
 const check = await post('https://policy.untitledfinancial.com/policy/check', {
-  agent_id: 'sub-agent-a', delegation_id: delegation.id, amount: 4_000,
+  agent_id: 'sub-agent-a', delegation_id: delegation.id, amount: 4_000, // checks need no signature
 });
 
 // check.decision: "ALLOW" | "HOLD" | "BLOCK"
@@ -218,7 +220,7 @@ For the full intelligence signal with AI reasoning and confidence score, use the
 | Route via Mercury | `mercury.send` |
 | Analyze Ramp spend | `ramp.spend_analysis` |
 
-Full tool reference: [MCP — 111 tools →](/integrations/mcp)
+Full tool reference: [MCP — 113 tools →](/integrations/mcp)
 
 ---
 

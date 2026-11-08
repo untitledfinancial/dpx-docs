@@ -3,6 +3,20 @@ title: Changelog
 description: Notable fixes and additions to DPX, dated.
 ---
 
+## 2026-11-08
+
+- **Added `GET /agent/{id}/authority`** — one read-only answer to what an agent may do right now: its effective KYA tier, tier-clamped mandate, the Policy Engine policies held under its `agentId` or registered wallet, and the combined limits (lowest cap wins). It states what is enforced at settlement (the mandate) and what is advisory (policies). Also available as the MCP tool `agent.authority`.
+- **Added a per-agent settlement audit export** — `GET https://agent.untitledfinancial.com/audit/agent/{agentId}` returns each settlement decided under that `X-Agent-Id` with the tier, mandate, policy and screening decisions recorded at the time, whether the payer was the agent's registered wallet, and a SHA-256 export digest. JSON or CSV; readable only with a signature from the agent's registered wallet. Also available as `agent.audit_export`. Settlements are now stored with their agent attribution; earlier settlements are not included.
+- **Added agent risk signals on `/settle`** — four explainable checks over an agent's own history (payer is not its registered wallet, repeated payments just under its cap, a large payment soon after a new mandate, a first-time recipient with an outlier amount) returned as `riskAssessment.signals` and recorded in the audit export. Reported only by default; none blocks a payment.
+- **Added registration-abuse controls** — an overall hourly cap on agent registrations, a 30-day lifetime for anonymous agents with no registered wallet, and a public directory listing now requires a registered wallet. Directory entries carry `identityBasis` (`self_declared` or `issuer_attested`).
+- **MCP server now lists 113 tools.**
+
+## 2026-11-07
+
+- **An LEI alone no longer grants VERIFIED.** A LEI is a public identifier, so registering with an active LEI records a claim at REGISTERED tier. VERIFIED requires an attestation from a trusted issuer naming the agent and the LEI, and lapses when that credential expires. Agents recorded as VERIFIED without an attestation are treated as REGISTERED.
+- **Changes to an agent now need its wallet's signature** — registering a `walletAddress`, creating a mandate, revoking, and submitting an attestation. Message formats are served at `GET /agent/auth-spec`. The MCP tools `agent.kya_register` and `agent.mandate_create` pass the signature through.
+- **Policy Engine writes now need a wallet signature** (or an operator admin key) — creating a policy, delegating, revoking a delegation, and recording a receipt. An agent's id in the engine is its wallet address for these writes. The MCP tools `policy.create`, `policy.delegate` and `receipt.create` pass the signature through.
+
 ## 2026-11-06
 
 - **Added four AI-sector risk endpoints to the Intelligence API** — [`vol-positioning`](/api/intelligence-api#get-v1intelligencevol-positioning), [`minsky-regime`](/api/intelligence-api#get-v1intelligenceminsky-regime), [`supplier-exposure`](/api/intelligence-api#get-v1intelligencesupplier-exposure) and [`counterparty-stress`](/api/intelligence-api#get-v1intelligencecounterparty-stress). They measure the concentration of debt-funded AI infrastructure from public data: index volatility and Nasdaq-100 futures positioning (daily, with an `asOf` replay that uses only data published by that date), debt-service class and buildout funding of listed filers computed from SEC XBRL, a citation-backed read of a supplier's customer concentration and commitments, and a caller-assumption what-if on contracted backlog. Every filing-derived value carries its accession number and source sentence. Private companies cannot be observed through these sources, and none of the endpoints forecasts a price or an outcome.

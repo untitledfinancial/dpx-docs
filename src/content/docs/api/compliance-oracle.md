@@ -603,20 +603,28 @@ curl -X POST https://compliance.untitledfinancial.com/agent/register \
   }'
 ```
 
-**Response (VERIFIED):**
+**Response (REGISTERED with an LEI claim):**
 ```json
 {
   "agentId": "agt_Xy9...",
-  "kyaLevel": "VERIFIED",
-  "kyaScore": 85,
+  "kyaLevel": "REGISTERED",
+  "kyaScore": 40,
   "status": "ACTIVE",
-  "tierCaps": { "maxNotionalUsd": 5000000, "dailyCapUsd": 10000000 },
-  "leiVerified": true,
+  "tierCaps": { "maxNotionalUsd": 25000, "dailyCapUsd": 25000 },
+  "leiVerified": false,
+  "leiClaimed": true,
+  "leiProof": "CLAIMED",
   "leiEntityName": "Acme Corporation",
-  "tierNote": "LEI 7LTWFZYICNSX8D621K86 confirmed ACTIVE via GLEIF. Owner identity verified. No documents required. Institutional caps apply — mandate governs.",
+  "walletBound": false,
+  "directory": "not requested",
+  "tierNote": "LEI 7LTWFZYICNSX8D621K86 exists and is ACTIVE at GLEIF, recorded as a claim (leiProof CLAIMED) — a LEI is public, so this does not prove you own it. $25K/day cap applies. VERIFIED requires an attestation from a trusted issuer naming this agentId and LEI (POST /agent/:id/kyc-attestation).",
   "mandate": { "mandateId": "mnd_...", "ap2Compatible": true, ... }
 }
 ```
+
+Registration never returns VERIFIED. Mandate caps in the register request are clamped to the tier ceiling shown in `tierCaps`.
+
+**Binding a wallet.** Add `walletAddress` to register an agent that can later authorize its own changes. Registering a wallet needs a signature from it: `X-Wallet-Signature`, `X-Wallet-Timestamp` (ms) and `X-Wallet-Nonce` headers carrying an EIP-191 signature over `DPX-KYA-REGISTER\n{walletAddress lowercase}\n{name}\n{timestamp}\n{nonce}`. An agent with no registered wallet cannot authorize mandates, revocation or attestations. The exact message formats for every signed action are served at `GET /agent/auth-spec`.
 
 ### POST /agent/:id/verify
 
@@ -689,11 +697,14 @@ curl "https://compliance.untitledfinancial.com/agents/directory?ownerEntity=Acme
 
 ### POST /agent/mandate
 
-Create or update a spend mandate for a REGISTERED or VERIFIED agent. ANONYMOUS agents must upgrade first. REGISTERED agent caps are clamped to the $25K tier limit; VERIFIED agents set their own with no platform ceiling.
+Create or update a spend mandate for a REGISTERED or VERIFIED agent. ANONYMOUS agents must upgrade first. REGISTERED agent caps are clamped to the $25K tier limit; VERIFIED agents (issuer-attested) set their own with no platform ceiling.
+
+The request must be signed by the agent's registered wallet over `DPX-KYA-MANDATE\n{agentId}\n{maxNotionalUsd}\n{dailyCapUsd}\n{timestamp}\n{nonce}`, sent as `X-Wallet-Signature`, `X-Wallet-Timestamp` and `X-Wallet-Nonce`. A signature for one amount does not authorize a different amount.
 
 ```bash
 curl -X POST https://compliance.untitledfinancial.com/agent/mandate \
   -H "Content-Type: application/json" \
+  -H "X-Wallet-Signature: 0x..." -H "X-Wallet-Timestamp: 1751299200000" -H "X-Wallet-Nonce: 8f3c2a91d4e7" \
   -d '{
     "agentId": "agt_Xy9...",
     "maxNotionalUsd": 500000,
@@ -714,15 +725,16 @@ curl https://compliance.untitledfinancial.com/agent/agt_Xy9...
 
 ### DELETE /agent/:id
 
-Revoke an agent. Credential verification will return `REVOKED` immediately.
+Revoke an agent. Credential verification will return `REVOKED` immediately. The request must be signed by the agent's registered wallet over `DPX-KYA-REVOKE\n{agentId}\n{timestamp}\n{nonce}`. The record is kept with status `REVOKED`; there is no delete.
 
 ```bash
-curl -X DELETE https://compliance.untitledfinancial.com/agent/agt_Xy9...
+curl -X DELETE https://compliance.untitledfinancial.com/agent/agt_Xy9... \
+  -H "X-Wallet-Signature: 0x..." -H "X-Wallet-Timestamp: 1751299200000" -H "X-Wallet-Nonce: 5b1e0c77a2f9"
 ```
 
 ### Upgrading tiers
 
-Tiers upgrade at registration time by providing additional fields. To upgrade an existing agent, re-register — a new `agentId` is issued. The registration response includes a `_next` field explaining the upgrade path when the agent is below VERIFIED.
+ANONYMOUS upgrades to REGISTERED by re-registering with `ownerEntity` and `ownerEmail` (a new `agentId` is issued). VERIFIED is not reached by re-registering: register with your `ownerLei` and a `walletAddress`, then have a trusted identity issuer sign a VC-JWT whose `credentialSubject` carries your `agentId` and `lei`, and submit it to `POST /agent/:id/kyc-attestation` (signed by your wallet over `DPX-KYA-ATTEST`). VERIFIED lasts until that credential expires. The registration response's `_next` field says what applies to your agent.
 
 To obtain a GLEIF LEI for your organization: [gleif.org](https://www.gleif.org/en/lei/search) — LEIs are issued by Local Operating Units (LOUs), typically within 1–3 business days. Many financial institutions can also obtain an LEI on behalf of a client.
 

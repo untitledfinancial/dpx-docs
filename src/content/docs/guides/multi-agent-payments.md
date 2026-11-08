@@ -22,21 +22,48 @@ No sub-agent can exceed its delegation. No delegation can exceed the parent poli
 
 ---
 
+## Before you start — identities and signed writes
+
+Every write to the Policy Engine (creating a policy, delegating, revoking a delegation, recording a receipt) has to be authorized by the agent it acts for. An agent is identified by a wallet address, and the write carries an EIP-191 signature from that wallet over `METHOD\nPATH\nSHA256(BODY)\nTIMESTAMP_MS\nNONCE` (headers `X-Wallet-Signature`, `X-Wallet-Timestamp`, `X-Wallet-Nonce`; five-minute window; each nonce works once). Reads and `policy/check` need no signature. An operator that acts for agents with free-form IDs can use an admin key (`X-Admin-Key`) instead.
+
+```typescript
+import { Wallet, sha256, toUtf8Bytes } from 'ethers';
+
+const orchestrator = new Wallet(process.env.ORCHESTRATOR_KEY!); // each agent holds its own key
+const subA = new Wallet(process.env.SUB_A_KEY!);
+
+// Sign and send a write on behalf of `agent`. The agent's wallet address is its id in the engine.
+async function signedPost(path: string, agent: Wallet, body: Record<string, unknown>) {
+  const raw = JSON.stringify(body);
+  const ts = Date.now();
+  const nonce = crypto.randomUUID();
+  const digest = sha256(toUtf8Bytes(raw)).slice(2);
+  const signature = await agent.signMessage(`POST\n${path}\n${digest}\n${ts}\n${nonce}`);
+  const res = await fetch(`https://policy.untitledfinancial.com${path}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Wallet-Signature': signature, 'X-Wallet-Timestamp': String(ts), 'X-Wallet-Nonce': nonce,
+    },
+    body: raw,
+  });
+  return res.json();
+}
+```
+
+---
+
 ## Step 1 — Orchestrator creates a spending policy
 
 ```typescript
-const policy = await fetch('https://policy.untitledfinancial.com/policy', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    agent_id:              'orchestrator-agent',
-    name:                  'Q3 Procurement Policy',
-    max_per_tx:            10_000,   // $10K ceiling per transaction
-    max_per_day:           50_000,   // $50K daily rolling limit
-    require_hold_above:    8_000,    // human review above $8K
-    require_oracle_stable: false,    // allow CAUTION, block UNSTABLE
-  }),
-}).then(r => r.json());
+const policy = await signedPost('/policy', orchestrator, {
+  agent_id:              orchestrator.address,
+  name:                  'Q3 Procurement Policy',
+  max_per_tx:            10_000,   // $10K ceiling per transaction
+  max_per_day:           50_000,   // $50K daily rolling limit
+  require_hold_above:    8_000,    // human review above $8K
+  require_oracle_stable: false,    // allow CAUTION, block UNSTABLE
+});
 
 console.log(policy.id); // "pol_..."
 ```
@@ -50,17 +77,13 @@ The policy ID is the root of the authorization tree. Every delegation and receip
 Each sub-agent gets its own delegation with explicit per-tx and lifetime caps. A sub-agent's caps cannot exceed the parent policy.
 
 ```typescript
-const delegation = await fetch('https://policy.untitledfinancial.com/delegate', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    parent_agent_id: 'orchestrator-agent',
-    child_agent_id:  'sub-agent-procurement-a',
-    policy_id:       policy.id,
-    max_per_tx:      5_000,    // $5K per transaction
-    max_total:       15_000,   // $15K total across all transactions
-  }),
-}).then(r => r.json());
+const delegation = await signedPost('/delegate', orchestrator, {
+  parent_agent_id: orchestrator.address,
+  child_agent_id:  subA.address,
+  policy_id:       policy.id,
+  max_per_tx:      5_000,    // $5K per transaction
+  max_total:       15_000,   // $15K total across all transactions
+});
 
 console.log(delegation.id); // "del_..."
 ```
@@ -69,7 +92,7 @@ Delegate to multiple sub-agents in parallel:
 
 ```typescript
 const [delegA, delegB, delegC] = await Promise.all([
-  createDelegation('sub-agent-procurement-a', policy.id),
+  createDelegation(subA.address, policy.id),
   createDelegation('sub-agent-procurement-b', policy.id),
   createDelegation('sub-agent-procurement-c', policy.id),
 ]);
@@ -86,7 +109,7 @@ const check = await fetch('https://policy.untitledfinancial.com/policy/check', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    agent_id:      'sub-agent-procurement-a',
+    agent_id:      subA.address,
     delegation_id: delegA.id,
     amount:        4_000,
     currency:      'USD',
@@ -117,20 +140,16 @@ Decisions:
 Once the settlement executes, the sub-agent records a signed receipt. This closes the authorization loop and updates the lifetime spend counter.
 
 ```typescript
-const receipt = await fetch('https://policy.untitledfinancial.com/receipt', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    agent_id:      'sub-agent-procurement-a',
-    delegation_id: delegA.id,
-    session_id:    sessionId,
-    amount:        4_000,
-    currency:      'USD',
-    tx_hash:       settled.txHash,
-    purpose:       'vendor-invoice',
-    recipient:     recipientAddress,
-  }),
-}).then(r => r.json());
+const receipt = await signedPost('/receipt', subA, {
+  agent_id:      subA.address,
+  delegation_id: delegA.id,
+  session_id:    sessionId,
+  amount:        4_000,
+  currency:      'USD',
+  tx_hash:       settled.txHash,
+  purpose:       'vendor-invoice',
+  recipient:     recipientAddress,
+});
 
 console.log(receipt.id);          // "rec_..."
 console.log(receipt.lifetime_used); // 4000 — running total for this delegation

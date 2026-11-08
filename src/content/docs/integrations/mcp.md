@@ -20,7 +20,7 @@ npx @untitledfinancial/dpx-mcp
 
 Or install from [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp) with one click.
 
-The local package currently exposes 94 tools (published 2026-09; it still includes five Mercury tools that the hosted server retired) — parity work is ongoing against the hosted server's 111. For the full catalog today, use the [remote connector](#connect-via-claudeai-claude-mobile-or-claude-code-remote---no-install) below instead of the local install.
+The local package currently exposes 94 tools (published 2026-09; it still includes five Mercury tools that the hosted server retired) — parity work is ongoing against the hosted server's 113. For the full catalog today, use the [remote connector](#connect-via-claudeai-claude-mobile-or-claude-code-remote---no-install) below instead of the local install.
 
 ## Configure Claude Desktop
 

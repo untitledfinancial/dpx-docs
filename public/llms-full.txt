@@ -369,7 +369,7 @@ Every settlement produces a verifiable on-chain record. Settlement receipts are 
 ## Agent Integrations
 
 **MCP — two surfaces**
-Remote connector (full catalog, no install): https://mcp.untitledfinancial.com/mcp — 111 tools. Works with Claude.ai, Claude mobile, Claude Code.
+Remote connector (full catalog, no install): https://mcp.untitledfinancial.com/mcp — 113 tools. Works with Claude.ai, Claude mobile, Claude Code.
 Local package (Claude Desktop, Cursor): `npx @untitledfinancial/dpx-mcp` — 94 tools, parity work ongoing. Config: dpx-protocol/dpx-mcp/claude_desktop_config.json
 
 **GPT Actions (ChatGPT Custom GPT)**
