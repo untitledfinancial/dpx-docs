@@ -717,7 +717,7 @@ curl -X POST https://compliance.untitledfinancial.com/agent/mandate \
 
 ### GET /agent/:id
 
-Retrieve agent record, current KYA level, score, and mandate.
+Retrieve agent record, current KYA level, score, and mandate. The owner's contact email is not returned (the response says `ownerEmailOnFile`). A revoked agent returns a minimal record: `status: REVOKED`, `revokedAt`, `revokedBy`, the owner entity and the tier it held.
 
 ```bash
 curl https://compliance.untitledfinancial.com/agent/agt_Xy9...
@@ -725,7 +725,11 @@ curl https://compliance.untitledfinancial.com/agent/agt_Xy9...
 
 ### DELETE /agent/:id
 
-Revoke an agent. Credential verification will return `REVOKED` immediately. The request must be signed by the agent's registered wallet over `DPX-KYA-REVOKE\n{agentId}\n{timestamp}\n{nonce}`. The record is kept with status `REVOKED`; there is no delete.
+Revoke an agent. Credential verification will return `REVOKED` immediately. The request must be signed by the agent's registered wallet over `DPX-KYA-REVOKE\n{agentId}\n{timestamp}\n{nonce}`.
+
+Revocation is irreversible and minimizes the stored record to a tombstone: the contact email, mandate, public key and attestation detail are deleted, the agent leaves the public directory, and only the agent id, owner entity, registered wallet, the tier it held, and when and by whom it was revoked (`owner` or `operator`) are kept. The id keeps answering `REVOKED` on `GET /agent/:id`, `/verify`, `/authority` and `/agent/by-wallet/:address` (never 404, which would read as "never registered"), and a revoked agent can no longer receive a mandate or attestation. Revoking again is a no-op. The tombstone is kept for `TOMBSTONE_RETENTION_DAYS` (default 365).
+
+An operator can hard-delete an agent that has no settlement history, for test data or mistakes, with `DELETE /agent/{agentId}?purge=1` and the internal key. A wallet signature never purges. The purge checks the settlement trail, or requires `confirmNoSettlements=true` where that check isn't configured, and refuses if the agent has settlements.
 
 ```bash
 curl -X DELETE https://compliance.untitledfinancial.com/agent/agt_Xy9... \

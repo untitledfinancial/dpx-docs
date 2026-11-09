@@ -3,6 +3,12 @@ title: Changelog
 description: Notable fixes and additions to DPX, dated.
 ---
 
+## 2026-11-09
+
+- **Revoking an agent now minimizes its record.** The contact email, mandate, public key and attestation detail are deleted, the agent leaves the public directory, and a tombstone is kept (agent id, owner entity, wallet, the tier it held, when and by whom it was revoked). The id keeps answering `REVOKED` rather than 404, and a revoked agent cannot receive a new mandate or attestation. Retention of the tombstone is configurable.
+- **`GET /agent/{id}` no longer returns the owner's contact email** — it reports whether one is on file. Agent ids are discoverable, so the email should not have been public.
+- **Added an operator-only purge** (`DELETE /agent/{id}?purge=1`) for test data and mistakes; it refuses to delete an agent that has settlements on record.
+
 ## 2026-11-08
 
 - **Added `GET /agent/{id}/authority`** — one read-only answer to what an agent may do right now: its effective KYA tier, tier-clamped mandate, the Policy Engine policies held under its `agentId` or registered wallet, and the combined limits (lowest cap wins). It states what is enforced at settlement (the mandate) and what is advisory (policies). Also available as the MCP tool `agent.authority`.
