@@ -3,6 +3,10 @@ title: Changelog
 description: Notable fixes and additions to DPX, dated.
 ---
 
+## 2026-11-11
+
+- **Added `GET /v1/intelligence/schema`** — a free, machine-readable description of every Intelligence endpoint: price, output fields, and the quality contract it is held to. See [Endpoint schema and quality contract](/api/intelligence-api#endpoint-schema-and-quality-contract).
+
 ## 2026-11-09
 
 - **Revoking an agent now minimizes its record.** The contact email, mandate, public key and attestation detail are deleted, the agent leaves the public directory, and a tombstone is kept (agent id, owner entity, wallet, the tier it held, when and by whom it was revoked). The id keeps answering `REVOKED` rather than 404, and a revoked agent cannot receive a new mandate or attestation. Retention of the tombstone is configurable.

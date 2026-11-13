@@ -1856,8 +1856,36 @@ Response headers include `X-DPX-Feed-Value`, `X-DPX-Feed-Signal`, `X-DPX-Feed-Sc
 |---|---|
 | `GET /health` | Worker liveness, KV status, endpoint index |
 | `GET /.well-known/x402` | x402 payment discovery manifest |
+| `GET /v1/intelligence/schema` | Machine-readable description of every endpoint: price, output fields, quality contract |
 | `GET /v1/oracle-feed` | List all oracle feed slugs |
 | `GET /openapi.yaml` | OpenAPI 3.1 specification |
+
+---
+
+## Endpoint schema and quality contract
+
+`GET /v1/intelligence/schema` is free and needs no key. It returns, for every priced endpoint, the URL, per-call price, a description, the output fields captured from the live handler (name and JSON type), and its **quality contract** when it has one. It is built from the same tables the router enforces, so it cannot drift from what the endpoint does. A field with no known value is omitted, never guessed.
+
+```json
+{
+  "schema": "dpx-intelligence-endpoints/1",
+  "count": 45,
+  "withQualityContract": 23,
+  "conventions": { "quality": {...}, "headers": {...}, "refusal": {...} },
+  "endpoints": [
+    {
+      "slug": "macro-stress",
+      "url": "https://intelligence.untitledfinancial.com/v1/intelligence/macro-stress",
+      "priceUsd": "0.15",
+      "description": "...",
+      "outputFields": { "...": "number" },
+      "qualityContract": { "requiredFields": ["components.*.value"], "minimumCompleteness": 0.6 }
+    }
+  ]
+}
+```
+
+A quality contract names the fields that must carry live data for a response to be worth paying for, and the minimum share that must be present. Responses from an endpoint with a contract include a `quality` object (`completeness`, `minimum`, `missing`, and `fallbacks` or `substitutes` when another provider answered) and an `X-DPX-Completeness` header. Below the minimum the endpoint answers `503 DATA_DEGRADED`: the payment is not settled, the result is not cached, and the same signed payment can be retried. Endpoints without a contract (`qualityContract: null`) return what they compute.
 
 ---
 
@@ -1867,4 +1895,5 @@ Response headers include `X-DPX-Feed-Value`, `X-DPX-Feed-Signal`, `X-DPX-Feed-Sc
 |---|---|
 | `https://intelligence.untitledfinancial.com/openapi.yaml` | OpenAPI 3.1 |
 | `https://intelligence.untitledfinancial.com/.well-known/x402` | x402 manifest |
+| `https://intelligence.untitledfinancial.com/v1/intelligence/schema` | Endpoint schema and quality contracts |
 | `https://intelligence.untitledfinancial.com/v1/oracle-feed` | Feed registry |
