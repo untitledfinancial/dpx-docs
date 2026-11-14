@@ -370,7 +370,7 @@ Every settlement produces a verifiable on-chain record. Settlement receipts are 
 
 **MCP — two surfaces**
 Remote connector (full catalog, no install): https://mcp.untitledfinancial.com/mcp — 113 tools. Works with Claude.ai, Claude mobile, Claude Code.
-Local package (Claude Desktop, Cursor): `npx @untitledfinancial/dpx-mcp` — 94 tools, parity work ongoing. Config: dpx-protocol/dpx-mcp/claude_desktop_config.json
+Local package (Claude Desktop, Cursor): `npx @untitledfinancial/dpx-mcp` — 89 tools, parity work ongoing. Config: dpx-protocol/dpx-mcp/claude_desktop_config.json
 
 **GPT Actions (ChatGPT Custom GPT)**
 Schema: dpx-protocol/dpx-gpt-actions/openapi.yaml
@@ -384,6 +384,17 @@ File: dpx-protocol/dpx-agents/langchain_tools.py
 Use HTTP Request nodes. Base URL: stability.untitledfinancial.com
 
 ---
+
+## Reports (reports.untitledfinancial.com)
+AI-synthesized reports over the DPX oracle data, paid per request over x402 (no account or API key):
+- GET /report/climate: TCFD physical risk, commodity stress, climate outlook
+- GET /report/macro: stability score, macro regime, 90-day outlook
+- GET /report/esg: SFDR PAI indicators, ESG sub-scores
+- GET /report/compliance: AML/sanctions screening summary, Travel Rule status
+- GET /report/treasury: settlement volume, corridor performance, decision audit
+- POST /report/scenario: multi-position decision brief comparing regime, commodity, currency, sovereign and entity signals across current, 30, 60, 90 day and tail horizons (MCP tool: reports.scenario)
+A report is refused with 503 DATA_DEGRADED, with no payment taken, when its essential input is unavailable.
+Docs: https://docs.untitledfinancial.com/api/reports
 
 ## Discovery URLs (Production)
 

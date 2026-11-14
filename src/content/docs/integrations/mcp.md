@@ -20,7 +20,7 @@ npx @untitledfinancial/dpx-mcp
 
 Or install from [Smithery](https://smithery.ai/server/@untitledfinancial/dpx-mcp) with one click.
 
-The local package currently exposes 94 tools (published 2026-09; it still includes five Mercury tools that the hosted server retired) — parity work is ongoing against the hosted server's 113. For the full catalog today, use the [remote connector](#connect-via-claudeai-claude-mobile-or-claude-code-remote---no-install) below instead of the local install.
+The local package currently exposes 89 tools (version 2.6.1; checked by running it) — parity work is ongoing against the hosted server's 113. For the full catalog today, use the [remote connector](#connect-via-claudeai-claude-mobile-or-claude-code-remote---no-install) below instead of the local install.
 
 ## Configure Claude Desktop
 
@@ -42,7 +42,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 }
 ```
 
-Restart Claude Desktop — **DPX** appears in the MCP toolbar with 94 tools.
+Restart Claude Desktop — **DPX** appears in the MCP toolbar with 89 tools.
 
 :::note[Sandbox mode]
 `SANDBOX_MODE: "true"` means `settle` runs real calculations with no on-chain execution. Set to `"false"` only when you are ready for live settlements with real USDC.
