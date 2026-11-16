@@ -56,7 +56,7 @@ UK employers with 250 or more staff must publish their gender pay gap each year.
 Australian employers with 100 or more staff report to the Workplace Gender Equality Agency every year. A record gives women and men counts for all employees, for managers and for executive-level occupations, and the gender composition of the employer's governing body.
 
 - A governing body is the chair plus the members excluding the chair, which is how the Agency's questionnaire counts them. `womenSharePct` is women as a share of that total.
-- The ratio is produced only when **exactly one chair** is recorded. Co-chairs or a missing chair make the board size ambiguous, so the counts are returned with status `CHAIR_COUNT_NOT_ONE` and no ratio.
+- The ratio is produced only when **exactly one chair** is recorded. Co-chairs or a missing chair make the board size ambiguous, so the counts are returned with status `CHAIR_COUNT_NOT_ONE` and no ratio. If the employer left any of the four counts blank, the status is `COUNTS_MISSING`, which is different from `NOT_REPORTED` (no record at all).
 - The public file contains no pay gap figures, so none are reported for Australia.
 
 ### Reading `NOT_REPORTED`
